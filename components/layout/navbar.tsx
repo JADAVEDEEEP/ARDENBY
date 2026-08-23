@@ -88,11 +88,24 @@ export function Navbar() {
             </button>
 
             {/* Logo */}
-            <Link href="/" className="flex items-center gap-2 select-none">
-              <span className="font-display text-2xl lg:text-3xl font-bold tracking-tight text-ink">
-                ARDENBY
-              </span>
-            </Link>
+           <Link href="/" className="flex items-center gap-2 select-none group">
+  <div className="flex flex-col leading-none">
+    <span
+      className="text-3xl lg:text-4xl font-bold uppercase tracking-[-0.08em] text-transparent bg-clip-text bg-gradient-to-b from-black via-neutral-700 to-black transition-all duration-300 group-hover:opacity-80"
+      style={{ fontFamily: "Bodoni MT, Didot, Times New Roman, serif" }}
+    >
+      ARDENBY
+    </span>
+
+    <div className="mt-1 flex items-center gap-2">
+      <div className="h-px w-5 bg-neutral-300" />
+      <span className="text-[8px] uppercase tracking-[0.35em] text-neutral-500">
+        WEAR YOUR ESSENCE
+      </span>
+      <div className="h-px w-5 bg-neutral-300" />
+    </div>
+  </div>
+</Link>
 
             {/* Desktop nav */}
             <div className="hidden lg:flex items-center gap-8 flex-1 justify-center">

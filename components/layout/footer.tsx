@@ -49,23 +49,23 @@ export function Footer() {
           <p className="text-cream/60 mb-8">
             Get early access to drops, exclusive offers, and 10% off your first order.
           </p>
-          <form onSubmit={handleSubscribe} className="flex gap-3 max-w-md mx-auto">
-            <input
-              type="email"
-              required
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="Enter your email"
-              className="flex-1 px-5 py-3.5 rounded-full bg-ink-soft text-cream border border-ink-soft focus:outline-none focus:border-sand placeholder:text-cream/40"
-            />
-            <button
-              type="submit"
-              className="px-6 py-3.5 rounded-full bg-cream text-ink font-semibold hover:bg-sand transition-colors flex items-center gap-2"
-            >
-              Subscribe
-              <ArrowRight className="h-4 w-4" />
-            </button>
-          </form>
+         <form onSubmit={handleSubscribe} className="flex flex-col sm:flex-row gap-3 max-w-md mx-auto">
+  <input
+    type="email"
+    required
+    value={email}
+    onChange={(e) => setEmail(e.target.value)}
+    placeholder="Enter your email"
+    className="w-full min-w-0 flex-1 px-5 py-3.5 rounded-full bg-ink-soft text-cream border border-ink-soft focus:outline-none focus:border-sand placeholder:text-cream/40"
+  />
+  <button
+    type="submit"
+    className="w-full sm:w-auto shrink-0 px-6 py-4 rounded-full bg-cream text-ink font-semibold hover:bg-sand transition-colors flex items-center justify-center gap-2"
+  >
+    Subscribe
+    <ArrowRight className="h-4 w-4" />
+  </button>
+</form>
         </div>
       </div>
 
@@ -73,7 +73,24 @@ export function Footer() {
       <div className="container-ardenby py-14">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-8 lg:gap-12">
           <div className="col-span-2 md:col-span-1">
-            <span className="font-display text-2xl font-bold">ARDENBY</span>
+           <Link href="/" className="flex items-center gap-2 select-none group">
+  <div className="flex flex-col leading-none">
+    <span
+      className="text-2xl lg:text-3xl font-bold uppercase tracking-[-0.08em] text-white"
+      style={{ fontFamily: "Didot, Bodoni MT, serif" }}
+    >
+      ARDENBY
+    </span>
+
+    <div className="mt-1 flex items-center gap-2">
+      <div className="h-px w-5 bg-white/40" />
+      <span className="text-[8px] uppercase tracking-[0.35em] text-white/80">
+        WEAR YOUR ESSENCE
+      </span>
+      <div className="h-px w-5 bg-white/40" />
+    </div>
+  </div>
+</Link>
             <p className="text-cream/50 text-sm mt-3 max-w-xs">
               Premium men's clothing crafted for the bold. Wear beyond ordinary.
             </p>
@@ -116,18 +133,18 @@ export function Footer() {
 
       {/* Bottom marquee */}
       <div className="border-t border-ink-soft py-5 overflow-hidden">
-        <div className="marquee-track gap-8">
-          {Array.from({ length: 16 }).map((_, i) => (
-            <span
-              key={i}
-              className="font-display text-2xl lg:text-3xl font-bold tracking-widest text-cream/80 whitespace-nowrap"
-            >
-              {marqueeText}
-              <span className="text-sand mx-6">/</span>
-            </span>
-          ))}
-        </div>
-      </div>
+<div className="flex w-max animate-[marquee_35s_linear_infinite] gap-8">
+    {Array.from({ length: 32 }).map((_, i) => (
+      <span
+        key={i}
+        className="font-display text-2xl lg:text-3xl font-bold tracking-widest text-cream/80 whitespace-nowrap"
+      >
+        {marqueeText}
+        <span className="text-sand mx-6">/</span>
+      </span>
+    ))}
+  </div>
+</div>
 
       {/* Copyright */}
       <div className="container-ardenby py-6 border-t border-ink-soft">
