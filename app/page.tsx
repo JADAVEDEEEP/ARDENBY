@@ -94,29 +94,63 @@ export default function HomePage() {
       </section>
 
       {/* Trust badges */}
-      <section className="border-b border-border bg-white">
-        <div className="container-ardenby py-6">
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-            {[
-              { Icon: Truck, title: 'Free Shipping', desc: 'On orders above ₹999' },
-              { Icon: RefreshCw, title: 'Easy Returns', desc: '7-day return policy' },
-              { Icon: ShieldCheck, title: 'Secure Payment', desc: '100% protected checkout' },
-              { Icon: Star, title: 'Premium Quality', desc: '240 GSM heavyweight cotton' },
-            ].map(({ Icon, title, desc }) => (
-              <div key={title} className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-full bg-cream flex items-center justify-center flex-shrink-0">
-                  <Icon className="h-5 w-5 text-ink" />
-                </div>
-                <div>
-                  <h4 className="text-sm font-semibold">{title}</h4>
-                  <p className="text-xs text-muted-foreground">{desc}</p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
+   <section className="w-full bg-[#F5F3EF] pt-14 pb-20 border-b border-stone-200 mb-20">
+  <div className="max-w-[1440px] mx-auto px-4 sm:px-8">
+    {/* Section Header - Vertical spacing reduced by ~40px */}
+    <div className="text-center">
+      <h2 className="text-2xl sm:text-3xl font-bold tracking-tight text-neutral-900 uppercase font-serif">
+        WHY ARDENBY
+      </h2>
+      <p className="text-xs sm:text-sm text-neutral-500 mt-1 font-light tracking-wide">
+        Crafted for everyday premium essentials.
+      </p>
+    </div>
 
+    {/* Badges Grid - Uniform Gap & Spacing */}
+    <div className="mt-10 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+      {[
+        { 
+          Icon: Truck, 
+          title: 'Free Shipping', 
+          desc: 'Free delivery on all orders above ₹999.' 
+        },
+        { 
+          Icon: RefreshCw, 
+          title: 'Easy Returns', 
+          desc: 'Hassle-free 7-day return and exchange policy.' 
+        },
+        { 
+          Icon: ShieldCheck, 
+          title: 'Safe Payment', 
+          desc: '100% protected and secure checkout process.' 
+        },
+        { 
+          Icon: Star, 
+          title: 'Premium Quality', 
+          desc: 'Crafted with 240 GSM heavyweight premium cotton.' 
+        },
+      ].map(({ Icon, title, desc }) => (
+        <div 
+          key={title} 
+          className="flex flex-col items-center text-center p-8 rounded-2xl bg-white border border-stone-200/60 shadow-[0_8px_24px_rgba(0,0,0,0.06)] hover:-translate-y-1 transition-all duration-300 ease-in-out"
+        >
+          {/* Consistent Outline Icon Style (No solid filled background) */}
+          <div className="mb-5 text-neutral-900">
+            <Icon className="h-7 w-7 stroke-[1.5]" />
+          </div>
+
+          {/* Badge Title & Description */}
+          <h3 className="text-sm font-semibold tracking-wide text-neutral-900 uppercase mb-2">
+            {title}
+          </h3>
+          <p className="text-xs text-neutral-500 font-light leading-relaxed max-w-[220px]">
+            {desc}
+          </p>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>
       {/* Shop by Category */}
       <section className="container-ardenby py-16 lg:py-24">
         <div className="text-center mb-10">

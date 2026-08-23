@@ -133,7 +133,7 @@ export function Footer() {
 
       {/* Bottom marquee */}
       <div className="border-t border-ink-soft py-5 overflow-hidden">
-<div className="flex w-max animate-[marquee_35s_linear_infinite] gap-8">
+<div className="flex w-max animate-[marquee_36s_linear_infinite] gap-8">
     {Array.from({ length: 32 }).map((_, i) => (
       <span
         key={i}
