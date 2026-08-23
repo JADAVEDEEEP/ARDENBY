@@ -13,6 +13,7 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://ardenby.com'),
   title: "ARDENBY — Wear Beyond Ordinary | Premium Men's Clothing",
   description:
     "Shop premium oversized tees, graphic prints, hoodies, cargos and joggers. Find your style with ARDENBY — luxury men's fashion crafted for the bold.",
