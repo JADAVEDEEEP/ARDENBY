@@ -185,8 +185,8 @@ export default function CheckoutPage() {
                 </button>
               </div>
 
-              {/* Keep hidden select element to guarantee native form integration */}
-              <select className="sr-only" value={selectedPayment === 'cod' ? 'Cash on Delivery' : 'UPI / Card at Delivery'} readOnly>
+              {/* Fixed hidden select element using onChange */}
+              <select className="sr-only" value={selectedPayment === 'cod' ? 'Cash on Delivery' : 'UPI / Card at Delivery'} onChange={() => {}}>
                 <option>Cash on Delivery</option>
                 <option>UPI / Card at Delivery</option>
               </select>
