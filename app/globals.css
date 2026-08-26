@@ -2,134 +2,358 @@
 @tailwind components;
 @tailwind utilities;
 
+/* =========================================================
+   ARDENBY — PREMIUM DESIGN SYSTEM
+   Existing functionality preserved.
+   ========================================================= */
+
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 0 0% 7%;
-    --card: 0 0% 100%;
-    --card-foreground: 0 0% 7%;
-    --popover: 0 0% 100%;
-    --popover-foreground: 0 0% 7%;
-    --primary: 0 0% 7%;
-    --primary-foreground: 0 0% 98%;
-    --secondary: 38 25% 95%;
-    --secondary-foreground: 0 0% 7%;
-    --muted: 38 20% 94%;
-    --muted-foreground: 0 0% 40%;
-    --accent: 38 35% 82%;
-    --accent-foreground: 0 0% 12%;
-    --destructive: 0 72% 51%;
+    --background: 40 20% 98%;
+    --foreground: 20 10% 8%;
+
+    --card: 40 20% 99%;
+    --card-foreground: 20 10% 8%;
+
+    --popover: 40 20% 99%;
+    --popover-foreground: 20 10% 8%;
+
+    --primary: 20 8% 8%;
+    --primary-foreground: 40 20% 98%;
+
+    --secondary: 38 22% 94%;
+    --secondary-foreground: 20 10% 10%;
+
+    --muted: 38 16% 94%;
+    --muted-foreground: 25 8% 42%;
+
+    --accent: 35 28% 72%;
+    --accent-foreground: 20 10% 10%;
+
+    --destructive: 0 65% 48%;
     --destructive-foreground: 0 0% 98%;
-    --border: 0 0% 88%;
-    --input: 0 0% 88%;
-    --ring: 0 0% 7%;
-    --radius: 18px;
-    --chart-1: 38 35% 60%;
-    --chart-2: 75 10% 40%;
-    --chart-3: 0 0% 20%;
-    --chart-4: 38 25% 85%;
-    --chart-5: 0 0% 50%;
+
+    --border: 35 14% 87%;
+    --input: 35 14% 87%;
+    --ring: 35 22% 55%;
+
+    --radius: 14px;
+
+    --chart-1: 35 28% 58%;
+    --chart-2: 78 10% 38%;
+    --chart-3: 20 8% 18%;
+    --chart-4: 35 20% 78%;
+    --chart-5: 25 7% 48%;
   }
 
   .dark {
-    --background: 0 0% 7%;
-    --foreground: 0 0% 98%;
-    --card: 0 0% 10%;
-    --card-foreground: 0 0% 98%;
-    --popover: 0 0% 10%;
-    --popover-foreground: 0 0% 98%;
-    --primary: 0 0% 98%;
-    --primary-foreground: 0 0% 7%;
-    --secondary: 0 0% 15%;
-    --secondary-foreground: 0 0% 98%;
-    --muted: 0 0% 15%;
-    --muted-foreground: 0 0% 65%;
-    --accent: 38 25% 20%;
-    --accent-foreground: 0 0% 98%;
-    --destructive: 0 62% 45%;
-    --destructive-foreground: 0 0% 98%;
-    --border: 0 0% 18%;
-    --input: 0 0% 18%;
-    --ring: 0 0% 85%;
+    --background: 20 8% 7%;
+    --foreground: 40 20% 96%;
+
+    --card: 20 8% 10%;
+    --card-foreground: 40 20% 96%;
+
+    --popover: 20 8% 10%;
+    --popover-foreground: 40 20% 96%;
+
+    --primary: 40 20% 96%;
+    --primary-foreground: 20 8% 7%;
+
+    --secondary: 20 7% 15%;
+    --secondary-foreground: 40 20% 96%;
+
+    --muted: 20 7% 15%;
+    --muted-foreground: 35 8% 65%;
+
+    --accent: 35 20% 22%;
+    --accent-foreground: 40 20% 96%;
+
+    --destructive: 0 55% 42%;
+    --destructive-foreground: 40 20% 96%;
+
+    --border: 20 7% 20%;
+    --input: 20 7% 20%;
+    --ring: 35 18% 72%;
+  }
+
+  *,
+  ::before,
+  ::after {
+    @apply border-border;
+  }
+
+  html {
+    scroll-behavior: smooth;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  body {
+    @apply bg-background text-foreground antialiased;
+
+    font-feature-settings:
+      "rlig" 1,
+      "calt" 1;
+
+    text-rendering: optimizeLegibility;
+  }
+
+  ::selection {
+    background: hsl(var(--foreground));
+    color: hsl(var(--background));
   }
 }
 
-@layer base {
-  * {
-    @apply border-border;
-  }
-  body {
-    @apply bg-background text-foreground antialiased;
-    font-feature-settings: "rlig" 1, "calt" 1;
-  }
-  html {
-    scroll-behavior: smooth;
-  }
-}
+/* =========================================================
+   COMPONENT UTILITIES
+   ========================================================= */
 
 @layer components {
   .container-ardenby {
-    @apply mx-auto w-full max-w-[1320px] px-4 sm:px-6 lg:px-8;
+    @apply mx-auto w-full max-w-[1380px] px-4 sm:px-6 lg:px-8 xl:px-10;
   }
+
+  /*
+   Premium glass navigation
+  */
   .glass-nav {
-    background: rgba(255, 255, 255, 0.72);
-    backdrop-filter: blur(18px) saturate(160%);
-    -webkit-backdrop-filter: blur(18px) saturate(160%);
+    background: rgba(255, 255, 255, 0.78);
+    backdrop-filter: blur(22px) saturate(150%);
+    -webkit-backdrop-filter: blur(22px) saturate(150%);
+    border-bottom: 1px solid rgba(20, 18, 15, 0.06);
   }
+
   .glass-nav-dark {
-    background: rgba(17, 17, 17, 0.72);
-    backdrop-filter: blur(18px) saturate(160%);
-    -webkit-backdrop-filter: blur(18px) saturate(160%);
+    background: rgba(17, 17, 17, 0.78);
+    backdrop-filter: blur(22px) saturate(150%);
+    -webkit-backdrop-filter: blur(22px) saturate(150%);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
   }
+
+  /*
+   Premium text utility
+  */
   .text-balance {
     text-wrap: balance;
   }
+
+  /*
+   Editorial heading
+  */
+  .ardenby-heading {
+    letter-spacing: -0.035em;
+    text-wrap: balance;
+  }
+
+  /*
+   Small luxury eyebrow text
+  */
+  .ardenby-eyebrow {
+    @apply text-[10px] font-medium uppercase tracking-[0.28em];
+
+    color: hsl(var(--muted-foreground));
+  }
+
+  /*
+   Premium section spacing
+  */
+  .ardenby-section {
+    @apply py-14 sm:py-16 lg:py-20 xl:py-24;
+  }
+
+  /*
+   Product image ratio
+  */
+  .product-aspect {
+    aspect-ratio: 4 / 5;
+  }
+
+  /*
+   Premium product image container
+  */
+  .product-image-shell {
+    position: relative;
+    overflow: hidden;
+    background: hsl(var(--muted));
+  }
+
+  /*
+   Subtle luxury card
+  */
+  .ardenby-card {
+    background: hsl(var(--card));
+    border: 1px solid hsl(var(--border));
+    transition:
+      transform 350ms cubic-bezier(0.16, 1, 0.3, 1),
+      box-shadow 350ms cubic-bezier(0.16, 1, 0.3, 1),
+      border-color 350ms ease;
+  }
+
+  .ardenby-card:hover {
+    border-color: hsl(35 14% 78%);
+    box-shadow:
+      0 12px 35px rgba(20, 18, 15, 0.06),
+      0 2px 8px rgba(20, 18, 15, 0.03);
+  }
+
+  /*
+   Premium button base
+  */
+  .ardenby-button {
+    transition:
+      transform 250ms cubic-bezier(0.16, 1, 0.3, 1),
+      background-color 250ms ease,
+      color 250ms ease,
+      border-color 250ms ease,
+      box-shadow 250ms ease;
+  }
+
+  .ardenby-button:active {
+    transform: scale(0.98);
+  }
+
+  /*
+   Scroll-free utility
+  */
   .no-scrollbar::-webkit-scrollbar {
     display: none;
   }
+
   .no-scrollbar {
     -ms-overflow-style: none;
     scrollbar-width: none;
   }
+}
+
+/* =========================================================
+   MARQUEE
+   ========================================================= */
+
+.marquee-track {
+  display: flex;
+  width: max-content;
+  animation: marquee 30s linear infinite;
+  will-change: transform;
+}
+
+.marquee-track:hover {
+  animation-play-state: paused;
+}
+
+/* =========================================================
+   IMAGE ZOOM
+   ========================================================= */
+
+.zoom-container {
+  overflow: hidden;
+}
+
+.zoom-img {
+  transition:
+    transform 700ms cubic-bezier(0.16, 1, 0.3, 1),
+    opacity 350ms ease;
+  will-change: transform;
+}
+
+.zoom-container:hover .zoom-img {
+  transform: scale(1.045);
+}
+
+/* =========================================================
+   PREMIUM SCROLLBAR
+   ========================================================= */
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color:
+    hsl(var(--muted-foreground) / 0.28)
+    transparent;
+}
+
+::-webkit-scrollbar {
+  width: 7px;
+  height: 7px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: hsl(var(--muted-foreground) / 0.28);
+  border-radius: 999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: hsl(var(--muted-foreground) / 0.48);
+}
+
+/* =========================================================
+   PREMIUM FOCUS STATES
+   ========================================================= */
+
+:focus-visible {
+  outline: 2px solid hsl(var(--ring));
+  outline-offset: 3px;
+}
+
+/* =========================================================
+   KEYFRAMES
+   ========================================================= */
+
+@keyframes marquee {
+  from {
+    transform: translateX(0);
+  }
+
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+/* =========================================================
+   REDUCED MOTION
+   ========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* =========================================================
+   MOBILE POLISH
+   ========================================================= */
+
+@media (max-width: 640px) {
+  .container-ardenby {
+    @apply px-4;
+  }
+
+  .ardenby-section {
+    @apply py-12;
+  }
+
   .product-aspect {
     aspect-ratio: 4 / 5;
   }
 }
 
-/* Marquee */
-.marquee-track {
-  display: flex;
-  width: max-content;
-  animation: marquee 30s linear infinite;
-}
-.marquee-track:hover {
-  animation-play-state: paused;
-}
+/* =========================================================
+   VERY SMALL SCREENS
+   ========================================================= */
 
-/* Image zoom */
-.zoom-img {
-  transition: transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
-}
-.zoom-container:hover .zoom-img {
-  transform: scale(1.05);
-}
-
-/* Custom scrollbar */
-::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
-}
-::-webkit-scrollbar-track {
-  background: transparent;
-}
-::-webkit-scrollbar-thumb {
-  background: hsl(var(--muted-foreground) / 0.3);
-  border-radius: 4px;
-}
-::-webkit-scrollbar-thumb:hover {
-  background: hsl(var(--muted-foreground) / 0.5);
-}
-@keyframes marquee {
-  from { transform: translateX(0); }
-  to { transform: translateX(-50%); }
+@media (max-width: 380px) {
+  .container-ardenby {
+    @apply px-3;
+  }
 }

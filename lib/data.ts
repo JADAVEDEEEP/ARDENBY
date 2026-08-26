@@ -53,7 +53,7 @@ export const products: Product[] = [
     colors: ['Beige', 'Olive', 'Black'],
     sizes: ALL_SIZES,
     images: [
-      img('https://images.pexels.com/photos/18584221/pexels-photo-18584221.jpeg'),
+      img('https://images.unsplash.com/photo-1503342217505-b0a15ec3261c?q=80&w=1600&auto=format&fit=crop'),
       img('https://images.pexels.com/photos/16485645/pexels-photo-16485645.jpeg'),
       img('https://images.pexels.com/photos/7643904/pexels-photo-7643904.jpeg'),
       img('https://images.pexels.com/photos/36942018/pexels-photo-36942018.jpeg'),

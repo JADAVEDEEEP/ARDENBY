@@ -533,7 +533,7 @@ export function Navbar() {
       {/* LUXURY MODAL POPUP */}
       <AnimatePresence>
         {isOpen && (
-          <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4 overflow-hidden">
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 overflow-hidden">
             
             {/* Dark Blurred Backdrop */}
             <motion.div
@@ -550,7 +550,7 @@ export function Navbar() {
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.96, y: 20 }}
               transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
-              className="relative z-10 w-full sm:max-w-[520px] bg-[#FBF9F5] rounded-t-3xl sm:rounded-3xl border border-[#E8E2D8] shadow-2xl p-6 sm:p-8 text-[#1A1A1A] max-h-[90vh] overflow-y-auto"
+             className="relative z-10 w-[calc(100%-2rem)] max-w-[420px] sm:max-w-[520px] bg-[#FBF9F5] rounded-3xl border border-[#E8E2D8] shadow-2xl p-5 sm:p-8 text-[#1A1A1A] max-h-[85vh] overflow-y-auto"
             >
               {/* Top Header */}
               <div className="flex items-center justify-between border-b border-[#EAE6DE] pb-4 mb-6">
