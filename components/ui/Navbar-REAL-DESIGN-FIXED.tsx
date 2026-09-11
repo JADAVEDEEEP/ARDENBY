@@ -371,7 +371,7 @@ export function Navbar() {
       const purpose =
         response.purpose ||
         response.data?.purpose ||
-        (response.requiresOTP || response.data?.requiresOTP
+        (response.requiresOtp || response.data?.requiresOtp
           ? 'email_verification'
           : 'login');
 
