@@ -10,9 +10,7 @@ import {
   User,
   Package,
   ChevronRight,
-  Sparkles,
   ArrowUpRight,
-  ShieldCheck,
   Truck,
 } from 'lucide-react';
 
@@ -63,6 +61,9 @@ export function NavbarMobileDrawer({
   handleOpenProfile,
   user,
 }: NavbarMobileDrawerProps) {
+  // Safe accessor to bypass strict type check if UserProfile lacks properties in navbar.ts
+  const typedUser = user as Record<string, any> | null;
+
   return (
     <AnimatePresence>
       {mobileOpen && (
@@ -91,6 +92,9 @@ export function NavbarMobileDrawer({
                 <div className="flex flex-col">
                   <span
                     className="font-serif text-2xl font-bold uppercase tracking-tight text-neutral-950"
+                    style={{
+                      fontFamily: 'Bodoni MT, Didot, Times New Roman, serif',
+                    }}
                   >
                     ARDENBY
                   </span>
@@ -115,7 +119,7 @@ export function NavbarMobileDrawer({
                     type="text"
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
-                    placeholder="Search 'Oversized Tee' or 'Drop 01'..."
+                    placeholder="Search 'Oversized Tee'..."
                     className="w-full rounded-full border border-neutral-300 bg-white py-2.5 pl-4 pr-10 text-xs text-neutral-900 placeholder:text-neutral-400 focus:border-neutral-950 focus:outline-none focus:ring-1 focus:ring-neutral-950 shadow-2xs"
                   />
                   <button
@@ -178,14 +182,14 @@ export function NavbarMobileDrawer({
               >
                 <div className="flex items-center gap-3">
                   <div className="flex h-9 w-9 items-center justify-center rounded-full bg-neutral-950 text-white font-bold text-xs">
-                    {user?.name ? user.name.charAt(0) : <User className="h-4 w-4" />}
+                    {typedUser?.name ? typedUser.name.charAt(0) : <User className="h-4 w-4" />}
                   </div>
                   <div className="text-left">
                     <p className="text-[11px] font-bold text-neutral-900 leading-none">
-                      {user ? user.name : 'Account Login'}
+                      {typedUser?.name ? typedUser.name : 'Account Login'}
                     </p>
                     <p className="text-[9px] font-light text-neutral-500 mt-0.5">
-                      {user ? user.email : 'Tap to manage orders & profile'}
+                      {typedUser?.email ? typedUser.email : 'Tap to manage orders & profile'}
                     </p>
                   </div>
                 </div>
