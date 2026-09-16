@@ -11,6 +11,7 @@ import {
   RefreshCw,
   ShieldCheck,
   Sparkles,
+  ChevronRight,
   Star,
   Truck,
   Flame,
@@ -26,7 +27,15 @@ const transparentHeroImages = [
   "/images/hero-dtf-back-print.png",
   "/images/hero-olive-graphic.png",
 ];
-
+const newsletterContent = {
+  eyebrow: "Exclusive Access",
+  title: "Join the ARDENBY Fam",
+  description:
+    "Get early drop links, VIP discounts, and 10% off your inaugural order.",
+  inputPlaceholder: "Enter your email",
+  buttonLabel: "Subscribe",
+  successMessage: "You are on the list. Welcome to the family.",
+};
 const trustItems = [
   {
     Icon: Truck,
@@ -1075,400 +1084,1726 @@ export default function HomePage() {
 </section>
 
       {/* ================= FULL-WIDTH TRUST STRIP ================= */}
-      <section className="w-full px-3 py-3 sm:px-6 sm:py-4 lg:px-10">
-        <div className="grid w-full grid-cols-2 gap-2.5 rounded-2xl border border-black/5 bg-white p-2.5 shadow-xs sm:gap-4 lg:grid-cols-4 lg:p-4">
-          {trustItems.map(({ Icon, title, desc }) => (
-            <div
-              key={title}
-              className="flex items-center gap-3 rounded-xl bg-[#FAF9F5] p-3 transition-all duration-300 hover:bg-[#F2EFE8] sm:gap-3.5 sm:p-3.5"
-            >
-              <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-white shadow-xs sm:h-9 sm:w-9">
-                <Icon className="h-3.5 w-3.5 text-neutral-900 stroke-[1.75] sm:h-4 sm:w-4" />
-              </div>
-              <div>
-                <h3 className="text-[8.5px] font-bold uppercase tracking-[0.14em] text-neutral-900 sm:text-[9.5px] sm:tracking-[0.16em]">
-                  {title}
-                </h3>
-                <p className="mt-0.5 hidden text-[10px] font-light text-neutral-500 md:block">
-                  {desc}
-                </p>
-              </div>
-            </div>
-          ))}
-        </div>
-      </section>
+      <section className="relative w-full overflow-hidden bg-[#F4F3F0] py-16 sm:py-20 lg:py-24">
+  <style>{`
+    @keyframes ardenbyTrustMarquee {
+      0% {
+        transform: translate3d(0, 0, 0);
+      }
+      100% {
+        transform: translate3d(-50%, 0, 0);
+      }
+    }
 
-      {/* ================= SHOP BY CATEGORY ================= */}
-      <section className="w-full px-3 py-8 sm:px-6 lg:px-10 lg:py-14">
-        <div className="mb-6 flex flex-col justify-between gap-3 md:flex-row md:items-end">
-          <div>
-            <span className="inline-flex items-center gap-1.5 rounded-full border border-neutral-300 bg-white/80 px-3 py-1 text-[8px] font-bold uppercase tracking-[0.22em] text-neutral-700 backdrop-blur-sm sm:text-[8.5px] sm:tracking-[0.25em]">
-              <Sparkles className="h-3 w-3 text-amber-500" />
-              Architectural Fits
-            </span>
-            <h2 className="mt-2 font-serif text-2xl font-normal tracking-[-0.035em] text-neutral-950 sm:text-4xl lg:text-5xl">
-              Shop by Sub-Category
-            </h2>
-          </div>
+    .ardenby-trust-marquee {
+      width: max-content;
+      animation: ardenbyTrustMarquee 34s linear infinite;
+      will-change: transform;
+    }
 
-          <Link
-            href="/shop"
-            className="group inline-flex items-center gap-2 self-start rounded-full border border-neutral-300 bg-white px-4 py-2 text-[8.5px] font-bold uppercase tracking-[0.2em] text-neutral-900 transition-all hover:border-neutral-950 hover:bg-neutral-950 hover:text-white sm:px-5 sm:py-2.5 sm:text-[9px]"
+    .ardenby-trust-track:hover .ardenby-trust-marquee {
+      animation-play-state: paused;
+    }
+
+    @media (max-width: 640px) {
+      .ardenby-trust-marquee {
+        animation-duration: 28s;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .ardenby-trust-marquee {
+        animation: none;
+      }
+    }
+  `}</style>
+
+  {/* ================= HEADER ================= */}
+  <div className="mx-auto mb-12 max-w-3xl px-5 text-center sm:mb-16">
+    <div className="mb-5 flex items-center justify-center gap-3">
+      <span className="h-px w-10 bg-neutral-300" />
+
+      <span className="text-[9px] font-semibold uppercase tracking-[0.38em] text-neutral-400">
+        The ARDENBY Standard
+      </span>
+
+      <span className="h-px w-10 bg-neutral-300" />
+    </div>
+
+    <h2 className="font-serif text-[32px] leading-none tracking-[-0.025em] text-neutral-950 sm:text-[40px] lg:text-[48px]">
+      Made With Intention.
+    </h2>
+
+    <p className="mx-auto mt-4 max-w-lg text-[11px] leading-6 text-neutral-500 sm:text-xs">
+      From the first stitch to the final delivery, every detail is
+      considered to make your ARDENBY experience exceptional.
+    </p>
+  </div>
+
+  {/* ================= MARQUEE ================= */}
+  <div className="ardenby-trust-track relative w-full overflow-hidden">
+    
+    {/* Edge fade */}
+    <div className="pointer-events-none absolute inset-y-0 left-0 z-20 w-20 bg-gradient-to-r from-[#F4F3F0] via-[#F4F3F0]/80 to-transparent sm:w-36" />
+
+    <div className="pointer-events-none absolute inset-y-0 right-0 z-20 w-20 bg-gradient-to-l from-[#F4F3F0] via-[#F4F3F0]/80 to-transparent sm:w-36" />
+
+    <div className="ardenby-trust-marquee flex">
+      {[...trustItems, ...trustItems].map(
+        ({ Icon, title, desc }, index) => (
+          <div
+            key={`${title}-${index}`}
+            className="
+              group relative mx-2.5
+              flex w-[290px] shrink-0
+              items-center gap-5
+              overflow-hidden
+              rounded-[18px]
+              border border-neutral-200/80
+              bg-white
+              px-5 py-5
+              shadow-[0_8px_30px_rgba(0,0,0,0.045)]
+              transition-all duration-500
+              hover:-translate-y-1
+              hover:border-neutral-300
+              hover:shadow-[0_18px_45px_rgba(0,0,0,0.10)]
+              sm:w-[360px]
+              sm:px-6
+              sm:py-6
+            "
           >
-            Explore All Categories
-            <ArrowUpRight className="h-3.5 w-3.5 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
-          </Link>
-        </div>
+            {/* Subtle inner glow */}
+            <div
+              className="
+                pointer-events-none absolute
+                -right-10 -top-10
+                h-24 w-24
+                rounded-full
+                bg-neutral-100/70
+                blur-2xl
+                transition-all duration-500
+                group-hover:bg-neutral-200
+              "
+            />
 
-        <div className="grid w-full grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4 lg:gap-5">
-          {categories.slice(0, 4).map((cat, index) => {
-            const catProduct = products.find((p) => p.category === cat.slug);
-
-            return (
-              <motion.div
-                key={cat.slug}
-                initial={{ opacity: 0, y: 15 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: index * 0.05, duration: 0.45, ease }}
-                className="group relative w-full"
-              >
-                <Link
-                  href={`/shop?category=${cat.slug}`}
-                  className="relative block aspect-[3/4] w-full overflow-hidden rounded-2xl border border-black/10 bg-stone-200 shadow-xs transition-all duration-500 group-hover:-translate-y-1.5 group-hover:shadow-xl sm:rounded-3xl"
-                >
-                  {catProduct && (
-                    <img
-                      src={catProduct.images[0]}
-                      alt={cat.name}
-                      className="h-full w-full object-cover object-center transition-transform duration-700 ease-out group-hover:scale-108"
-                    />
-                  )}
-
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/25 to-black/5 transition-opacity duration-300 group-hover:from-black/90" />
-
-                  <div className="absolute top-3 inset-x-3 flex items-center justify-between z-10 sm:top-4 sm:inset-x-4">
-                    <span className="rounded-full border border-white/20 bg-black/40 px-2.5 py-0.5 text-[7.5px] font-semibold uppercase tracking-[0.18em] text-white backdrop-blur-md sm:px-3 sm:py-1 sm:text-[8px]">
-                      Drop 0{index + 1}
-                    </span>
-                    <div className="flex h-7 w-7 items-center justify-center rounded-full border border-white/30 bg-white/20 text-white backdrop-blur-md opacity-0 transition-all duration-300 group-hover:opacity-100 group-hover:scale-105 sm:h-8 sm:w-8">
-                      <ArrowUpRight className="h-3.5 w-3.5" />
-                    </div>
-                  </div>
-
-                  <div className="absolute inset-x-2.5 bottom-2.5 z-10 rounded-xl border border-white/15 bg-neutral-950/65 p-3 text-white backdrop-blur-md transition-colors duration-300 group-hover:bg-neutral-950/80 sm:inset-x-3 sm:bottom-3 sm:rounded-2xl sm:p-4">
-                    <div className="flex items-center justify-between">
-                      <span className="text-[7.5px] font-bold uppercase tracking-[0.2em] text-amber-300 sm:text-[8px]">
-                        {cat.desc}
-                      </span>
-                      <span className="hidden text-[8.5px] font-light text-neutral-300 sm:block">
-                        240 GSM
-                      </span>
-                    </div>
-
-                    <h3 className="mt-0.5 font-serif text-lg font-normal tracking-tight sm:mt-1 sm:text-2xl">
-                      {cat.name}
-                    </h3>
-
-                    <div className="mt-1.5 flex items-center gap-1.5 text-[7.5px] font-bold uppercase tracking-[0.18em] text-white/80 group-hover:text-white sm:mt-2 sm:text-[8.5px]">
-                      <span>Browse Line</span>
-                      <ArrowRight className="h-3 w-3 transition-transform duration-300 group-hover:translate-x-1" />
-                    </div>
-                  </div>
-                </Link>
-              </motion.div>
-            );
-          })}
-        </div>
-      </section>
-
-      {/* ================= EDITORIAL / SUPREME BANNER (FIXED DESKTOP GRID & WHITE TRANSPARENT CUTOUT) ================= */}
-      <section className="w-full px-3 pb-8 sm:px-6 lg:px-10 lg:pb-14">
-        <div className="relative w-full overflow-hidden rounded-3xl border border-neutral-800 bg-[#0C0C0C] text-white shadow-2xl">
-          <div className="relative grid w-full min-h-[440px] lg:min-h-[520px] lg:grid-cols-12 lg:items-center">
-            
-            {/* Image Layer: Mobile absolute background overlay / Desktop relative right column */}
-            <div className="absolute inset-0 z-0 flex items-center justify-center overflow-hidden opacity-35 sm:opacity-50 lg:relative lg:inset-auto lg:col-span-6 lg:z-10 lg:h-[520px] lg:opacity-100">
-              {/* Backlight Glows */}
-              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 h-64 w-64 rounded-full bg-white/10 blur-3xl pointer-events-none" />
-              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 h-80 w-80 rounded-full bg-stone-300/10 blur-2xl pointer-events-none" />
-
-              <img
-                src="/images/hero-linen.png"
-                alt="Supreme Edition Lookbook"
-                className="h-full w-auto max-w-full object-contain object-bottom transition-transform duration-700 hover:scale-105"
-              />
-              
-              {/* Mobile Readability Gradient Mask */}
-              <div className="absolute inset-0 bg-gradient-to-t from-[#0C0C0C] via-[#0C0C0C]/70 to-transparent lg:hidden" />
+            {/* Number */}
+            <div
+              className="
+                absolute right-4 top-3
+                text-[8px] font-medium
+                tracking-[0.2em]
+                text-neutral-300
+              "
+            >
+              {String((index % trustItems.length) + 1).padStart(2, "0")}
             </div>
 
-            {/* Text Content Layer: Mobile overlay on top / Desktop left column */}
-            <div className="relative z-20 flex flex-col justify-center p-6 sm:p-10 lg:col-span-6 lg:p-14 xl:p-16 lg:order-first">
-              <div className="inline-flex items-center gap-2 self-start rounded-full border border-amber-400/30 bg-amber-400/10 px-3.5 py-1.5 text-[8px] font-bold uppercase tracking-[0.22em] text-amber-300 backdrop-blur-md sm:text-[8.5px]">
-                <Flame className="h-3.5 w-3.5" />
-                Limited Supreme Release
-              </div>
+            {/* Icon */}
+            <div
+              className="
+                relative z-10
+                flex h-12 w-12 shrink-0
+                items-center justify-center
+                rounded-xl
+                border border-neutral-200
+                bg-[#FAF9F5]
+                shadow-[0_4px_14px_rgba(0,0,0,0.06)]
+                transition-all duration-500
+                group-hover:border-neutral-950
+                group-hover:bg-neutral-950
+                group-hover:shadow-[0_8px_20px_rgba(0,0,0,0.18)]
+              "
+            >
+              <Icon
+                className="
+                  h-[18px] w-[18px]
+                  stroke-[1.5]
+                  text-neutral-800
+                  transition-all duration-500
+                  group-hover:scale-110
+                  group-hover:text-white
+                "
+              />
+            </div>
 
-              <h2 className="mt-4 font-serif text-3xl font-normal leading-[0.98] tracking-[-0.04em] sm:mt-6 sm:text-5xl lg:text-6xl">
-                Supreme <br className="hidden sm:block" />
-                Edition '26
-              </h2>
-
-              <p className="mt-3 max-w-lg text-xs font-light leading-5 text-neutral-300 sm:mt-4 sm:text-sm sm:leading-6">
-                Custom high-density screen graphics, 240 GSM combed cotton, raw-edge stitch accents, and an architectural oversized drape.
+            {/* Content */}
+            <div className="relative z-10 min-w-0 pr-4">
+              <p className="mb-1.5 text-[8px] font-semibold uppercase tracking-[0.24em] text-neutral-400">
+                ARDENBY Promise
               </p>
 
-              <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:gap-4">
-                <Link
-                  href="/shop?category=supreme-edition"
-                  className="group inline-flex items-center justify-center gap-2.5 rounded-full bg-white px-6 py-3.5 text-[8.5px] font-bold uppercase tracking-[0.2em] text-black transition-all hover:bg-neutral-200 sm:text-[9px]"
-                >
-                  Shop Supreme Drop
-                  <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-1" />
-                </Link>
+              <h3 className="text-[12px] font-semibold leading-tight tracking-wide text-neutral-950">
+                {title}
+              </h3>
 
-                <div className="inline-flex items-center justify-center gap-2 rounded-full border border-white/15 bg-white/10 px-4 py-3 text-[8px] font-semibold uppercase tracking-[0.2em] text-neutral-200 backdrop-blur-md sm:text-[8.5px]">
-                  <span>Only 300 Pieces Created</span>
-                </div>
-              </div>
+              <p className="mt-1.5 line-clamp-2 text-[10px] leading-[1.65] text-neutral-500">
+                {desc}
+              </p>
             </div>
 
+            {/* Bottom accent */}
+            <div
+              className="
+                absolute bottom-0 left-5 right-5
+                h-px
+                origin-left
+                scale-x-0
+                bg-neutral-950
+                transition-transform duration-500
+                group-hover:scale-x-100
+              "
+            />
           </div>
-        </div>
-      </section>
+        )
+      )}
+    </div>
+  </div>
+
+  {/* ================= BOTTOM STATEMENT ================= */}
+  <div className="mx-auto mt-14 max-w-6xl px-5 sm:mt-16">
+    <div className="flex items-center gap-4">
+      <div className="h-px flex-1 bg-neutral-200" />
+
+      <div className="flex items-center gap-3">
+        <span className="h-1.5 w-1.5 rounded-full bg-neutral-950" />
+
+        <span className="text-[8px] font-semibold uppercase tracking-[0.32em] text-neutral-400">
+          Beyond Ordinary
+        </span>
+
+        <span className="h-1.5 w-1.5 rounded-full bg-neutral-950" />
+      </div>
+
+      <div className="h-px flex-1 bg-neutral-200" />
+    </div>
+  </div>
+</section>
+      {/* ================= SHOP BY CATEGORY ================= */}
+    {/* ================================================================
+    SHOP BY SUB-CATEGORY
+    Desktop + Mobile Production Section
+================================================================ */}
+
+<section className="w-full bg-[#F8F7F3] px-4 py-10 sm:px-6 lg:px-9 lg:py-14">
+
+  {/* ================================================================
+      DESKTOP SECTION HEADER
+  ================================================================= */}
+
+  <div className="mb-8 hidden items-end justify-between gap-10 lg:flex">
+
+    {/* LEFT CONTENT */}
+    <div>
+
+      {/* Eyebrow */}
+      <div className="mb-4 flex items-center gap-3">
+
+        <span className="h-px w-7 bg-neutral-500" />
+
+        <span className="text-[10px] font-medium uppercase tracking-[0.28em] text-neutral-500">
+          Architectural Fits
+        </span>
+
+      </div>
+
+      {/* Main Heading */}
+     <h4 className="font-serif text-[36px] font-normal leading-[1] tracking-[-0.02em] text-neutral-950 sm:text-[40px] lg:text-[44px]">
+  Shop by Sub-Category.
+</h4>
+
+      {/* Subtitle */}
+      <p className="mt-4 font-serif text-[19px] text-neutral-500">
+        Four distinct collections. One attitude.
+      </p>
+
+    </div>
+
+
+    {/* RIGHT CONTENT */}
+    <div className="flex flex-col items-end gap-5 pb-1">
+
+      <p className="max-w-[190px] text-right text-[9px] uppercase leading-5 tracking-[0.25em] text-neutral-400">
+        More than clothing.
+        <br />
+        A lifestyle.
+      </p>
+
+      <Link
+        href="/shop"
+        className="
+          group
+          inline-flex
+          h-11
+          items-center
+          gap-4
+          rounded-full
+          bg-neutral-950
+          px-6
+          text-[9px]
+          font-bold
+          uppercase
+          tracking-[0.2em]
+          text-white
+          transition-all
+          duration-300
+          hover:bg-neutral-800
+        "
+      >
+
+        <span>
+          Explore All Categories
+        </span>
+
+        <ArrowRight
+          className="
+            h-3.5
+            w-3.5
+            transition-transform
+            duration-300
+            group-hover:translate-x-1
+          "
+        />
+
+      </Link>
+
+    </div>
+
+  </div>
+
+
+  {/* ================================================================
+      MOBILE SECTION HEADER
+  ================================================================= */}
+
+  <div className="mb-6 lg:hidden">
+
+    {/* Eyebrow */}
+    <div className="mb-3 flex items-center gap-2.5">
+
+      <span className="h-px w-6 bg-neutral-400" />
+
+      <span className="text-[8px] font-medium uppercase tracking-[0.25em] text-neutral-500">
+        Architectural Fits
+      </span>
+
+    </div>
+
+
+    {/* Mobile Heading */}
+    <h2 className="font-serif text-[36px] font-normal leading-[0.9] tracking-[-0.04em] text-neutral-950">
+      Shop by
+      <br />
+      Sub-Category.
+    </h2>
+
+
+    {/* Mobile Subtitle */}
+    <p className="mt-3 font-serif text-[14px] text-neutral-500">
+      Four distinct collections. One attitude.
+    </p>
+
+
+    {/* ================================================================
+        MOBILE CATEGORY PILLS
+    ================================================================= */}
+
+    <div className="mt-5 flex gap-2 overflow-x-auto pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+
+      {/* ALL */}
+      <Link
+        href="/shop"
+        className="
+          shrink-0
+          rounded-full
+          bg-neutral-950
+          px-4
+          py-2
+          text-[7px]
+          font-bold
+          uppercase
+          tracking-[0.14em]
+          text-white
+        "
+      >
+        All
+      </Link>
+
+
+      {/* SUPREME */}
+      <Link
+        href="/shop?category=supreme-edition"
+        className="
+          shrink-0
+          rounded-full
+          bg-white
+          px-4
+          py-2
+          text-[7px]
+          font-semibold
+          uppercase
+          tracking-[0.12em]
+          text-neutral-700
+        "
+      >
+        Supreme Edition
+      </Link>
+
+
+      {/* EPIC THREAD */}
+      <Link
+        href="/shop?category=epic-thread"
+        className="
+          shrink-0
+          rounded-full
+          bg-white
+          px-4
+          py-2
+          text-[7px]
+          font-semibold
+          uppercase
+          tracking-[0.12em]
+          text-neutral-700
+        "
+      >
+        Epic Thread
+      </Link>
+
+
+      {/* PREMIUM */}
+      <Link
+        href="/shop?category=ardenby-premium"
+        className="
+          shrink-0
+          rounded-full
+          bg-white
+          px-4
+          py-2
+          text-[7px]
+          font-semibold
+          uppercase
+          tracking-[0.12em]
+          text-neutral-700
+        "
+      >
+        Premium
+      </Link>
+
+    </div>
+
+  </div>
+
+
+  {/* ================================================================
+      DESKTOP — FOUR COLLECTION CARDS
+  ================================================================= */}
+
+  <div className="hidden grid-cols-4 gap-4 lg:grid">
+
+    {categories.slice(0, 4).map((cat, index) => {
+
+      const catProduct = products.find(
+        (p) => p.category === cat.slug
+      );
+
+
+      const productImage =
+        catProduct?.images?.[0] ||
+        "https://images.unsplash.com/photo-1521572267360-ee0c2909d518?q=80&w=1000&auto=format&fit=crop";
+
+
+      const cardData = [
+        {
+          top: "240 GSM",
+          label: "HEAVYWEIGHT OVERSIZED DROPS",
+          description: "Bold silhouettes. Timeless essentials.",
+          position: "object-center",
+        },
+
+        {
+          top: "GRAPHIC TEES",
+          label: "GRAPHIC & PRINTED TEES",
+          description: "Premium prints. Bolder stories.",
+          position: "object-center",
+        },
+
+        {
+          top: "EVERYDAY LUXURY",
+          label: "LONG-STAPLE COTTON ESSENTIALS",
+          description: "Everyday luxury. Elevated basics.",
+          position: "object-center",
+        },
+
+        {
+          top: "BOLD PRINTS",
+          label: "STATEMENT PIECES",
+          description: "No limits. Just expression.",
+          position: "object-center",
+        },
+      ][index];
+
+
+      return (
+        <motion.div
+          key={cat.slug}
+          initial={{
+            opacity: 0,
+            y: 18,
+          }}
+          whileInView={{
+            opacity: 1,
+            y: 0,
+          }}
+          viewport={{
+            once: true,
+            amount: 0.15,
+          }}
+          transition={{
+            duration: 0.55,
+            delay: index * 0.06,
+            ease: [0.22, 1, 0.36, 1],
+          }}
+        >
+
+          <Link
+            href={`/shop?category=${cat.slug}`}
+            className="
+              group
+              relative
+              block
+              aspect-[0.69]
+              w-full
+              overflow-hidden
+              rounded-[14px]
+              bg-neutral-200
+            "
+          >
+
+            {/* ======================================================
+                DESKTOP IMAGE
+            ======================================================= */}
+
+            <img
+              src={productImage}
+              alt={cat.name}
+              className={`
+                absolute
+                inset-0
+                h-full
+                w-full
+                object-cover
+                ${cardData.position}
+                transition-transform
+                duration-700
+                ease-out
+                group-hover:scale-[1.035]
+              `}
+            />
+
+
+            {/* ======================================================
+                TOP IMAGE GRADIENT
+            ======================================================= */}
+
+            <div
+              className="
+                pointer-events-none
+                absolute
+                inset-x-0
+                top-0
+                h-32
+                bg-gradient-to-b
+                from-black/20
+                to-transparent
+              "
+            />
+
+
+            {/* ======================================================
+                BOTTOM IMAGE GRADIENT
+            ======================================================= */}
+
+            <div
+              className="
+                pointer-events-none
+                absolute
+                inset-x-0
+                bottom-0
+                h-[60%]
+                bg-gradient-to-t
+                from-black/[0.94]
+                via-black/50
+                to-transparent
+              "
+            />
+
+
+            {/* ======================================================
+                TOP META
+            ======================================================= */}
+
+            <div
+              className="
+                absolute
+                inset-x-0
+                top-0
+                z-10
+                flex
+                items-center
+                justify-between
+                p-5
+              "
+            >
+
+              <div className="flex items-center gap-3 text-white">
+
+                <span className="font-mono text-[10px] tracking-[0.18em]">
+                  0{index + 1}
+                </span>
+
+                <span className="h-px w-7 bg-white/70" />
+
+              </div>
+
+
+              <span className="text-[7px] font-semibold uppercase tracking-[0.18em] text-white">
+                {cardData.top}
+              </span>
+
+            </div>
+
+
+            {/* ======================================================
+                DESKTOP CENTER HOVER ARROW
+            ======================================================= */}
+
+            <div
+              className="
+                absolute
+                right-5
+                top-1/2
+                z-20
+                hidden
+                h-10
+                w-10
+                -translate-y-1/2
+                items-center
+                justify-center
+                rounded-full
+                border
+                border-white/60
+                bg-white/10
+                text-white
+                opacity-0
+                backdrop-blur-sm
+                transition-all
+                duration-500
+                group-hover:opacity-100
+                lg:flex
+              "
+            >
+
+              <ArrowUpRight className="h-4 w-4" />
+
+            </div>
+
+
+            {/* ======================================================
+                DESKTOP BOTTOM CONTENT
+            ======================================================= */}
+
+            <div
+              className="
+                absolute
+                inset-x-0
+                bottom-0
+                z-10
+                p-5
+              "
+            >
+
+              {/* Label */}
+              <div className="mb-2 flex items-center gap-2">
+
+                <span className="h-px w-5 bg-white/80" />
+
+                <span className="text-[7px] font-bold uppercase tracking-[0.19em] text-white">
+                  {cardData.label}
+                </span>
+
+              </div>
+
+
+              {/* Title */}
+              <h3 className="font-serif text-[28px] font-normal leading-none tracking-[-0.025em] text-white">
+                {cat.name}
+              </h3>
+
+
+              {/* Description */}
+              <p className="mt-2 max-w-[190px] text-[10px] leading-[1.45] text-white/80">
+                {cardData.description}
+              </p>
+
+
+              {/* Divider */}
+              <div className="my-4 border-t border-white/25" />
+
+
+              {/* Action */}
+              <div className="flex items-center justify-between">
+
+                <span className="text-[7px] font-bold uppercase tracking-[0.2em] text-white">
+                  Explore
+                </span>
+
+
+                <span
+                  className="
+                    flex
+                    h-10
+                    w-10
+                    items-center
+                    justify-center
+                    rounded-full
+                    border
+                    border-white/70
+                    text-white
+                    transition-all
+                    duration-300
+                    group-hover:bg-white
+                    group-hover:text-neutral-950
+                  "
+                >
+
+                  <ArrowRight className="h-4 w-4" />
+
+                </span>
+
+              </div>
+
+            </div>
+
+          </Link>
+
+        </motion.div>
+      );
+    })}
+
+  </div>
+
+
+  {/* ================================================================
+      MOBILE — FOUR HORIZONTAL EDITORIAL CARDS
+  ================================================================= */}
+
+  <div className="flex flex-col gap-3 lg:hidden">
+
+    {categories.slice(0, 4).map((cat, index) => {
+
+      const catProduct = products.find(
+        (p) => p.category === cat.slug
+      );
+
+
+      const productImage =
+        catProduct?.images?.[0] ||
+        "https://images.unsplash.com/photo-1521572267360-ee0c2909d518?q=80&w=1000&auto=format&fit=crop";
+
+
+      /* --------------------------------------------------------------
+          IMPORTANT:
+          Different object positions prevent heads/faces from being
+          unnecessarily pushed outside the mobile crop.
+      -------------------------------------------------------------- */
+
+      const cardData = [
+        {
+          top: "240 GSM",
+          label: "HEAVYWEIGHT OVERSIZED DROPS",
+          description: "Bold silhouettes. Timeless essentials.",
+          position: "object-[center_18%]",
+        },
+
+        {
+          top: "GRAPHIC TEES",
+          label: "GRAPHIC & PRINTED TEES",
+          description: "Premium prints. Bolder stories.",
+          position: "object-[center_18%]",
+        },
+
+        {
+          top: "EVERYDAY LUXURY",
+          label: "LONG-STAPLE COTTON ESSENTIALS",
+          description: "Everyday luxury. Elevated basics.",
+          position: "object-[center_18%]",
+        },
+
+        {
+          top: "BOLD PRINTS",
+          label: "STATEMENT PIECES",
+          description: "No limits. Just expression.",
+          position: "object-[center_15%]",
+        },
+      ][index];
+
+
+      return (
+        <motion.div
+          key={cat.slug}
+          initial={{
+            opacity: 0,
+            y: 12,
+          }}
+          whileInView={{
+            opacity: 1,
+            y: 0,
+          }}
+          viewport={{
+            once: true,
+            amount: 0.15,
+          }}
+          transition={{
+            duration: 0.45,
+            delay: index * 0.05,
+            ease: [0.22, 1, 0.36, 1],
+          }}
+        >
+
+          <Link
+            href={`/shop?category=${cat.slug}`}
+            className="
+              group
+              relative
+              block
+              h-[158px]
+              w-full
+              overflow-hidden
+              rounded-[14px]
+              bg-neutral-900
+              sm:h-[175px]
+            "
+          >
+
+            {/* ======================================================
+                MOBILE SINGLE IMAGE
+            ======================================================= */}
+
+            <img
+              src={productImage}
+              alt={cat.name}
+              className={`
+                absolute
+                inset-0
+                h-full
+                w-full
+                object-cover
+                ${cardData.position}
+                transition-transform
+                duration-700
+                ease-out
+                group-hover:scale-[1.025]
+              `}
+            />
+
+
+            {/* ======================================================
+                MOBILE LEFT GRADIENT
+            ======================================================= */}
+
+            <div
+              className="
+                pointer-events-none
+                absolute
+                inset-0
+                bg-gradient-to-r
+                from-black/75
+                via-black/30
+                to-transparent
+              "
+            />
+
+
+            {/* ======================================================
+                MOBILE BOTTOM GRADIENT
+            ======================================================= */}
+
+            <div
+              className="
+                pointer-events-none
+                absolute
+                inset-x-0
+                bottom-0
+                h-24
+                bg-gradient-to-t
+                from-black/75
+                to-transparent
+              "
+            />
+
+
+            {/* ======================================================
+                MOBILE TOP META
+            ======================================================= */}
+
+            <div
+              className="
+                absolute
+                inset-x-0
+                top-0
+                z-10
+                flex
+                items-center
+                justify-between
+                px-4
+                py-3.5
+              "
+            >
+
+              <div className="flex items-center gap-2.5 text-white">
+
+                <span className="font-mono text-[8px] tracking-[0.18em]">
+                  0{index + 1}
+                </span>
+
+                <span className="h-px w-5 bg-white/70" />
+
+              </div>
+
+
+              <span className="text-[6px] font-semibold uppercase tracking-[0.15em] text-white">
+                {cardData.top}
+              </span>
+
+            </div>
+
+
+            {/* ======================================================
+                MOBILE CONTENT
+            ======================================================= */}
+
+            <div
+              className="
+                absolute
+                bottom-0
+                left-0
+                z-10
+                w-full
+                px-4
+                pb-3.5
+                pr-16
+              "
+            >
+
+              {/* Label */}
+              <div className="mb-1.5 flex items-center gap-1.5">
+
+                <span className="h-px w-4 bg-white/70" />
+
+                <span className="text-[6px] font-bold uppercase tracking-[0.17em] text-white">
+                  {cardData.label}
+                </span>
+
+              </div>
+
+
+              {/* Title */}
+              <h3 className="font-serif text-[22px] font-normal leading-none tracking-[-0.025em] text-white">
+                {cat.name}
+              </h3>
+
+
+              {/* Description */}
+              <p className="mt-1.5 max-w-[210px] text-[8px] leading-3.5 text-white/75">
+                {cardData.description}
+              </p>
+
+
+              {/* Explore */}
+              <div className="mt-2.5 flex items-center gap-1.5">
+
+                <span className="text-[6px] font-bold uppercase tracking-[0.18em] text-white">
+                  Explore
+                </span>
+
+                <ArrowRight className="h-2.5 w-2.5 text-white" />
+
+              </div>
+
+            </div>
+
+
+            {/* ======================================================
+                MOBILE ROUND ARROW
+            ======================================================= */}
+
+            <span
+              className="
+                absolute
+                bottom-3.5
+                right-4
+                z-20
+                flex
+                h-9
+                w-9
+                items-center
+                justify-center
+                rounded-full
+                bg-white
+                text-neutral-950
+                shadow-lg
+                transition-transform
+                duration-300
+                group-active:scale-95
+              "
+            >
+
+              <ArrowRight className="h-3.5 w-3.5" />
+
+            </span>
+
+          </Link>
+
+        </motion.div>
+      );
+    })}
+
+  </div>
+
+
+  {/* ================================================================
+      MOBILE EXPLORE CTA
+  ================================================================= */}
+
+  <Link
+    href="/shop"
+    className="
+      group
+      mt-4
+      flex
+      h-12
+      w-full
+      items-center
+      justify-center
+      gap-3
+      rounded-full 
+      bg-neutral-950
+      text-[8px]
+      font-bold
+      uppercase
+      tracking-[0.2em]
+      text-white
+      transition-colors
+      duration-300
+      hover:bg-neutral-800
+      lg:hidden
+    "
+  >
+
+    <span>
+      Explore All Categories
+    </span>
+
+    <ArrowRight
+      className="
+        h-3.5
+        w-3.5
+        transition-transform
+        duration-300
+        group-hover:translate-x-1
+      "
+    />
+
+  </Link>
+
+
+  {/* ================================================================
+      DESKTOP TRUST STRIP
+  ================================================================= */}
+
+
+
+
+  {/* ================================================================
+      MOBILE BENEFITS
+  ================================================================= */}
+
+  
+</section>
+     
+    
 
       {/* ================= BEST SELLERS ================= */}
-      <section className="w-full px-3 pb-8 sm:px-6 lg:px-10 lg:pb-14">
-        <div className="mb-6 flex items-end justify-between border-b border-black/10 pb-4">
-          <div>
-            <span className="text-[8.5px] font-bold uppercase tracking-[0.25em] text-neutral-500 sm:text-[9px]">
-              High Demand
-            </span>
-            <h2 className="mt-1 font-serif text-2xl font-normal tracking-tight sm:text-4xl">
-              Best Sellers
-            </h2>
-          </div>
-          <Link
-            href="/shop"
-            className="group hidden items-center gap-1.5 text-[9.5px] font-bold uppercase tracking-[0.2em] text-neutral-900 hover:text-neutral-600 sm:flex"
-          >
-            Explore All Fits
-            <ArrowUpRight className="h-3.5 w-3.5 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
-          </Link>
+     <section className="w-full bg-[#f8f7f3] px-3 pb-10 pt-12 sm:px-6 sm:pb-14 sm:pt-16 lg:px-10 lg:pb-16 lg:pt-20">
+  <div className="mx-auto w-full max-w-[1440px]">
+
+    {/* ================= HEADER ================= */}
+    <div className="mb-7 flex items-end justify-between border-b border-black/10 pb-5 sm:mb-9">
+      <div>
+        <div className="flex items-center gap-3">
+          <span className="text-[8.5px] font-semibold uppercase tracking-[0.28em] text-neutral-500 sm:text-[9px]">
+            Customer Favorites
+          </span>
+
+          <span className="hidden h-px w-8 bg-neutral-400 sm:block" />
         </div>
 
-        <div className="grid w-full grid-cols-2 gap-x-2.5 gap-y-6 sm:gap-x-4 lg:grid-cols-4 lg:gap-x-5 lg:gap-y-10">
-          {bestSellers.map((product, index) => (
-            <ProductCard key={product.id} product={product} index={index} />
-          ))}
-        </div>
-      </section>
+        <h2 className="mt-1 font-serif text-[32px] font-normal leading-[0.95] tracking-[-0.035em] text-[#111] sm:text-[42px] lg:text-[48px]">
+          Best Sellers
+        </h2>
+
+        <p className="mt-3 hidden max-w-[420px] text-[11px] leading-5 text-neutral-500 sm:block">
+          Most loved. Most worn. Timeless pieces that define ARDENBY.
+        </p>
+      </div>
+
+      {/* DESKTOP VIEW ALL */}
+      <Link
+        href="/shop"
+        className="group hidden items-center gap-2 border-b border-black pb-1.5 text-[9.5px] font-semibold uppercase tracking-[0.2em] text-neutral-900 transition-colors hover:text-neutral-500 sm:flex"
+      >
+        Explore All Fits
+
+        <ArrowUpRight
+          className="h-3.5 w-3.5 transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
+        />
+      </Link>
+    </div>
+
+    {/* ================= PRODUCTS ================= */}
+    <div className="grid w-full grid-cols-2 gap-x-2.5 gap-y-8 sm:gap-x-4 sm:gap-y-10 lg:grid-cols-4 lg:gap-x-5 lg:gap-y-10">
+      {bestSellers.map((product, index) => (
+        <ProductCard
+          key={product.id}
+          product={product}
+          index={index}
+        />
+      ))}
+    </div>
+
+    {/* ================= MOBILE VIEW ALL ================= */}
+    <div className="mt-9 flex justify-center sm:hidden">
+      <Link
+        href="/shop"
+        className="flex items-center gap-2 border-b border-black pb-1.5 text-[9px] font-semibold uppercase tracking-[0.18em] text-neutral-900"
+      >
+        View All Best Sellers
+
+        <ArrowUpRight className="h-3.5 w-3.5" />
+      </Link>
+    </div>
+
+  </div>
+</section>
 
       {/* ================= NEW ARRIVALS ================= */}
       <section className="w-full px-3 py-6 sm:px-6 lg:px-10 lg:py-10">
-        <div className="w-full rounded-3xl border border-black/10 bg-[#EFECE4] p-4 sm:p-8 lg:p-10">
-          <div className="mb-6 flex flex-col justify-between gap-4 border-b border-black/10 pb-5 md:flex-row md:items-end">
-            <div>
-              <span className="inline-flex items-center gap-1.5 text-[8.5px] font-bold uppercase tracking-[0.25em] text-neutral-600 sm:text-[9px]">
-                <SlidersHorizontal className="h-3 w-3" />
-                Fresh Drops • SS26
-              </span>
-              <h2 className="mt-0.5 font-serif text-2xl font-normal tracking-tight text-neutral-950 sm:text-4xl">
-                New Arrivals
-              </h2>
-            </div>
+  <div className="relative w-full overflow-hidden rounded-[28px] border border-black/10 bg-[#EFECE4] p-4 shadow-[0_12px_40px_rgba(0,0,0,0.06)] sm:p-7 lg:p-10">
 
-            <div className="flex items-center gap-2 overflow-x-auto pb-1 scrollbar-none">
-              {[
-                { id: "all", label: "All Fits" },
-                { id: "supreme-edition", label: "Supreme Edition" },
-                { id: "epic-thread", label: "Epic Thread" },
-                { id: "ardenby-premium", label: "Ardenby Premium" },
-                { id: "the-print-club", label: "Print Club" },
-              ].map((tab) => (
+    {/* Subtle background detail */}
+    <div className="pointer-events-none absolute -right-24 -top-24 h-72 w-72 rounded-full bg-white/30 blur-3xl" />
+    <div className="pointer-events-none absolute -bottom-24 -left-24 h-72 w-72 rounded-full bg-black/[0.025] blur-3xl" />
+
+    {/* ================= HEADER ================= */}
+    <div className="relative z-10 mb-7 border-b border-black/10 pb-6 sm:mb-8">
+      <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
+
+        {/* Heading */}
+        <div className="min-w-0">
+          <div className="mb-2 flex items-center gap-2">
+            <span className="flex h-5 w-5 items-center justify-center rounded-full border border-black/10 bg-white/60">
+              <SlidersHorizontal className="h-2.5 w-2.5 text-neutral-700" />
+            </span>
+
+            <span className="text-[8px] font-semibold uppercase tracking-[0.3em] text-neutral-500 sm:text-[9px]">
+              Fresh Drops • SS26
+            </span>
+          </div>
+
+          <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
+            <h2 className="font-serif text-[30px] font-normal leading-none tracking-[-0.025em] text-neutral-950 sm:text-[40px] lg:text-[46px]">
+              New Arrivals
+            </h2>
+
+            {/* Dynamic count */}
+            <span className="text-[9px] font-medium uppercase tracking-[0.2em] text-neutral-400">
+              {filteredNewArrivals.length} Pieces
+            </span>
+          </div>
+
+          <p className="mt-3 max-w-md text-[10px] leading-5 text-neutral-500 sm:text-[11px]">
+            Discover the latest pieces added to the ARDENBY collection.
+          </p>
+        </div>
+
+        {/* ================= FILTERS ================= */}
+        <div className="w-full lg:w-auto lg:max-w-[620px]">
+          <div className="scrollbar-none flex gap-1.5 overflow-x-auto pb-1">
+
+            {[
+              { id: "all", label: "All Fits" },
+              { id: "supreme-edition", label: "Supreme Edition" },
+              { id: "epic-thread", label: "Epic Thread" },
+              { id: "ardenby-premium", label: "Ardenby Premium" },
+              { id: "the-print-club", label: "Print Club" },
+            ].map((tab) => {
+              const isActive = selectedSubCat === tab.id;
+
+              return (
                 <button
                   key={tab.id}
+                  type="button"
                   onClick={() => setSelectedSubCat(tab.id)}
-                  className={`shrink-0 rounded-full px-3.5 py-1.5 text-[8px] font-bold uppercase tracking-[0.18em] transition-all duration-300 sm:px-4 sm:py-2 sm:text-[8.5px] ${
-                    selectedSubCat === tab.id
-                      ? "bg-neutral-950 text-white shadow-md"
-                      : "bg-white/80 text-neutral-700 hover:bg-white"
-                  }`}
+                  className={`
+                    group relative shrink-0 overflow-hidden
+                    rounded-full border px-4 py-2
+                    text-[8px] font-semibold uppercase
+                    tracking-[0.17em]
+                    transition-all duration-300
+                    sm:px-5 sm:py-2.5
+                    sm:text-[8.5px]
+                    ${
+                      isActive
+                        ? "border-neutral-950 bg-neutral-950 text-white shadow-[0_5px_18px_rgba(0,0,0,0.18)]"
+                        : "border-black/10 bg-white/70 text-neutral-600 hover:border-black/20 hover:bg-white hover:text-neutral-950 hover:shadow-sm"
+                    }
+                  `}
                 >
                   {tab.label}
-                </button>
-              ))}
-            </div>
-          </div>
 
-          <div className="grid w-full grid-cols-2 gap-x-2.5 gap-y-6 sm:gap-x-4 lg:grid-cols-4 lg:gap-x-5">
-            {filteredNewArrivals.map((product, index) => (
-              <ProductCard key={product.id} product={product} index={index} />
-            ))}
+                  {/* Active indicator */}
+                  {isActive && (
+                    <span className="absolute bottom-0 left-1/2 h-[2px] w-5 -translate-x-1/2 rounded-full bg-white/70" />
+                  )}
+                </button>
+              );
+            })}
           </div>
         </div>
-      </section>
+      </div>
+    </div>
+
+    {/* ================= PRODUCTS ================= */}
+    {filteredNewArrivals.length > 0 ? (
+      <div className="relative z-10 grid w-full grid-cols-2 gap-x-2.5 gap-y-7 sm:gap-x-4 sm:gap-y-9 lg:grid-cols-4 lg:gap-x-5 lg:gap-y-10">
+        {filteredNewArrivals.map((product, index) => (
+          <div
+            key={product.id}
+            className="group min-w-0"
+          >
+            <ProductCard
+              product={product}
+              index={index}
+            />
+          </div>
+        ))}
+      </div>
+    ) : (
+      /* ================= EMPTY STATE ================= */
+      <div className="relative z-10 flex min-h-[280px] flex-col items-center justify-center px-5 text-center">
+        <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-full border border-black/10 bg-white/60 shadow-sm">
+          <SlidersHorizontal className="h-4 w-4 text-neutral-500" />
+        </div>
+
+        <h3 className="font-serif text-xl text-neutral-950">
+          No pieces found
+        </h3>
+
+        <p className="mt-2 max-w-xs text-[10px] leading-5 text-neutral-500">
+          We couldn't find any new arrivals in this collection.
+        </p>
+
+        <button
+          type="button"
+          onClick={() => setSelectedSubCat("all")}
+          className="mt-5 rounded-full bg-neutral-950 px-5 py-2.5 text-[8px] font-semibold uppercase tracking-[0.2em] text-white transition-all duration-300 hover:-translate-y-0.5 hover:bg-neutral-800 hover:shadow-lg"
+        >
+          View All Pieces
+        </button>
+      </div>
+    )}
+
+    {/* ================= BOTTOM DETAIL ================= */}
+    {filteredNewArrivals.length > 0 && (
+      <div className="relative z-10 mt-8 flex items-center gap-3 border-t border-black/10 pt-5 sm:mt-10">
+        <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-neutral-950" />
+
+        <p className="text-[8px] font-medium uppercase tracking-[0.25em] text-neutral-400">
+          Curated for the new season
+        </p>
+
+        <span className="h-px flex-1 bg-black/10" />
+
+        <span className="text-[8px] font-medium uppercase tracking-[0.2em] text-neutral-400">
+          ARDENBY
+        </span>
+      </div>
+    )}
+  </div>
+</section>
 
       {/* ================= TRENDING NOW ================= */}
-      <section className="w-full px-3 py-8 sm:px-6 lg:px-10 lg:py-14">
-        <div className="mb-6 text-center sm:mb-8">
-          <span className="text-[8.5px] font-bold uppercase tracking-[0.28em] text-neutral-400 sm:text-[9px]">
+      {/* ================================================================
+    TRENDING NOW
+================================================================ */}
+
+<section className="relative w-full overflow-hidden bg-[#F6F5F0] px-3 py-14 sm:px-6 sm:py-18 lg:px-10 lg:py-24">
+  <div className="mx-auto w-full max-w-[1440px]">
+
+    {/* ================= HEADER ================= */}
+    <motion.div
+      initial={{ opacity: 0, y: 18 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, amount: 0.2 }}
+      transition={{ duration: 0.6, ease }}
+      className="mb-8 flex items-end justify-between border-b border-black/10 pb-5 sm:mb-10 sm:pb-6"
+    >
+      <div>
+        <div className="flex items-center gap-3">
+          <span className="h-px w-7 bg-neutral-400" />
+
+          <span className="text-[8px] font-semibold uppercase tracking-[0.28em] text-neutral-500 sm:text-[9px]">
             Community Top Picks
           </span>
-          <h2 className="mt-1 font-serif text-2xl font-normal tracking-[-0.035em] sm:text-4xl">
-            Trending Now
+        </div>
+
+        <h2 className="mt-2 font-serif text-[32px] font-normal leading-[0.95] tracking-[-0.04em] text-neutral-950 sm:text-[42px] lg:text-[52px]">
+          Trending Now
+        </h2>
+
+        <p className="mt-3 max-w-[420px] text-[10px] leading-5 text-neutral-500 sm:text-[11px]">
+          Discover the pieces everyone is talking about this season.
+        </p>
+      </div>
+
+      {/* DESKTOP CTA */}
+      <Link
+        href="/shop"
+        className="group hidden items-center gap-2 border-b border-neutral-900 pb-1 text-[9px] font-bold uppercase tracking-[0.2em] text-neutral-900 sm:flex"
+      >
+        Discover Trending
+
+        <ArrowUpRight
+          className="h-3.5 w-3.5 transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
+        />
+      </Link>
+    </motion.div>
+
+    {/* ================= PRODUCT GRID ================= */}
+    <div className="grid w-full grid-cols-2 gap-x-2.5 gap-y-9 sm:gap-x-4 sm:gap-y-12 lg:grid-cols-4 lg:gap-x-5">
+
+      {trending.map((product, index) => (
+        <motion.div
+          key={product.id}
+          initial={{
+            opacity: 0,
+            y: 25,
+          }}
+          whileInView={{
+            opacity: 1,
+            y: 0,
+          }}
+          viewport={{
+            once: true,
+            amount: 0.12,
+          }}
+          transition={{
+            duration: 0.55,
+            delay: index * 0.07,
+            ease,
+          }}
+          className="group min-w-0"
+        >
+          <ProductCard
+            product={product}
+            index={index}
+          />
+        </motion.div>
+      ))}
+
+    </div>
+
+    {/* ================= MOBILE CTA ================= */}
+    <div className="mt-9 flex justify-center sm:hidden">
+      <Link
+        href="/shop"
+        className="group flex items-center gap-2 border-b border-neutral-900 pb-1.5 text-[8.5px] font-bold uppercase tracking-[0.2em] text-neutral-900"
+      >
+        Discover Trending
+
+        <ArrowUpRight
+          className="h-3.5 w-3.5 transition-transform duration-300 group-active:-translate-y-0.5 group-active:translate-x-0.5"
+        />
+      </Link>
+    </div>
+
+  </div>
+</section>
+
+
+{/* ================================================================
+    BRAND PHILOSOPHY
+================================================================ */}
+
+<section className="w-full px-3 py-8 sm:px-6 sm:py-12 lg:px-10 lg:py-16">
+  <div className="relative mx-auto w-full max-w-[1440px] overflow-hidden bg-[#101010] px-5 py-10 text-[#F8F7F3] sm:px-8 sm:py-14 lg:px-12 lg:py-20">
+
+    {/* SUBTLE BACKGROUND DETAIL */}
+    <div
+      aria-hidden="true"
+      className="pointer-events-none absolute -right-32 -top-32 h-[420px] w-[420px] rounded-full border border-white/[0.04]"
+    />
+
+    <div
+      aria-hidden="true"
+      className="pointer-events-none absolute -bottom-48 -left-48 h-[500px] w-[500px] rounded-full border border-white/[0.035]"
+    />
+
+    <div className="relative z-10">
+
+      {/* ================= TOP HEADER ================= */}
+      <motion.div
+        initial={{ opacity: 0, y: 18 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, amount: 0.2 }}
+        transition={{ duration: 0.6, ease }}
+        className="grid gap-8 border-b border-white/10 pb-10 lg:grid-cols-[0.8fr_1.2fr] lg:gap-16 lg:pb-14"
+      >
+
+        {/* LEFT */}
+        <div>
+          <div className="flex items-center gap-3">
+            <span className="h-px w-7 bg-amber-400/70" />
+
+            <span className="text-[8px] font-semibold uppercase tracking-[0.3em] text-amber-400 sm:text-[9px]">
+              Core Standard
+            </span>
+          </div>
+
+          <h2 className="mt-3 max-w-[500px] font-serif text-[32px] font-normal leading-[0.98] tracking-[-0.045em] text-[#F8F7F3] sm:text-[42px] lg:text-[54px]">
+            Crafted with precision.
+            <br />
+            Built for identity.
           </h2>
         </div>
 
-        <div className="grid w-full grid-cols-2 gap-x-2.5 gap-y-6 sm:gap-x-4 lg:grid-cols-4 lg:gap-x-5">
-          {trending.map((product, index) => (
-            <ProductCard key={product.id} product={product} index={index} />
-          ))}
-        </div>
-      </section>
-
-      {/* ================= BRAND PHILOSOPHY ================= */}
-      <section className="w-full px-3 pb-8 sm:px-6 lg:px-10 lg:pb-14">
-        <div className="w-full rounded-3xl bg-[#0F0F0F] px-5 py-10 text-[#F8F7F3] sm:px-10 lg:px-12 lg:py-16">
-          <div className="grid gap-8 lg:grid-cols-[0.8fr_1.2fr] lg:gap-14">
-            <div>
-              <span className="text-[8.5px] font-bold uppercase tracking-[0.28em] text-amber-400 sm:text-[9.5px]">
-                Core Standard
-              </span>
-              <h2 className="mt-2 font-serif text-2xl font-normal leading-[1.08] tracking-[-0.04em] sm:mt-3 sm:text-4xl lg:text-5xl">
-                Crafted with precision. <br /> Built for identity.
-              </h2>
-            </div>
-
-            <div className="grid gap-4 sm:grid-cols-3 sm:gap-5">
-              {philosophy.map((item) => (
-                <div
-                  key={item.num}
-                  className="rounded-2xl border border-white/10 bg-white/5 p-5 backdrop-blur-sm transition-colors hover:border-white/20 sm:p-6"
-                >
-                  <span className="font-serif text-xl font-light text-amber-400 sm:text-2xl">
-                    {item.num}
-                  </span>
-                  <h3 className="mt-2 font-serif text-lg font-normal sm:mt-3 sm:text-xl">
-                    {item.title}
-                  </h3>
-                  <p className="mt-1.5 text-xs font-light leading-5 text-neutral-400 sm:mt-2">
-                    {item.desc}
-                  </p>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* ================= REVIEWS ================= */}
-      <section className="w-full px-3 py-8 sm:px-6 lg:px-10 lg:py-14">
-        <div className="flex flex-col items-center text-center">
-          <span className="text-[8.5px] font-bold uppercase tracking-[0.28em] text-neutral-400 sm:text-[9.5px]">
-            Real Customer Reviews
-          </span>
-          <h2 className="mt-1 font-serif text-2xl font-normal tracking-[-0.035em] sm:text-4xl">
-            What The Fam Says
-          </h2>
-          <div className="mt-2.5 flex items-center gap-2">
-            <div className="flex gap-0.5 text-amber-500">
-              {[1, 2, 3, 4, 5].map((s) => (
-                <Star key={s} className="h-3.5 w-3.5 fill-current" />
-              ))}
-            </div>
-            <span className="text-[9px] font-bold uppercase tracking-[0.15em] text-neutral-600 sm:text-[10px]">
-              4.9 / 5 Rating (2,800+ Orders)
-            </span>
-          </div>
-        </div>
-
-        <div className="mt-8 grid w-full gap-4 md:grid-cols-3 sm:mt-10 sm:gap-5">
-          {reviews.map((review) => (
-            <div
-              key={review.name}
-              className="flex flex-col justify-between rounded-3xl border border-black/10 bg-white p-5 shadow-xs transition-all duration-300 hover:shadow-xl hover:-translate-y-1 sm:p-8"
-            >
-              <div>
-                <div className="flex gap-1 text-amber-400">
-                  {[...Array(review.rating)].map((_, i) => (
-                    <Star key={i} className="h-3 w-3 fill-current" />
-                  ))}
-                </div>
-                <p className="mt-3 font-serif text-sm leading-6 text-neutral-800 sm:mt-4 sm:text-base sm:leading-7">
-                  “{review.text}”
-                </p>
-              </div>
-
-              <div className="mt-5 flex items-center justify-between border-t border-black/5 pt-3.5 sm:mt-6 sm:pt-4">
-                <div className="flex items-center gap-3">
-                  <div className="flex h-7 w-7 items-center justify-center rounded-full bg-neutral-950 text-[10px] font-bold text-white sm:h-8 sm:w-8 sm:text-xs">
-                    {review.name.charAt(0)}
-                  </div>
-                  <div>
-                    <p className="text-[9px] font-bold uppercase tracking-[0.15em] sm:text-[9.5px]">
-                      {review.name}
-                    </p>
-                    <p className="text-[7.5px] uppercase tracking-[0.15em] text-emerald-600 font-semibold flex items-center gap-1 sm:text-[8px]">
-                      <Check className="h-2.5 w-2.5" />
-                      {review.tag}
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* ================= NEWSLETTER ================= */}
-      <section className="w-full px-3 pb-12 sm:px-6 lg:px-10">
-        <div className="relative w-full overflow-hidden rounded-3xl bg-[#080808] py-12 px-5 text-white text-center sm:py-20 sm:px-12">
-          <div className="relative z-10 mx-auto max-w-2xl">
-            <span className="rounded-full border border-amber-400/30 bg-amber-400/10 px-3.5 py-1 text-[8px] font-bold uppercase tracking-[0.22em] text-amber-300 sm:text-[8.5px]">
-              Exclusive Access
-            </span>
-            <h2 className="mt-3 font-serif text-3xl font-normal tracking-tight sm:mt-4 sm:text-5xl">
-              Join the ARDENBY Fam
-            </h2>
-            <p className="mt-2 text-xs font-light text-neutral-400 sm:mt-3 sm:text-sm">
-              Get early drop links, VIP discounts, and 10% off your inaugural order.
+        {/* RIGHT EDITORIAL COPY */}
+        <div className="flex items-end lg:justify-end">
+          <div className="max-w-[390px]">
+            <p className="text-[8px] font-semibold uppercase tracking-[0.24em] text-white/35">
+              The ARDENBY Standard
             </p>
 
-            {subscribed ? (
-              <div className="mt-6 inline-flex items-center gap-2 rounded-full bg-neutral-900 border border-neutral-800 px-5 py-3 text-xs text-neutral-200 sm:mt-8 sm:px-6 sm:py-3.5">
-                <Check className="h-4 w-4 text-emerald-400" />
-                You are on the list. Welcome to the family.
-              </div>
-            ) : (
-              <form
-                onSubmit={handleSubscribe}
-                className="mt-6 flex flex-col gap-2.5 sm:mt-8 sm:flex-row sm:items-center sm:justify-center sm:gap-3"
-              >
-                <div className="relative w-full max-w-md">
-                  <Mail className="absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-neutral-500" />
-                  <input
-                    type="email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    placeholder="Enter your email"
-                    required
-                    className="w-full rounded-full bg-neutral-900 border border-neutral-800 py-3 pl-11 pr-4 text-xs text-white placeholder-neutral-500 focus:border-neutral-400 focus:outline-none sm:py-3.5"
-                  />
-                </div>
-                <button
-                  type="submit"
-                  className="group inline-flex items-center justify-center gap-2 rounded-full bg-white px-7 py-3 text-[8.5px] font-bold uppercase tracking-[0.2em] text-black transition hover:bg-neutral-200 sm:py-3.5 sm:text-[9px]"
-                >
-                  Subscribe
-                  <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-1" />
-                </button>
-              </form>
-            )}
+            <p className="mt-4 font-serif text-[17px] leading-[1.45] text-white/75 sm:text-[20px]">
+              Every silhouette is engineered around quality, comfort and
+              individuality — without unnecessary compromise.
+            </p>
           </div>
         </div>
-      </section>
+
+      </motion.div>
+
+
+      {/* ================= PHILOSOPHY GRID ================= */}
+      <div className="grid sm:grid-cols-3">
+
+        {philosophy.map((item, index) => (
+          <motion.div
+            key={item.num}
+            initial={{
+              opacity: 0,
+              y: 20,
+            }}
+            whileInView={{
+              opacity: 1,
+              y: 0,
+            }}
+            viewport={{
+              once: true,
+              amount: 0.15,
+            }}
+            transition={{
+              duration: 0.55,
+              delay: index * 0.08,
+              ease,
+            }}
+            className={`
+              group
+              relative
+              py-7
+              sm:px-6
+              sm:py-9
+              lg:px-8
+              lg:py-11
+              ${
+                index !== philosophy.length - 1
+                  ? "border-b border-white/10 sm:border-b-0 sm:border-r"
+                  : ""
+              }
+            `}
+          >
+
+            {/* NUMBER */}
+            <div className="flex items-center justify-between">
+
+              <span className="font-mono text-[10px] tracking-[0.18em] text-amber-400 sm:text-[11px]">
+                {item.num}
+              </span>
+
+              <ArrowUpRight
+                className="
+                  h-3.5
+                  w-3.5
+                  text-white/20
+                  transition-all
+                  duration-300
+                  group-hover:-translate-y-0.5
+                  group-hover:translate-x-0.5
+                  group-hover:text-amber-400
+                "
+              />
+
+            </div>
+
+            {/* TITLE */}
+            <h3 className="mt-6 max-w-[250px] font-serif text-[20px] font-normal leading-[1.05] tracking-[-0.02em] text-white sm:text-[22px] lg:text-[25px]">
+              {item.title}
+            </h3>
+
+            {/* DESCRIPTION */}
+            <p className="mt-3 max-w-[300px] text-[10px] font-light leading-[1.7] text-white/45 sm:text-[11px]">
+              {item.desc}
+            </p>
+
+            {/* BOTTOM INDEX */}
+            <div className="mt-7 flex items-center gap-2">
+
+              <span className="h-px w-5 bg-white/15 transition-all duration-300 group-hover:w-9 group-hover:bg-amber-400/70" />
+
+              <span className="text-[7px] font-semibold uppercase tracking-[0.2em] text-white/25">
+                ARDENBY
+              </span>
+
+            </div>
+
+          </motion.div>
+        ))}
+
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+{/* ================================================================
+    REVIEWS
+================================================================ */}
+
+<section className="w-full bg-[#F8F7F3] px-3 py-14 sm:px-6 sm:py-18 lg:px-10 lg:py-24">
+  <div className="mx-auto w-full max-w-[1440px]">
+
+    {/* ================= HEADER ================= */}
+    <motion.div
+      initial={{ opacity: 0, y: 18 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, amount: 0.2 }}
+      transition={{ duration: 0.6, ease }}
+      className="text-center"
+    >
+
+      <div className="flex items-center justify-center gap-3">
+        <span className="h-px w-7 bg-neutral-300" />
+
+        <span className="text-[8px] font-semibold uppercase tracking-[0.28em] text-neutral-400 sm:text-[9px]">
+          Real Customer Reviews
+        </span>
+
+        <span className="h-px w-7 bg-neutral-300" />
+      </div>
+
+      <h2 className="mt-3 font-serif text-[32px] font-normal leading-none tracking-[-0.04em] text-neutral-950 sm:text-[42px] lg:text-[50px]">
+        What The Fam Says
+      </h2>
+
+      {/* RATING */}
+      <div className="mt-4 flex items-center justify-center gap-3">
+
+        <div className="flex gap-0.5 text-amber-500">
+          {[1, 2, 3, 4, 5].map((star) => (
+            <Star
+              key={star}
+              className="h-3 w-3 fill-current sm:h-3.5 sm:w-3.5"
+            />
+          ))}
+        </div>
+
+        <span className="h-3 w-px bg-neutral-300" />
+
+        <span className="text-[8px] font-semibold uppercase tracking-[0.15em] text-neutral-500 sm:text-[9px]">
+          4.9 / 5 Rating
+        </span>
+
+      </div>
+
+    </motion.div>
+
+
+    {/* ================= REVIEW GRID ================= */}
+    <div className="mt-9 grid gap-3 sm:mt-12 sm:gap-5 md:grid-cols-3">
+
+      {reviews.map((review, index) => (
+        <motion.article
+          key={review.name}
+          initial={{
+            opacity: 0,
+            y: 25,
+          }}
+          whileInView={{
+            opacity: 1,
+            y: 0,
+          }}
+          viewport={{
+            once: true,
+            amount: 0.15,
+          }}
+          transition={{
+            duration: 0.55,
+            delay: index * 0.08,
+            ease,
+          }}
+          className="
+            group
+            relative
+            flex
+            min-h-[270px]
+            flex-col
+            justify-between
+            overflow-hidden
+            border
+            border-black/10
+            bg-white
+            p-5
+            transition-all
+            duration-500
+            hover:-translate-y-1
+            hover:border-black/20
+            hover:shadow-[0_18px_50px_rgba(0,0,0,0.07)]
+            sm:min-h-[320px]
+            sm:p-7
+            lg:p-8
+          "
+        >
+
+          {/* QUOTE MARK */}
+          <span
+            aria-hidden="true"
+            className="
+              pointer-events-none
+              absolute
+              right-5
+              top-1
+              font-serif
+              text-[75px]
+              leading-none
+              text-black/[0.045]
+              transition-transform
+              duration-500
+              group-hover:translate-y-1
+              sm:right-7
+              sm:text-[90px]
+            "
+          >
+            “
+          </span>
+
+
+          {/* REVIEW CONTENT */}
+          <div className="relative z-10">
+
+            {/* STARS */}
+            <div className="flex gap-0.5 text-amber-500">
+              {[...Array(review.rating)].map((_, i) => (
+                <Star
+                  key={i}
+                  className="h-3 w-3 fill-current"
+                />
+              ))}
+            </div>
+
+            {/* REVIEW TEXT */}
+            <p className="mt-5 max-w-[360px] font-serif text-[15px] leading-[1.65] tracking-[-0.01em] text-neutral-800 sm:mt-6 sm:text-[17px] sm:leading-[1.7]">
+              “{review.text}”
+            </p>
+
+          </div>
+
+
+          {/* REVIEWER */}
+          <div className="relative z-10 mt-8 border-t border-black/8 pt-4">
+
+            <div className="flex items-center justify-between gap-3">
+
+              <div className="flex items-center gap-3">
+
+                {/* INITIAL */}
+                <div className="flex h-9 w-9 shrink-0 items-center justify-center bg-neutral-950 font-serif text-sm text-white sm:h-10 sm:w-10">
+                  {review.name.charAt(0)}
+                </div>
+
+                <div>
+
+                  <p className="text-[9px] font-bold uppercase tracking-[0.15em] text-neutral-900 sm:text-[10px]">
+                    {review.name}
+                  </p>
+
+                  <div className="mt-1 flex items-center gap-1.5">
+                    <Check className="h-2.5 w-2.5 text-emerald-600" />
+
+                    <span className="text-[7px] font-semibold uppercase tracking-[0.14em] text-emerald-600 sm:text-[8px]">
+                      {review.tag}
+                    </span>
+                  </div>
+
+                </div>
+
+              </div>
+
+              {/* REVIEW NUMBER */}
+              <span className="font-mono text-[8px] tracking-[0.18em] text-neutral-300">
+                0{index + 1}
+              </span>
+
+            </div>
+
+          </div>
+
+        </motion.article>
+      ))}
+
+    </div>
+
+
+    {/* ================= BOTTOM EDITORIAL LINE ================= */}
+    <motion.div
+      initial={{ opacity: 0 }}
+      whileInView={{ opacity: 1 }}
+      viewport={{ once: true }}
+      transition={{ duration: 0.8, delay: 0.2 }}
+      className="mt-10 flex items-center justify-center gap-3 sm:mt-12"
+    >
+      <span className="h-px w-10 bg-neutral-200" />
+
+      <span className="text-[7px] font-semibold uppercase tracking-[0.25em] text-neutral-400">
+        Worn by the community
+      </span>
+
+      <span className="h-px w-10 bg-neutral-200" />
+    </motion.div>
+
+  </div>
+</section>
+      {/* ================= NEWSLETTER ================= */}
+     
     </main>
   );
 }
