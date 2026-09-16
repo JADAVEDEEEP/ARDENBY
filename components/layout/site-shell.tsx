@@ -13,9 +13,10 @@ export function SiteShell({
 }) {
   const pathname = usePathname();
 
-  const isAdmin = pathname.startsWith('/admin');
+  const isPrivateArea =
+    pathname.startsWith('/admin') || pathname.startsWith('/superadmin');
 
-  if (isAdmin) {
+  if (isPrivateArea) {
     return <>{children}</>;
   }
 

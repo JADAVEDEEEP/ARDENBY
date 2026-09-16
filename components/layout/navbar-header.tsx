@@ -3,7 +3,13 @@
 import Link from 'next/link';
 import type { FormEvent } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
-import { Heart, Menu, Search, ShoppingBag, User } from 'lucide-react';
+import {
+  Heart,
+  Menu,
+  Search,
+  ShoppingBag,
+  User,
+} from 'lucide-react';
 
 import type { UserProfile } from './navbar';
 import { megaMenu, topNavItems } from './navbar-data';
@@ -22,6 +28,26 @@ type NavbarHeaderProps = {
   openCart: () => void;
 };
 
+// ---------------------------------------------------------------------------
+// Design tokens — ivory / charcoal / brass
+// ---------------------------------------------------------------------------
+const INK = '#1B1B1B';
+const IVORY = '#FAF8F3';
+const BRASS = '#A67C42';
+const STONE = '#7A7268';
+const HAIRLINE = '#E4DFD4';
+
+// Soft golden glow
+const GLOW_SOFT =
+  '0 0 0 1px rgba(166,124,66,0.16), 0 3px 14px rgba(166,124,66,0.14)';
+const GLOW_HOVER =
+  '0 0 0 1px rgba(166,124,66,0.30), 0 5px 20px rgba(166,124,66,0.22)';
+const GLOW_FOCUS =
+  '0 0 0 1.5px rgba(166,124,66,0.45), 0 7px 26px rgba(166,124,66,0.28)';
+
+const ICON_GLOW = '0 4px 16px rgba(166,124,66,0.22)';
+const SEARCH_RADIUS = '14px';
+
 export function NavbarHeader({
   setMobileOpen,
   megaOpen,
@@ -36,388 +62,287 @@ export function NavbarHeader({
   openCart,
 }: NavbarHeaderProps) {
   return (
-    <>
-      {/* ======================================================
+    <header
+      className="sticky top-0 z-40 border-b"
+      style={{ backgroundColor: IVORY, borderColor: HAIRLINE }}
+    >
+      <style jsx>{`
+        .ard-search {
+          box-shadow: ${GLOW_SOFT};
+          transition: box-shadow 0.3s ease;
+        }
+        .ard-search:hover {
+          box-shadow: ${GLOW_HOVER};
+        }
+        .ard-search:focus-within {
+          box-shadow: ${GLOW_FOCUS};
+        }
+        .ard-icon {
+          transition: box-shadow 0.3s ease, background-color 0.3s ease,
+            color 0.3s ease;
+        }
+        .ard-icon:hover {
+          box-shadow: ${ICON_GLOW};
+          background-color: rgba(166, 124, 66, 0.07);
+          color: ${BRASS};
+        }
+        .ard-icon:focus-visible {
+          outline: 2px solid ${BRASS};
+          outline-offset: 2px;
+        }
+      `}</style>
 
-          MAIN NAVBAR
-
+      {/* =====================================================
+          MAIN HEADER — brand left, search center (desktop only), icons right
       ====================================================== */}
 
+      <div className="mx-auto max-w-[1440px] px-4 sm:px-6">
+        <div className="flex min-h-[76px] lg:min-h-[88px] items-center gap-3 lg:gap-8">
 
+          {/* MOBILE MENU BUTTON */}
+          <button
+            type="button"
+            onClick={() => setMobileOpen(true)}
+            className="lg:hidden shrink-0 p-2 -ml-2 rounded-full transition-colors"
+            style={{ color: INK }}
+            aria-label="Open menu"
+          >
+            <Menu className="h-6 w-6" strokeWidth={1.5} />
+          </button>
 
-      <header className="sticky top-0 z-40 border-b border-neutral-200/70 bg-white shadow-sm">
-
-        <div className="mx-auto max-w-[1440px] px-4 sm:px-6">
-
-          <div className="flex h-14 items-center justify-between gap-4 lg:h-[60px]">
-
-
-
-            {/* Mobile Menu */}
-
-            <button
-
-              className="lg:hidden p-2 -ml-2 text-neutral-800"
-
-              onClick={() => setMobileOpen(true)}
-
-              aria-label="Open menu"
-
+          {/* BRAND LOGO */}
+          <Link
+            href="/"
+            className="group flex shrink-0 flex-col items-start leading-none select-none"
+          >
+            <span
+              className="text-[28px] sm:text-[34px] lg:text-[42px] font-bold uppercase tracking-[-0.055em] transition-transform duration-300 group-hover:translate-y-[-1px]"
+              style={{
+                color: INK,
+                fontFamily: 'Bodoni MT, Didot, Times New Roman, serif',
+              }}
             >
+              ARDENBY
+            </span>
 
-              <Menu className="h-6 w-6" />
+            <div className="mt-1 flex w-full items-center gap-1.5 sm:gap-2">
+              <span
+                className="text-[6.5px] sm:text-[7.5px] uppercase tracking-[0.32em] sm:tracking-[0.38em] whitespace-nowrap"
+                style={{ color: STONE }}
+              >
+                Wear Your Essence
+              </span>
+              <div
+                className="h-px flex-1"
+                style={{ backgroundColor: BRASS, opacity: 0.55 }}
+              />
+            </div>
+          </Link>
 
+          {/* DESKTOP SEARCH BAR (Hidden on mobile / tablet) */}
+         <div className="hidden lg:flex items-center justify-end flex-1">
+  <form
+    onSubmit={handleSearchSubmit}
+    className="w-full max-w-[220px]"
+  >
+    <div
+      className="relative flex items-center bg-[#f5f0eb] rounded-md border-2 border-[#8d6e63] transition-all hover:border-[#6d4c41]"
+    >
+      <input
+        type="text"
+        value={searchQuery}
+        onChange={(e) => setSearchQuery(e.target.value)}
+        placeholder='Try searching "T-Shirt"'
+        className="w-full h-[44px] pl-3.5 pr-10 bg-transparent text-[13px] font-medium outline-none text-[#4e342e] placeholder:text-[#8d6e63] placeholder:font-medium"
+      />
+      <button
+        type="submit"
+        aria-label="Search"
+        className="absolute right-1 top-1/2 -translate-y-1/2 h-[34px] w-[34px] flex items-center justify-center rounded-md text-[#6d4c41] hover:bg-[#ebdcd0] transition-colors outline-none"
+      >
+        <Search className="h-[16px] w-[16px]" strokeWidth={2.5} />
+      </button>
+    </div>
+  </form>
+</div>
+
+          {/* ACTION ICONS */}
+          <div className="ml-auto flex shrink-0 items-center gap-1 sm:gap-2">
+            <button
+              type="button"
+              onClick={handleOpenProfile}
+              aria-label={user ? 'My profile' : 'Login'}
+              title={user ? 'My profile' : 'Login'}
+              className="ard-icon group relative flex h-10 w-10 sm:h-11 sm:w-11 items-center justify-center rounded-full"
+              style={{ color: INK }}
+            >
+              <User className="h-[18px] w-[18px] sm:h-[20px] sm:w-[20px]" strokeWidth={1.5} />
+              <span
+                className="pointer-events-none absolute top-[48px] left-1/2 -translate-x-1/2 whitespace-nowrap px-2.5 py-1.5 text-[10px] font-medium text-white opacity-0 translate-y-1 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-200 z-50 hidden sm:block"
+                style={{ backgroundColor: INK }}
+              >
+                {user ? 'My Profile' : 'Login'}
+              </span>
             </button>
 
-
-
-            {/* Brand */}
-
             <Link
-
-              href="/"
-
-              className="flex items-center gap-2 select-none group flex-shrink-0"
-
+              href="/wishlist"
+              aria-label="Wishlist"
+              className="ard-icon relative flex h-10 w-10 sm:h-11 sm:w-11 items-center justify-center rounded-full"
+              style={{ color: INK }}
             >
-
-              <div className="flex flex-col leading-none">
-
+              <Heart className="h-[18px] w-[18px] sm:h-[20px] sm:w-[20px]" strokeWidth={1.5} />
+              {wishlistCount > 0 && (
                 <span
-
-                  className="text-2xl sm:text-3xl lg:text-4xl font-bold uppercase tracking-[-0.08em] text-transparent bg-clip-text bg-gradient-to-b from-black via-neutral-700 to-black transition-all duration-300 group-hover:opacity-80"
-
+                  className="absolute -right-0.5 -top-0.5 min-w-[17px] h-[17px] px-1 rounded-full text-[9px] font-semibold flex items-center justify-center"
                   style={{
-
-                    fontFamily: 'Bodoni MT, Didot, Times New Roman, serif',
-
+                    backgroundColor: BRASS,
+                    color: IVORY,
+                    boxShadow: `0 0 0 2px ${IVORY}`,
                   }}
-
                 >
-
-                  ARDENBY
-
+                  {wishlistCount}
                 </span>
-
-
-
-                <div className="mt-1 flex items-center gap-2">
-
-                  <div className="h-px w-4 sm:w-5 bg-neutral-300" />
-
-                  <span className="text-[7px] uppercase tracking-[0.4em] text-neutral-500">
-
-                    WEAR YOUR ESSENCE
-
-                  </span>
-
-                  <div className="h-px w-4 sm:w-5 bg-neutral-300" />
-
-                </div>
-
-              </div>
-
+              )}
             </Link>
 
-
-
-            {/* Desktop Navigation */}
-
-            <nav className="hidden lg:flex items-center gap-6 flex-1 justify-center px-4">
-
-              {topNavItems.map((item) => (
-
-                <div
-
-                  key={item.slug}
-
-                  className="relative py-3"
-
-                  onMouseEnter={() => {
-
-                    if (
-
-                      item.slug === 'supreme-edition' ||
-
-                      item.slug === 'epic-thread'
-
-                    ) {
-
-                      setMegaOpen(true);
-
-                    }
-
+            <button
+              type="button"
+              onClick={openCart}
+              aria-label="Cart"
+              className="ard-icon relative flex h-10 w-10 sm:h-11 sm:w-11 items-center justify-center rounded-full"
+              style={{ color: INK }}
+            >
+              <ShoppingBag className="h-[18px] w-[18px] sm:h-[20px] sm:w-[20px]" strokeWidth={1.5} />
+              {cartCount > 0 && (
+                <span
+                  className="absolute -right-0.5 -top-0.5 min-w-[17px] h-[17px] px-1 rounded-full text-[9px] font-semibold flex items-center justify-center"
+                  style={{
+                    backgroundColor: BRASS,
+                    color: IVORY,
+                    boxShadow: `0 0 0 2px ${IVORY}`,
                   }}
-
-                  onMouseLeave={() => setMegaOpen(false)}
-
                 >
+                  {cartCount}
+                </span>
+              )}
+            </button>
+          </div>
+        </div>
+      </div>
 
-                  <Link
+      {/* =====================================================
+          CATEGORY NAVIGATION (Desktop Only)
+      ====================================================== */}
+      <div className="hidden lg:block border-t" style={{ borderColor: HAIRLINE }}>
+        <div className="mx-auto max-w-[1440px] px-4 sm:px-6">
+          <nav className="flex items-center justify-center">
+            {topNavItems.map((item, i) => (
+              <div
+                key={item.slug}
+                className="relative flex items-center"
+                onMouseEnter={() => {
+                  if (item.slug === 'supreme-edition' || item.slug === 'epic-thread') {
+                    setMegaOpen(true);
+                  }
+                }}
+                onMouseLeave={() => {
+                  if (item.slug !== 'supreme-edition' && item.slug !== 'epic-thread') {
+                    setMegaOpen(false);
+                  }
+                }}
+              >
+                {i > 0 && (
+                  <div className="h-3 w-px" style={{ backgroundColor: HAIRLINE }} />
+                )}
 
-                    href={`/shop?category=${item.slug}`}
+                <Link
+                  href={`/shop?category=${item.slug}`}
+                  className="group relative flex min-h-[50px] items-center justify-center px-5 xl:px-6 text-[11px] xl:text-[12px] font-medium uppercase tracking-[0.1em] whitespace-nowrap transition-colors duration-200"
+                  style={{ color: INK }}
+                >
+                  {item.label}
+                  <span
+                    className="absolute bottom-0 left-5 right-5 h-[1.5px] scale-x-0 transition-transform duration-300 origin-center group-hover:scale-x-100"
+                    style={{ backgroundColor: BRASS }}
+                  />
+                </Link>
+              </div>
+            ))}
+          </nav>
+        </div>
+      </div>
 
-                    className="text-[11px] xl:text-[12px] font-bold text-neutral-800 hover:text-[#1A80E6] transition-colors leading-tight text-center block max-w-[85px] tracking-tight uppercase"
-
-                  >
-
-                    {item.label}
-
+      {/* =====================================================
+          MEGA MENU
+      ====================================================== */}
+      <AnimatePresence>
+        {megaOpen && (
+          <motion.div
+            initial={{ opacity: 0, y: 6 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 6 }}
+            transition={{ duration: 0.18 }}
+            className="absolute top-full left-0 w-full border-t py-8 z-50 hidden lg:block"
+            style={{
+              backgroundColor: IVORY,
+              borderColor: HAIRLINE,
+              boxShadow: '0 20px 40px rgba(27,27,27,0.08)',
+            }}
+            onMouseEnter={() => setMegaOpen(true)}
+            onMouseLeave={() => setMegaOpen(false)}
+          >
+            <div className="mx-auto max-w-7xl px-6 grid grid-cols-4 gap-10">
+              {megaMenu.map((col) => (
+                <div key={col.slug}>
+                  <Link href={`/shop?category=${col.slug}`} className="block mb-4">
+                    <h3
+                      className="text-[13px] font-semibold uppercase tracking-[0.1em]"
+                      style={{
+                        color: INK,
+                        fontFamily: 'Bodoni MT, Didot, Times New Roman, serif',
+                      }}
+                    >
+                      {col.title}
+                    </h3>
+                    <div className="mt-1.5 h-px w-6" style={{ backgroundColor: BRASS }} />
+                    <p className="mt-2 text-xs" style={{ color: STONE }}>
+                      {col.desc}
+                    </p>
                   </Link>
 
-                </div>
-
-              ))}
-
-            </nav>
-
-
-
-            {/* Search + Actions */}
-
-            <div className="flex items-center gap-3 xl:gap-4">
-
-              <form
-
-                onSubmit={handleSearchSubmit}
-
-                className="hidden md:block relative w-44"
-
-              >
-
-                <input
-
-                  type="text"
-
-                  value={searchQuery}
-
-                  onChange={(e) => setSearchQuery(e.target.value)}
-
-                  placeholder='Try searching "T-shirt"'
-
-                  className="w-full pl-4 pr-10 py-2 text-xs bg-neutral-50 rounded-lg border border-purple-300 focus:border-purple-600 focus:outline-none focus:bg-white text-neutral-800 placeholder-neutral-400 transition-all"
-
-                />
-
-
-
-                <button
-
-                  type="submit"
-
-                  className="absolute right-2.5 top-1/2 -translate-y-1/2 text-purple-600 hover:text-purple-800"
-
-                  aria-label="Search"
-
-                >
-
-                  <Search className="h-4 w-4" />
-
-                </button>
-
-              </form>
-
-
-
-              {/* Profile */}
-
-              <button
-
-                type="button"
-
-                onClick={handleOpenProfile}
-
-                className="p-1.5 hover:bg-neutral-100 rounded-full transition-colors hidden sm:block text-neutral-700"
-
-                aria-label={user ? 'My profile' : 'Login'}
-
-                title={user ? 'My profile' : 'Login'}
-
-              >
-
-                <User className="h-5 w-5" />
-
-              </button>
-
-
-
-              {/* Wishlist */}
-
-              <Link
-
-                href="/wishlist"
-
-                className="p-1.5 hover:bg-neutral-100 rounded-full transition-colors relative text-neutral-700"
-
-                aria-label="Wishlist"
-
-              >
-
-                <Heart className="h-5 w-5" />
-
-
-
-                {wishlistCount > 0 && (
-
-                  <span className="absolute -top-1 -right-1 bg-purple-600 text-white text-[10px] font-bold rounded-full h-4 w-4 flex items-center justify-center">
-
-                    {wishlistCount}
-
-                  </span>
-
-                )}
-
-              </Link>
-
-
-
-              {/* Cart */}
-
-              <button
-
-                onClick={openCart}
-
-                className="p-1.5 hover:bg-neutral-100 rounded-full transition-colors relative text-neutral-700"
-
-                aria-label="Cart"
-
-              >
-
-                <ShoppingBag className="h-5 w-5" />
-
-
-
-                {cartCount > 0 && (
-
-                  <span className="absolute -top-1 -right-1 bg-purple-600 text-white text-[10px] font-bold rounded-full h-4 w-4 flex items-center justify-center">
-
-                    {cartCount}
-
-                  </span>
-
-                )}
-
-              </button>
-
-            </div>
-
-          </div>
-
-        </div>
-
-
-
-        {/* ====================================================
-
-            MEGA MENU
-
-        ===================================================== */}
-
-        <AnimatePresence>
-
-          {megaOpen && (
-
-            <motion.div
-
-              initial={{ opacity: 0, y: 10 }}
-
-              animate={{ opacity: 1, y: 0 }}
-
-              exit={{ opacity: 0, y: 10 }}
-
-              transition={{ duration: 0.2 }}
-
-              className="absolute top-full left-0 w-full bg-white  border-neutral-200 shadow-xl py-6 z-50 hidden lg:block"
-
-              onMouseEnter={() => setMegaOpen(true)}
-
-              onMouseLeave={() => setMegaOpen(false)}
-
-            >
-
-              <div className="max-w-7xl mx-auto px-6 grid grid-cols-4 gap-8">
-
-                {megaMenu.map((col) => (
-
-                  <div key={col.slug}>
-
-                    <Link
-
-                      href={`/shop?category=${col.slug}`}
-
-                      className="block mb-2"
-
-                    >
-
-                      <h3 className="font-bold text-sm text-neutral-900 hover:text-[#1A80E6] transition-colors">
-
-                        {col.title}
-
-                      </h3>
-
-
-
-                      <p className="text-xs text-neutral-500">{col.desc}</p>
-
-                    </Link>
-
-
-
-                    <div className="space-y-2 mt-3">
-
-                      {col.featured.map((p) => (
-
-                        <Link
-
-                          key={p.id}
-
-                          href={`/product/${p.slug}`}
-
-                          className="flex items-center gap-2 group p-1 rounded-md hover:bg-neutral-50 transition-colors"
-
+                  <div className="space-y-1 mt-4">
+                    {col.featured.map((p) => (
+                      <Link
+                        key={p.id}
+                        href={`/product/${p.slug}`}
+                        className="flex items-center gap-3 group p-1.5 transition-colors"
+                      >
+                        <div
+                          className="w-11 h-12 overflow-hidden shrink-0"
+                          style={{ backgroundColor: HAIRLINE }}
                         >
-
-                          <div className="w-10 h-12 rounded overflow-hidden bg-neutral-100 flex-shrink-0">
-
-                            <img
-
-                              src={p.images[0]}
-
-                              alt={p.name}
-
-                              className="w-full h-full object-cover"
-
-                            />
-
-                          </div>
-
-
-
-                          <span className="text-xs font-medium text-neutral-700 group-hover:text-[#1A80E6] line-clamp-2">
-
-                            {p.name}
-
-                          </span>
-
-                        </Link>
-
-                      ))}
-
-                    </div>
-
+                          <img
+                            src={p.images[0]}
+                            alt={p.name}
+                            className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                          />
+                        </div>
+                        <span
+                          className="text-xs font-medium line-clamp-2 transition-colors"
+                          style={{ color: STONE }}
+                        >
+                          {p.name}
+                        </span>
+                      </Link>
+                    ))}
                   </div>
-
-                ))}
-
-              </div>
-
-            </motion.div>
-
-          )}
-
-        </AnimatePresence>
-
-      </header>
-    </>
+                </div>
+              ))}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </header>
   );
 }

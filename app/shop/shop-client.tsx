@@ -13,7 +13,8 @@ import {
   Check,
 } from 'lucide-react';
 import { ProductCard } from '@/components/product/product-card';
-import { products, categories } from '@/lib/data';
+import { categories, products as staticProducts } from '@/lib/data';
+import { apiUrl } from '@/lib/api-url';
 import type { ProductColor, ProductSize, FabricType, CoverageType, FitType } from '@/types';
 import { formatINR } from '@/lib/format';
 import { cn } from '@/lib/utils';
@@ -21,6 +22,136 @@ import { Slider } from '@/components/ui/slider';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
 import { motion, AnimatePresence } from 'framer-motion';
+
+type ApiProduct = {
+  id: string;
+  slug: string;
+  name: string;
+  category_slug?: string | null;
+  category_label?: string | null;
+  fit?: string | null;
+  fabric?: string | null;
+  coverage?: string | null;
+  price?: number | string | null;
+  mrp?: number | string | null;
+  best_price?: number | string | null;
+  rating?: number | string | null;
+  review_count?: number | string | null;
+  description?: string | null;
+  fabric_details?: string | null;
+  wash_care?: string | null;
+  tags?: string | null;
+  best_seller?: boolean;
+  new_arrival?: boolean;
+  trending?: boolean;
+  limited_edition?: boolean;
+  inventory?: number | string | null;
+  created_at?: string | null;
+  images?: { image_url?: string }[];
+  variants?: {
+    id?: string;
+    size?: string;
+    color?: string;
+    inventory?: number | string;
+    sku?: string;
+  }[];
+};
+
+function normalizeStaticProduct(product: any) {
+  const variants = Array.isArray(product.variants) ? product.variants : [];
+
+  const images = Array.isArray(product.images)
+    ? product.images.map((image: any) =>
+        typeof image === 'string' ? image : image?.image_url
+      ).filter(Boolean)
+    : [];
+
+  return {
+    ...product,
+    category: product.category || product.category_slug || '',
+    categoryLabel:
+      product.categoryLabel || product.category_label || '',
+    price: Number(product.price || 0),
+    mrp: product.mrp == null ? undefined : Number(product.mrp),
+    bestPrice: Number(product.bestPrice ?? product.best_price ?? 0),
+    rating: Number(product.rating || 0),
+    reviewCount: Number(product.reviewCount ?? product.review_count ?? 0),
+    fabric: product.fabric || '',
+    coverage: product.coverage || '',
+    fit: product.fit || '',
+    description: product.description || '',
+    fabricDetails:
+      product.fabricDetails || product.fabric_details || '',
+    washCare: product.washCare || product.wash_care || '',
+    tags: product.tags || '',
+    bestSeller: Boolean(product.bestSeller ?? product.best_seller),
+    newArrival: Boolean(product.newArrival ?? product.new_arrival),
+    trending: Boolean(product.trending),
+    limitedEdition: Boolean(
+      product.limitedEdition ?? product.limited_edition
+    ),
+    inventory: Number(product.inventory || 0),
+    images,
+    variants,
+    sizes:
+      Array.isArray(product.sizes) && product.sizes.length > 0
+        ? product.sizes
+        : Array.from(
+            new Set(
+              variants
+                .map((variant: any) => variant.size)
+                .filter(Boolean)
+            )
+          ),
+    colors:
+      Array.isArray(product.colors) && product.colors.length > 0
+        ? product.colors
+        : Array.from(
+            new Set(
+              variants
+                .map((variant: any) => variant.color)
+                .filter(Boolean)
+            )
+          ),
+  };
+}
+
+function normalizeProduct(product: ApiProduct) {
+  const variants = Array.isArray(product.variants) ? product.variants : [];
+
+  return {
+    ...product,
+    category: product.category_slug || '',
+    categoryLabel: product.category_label || '',
+    price: Number(product.price || 0),
+    mrp: product.mrp == null ? undefined : Number(product.mrp),
+    bestPrice: Number(product.best_price || 0),
+    rating: Number(product.rating || 0),
+    reviewCount: Number(product.review_count || 0),
+    fabric: product.fabric || '',
+    coverage: product.coverage || '',
+    fit: product.fit || '',
+    description: product.description || '',
+    fabricDetails: product.fabric_details || '',
+    washCare: product.wash_care || '',
+    tags: product.tags || '',
+    bestSeller: Boolean(product.best_seller),
+    newArrival: Boolean(product.new_arrival),
+    trending: Boolean(product.trending),
+    limitedEdition: Boolean(product.limited_edition),
+    inventory: Number(product.inventory || 0),
+    images: (product.images || [])
+      .map((image) => image?.image_url)
+      .filter(Boolean),
+    variants,
+    sizes: Array.from(
+      new Set(variants.map((variant) => variant.size).filter(Boolean))
+    ),
+    colors: Array.from(
+      new Set(variants.map((variant) => variant.color).filter(Boolean))
+    ),
+  };
+}
 
 const sortOptions = [
   { value: 'featured', label: 'Featured Drops' },
@@ -94,6 +225,8 @@ export function ShopClient() {
   const categoryParam = searchParams.get('category') as string | null;
   const fitParam = searchParams.get('fit') as string | null;
 
+  const [products, setProducts] = useState<any[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
   const [sort, setSort] = useState('featured');
   const [selectedSizes, setSelectedSizes] = useState<ProductSize[]>([]);
   const [priceRange, setPriceRange] = useState<[number, number]>([0, 2000]);
@@ -113,15 +246,105 @@ export function ShopClient() {
 
   const activeCategory = categories.find((c) => c.slug === categoryParam);
 
+  useEffect(() => {
+    let cancelled = false;
+
+    async function loadProducts() {
+      setIsLoading(true);
+
+      try {
+        const params = new URLSearchParams({
+          page: '1',
+          limit: '1000',
+        });
+
+        if (categoryParam && categoryParam !== 'all-products' && categoryParam !== 'plus-size') {
+          params.set('category', categoryParam);
+        }
+
+        const response = await fetch(apiUrl(`/api/products?${params.toString()}`), {
+          cache: 'no-store',
+        });
+
+        if (!response.ok) {
+          throw new Error('Failed to load products');
+        }
+
+        const data = await response.json();
+        const apiProducts: ApiProduct[] = Array.isArray(data)
+          ? data
+          : Array.isArray(data?.products)
+            ? data.products
+            : Array.isArray(data?.data?.products)
+              ? data.data.products
+              : [];
+
+        if (!cancelled) {
+          const liveProducts = apiProducts.map(normalizeProduct);
+
+          const staticProductsForCategory =
+            categoryParam &&
+            categoryParam !== 'all-products' &&
+            categoryParam !== 'plus-size'
+              ? staticProducts
+                  .filter(
+                    (product: any) =>
+                      (product.category || product.category_slug) ===
+                      categoryParam
+                  )
+                  .map(normalizeStaticProduct)
+              : staticProducts.map(normalizeStaticProduct);
+
+          const liveKeys = new Set(
+            liveProducts.map(
+              (product) => `${product.id}::${product.slug}`
+            )
+          );
+
+          const fallbackProducts = staticProductsForCategory.filter(
+            (product: any) =>
+              !liveKeys.has(`${product.id}::${product.slug}`)
+          );
+
+          setProducts([...liveProducts, ...fallbackProducts]);
+        }
+      } catch (error) {
+        console.error('Shop products API error:', error);
+        if (!cancelled) {
+          const staticProductsForCategory =
+            categoryParam &&
+            categoryParam !== 'all-products' &&
+            categoryParam !== 'plus-size'
+              ? staticProducts
+                  .filter(
+                    (product: any) =>
+                      (product.category || product.category_slug) ===
+                      categoryParam
+                  )
+                  .map(normalizeStaticProduct)
+              : staticProducts.map(normalizeStaticProduct);
+
+          setProducts(staticProductsForCategory);
+        }
+      } finally {
+        if (!cancelled) {
+          setIsLoading(false);
+        }
+      }
+    }
+
+    loadProducts();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [categoryParam]);
+
   const filtered = useMemo(() => {
     let result = [...products];
 
-    if (categoryParam && categoryParam !== 'all-products') {
-      if (categoryParam === 'plus-size') {
-        result = result.filter((p) => p.sizes.includes('XXL'));
-      } else {
-        result = result.filter((p) => p.category === categoryParam);
-      }
+    if (categoryParam === 'plus-size') {
+      result = result.filter((p) => p.sizes.includes('XXL'));
     }
 
     if (selectedSizes.length > 0) {
@@ -485,7 +708,7 @@ export function ShopClient() {
           </div>
 
           {/* Dynamic Grid Layout */}
-          {paged.length === 0 ? (
+          {!isLoading && paged.length === 0 ? (
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -503,6 +726,8 @@ export function ShopClient() {
                 Clear All Filters
               </Button>
             </motion.div>
+          ) : isLoading ? (
+            <div className="min-h-[300px]" />
           ) : (
             <motion.div layout className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">
               <AnimatePresence>

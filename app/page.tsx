@@ -138,128 +138,941 @@ export default function HomePage() {
   return (
     <main className="w-full overflow-x-hidden bg-[#F6F5F0] text-[#111111] selection:bg-neutral-900 selection:text-white">
       {/* ================= HERO SECTION ================= */}
-      <section
-        className="relative h-[560px] w-full overflow-hidden bg-[#F4F2ED] sm:h-[595px] lg:h-[calc(100vh-90px)] lg:max-h-[680px] lg:min-h-[560px]"
-        onMouseEnter={() => setIsPaused(true)}
-        onMouseLeave={() => setIsPaused(false)}
+     {/* =========================================================
+    HERO SECTION
+========================================================= */}
+
+<section
+  className="
+    relative
+    z-0
+    w-full
+    h-[600px]
+    overflow-hidden
+    bg-[#F4F2ED]
+
+    sm:h-[640px]
+    md:h-[680px]
+
+    lg:h-[calc(100vh-90px)]
+    lg:min-h-[580px]
+    lg:max-h-[700px]
+  "
+  onMouseEnter={() => setIsPaused(true)}
+  onMouseLeave={() => setIsPaused(false)}
+>
+  <div className="relative mx-auto h-full w-full max-w-[1500px]">
+
+    {/* =====================================================
+        BACKGROUND TRANSITION / BLEND LAYER
+    ====================================================== */}
+    <div
+      aria-hidden="true"
+      className="
+        pointer-events-none
+        absolute inset-0 z-0
+        bg-[radial-gradient(ellipse_at_center,rgba(246,245,240,0)_0%,rgba(246,245,240,0.08)_28%,rgba(246,245,240,0.58)_72%,rgba(246,245,240,0.94)_100%)]
+      "
+    />
+
+    <div
+      aria-hidden="true"
+      className="
+        pointer-events-none
+        absolute inset-x-0 bottom-0 z-0 h-36
+        bg-gradient-to-t from-[#F6F5F0] via-[#F6F5F0]/55 to-transparent
+      "
+    />
+
+    {/* =====================================================
+        PREMIUM DROP LABEL
+    ====================================================== */}
+
+    <motion.div
+      initial={{ opacity: 0, y: -8 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5 }}
+      className="
+        absolute
+        left-4
+        top-5
+        z-30
+
+        sm:left-6
+        sm:top-7
+
+        lg:left-8
+        lg:top-9
+      "
+    >
+      <div
+        className="
+          rounded-md
+          border
+          border-neutral-300/80
+          bg-white/75
+          px-3
+          py-1.5
+          backdrop-blur-md
+          shadow-[0_5px_16px_rgba(0,0,0,0.06)]
+
+          sm:px-3.5
+          sm:py-2
+        "
       >
-        <div className="relative mx-auto flex h-full max-w-[1500px] flex-col lg:flex-row">
-          {/* LEFT: IMAGE CONTAINER */}
-          <div className="relative flex h-full w-full items-end justify-center overflow-hidden bg-[#F4F2ED] pt-5 lg:w-[45%] lg:items-center lg:justify-center lg:pt-0">
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 h-64 w-64 rounded-full bg-stone-300/30 blur-3xl pointer-events-none" />
+        <p
+          className="
+            text-[6.5px]
+            font-bold
+            uppercase
+            tracking-[0.2em]
+            text-neutral-900
 
-            <AnimatePresence mode="wait">
-              <motion.div
-                key={slide}
-                className="relative z-10 flex h-full w-full items-end justify-center lg:items-center lg:justify-center"
-                initial={{ opacity: 0, x: -10, scale: 1.01 }}
-                animate={{ opacity: 1, x: 0, scale: 1 }}
-                exit={{ opacity: 0, x: -8 }}
-                transition={{ duration: 0.6, ease }}
-              >
-                <img
-                  src={
-                    transparentHeroImages[slide % transparentHeroImages.length]
-                  }
-                  alt={activeHero.headline}
-                  className="h-full w-full object-cover object-center contrast-[1.06] saturate-[1.03] lg:h-auto lg:max-h-[92%] lg:w-auto lg:max-w-full lg:object-contain lg:object-center"
-                />
-              </motion.div>
-            </AnimatePresence>
+            sm:text-[7px]
+          "
+        >
+          Premium Drop • SS26
+        </p>
 
-            <motion.div
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.2, duration: 0.5 }}
-              className="absolute top-6 left-6 z-20 hidden rounded-sm border border-neutral-300/70 bg-white/65 px-3.5 py-2 backdrop-blur-md lg:block"
-            >
-              <p className="text-[8px] font-bold uppercase tracking-[0.2em] text-neutral-900">
-                Premium Drop • SS26
-              </p>
-              <p className="text-[8.5px] font-light text-neutral-500">
-                Heavyweight • Drop Shoulder
-              </p>
-            </motion.div>
-          </div>
+        <p
+          className="
+            mt-0.5
+            text-[7px]
+            font-light
+            text-neutral-500
 
-          {/* RIGHT: TEXT CONTENT */}
-          <div className="absolute inset-0 z-30 flex w-full items-end bg-transparent px-6 pb-12 sm:px-10 sm:pb-12 lg:static lg:z-20 lg:w-[55%] lg:items-center lg:bg-transparent lg:px-12 lg:pb-0 xl:px-16">
-            <div className="pointer-events-none absolute inset-0 z-10 bg-gradient-to-t from-black/38 via-black/8 to-transparent lg:hidden" />
+            sm:text-[8px]
+          "
+        >
+          Heavyweight • Drop Shoulder
+        </p>
+      </div>
+    </motion.div>
 
-            <AnimatePresence mode="wait">
-              <motion.div
-                key={slide}
-                initial={{ opacity: 0, x: 14 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: 8 }}
-                transition={{ duration: 0.5, ease }}
-                className="relative z-20 w-full max-w-[680px] text-white lg:text-neutral-950"
-              >
-                <div className="mb-3 flex items-center gap-2.5">
-                  <span className="h-px w-6 bg-white/70 lg:bg-neutral-950" />
-                  <span className="text-[9px] font-semibold uppercase tracking-[0.3em] text-white/80 sm:text-[9.5px] lg:text-neutral-600">
-                    {activeHero.sub}
-                  </span>
-                </div>
 
-                <h1 className="max-w-[620px] font-serif text-[32px] font-normal leading-[1] tracking-[-0.035em] text-white sm:text-[42px] lg:text-[46px] lg:text-neutral-950 xl:text-[54px]">
-                  {activeHero.headline}
-                </h1>
+    {/* =====================================================
+        HUGE EDITORIAL TYPOGRAPHY
 
-                <p className="mt-3 max-w-sm text-[11px] font-light leading-5 text-white/75 hidden sm:block lg:text-neutral-600">
-                  Engineered silhouettes, custom fabric treatments, and everyday luxury crafted for modern comfort.
-                </p>
+        z-10 = BEHIND MODEL
+    ====================================================== */}
 
-                <div className="mt-6 flex flex-wrap items-center gap-3">
-                  <Link
-                    href={activeHero.href}
-                    className="relative z-30 group inline-flex items-center gap-2 bg-white px-5 py-3 text-[8.5px] font-bold uppercase tracking-[0.2em] text-neutral-950 transition-all duration-300 hover:bg-neutral-100 lg:bg-neutral-950 lg:text-white lg:hover:bg-neutral-800"
-                  >
-                    {activeHero.cta}
-                    <ArrowRight className="h-3 w-3 transition-transform duration-300 group-hover:translate-x-1" />
-                  </Link>
+    <AnimatePresence mode="wait">
+      <motion.div
+        key={`headline-${slide}`}
+        initial={{
+          opacity: 0,
+          y: 12,
+        }}
+        animate={{
+          opacity: 1,
+          y: 0,
+        }}
+        exit={{
+          opacity: 0,
+          y: -8,
+        }}
+        transition={{
+          duration: 0.55,
+          ease,
+        }}
+        className="
+          absolute
+          left-0
+          right-0
 
-                  <Link
-                    href="/shop"
-                    className="relative z-30 inline-flex items-center border border-white/70 bg-black/15 px-5 py-3 text-[8.5px] font-bold uppercase tracking-[0.2em] text-white backdrop-blur-sm transition-all duration-300 hover:border-white hover:bg-white/10 lg:border-neutral-300 lg:bg-transparent lg:text-neutral-800 lg:backdrop-blur-none lg:hover:border-neutral-950 lg:hover:bg-white"
-                  >
-                    Explore Collection
-                  </Link>
-                </div>
-              </motion.div>
-            </AnimatePresence>
+          top-[105px]
 
-            <div className="absolute bottom-5 left-6 z-40 flex items-center gap-2.5 text-white sm:left-10 lg:bottom-6 lg:left-12 lg:text-neutral-900 xl:left-16">
-              <span className="text-[9px] font-bold tracking-[0.2em] text-white lg:text-neutral-900">
-                {String(slide + 1).padStart(2, "0")}
-              </span>
-              <span className="h-px w-8 bg-white/40 lg:bg-neutral-400" />
-              <span className="text-[9px] tracking-[0.2em] text-white/60 lg:text-neutral-400">
-                {String(heroSlides.length).padStart(2, "0")}
-              </span>
-            </div>
+          z-10
 
-            <div className="absolute bottom-6 right-6 z-20 hidden items-center gap-2 lg:flex">
-              {heroSlides.map((_, index) => (
-                <button
-                  key={index}
-                  onClick={() => setSlide(index)}
-                  aria-label={`Go to slide ${index + 1}`}
-                  className="group p-1"
-                >
-                  <span
-                    className={`block h-[2px] transition-all duration-500 ${
-                      index === slide
-                        ? "w-8 bg-neutral-950"
-                        : "w-3.5 bg-neutral-300 group-hover:bg-neutral-500"
-                    }`}
-                  />
-                </button>
-              ))}
-            </div>
-          </div>
+          flex
+          justify-center
+
+          px-2
+
+          sm:top-[115px]
+          sm:px-4
+
+          md:top-[120px]
+
+          lg:top-[88px]
+          lg:px-8
+        "
+      >
+        <h1
+          className="
+            w-full
+            max-w-[1350px]
+
+            text-center
+
+            font-serif
+            font-black
+            uppercase
+
+            leading-[0.76]
+
+            tracking-[-0.055em]
+
+            text-neutral-950
+
+            /* MOBILE */
+            text-[54px]
+
+            /* LARGE PHONE */
+            sm:text-[68px]
+
+            /* TABLET */
+            md:text-[86px]
+
+            /* DESKTOP */
+            lg:text-[clamp(86px,8.7vw,132px)]
+          "
+          style={{
+            fontFamily:
+              "Bodoni MT, Didot, Times New Roman, serif",
+
+            textShadow:
+              "0 1px 0 rgba(0,0,0,0.08)",
+          }}
+        >
+          {activeHero.headline}
+        </h1>
+      </motion.div>
+    </AnimatePresence>
+
+
+    {/* =====================================================
+        MODEL LAYER
+
+        z-50 = ABOVE HEADLINE
+    ====================================================== */}
+
+    <div
+      className="
+        pointer-events-none
+
+        absolute
+        inset-0
+
+        z-50
+
+        flex
+        items-end
+        justify-center
+      "
+    >
+
+      <AnimatePresence mode="wait">
+        <motion.div
+          key={`model-${slide}`}
+          initial={{
+            opacity: 0,
+            y: 25,
+            scale: 1.02,
+          }}
+          animate={{
+            opacity: 1,
+            y: 35,
+            scale: 1,
+          }}
+          exit={{
+            opacity: 0,
+            y: 20,
+          }}
+          transition={{
+            duration: 0.65,
+            ease,
+          }}
+          className="
+            relative
+            z-50
+
+            flex
+            h-full
+            w-full
+
+            items-end
+            justify-center
+
+            sm:translate-y-[25px]
+
+            md:translate-y-0
+          "
+        >
+
+          {/* =================================================
+              SOFT MODEL SHADOW
+          ================================================== */}
+
+          <div
+            className="
+              absolute
+
+              bottom-[35px]
+              left-1/2
+
+              h-[340px]
+              w-[290px]
+
+              -translate-x-1/2
+
+              rounded-full
+
+              bg-neutral-400/10
+
+              blur-[70px]
+
+              sm:h-[390px]
+              sm:w-[340px]
+
+              md:h-[440px]
+              md:w-[390px]
+
+              lg:h-[470px]
+              lg:w-[430px]
+            "
+          />
+
+
+          {/* =================================================
+              TRANSPARENT MODEL IMAGE
+          ================================================== */}
+
+          <img
+            src={
+              transparentHeroImages[
+                slide % transparentHeroImages.length
+              ]
+            }
+            alt={activeHero.headline}
+            className="
+              relative
+              z-50
+
+              /* MOBILE */
+              h-[86%]
+
+              w-auto
+
+              max-w-[105%]
+
+              object-contain
+              object-bottom
+
+              drop-shadow-[0_20px_32px_rgba(0,0,0,0.18)]
+
+              /* LARGE PHONE */
+              sm:h-[88%]
+              sm:max-w-[100%]
+
+              /* TABLET */
+              md:h-[88%]
+
+              /* DESKTOP */
+              lg:h-[92%]
+              lg:max-w-[64%]
+
+              lg:drop-shadow-[0_22px_35px_rgba(0,0,0,0.20)]
+            "
+          />
+
+        </motion.div>
+      </AnimatePresence>
+
+    </div>
+
+
+    {/* =====================================================
+        MOBILE SUBTITLE
+    ====================================================== */}
+
+    <AnimatePresence mode="wait">
+      <motion.div
+        key={`mobile-sub-${slide}`}
+        initial={{
+          opacity: 0,
+        }}
+        animate={{
+          opacity: 1,
+        }}
+        exit={{
+          opacity: 0,
+        }}
+        transition={{
+          duration: 0.4,
+        }}
+        className="
+          absolute
+
+          left-0
+          right-0
+
+          top-[218px]
+
+          z-30
+
+          flex
+          justify-center
+
+          px-4
+
+          sm:top-[245px]
+
+          md:hidden
+        "
+      >
+        <div className="flex items-center gap-2">
+
+          <span className="h-px w-5 bg-neutral-400" />
+
+          <span
+            className="
+              text-[6px]
+              font-semibold
+              uppercase
+              tracking-[0.23em]
+              text-neutral-600
+            "
+          >
+            {activeHero.sub}
+          </span>
+
+          <span className="h-px w-5 bg-neutral-400" />
+
         </div>
-      </section>
+      </motion.div>
+    </AnimatePresence>
+
+
+    {/* =====================================================
+        MOBILE LEFT EDITORIAL TEXT
+    ====================================================== */}
+
+    <AnimatePresence mode="wait">
+      <motion.div
+        key={`mobile-left-${slide}`}
+        initial={{
+          opacity: 0,
+          x: -8,
+        }}
+        animate={{
+          opacity: 1,
+          x: 0,
+        }}
+        exit={{
+          opacity: 0,
+        }}
+        transition={{
+          duration: 0.4,
+        }}
+        className="
+          absolute
+
+          left-4
+          bottom-[145px]
+
+          z-30
+
+          w-[110px]
+
+          sm:left-6
+          sm:bottom-[150px]
+          sm:w-[135px]
+
+          md:hidden
+        "
+      >
+        <p
+          className="
+            text-[6px]
+            font-bold
+            uppercase
+            tracking-[0.2em]
+            text-neutral-900
+          "
+        >
+          Move Comfortably
+        </p>
+
+        <div
+          className="
+            mt-1.5
+            h-px
+            w-7
+            bg-neutral-300
+          "
+        />
+
+        <p
+          className="
+            mt-2
+            text-[6.5px]
+            font-light
+            leading-[1.5]
+            text-neutral-500
+          "
+        >
+          Designed for everyday
+          comfort, refined details,
+          and modern silhouettes.
+        </p>
+      </motion.div>
+    </AnimatePresence>
+
+
+    {/* =====================================================
+        MOBILE RIGHT EDITORIAL TEXT
+    ====================================================== */}
+
+    <AnimatePresence mode="wait">
+      <motion.div
+        key={`mobile-right-${slide}`}
+        initial={{
+          opacity: 0,
+          x: 8,
+        }}
+        animate={{
+          opacity: 1,
+          x: 0,
+        }}
+        exit={{
+          opacity: 0,
+        }}
+        transition={{
+          duration: 0.4,
+        }}
+        className="
+          absolute
+
+          right-4
+          bottom-[145px]
+
+          z-30
+
+          w-[110px]
+
+          text-right
+
+          sm:right-6
+          sm:bottom-[150px]
+          sm:w-[135px]
+
+          md:hidden
+        "
+      >
+        <p
+          className="
+            text-[6px]
+            font-bold
+            uppercase
+            tracking-[0.2em]
+            text-neutral-900
+          "
+        >
+          Feel Confident
+        </p>
+
+        <div
+          className="
+            mt-1.5
+            ml-auto
+            h-px
+            w-7
+            bg-neutral-300
+          "
+        />
+
+        <p
+          className="
+            mt-2
+            text-[6.5px]
+            font-light
+            leading-[1.5]
+            text-neutral-500
+          "
+        >
+          Crafted for a refined
+          everyday look with
+          effortless comfort.
+        </p>
+      </motion.div>
+    </AnimatePresence>
+
+
+    {/* =====================================================
+        DESKTOP LEFT TEXT
+    ====================================================== */}
+
+    <AnimatePresence mode="wait">
+      <motion.div
+        key={`left-${slide}`}
+        initial={{
+          opacity: 0,
+          x: -12,
+        }}
+        animate={{
+          opacity: 1,
+          x: 0,
+        }}
+        exit={{
+          opacity: 0,
+        }}
+        className="
+          absolute
+
+          left-7
+          top-[275px]
+
+          z-30
+
+          hidden
+
+          w-[205px]
+
+          md:block
+
+          xl:left-10
+        "
+      >
+        <p
+          className="
+            text-[8px]
+            font-bold
+            uppercase
+            tracking-[0.24em]
+            text-neutral-900
+          "
+        >
+          Move Comfortably
+        </p>
+
+        <div className="mt-2 h-px w-11 bg-neutral-300" />
+
+        <p
+          className="
+            mt-3
+            max-w-[190px]
+            text-[8px]
+            font-light
+            leading-[1.65]
+            text-neutral-500
+          "
+        >
+          Designed for everyday comfort,
+          refined details, and modern
+          silhouettes.
+        </p>
+      </motion.div>
+    </AnimatePresence>
+
+
+    {/* =====================================================
+        DESKTOP RIGHT TEXT
+    ====================================================== */}
+
+    <AnimatePresence mode="wait">
+      <motion.div
+        key={`right-${slide}`}
+        initial={{
+          opacity: 0,
+          x: 12,
+        }}
+        animate={{
+          opacity: 1,
+          x: 0,
+        }}
+        exit={{
+          opacity: 0,
+        }}
+        className="
+          absolute
+
+          right-7
+          top-[275px]
+
+          z-30
+
+          hidden
+
+          w-[205px]
+
+          md:block
+
+          xl:right-10
+        "
+      >
+        <p
+          className="
+            text-[8px]
+            font-bold
+            uppercase
+            tracking-[0.24em]
+            text-neutral-900
+          "
+        >
+          Feel Confident
+        </p>
+
+        <div className="mt-2 h-px w-11 bg-neutral-300" />
+
+        <p
+          className="
+            mt-3
+            max-w-[190px]
+            text-[8px]
+            font-light
+            leading-[1.65]
+            text-neutral-500
+          "
+        >
+          Crafted for a refined everyday
+          look with effortless comfort.
+        </p>
+      </motion.div>
+    </AnimatePresence>
+
+
+    {/* =====================================================
+        CTA BUTTONS
+    ====================================================== */}
+
+    <AnimatePresence mode="wait">
+      <motion.div
+        key={`cta-${slide}`}
+        initial={{
+          opacity: 0,
+          y: 10,
+        }}
+        animate={{
+          opacity: 1,
+          y: 0,
+        }}
+        exit={{
+          opacity: 0,
+          y: 8,
+        }}
+        transition={{
+          delay: 0.15,
+          duration: 0.45,
+        }}
+        className="
+          absolute
+
+          bottom-8
+
+          left-0
+          right-0
+
+          z-[60]
+
+          flex
+          flex-wrap
+          items-center
+          justify-center
+
+          gap-2
+
+          px-3
+
+          sm:bottom-9
+          sm:gap-3
+
+          lg:bottom-9
+        "
+      >
+
+        {/* PRIMARY BUTTON */}
+
+        <Link
+    href={activeHero.href}
+    className="
+      group
+      inline-flex
+      h-12
+      min-w-[158px]
+      items-center
+      justify-center
+      gap-2
+      rounded-sm
+      bg-neutral-950
+      px-6
+      text-[10px]
+      font-bold
+      uppercase
+      tracking-[0.16em]
+      text-white
+      shadow-[0_8px_24px_rgba(0,0,0,0.14)]
+      transition-all
+      duration-300
+      hover:-translate-y-0.5
+      hover:bg-neutral-800
+      sm:h-[50px]
+      sm:min-w-[168px]
+      sm:px-7
+    "
+  >
+    {activeHero.cta}
+
+    <ArrowRight
+      className="
+        h-3.5
+        w-3.5
+        transition-transform
+        duration-300
+        group-hover:translate-x-1
+      "
+    />
+  </Link>
+
+
+  {/* EXPLORE COLLECTION */}
+  <Link
+    href="/shop"
+    className="
+      inline-flex
+      h-12
+      min-w-[190px]
+      items-center
+      justify-center
+      rounded-sm
+      border
+      border-neutral-300
+      bg-white/90
+      px-6
+      text-[10px]
+      font-bold
+      uppercase
+      tracking-[0.16em]
+      text-neutral-800
+      shadow-[0_8px_24px_rgba(0,0,0,0.08)]
+      backdrop-blur-sm
+      transition-all
+      duration-300
+      hover:-translate-y-0.5
+      hover:border-neutral-950
+      hover:bg-white
+      sm:h-[50px]
+      sm:min-w-[202px]
+      sm:px-7
+    "
+  >
+    Explore Collection
+  </Link>
+      </motion.div>
+    </AnimatePresence>
+
+
+    {/* =====================================================
+        SLIDE COUNTER
+    ====================================================== */}
+
+    <div
+      className="
+        absolute
+
+        bottom-4
+        left-4
+
+        z-[60]
+
+        flex
+        items-center
+        gap-2
+
+        sm:bottom-5
+        sm:left-6
+        sm:gap-2.5
+
+        lg:left-10
+      "
+    >
+      <span
+        className="
+          text-[7px]
+          font-bold
+          tracking-[0.2em]
+          text-neutral-900
+
+          sm:text-[8px]
+        "
+      >
+        {String(slide + 1).padStart(2, "0")}
+      </span>
+
+      <span
+        className="
+          h-px
+          w-6
+          bg-neutral-300
+
+          sm:w-8
+        "
+      />
+
+      <span
+        className="
+          text-[7px]
+          tracking-[0.2em]
+          text-neutral-400
+
+          sm:text-[8px]
+        "
+      >
+        {String(heroSlides.length).padStart(2, "0")}
+      </span>
+    </div>
+
+
+    {/* =====================================================
+        DESKTOP SLIDE INDICATORS
+    ====================================================== */}
+
+    <div
+      className="
+        absolute
+
+        bottom-5
+        right-5
+
+        z-[60]
+
+        hidden
+
+        items-center
+        gap-2
+
+        lg:right-10
+        lg:flex
+      "
+    >
+      {heroSlides.map((_, index) => (
+        <button
+          key={index}
+          type="button"
+          onClick={() => setSlide(index)}
+          aria-label={`Go to slide ${index + 1}`}
+          className="group p-1"
+        >
+          <span
+            className={`
+              block
+              h-[2px]
+              transition-all
+              duration-500
+
+              ${
+                index === slide
+                  ? "w-8 bg-neutral-950"
+                  : "w-3.5 bg-neutral-300 group-hover:bg-neutral-500"
+              }
+            `}
+          />
+        </button>
+      ))}
+    </div>
+
+  </div>
+</section>
 
       {/* ================= FULL-WIDTH TRUST STRIP ================= */}
       <section className="w-full px-3 py-3 sm:px-6 sm:py-4 lg:px-10">
