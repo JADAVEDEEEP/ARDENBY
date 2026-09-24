@@ -1,15 +1,23 @@
 'use client';
 
 import { useState } from 'react';
+
 import Link from 'next/link';
+
 import { motion } from 'framer-motion';
+
 import { Heart, Star, Plus } from 'lucide-react';
 
 import type { Product } from '@/types';
+
 import { useWishlistStore } from '@/store/wishlist-store';
+
 import { useCartStore } from '@/store/cart-store';
+
 import { formatINR, discountPercent } from '@/lib/format';
+
 import { cn } from '@/lib/utils';
+
 import { toast } from 'sonner';
 
 interface ProductCardProps {
@@ -32,6 +40,22 @@ export function ProductCard({
     e.preventDefault();
     e.stopPropagation();
 
+    const token =
+      typeof window !== 'undefined'
+        ? localStorage.getItem('ardenby_token')
+        : null;
+
+    // User is not logged in
+    if (!token) {
+      toast('❤️ Please log in to add this to your favourites.', {
+        description: 'Create an account or sign in to save your favourite pieces.',
+        duration: 3500,
+      });
+
+      return;
+    }
+
+    // User is logged in → toggle wishlist
     wishlist.toggle({
       productId: product.id,
       slug: product.slug,
@@ -43,8 +67,11 @@ export function ProductCard({
 
     toast.success(
       isWishlisted
-        ? 'Removed from wishlist'
-        : 'Added to wishlist'
+        ? 'Removed from your favourites'
+        : 'Added to your favourites ❤️',
+      {
+        duration: 2500,
+      }
     );
   };
 
@@ -123,7 +150,11 @@ export function ProductCard({
           {/* Wishlist */}
           <button
             onClick={handleWishlist}
-            aria-label="Toggle wishlist"
+            aria-label={
+              isWishlisted
+                ? 'Remove from wishlist'
+                : 'Add to wishlist'
+            }
             className="absolute right-2.5 top-2.5 z-10 flex h-8 w-8 items-center justify-center rounded-full border border-black/5 bg-white/80 shadow-sm backdrop-blur-md transition-all duration-300 hover:scale-110 hover:bg-white active:scale-95"
           >
             <Heart

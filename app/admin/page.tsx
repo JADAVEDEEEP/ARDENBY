@@ -16,6 +16,7 @@ import {
 } from 'lucide-react';
 
 import { apiUrl } from '@/lib/api-url';
+import { getAdminToken } from '@/components/admin/admin-auth';
 
 type Product = {
   id: string;
@@ -69,10 +70,7 @@ type Order = {
 };
 
 async function request<T>(path: string): Promise<T> {
-  const token =
-    typeof window !== 'undefined'
-      ? localStorage.getItem('ardenby_token')
-      : null;
+  const token = getAdminToken();
 
   const response = await fetch(apiUrl(path), {
     headers: {

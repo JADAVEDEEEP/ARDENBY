@@ -1,39 +1,68 @@
 import { products } from '@/lib/data';
 
-export const megaMenu = [
+export const topNavItems = [
   {
-    title: 'Supreme Edition',
+    label: 'SUPREME EDITION',
     slug: 'supreme-edition',
-    desc: 'Heavyweight oversized cotton',
-    featured: products.filter((p) => p.category === 'supreme-edition').slice(0, 3),
+    desc: 'Heavyweight oversized drops',
   },
   {
-    title: 'Epic Thread',
+    label: 'EPIC THREAD',
     slug: 'epic-thread',
     desc: 'Graphic & printed tees',
-    featured: products.filter((p) => p.category === 'epic-thread').slice(0, 3),
   },
   {
-    title: 'Ardenby Premium',
+    label: 'ARDENBY PREMIUM',
     slug: 'ardenby-premium',
     desc: 'Long-staple cotton essentials',
-    featured: products.filter((p) => p.category === 'ardenby-premium').slice(0, 3),
   },
   {
-    title: 'The Print Club',
+    label: 'THE PRINT CLUB',
     slug: 'the-print-club',
     desc: 'Bold prints & puff graphics',
-    featured: products.filter((p) => p.category === 'the-print-club').slice(0, 3),
   },
-];
+  {
+    label: 'TOP WEAR',
+    slug: 'top-wear',
+    desc: 'Hoodies & sweatshirts',
+  },
+  {
+    label: 'PLUS SIZE',
+    slug: 'plus-size',
+    desc: 'Relaxed fits up to XXL',
+  },
+  {
+    label: 'BOTTOM WEAR',
+    slug: 'bottom-wear',
+    desc: 'Cargos & joggers',
+  },
+  {
+    label: 'ALL PRODUCTS',
+    slug: 'all-products',
+    desc: 'Browse the complete collection',
+  },
+] as const;
 
-export const topNavItems = [
-  { label: 'SUPREME EDITION', slug: 'supreme-edition' },
-  { label: 'EPIC THREAD', slug: 'epic-thread' },
-  { label: 'ARDENBY PREMIUM', slug: 'ardenby-premium' },
-  { label: 'THE PRINT CLUB', slug: 'the-print-club' },
-  { label: 'TOP WEAR', slug: 'top-wear' },
-  { label: 'PLUS SIZE', slug: 'plus-size' },
-  { label: 'BOTTOM WEAR', slug: 'bottom-wear' },
-  { label: 'ALL PRODUCTS', slug: 'all-products' },
-];
+/* =========================================================
+   DYNAMIC MEGA MENU
+   Products are automatically picked from existing data
+========================================================= */
+
+export const megaMenu = topNavItems.map((category) => {
+  const featured =
+    category.slug === 'all-products'
+      ? products.slice(0, 8)
+      : products
+          .filter(
+            (product) =>
+              product.category === category.slug
+          )
+          .slice(0, 8);
+
+  return {
+    title: category.label,
+    slug: category.slug,
+    desc: category.desc,
+    featured,
+  };
+});

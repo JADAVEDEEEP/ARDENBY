@@ -14,6 +14,7 @@ import {
 } from 'lucide-react';
 
 import { apiUrl } from '@/lib/api-url';
+import { getAdminToken } from '@/components/admin/admin-auth';
 
 type OrderItem = {
   id?: string;
@@ -82,10 +83,7 @@ async function request<T>(
   path: string,
   options?: RequestInit
 ): Promise<T> {
-  const token =
-    typeof window !== 'undefined'
-      ? localStorage.getItem('ardenby_token')
-      : null;
+  const token = getAdminToken();
 
   const response = await fetch(apiUrl(path), {
     ...options,
@@ -267,8 +265,7 @@ function getAddress(order: Order) {
 
 export default function AdminOrdersPage() {
   const [orders, setOrders] = useState<Order[]>([]);
-  const [selectedOrderId, setSelectedOrderId] =
-    useState('');
+  const [selectedOrderId, setSelectedOrderId] = useState('');
   const [status, setStatus] = useState('');
   const [search, setSearch] = useState('');
 
@@ -570,15 +567,19 @@ export default function AdminOrdersPage() {
                     <th className="px-5 py-3 font-medium">
                       Order
                     </th>
+
                     <th className="px-3 py-3 font-medium">
                       Customer
                     </th>
+
                     <th className="px-3 py-3 font-medium">
                       Date
                     </th>
+
                     <th className="px-3 py-3 font-medium">
                       Status
                     </th>
+
                     <th className="px-5 py-3 text-right font-medium">
                       Total
                     </th>
@@ -611,10 +612,12 @@ export default function AdminOrdersPage() {
                               <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-[#f2eee8]">
                                 <ShoppingBag className="h-3.5 w-3.5 text-[#9a7447]" />
                               </div>
+
                               <div className="min-w-0">
                                 <p className="text-xs font-semibold text-[#343a40]">
                                   Order #{index + 1}
                                 </p>
+
                                 <p className="mt-0.5 max-w-[150px] truncate text-[9px] text-[#a0a6ab]">
                                   {id || 'Order reference'}
                                 </p>
@@ -707,18 +710,12 @@ export default function AdminOrdersPage() {
                 </p>
 
                 <p className="mt-2 text-sm font-medium text-[#343a40]">
-                  {getCustomer(
-                    selectedOrder
-                  )}
+                  {getCustomer(selectedOrder)}
                 </p>
 
-                {getCustomerEmail(
-                  selectedOrder
-                ) && (
+                {getCustomerEmail(selectedOrder) && (
                   <p className="mt-1 break-all text-xs text-[#858e95]">
-                    {getCustomerEmail(
-                      selectedOrder
-                    )}
+                    {getCustomerEmail(selectedOrder)}
                   </p>
                 )}
 
@@ -758,16 +755,14 @@ export default function AdminOrdersPage() {
                   <span className="text-[10px] text-[#929aa1]">
                     {getItems(selectedOrder).length}{' '}
                     item
-                    {getItems(selectedOrder).length ===
-                    1
+                    {getItems(selectedOrder).length === 1
                       ? ''
                       : 's'}
                   </span>
                 </div>
 
                 <div className="mt-2 space-y-2">
-                  {getItems(selectedOrder).length ===
-                  0 ? (
+                  {getItems(selectedOrder).length === 0 ? (
                     <div className="border border-dashed border-[#dfe4e8] p-4 text-center text-xs text-[#969da3]">
                       No item details returned by
                       the API.

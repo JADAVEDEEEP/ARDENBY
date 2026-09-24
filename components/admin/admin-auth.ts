@@ -24,7 +24,7 @@ export interface AuthResponse {
   message?: string;
 }
 
-export const ADMIN_TOKEN_KEY = 'ardenby_token';
+export const ADMIN_TOKEN_KEY = 'ardenby_admin_token';
 
 export const isAdminRole = (role?: string): role is AdminRole =>
   role === 'admin' || role === 'superadmin';

@@ -2,7 +2,9 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
+
 import { profileRequest, unwrap } from '../services/profile-api';
+
 import type {
   Address,
   Order,
@@ -16,7 +18,6 @@ export function useProfile() {
     typeof window !== 'undefined'
       ? localStorage.getItem('ardenby_token')
       : null;
-
 
   const router = useRouter();
 
@@ -61,7 +62,8 @@ export function useProfile() {
 
   const [oldPassword, setOldPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] =
+    useState('');
 
   const [showDeleteModal, setShowDeleteModal] =
     useState(false);
@@ -102,7 +104,8 @@ export function useProfile() {
 
     try {
       if (section === 'orders') {
-        const data = await profileRequest('/api/orders/my');
+        const data =
+          await profileRequest('/api/orders/my');
 
         setOrders(
           unwrap(data, ['orders', 'data']) || []
@@ -110,7 +113,8 @@ export function useProfile() {
       }
 
       if (section === 'wishlist') {
-        const data = await profileRequest('/api/wishlist/');
+        const data =
+          await profileRequest('/api/wishlist/');
 
         setWishlist(
           unwrap(data, [
@@ -122,7 +126,8 @@ export function useProfile() {
       }
 
       if (section === 'addresses') {
-        const data = await profileRequest('/api/addresses');
+        const data =
+          await profileRequest('/api/addresses');
 
         setAddresses(
           unwrap(data, [
@@ -146,6 +151,126 @@ export function useProfile() {
       );
     } finally {
       setSectionLoading(false);
+    }
+  };
+
+  // ============================================================
+  // WISHLIST
+  // ============================================================
+
+  const addToWishlist = async (productId: string) => {
+    try {
+      setError('');
+      setMessage('');
+
+      await profileRequest('/api/wishlist', {
+        method: 'POST',
+        body: JSON.stringify({
+          productId,
+        }),
+      });
+
+      await loadSection('wishlist');
+
+      setMessage('Added to wishlist.');
+    } catch (err: any) {
+      if (err.message === 'AUTH_REQUIRED') {
+        logout();
+        return;
+      }
+
+      setError(
+        err.message ||
+          'Unable to add product to wishlist.'
+      );
+    }
+  };
+
+  const checkWishlist = async (productId: string) => {
+    try {
+      const data =
+        await profileRequest(
+          `/api/wishlist/check/${encodeURIComponent(
+            productId
+          )}`
+        );
+
+      return Boolean(
+        data?.isWishlisted ??
+          data?.inWishlist ??
+          data?.wishlisted ??
+          data?.data?.isWishlisted ??
+          data?.data?.inWishlist
+      );
+    } catch (err: any) {
+      if (err.message === 'AUTH_REQUIRED') {
+        logout();
+        return false;
+      }
+
+      setError(
+        err.message ||
+          'Unable to check wishlist.'
+      );
+
+      return false;
+    }
+  };
+
+  const removeFromWishlist = async (
+    productId: string
+  ) => {
+    try {
+      setError('');
+      setMessage('');
+
+      await profileRequest(
+        `/api/wishlist/${encodeURIComponent(
+          productId
+        )}`,
+        {
+          method: 'DELETE',
+        }
+      );
+
+      await loadSection('wishlist');
+
+      setMessage('Removed from wishlist.');
+    } catch (err: any) {
+      if (err.message === 'AUTH_REQUIRED') {
+        logout();
+        return;
+      }
+
+      setError(
+        err.message ||
+          'Unable to remove product from wishlist.'
+      );
+    }
+  };
+
+  const clearWishlist = async () => {
+    try {
+      setError('');
+      setMessage('');
+
+      await profileRequest('/api/wishlist', {
+        method: 'DELETE',
+      });
+
+      setWishlist([]);
+
+      setMessage('Wishlist cleared.');
+    } catch (err: any) {
+      if (err.message === 'AUTH_REQUIRED') {
+        logout();
+        return;
+      }
+
+      setError(
+        err.message ||
+          'Unable to clear wishlist.'
+      );
     }
   };
 
@@ -204,17 +329,18 @@ export function useProfile() {
     setMessage('');
 
     try {
-      const data = await profileRequest(
-        '/api/users/me',
-        {
-          method: 'PUT',
-          body: JSON.stringify({
-            fullName,
-            phone,
-            gender,
-          }),
-        }
-      );
+      const data =
+        await profileRequest(
+          '/api/users/me',
+          {
+            method: 'PUT',
+            body: JSON.stringify({
+              fullName,
+              phone,
+              gender,
+            }),
+          }
+        );
 
       const updated = unwrap(data, [
         'user',
@@ -271,7 +397,10 @@ export function useProfile() {
       user.auth_provider === 'google';
 
     // Email/password account
-    if (!isGoogleAccount && !deletePassword.trim()) {
+    if (
+      !isGoogleAccount &&
+      !deletePassword.trim()
+    ) {
       setError(
         'Password is required to delete your account.'
       );
@@ -364,10 +493,13 @@ export function useProfile() {
           }
         );
       } else {
-        await profileRequest('/api/addresses', {
-          method: 'POST',
-          body: JSON.stringify(payload),
-        });
+        await profileRequest(
+          '/api/addresses',
+          {
+            method: 'POST',
+            body: JSON.stringify(payload),
+          }
+        );
       }
 
       setShowAddressForm(false);
@@ -576,9 +708,14 @@ export function useProfile() {
     return 'bg-[#EFECE6] text-[#5C554E]';
   };
 
-  const displayName = user?.full_name || 'ARDENBY Member';
-  const initial = displayName.charAt(0).toUpperCase();
-  const isGoogleAccount = user?.auth_provider === 'google';
+  const displayName =
+    user?.full_name || 'ARDENBY Member';
+
+  const initial =
+    displayName.charAt(0).toUpperCase();
+
+  const isGoogleAccount =
+    user?.auth_provider === 'google';
 
   return {
     router,
@@ -625,6 +762,10 @@ export function useProfile() {
     isGoogleAccount,
     logout,
     loadSection,
+    addToWishlist,
+    checkWishlist,
+    removeFromWishlist,
+    clearWishlist,
     updateAccount,
     openDeleteModal,
     deleteAccount,

@@ -18,7 +18,9 @@ import {
   SlidersHorizontal,
 } from "lucide-react";
 import { ProductCard } from "@/components/product/product-card";
-import { products, categories, heroSlides } from "@/lib/data";
+import { products as staticProducts, categories, heroSlides } from "@/lib/data";
+import { apiUrl } from "@/lib/api-url";
+import type { Product } from "@/types";
 
 const ease = [0.16, 1, 0.3, 1] as const;
 
@@ -98,6 +100,273 @@ const reviews = [
   },
 ];
 
+type ApiProduct = {
+  id: string;
+  slug: string;
+  name: string;
+  category_slug?: string | null;
+  category_label?: string | null;
+  fit?: string | null;
+  fabric?: string | null;
+  coverage?: string | null;
+  price?: number | string | null;
+  mrp?: number | string | null;
+  best_price?: number | string | null;
+  rating?: number | string | null;
+  review_count?: number | string | null;
+  description?: string | null;
+  fabric_details?: string | null;
+  wash_care?: string | null;
+  tags?: string | string[] | null;
+  best_seller?: boolean;
+  new_arrival?: boolean;
+  trending?: boolean;
+  limited_edition?: boolean;
+  inventory?: number | string | null;
+  created_at?: string | null;
+  images?: {
+    id?: string;
+    image_url?: string;
+    sort_order?: number;
+    is_primary?: boolean;
+  }[];
+  variants?: {
+    id?: string;
+    product_id?: string;
+    size?: string;
+    color?: string;
+    inventory?: number | string;
+    sku?: string | null;
+  }[];
+};
+
+type HomeProduct = {
+  [key: string]: any;
+  id: string;
+  slug: string;
+  name: string;
+  category?: string;
+  categoryLabel?: string;
+  fit?: string;
+  fabric?: string;
+  coverage?: string;
+  colors?: string[];
+  sizes?: string[];
+  images?: string[];
+  price?: number;
+  mrp?: number;
+  bestPrice?: number;
+  rating?: number;
+  reviewCount?: number;
+  description?: string;
+  fabricDetails?: string;
+  washCare?: string;
+  tags?: string[];
+  bestSeller?: boolean;
+  newArrival?: boolean;
+  trending?: boolean;
+  limitedEdition?: boolean;
+  inventory?: number;
+  variants?: any[];
+  fabricImage: string;
+  reviews: any[];
+};
+
+function normalizeApiProduct(product: ApiProduct): HomeProduct {
+  const variants = Array.isArray(product.variants)
+    ? product.variants
+        .filter((variant) => variant?.size && variant?.color)
+        .map((variant) => ({
+          id: variant.id,
+          product_id: variant.product_id || product.id,
+          size: String(variant.size),
+          color: String(variant.color),
+          inventory: Number(variant.inventory || 0),
+          sku: variant.sku || "",
+        }))
+    : [];
+
+  const images = Array.isArray(product.images)
+    ? [...product.images]
+        .sort(
+          (a, b) =>
+            Number(a.sort_order || 0) - Number(b.sort_order || 0)
+        )
+        .map((image) => image?.image_url)
+        .filter((url): url is string => Boolean(url))
+    : [];
+
+  const colors = Array.from(
+    new Set(
+      variants
+        .map((variant) => variant.color)
+        .filter(Boolean)
+    )
+  );
+
+  const sizes = Array.from(
+    new Set(
+      variants
+        .map((variant) => variant.size)
+        .filter(Boolean)
+    )
+  );
+
+  const tags = Array.isArray(product.tags)
+    ? product.tags.map(String)
+    : product.tags
+      ? String(product.tags)
+          .split(",")
+          .map((tag) => tag.trim())
+          .filter(Boolean)
+      : [];
+
+  return {
+    id: product.id,
+    slug: product.slug,
+    name: product.name,
+    category: product.category_slug || "",
+    categoryLabel: product.category_label || "",
+    fit: product.fit || "",
+    fabric: product.fabric || "",
+    coverage: product.coverage || "",
+    colors,
+    sizes,
+    images,
+    price: Number(product.price || 0),
+    mrp:
+      product.mrp == null
+        ? undefined
+        : Number(product.mrp),
+    bestPrice: Number(product.best_price || 0),
+    rating: Number(product.rating || 0),
+    reviewCount: Number(product.review_count || 0),
+    description: product.description || "",
+    fabricDetails: product.fabric_details || "",
+    washCare: product.wash_care || "",
+    tags,
+    bestSeller: Boolean(product.best_seller),
+    newArrival: Boolean(product.new_arrival),
+    trending: Boolean(product.trending),
+    limitedEdition: Boolean(product.limited_edition),
+    inventory: Number(product.inventory || 0),
+    variants,
+    fabricImage: images[0] || "",
+    reviews: [],
+  };
+}
+
+function normalizeStaticProduct(product: any): HomeProduct {
+  const variants = Array.isArray(product?.variants)
+    ? product.variants
+    : [];
+
+  const images = Array.isArray(product?.images)
+    ? product.images
+        .map((image: any) =>
+          typeof image === "string"
+            ? image
+            : image?.image_url
+        )
+        .filter(Boolean)
+    : [];
+
+  const sizes =
+    Array.isArray(product?.sizes) && product.sizes.length
+      ? product.sizes
+      : Array.from(
+          new Set(
+            variants
+              .map((variant: any) => variant?.size)
+              .filter(Boolean)
+          )
+        );
+
+  const colors =
+    Array.isArray(product?.colors) && product.colors.length
+      ? product.colors
+      : Array.from(
+          new Set(
+            variants
+              .map((variant: any) => variant?.color)
+              .filter(Boolean)
+          )
+        );
+
+  const tags = Array.isArray(product?.tags)
+    ? product.tags.map(String)
+    : product?.tags
+      ? String(product.tags)
+          .split(",")
+          .map((tag: string) => tag.trim())
+          .filter(Boolean)
+      : [];
+
+  return {
+    ...product,
+    id: String(product?.id ?? ""),
+    slug: String(product?.slug ?? ""),
+    name: String(product?.name ?? ""),
+    category:
+      product?.category ||
+      product?.category_slug ||
+      "",
+    categoryLabel:
+      product?.categoryLabel ||
+      product?.category_label ||
+      "",
+    fit: product?.fit || "",
+    fabric: product?.fabric || "",
+    coverage: product?.coverage || "",
+    price: Number(product?.price || 0),
+    mrp:
+      product?.mrp == null
+        ? undefined
+        : Number(product.mrp),
+    bestPrice: Number(
+      product?.bestPrice ??
+        product?.best_price ??
+        0
+    ),
+    rating: Number(product?.rating || 0),
+    reviewCount: Number(
+      product?.reviewCount ??
+        product?.review_count ??
+        0
+    ),
+    description: product?.description || "",
+    fabricDetails:
+      product?.fabricDetails ||
+      product?.fabric_details ||
+      "",
+    washCare:
+      product?.washCare ||
+      product?.wash_care ||
+      "",
+    tags,
+    bestSeller: Boolean(
+      product?.bestSeller ??
+        product?.best_seller
+    ),
+    newArrival: Boolean(
+      product?.newArrival ??
+        product?.new_arrival
+    ),
+    trending: Boolean(product?.trending),
+    limitedEdition: Boolean(
+      product?.limitedEdition ??
+        product?.limited_edition
+    ),
+    inventory: Number(product?.inventory || 0),
+    images,
+    variants,
+    sizes,
+    colors,
+    fabricImage: product?.fabricImage || images[0] || "",
+    reviews: Array.isArray(product?.reviews) ? product.reviews : [],
+  };
+}
+
 export default function HomePage() {
   const [slide, setSlide] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
@@ -105,9 +374,100 @@ export default function HomePage() {
   const [subscribed, setSubscribed] = useState(false);
   const [selectedSubCat, setSelectedSubCat] = useState("all");
 
+  // Existing dummy/static products stay available.
+  const staticHomeProducts = useMemo(
+    () => staticProducts.map(normalizeStaticProduct),
+    []
+  );
+
+  const [products, setProducts] = useState<HomeProduct[]>(
+    () => staticProducts.map(normalizeStaticProduct)
+  );
+  const [productsLoading, setProductsLoading] = useState(true);
+  const [productsError, setProductsError] = useState("");
+
+  useEffect(() => {
+    let cancelled = false;
+
+    async function loadProducts() {
+      setProductsLoading(true);
+      setProductsError("");
+
+      try {
+        const response = await fetch(
+          apiUrl("/api/products?page=1&limit=1000"),
+          { cache: "no-store" }
+        );
+
+        if (!response.ok) {
+          throw new Error(
+            `Products API failed with status ${response.status}`
+          );
+        }
+
+        const data = await response.json();
+
+        const apiProducts = Array.isArray(data?.products)
+          ? data.products
+          : Array.isArray(data?.data)
+            ? data.data
+            : Array.isArray(data)
+              ? data
+              : [];
+
+        const normalizedApiProducts = apiProducts
+          .map((product: ApiProduct) =>
+            normalizeApiProduct(product)
+          )
+          .filter(
+            (product: HomeProduct) =>
+              Boolean(
+                product.id &&
+                product.slug &&
+                product.name
+              )
+          );
+
+        if (!cancelled) {
+          // IMPORTANT:
+          // API products + existing dummy/static products.
+          // Static data is intentionally NOT removed.
+          setProducts([
+            ...normalizedApiProducts,
+            ...staticHomeProducts,
+          ]);
+        }
+      } catch (error) {
+        console.error(
+          "Home products API error:",
+          error
+        );
+
+        if (!cancelled) {
+          setProductsError(
+            "Live products are temporarily unavailable."
+          );
+
+          // Keep existing dummy products if API fails.
+          setProducts(staticHomeProducts);
+        }
+      } finally {
+        if (!cancelled) {
+          setProductsLoading(false);
+        }
+      }
+    }
+
+    loadProducts();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [staticHomeProducts]);
+
   const bestSellers = useMemo(
     () => products.filter((p) => p.bestSeller).slice(0, 8),
-    []
+    [products]
   );
 
   const filteredNewArrivals = useMemo(() => {
@@ -115,13 +475,13 @@ export default function HomePage() {
       return products.filter((p) => p.newArrival).slice(0, 4);
     }
     return products
-      .filter((p) => p.category === selectedSubCat || p.tags?.includes(selectedSubCat))
+      .filter((p) => p.newArrival && (p.category === selectedSubCat || p.tags?.includes(selectedSubCat)))
       .slice(0, 4);
-  }, [selectedSubCat]);
+  }, [products, selectedSubCat]);
 
   const trending = useMemo(
     () => products.filter((p) => p.trending).slice(0, 4),
-    []
+    [products]
   );
 
   useEffect(() => {
@@ -1501,12 +1861,16 @@ export default function HomePage() {
 
     {categories.slice(0, 4).map((cat, index) => {
 
+      const staticCatProduct = staticHomeProducts.find(
+        (p) => p.category === cat.slug
+      );
+
       const catProduct = products.find(
         (p) => p.category === cat.slug
       );
 
-
       const productImage =
+        staticCatProduct?.images?.[0] ||
         catProduct?.images?.[0] ||
         "https://images.unsplash.com/photo-1521572267360-ee0c2909d518?q=80&w=1000&auto=format&fit=crop";
 
@@ -1800,12 +2164,16 @@ export default function HomePage() {
 
     {categories.slice(0, 4).map((cat, index) => {
 
+      const staticCatProduct = staticHomeProducts.find(
+        (p) => p.category === cat.slug
+      );
+
       const catProduct = products.find(
         (p) => p.category === cat.slug
       );
 
-
       const productImage =
+        staticCatProduct?.images?.[0] ||
         catProduct?.images?.[0] ||
         "https://images.unsplash.com/photo-1521572267360-ee0c2909d518?q=80&w=1000&auto=format&fit=crop";
 
@@ -2154,6 +2522,16 @@ export default function HomePage() {
         <p className="mt-3 hidden max-w-[420px] text-[11px] leading-5 text-neutral-500 sm:block">
           Most loved. Most worn. Timeless pieces that define ARDENBY.
         </p>
+        {productsLoading && (
+          <p className="mt-2 text-[8px] font-medium uppercase tracking-[0.2em] text-neutral-400">
+            Loading live collection...
+          </p>
+        )}
+        {!productsLoading && productsError && (
+          <p className="mt-2 text-[8px] font-medium uppercase tracking-[0.2em] text-neutral-400">
+            Showing the latest available collection.
+          </p>
+        )}
       </div>
 
       {/* DESKTOP VIEW ALL */}
@@ -2174,7 +2552,7 @@ export default function HomePage() {
       {bestSellers.map((product, index) => (
         <ProductCard
           key={product.id}
-          product={product}
+          product={product as Product}
           index={index}
         />
       ))}
@@ -2291,7 +2669,7 @@ export default function HomePage() {
             className="group min-w-0"
           >
             <ProductCard
-              product={product}
+              product={product as Product}
               index={index}
             />
           </div>
@@ -2414,7 +2792,7 @@ export default function HomePage() {
           className="group min-w-0"
         >
           <ProductCard
-            product={product}
+            product={product as Product}
             index={index}
           />
         </motion.div>

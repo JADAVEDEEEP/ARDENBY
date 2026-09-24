@@ -142,6 +142,8 @@ export function Navbar() {
   const cartCount = getCartCount(cartItems);
 
   const wishlistCount = useWishlistStore((s) => s.items.length);
+  const syncWishlist = useWishlistStore((s) => s.syncFromApi);
+  const clearWishlistLocal = useWishlistStore((s) => s.clearLocal);
 
   // ============================================================
   // AUTH STATE
@@ -179,59 +181,100 @@ export function Navbar() {
   // ============================================================
 
   useEffect(() => {
-    let cancelled = false;
+  let cancelled = false;
 
-    const loadUser = async () => {
-      const token = getToken();
+  const loadUser = async () => {
+    const token = getToken();
 
-      if (!token) {
-        if (!cancelled) setUser(null);
-        return;
+    if (!token) {
+      if (!cancelled) {
+        setUser(null);
+        clearWishlistLocal();
       }
+      return;
+    }
 
-      try {
-        const response = await apiRequest<{ user?: any; data?: any }>(
-          '/api/users/me',
-          { method: 'GET' }
-        );
+    try {
+      const response = await apiRequest<{
+        user?: any;
+        data?: any;
+      }>('/api/users/me', {
+        method: 'GET',
+      });
 
-        const rawUser = response.user || response.data || response;
+      const rawUser = response.user || response.data || response;
 
-        if (!cancelled) {
-          setUser({
-            id: rawUser.id,
-            phone: rawUser.phone || '',
-            fullName: rawUser.full_name || rawUser.fullName || rawUser.name || '',
-            email: rawUser.email || '',
-            gender: rawUser.gender || 'other',
-            isVerified:
-              rawUser.email_verified === true ||
-              rawUser.email_verified === 1 ||
-              rawUser.isVerified === true,
-            role: rawUser.role,
-          });
-        }
-      } catch {
-        clearToken();
-        if (!cancelled) setUser(null);
+      if (cancelled) return;
+
+      const role = String(rawUser.role || '').toLowerCase();
+
+      setUser({
+        id: rawUser.id,
+        phone: rawUser.phone || '',
+        fullName:
+          rawUser.full_name ||
+          rawUser.fullName ||
+          rawUser.name ||
+          '',
+        email: rawUser.email || '',
+        gender: rawUser.gender || 'other',
+        isVerified:
+          rawUser.email_verified === true ||
+          rawUser.email_verified === 1 ||
+          rawUser.isVerified === true,
+        role: rawUser.role,
+      });
+
+      // Wishlist API is customer-only.
+      if (role === 'customer') {
+        await syncWishlist();
+      } else {
+        clearWishlistLocal();
       }
-    };
+    } catch {
+      clearToken();
 
+      if (!cancelled) {
+        setUser(null);
+        clearWishlistLocal();
+      }
+    }
+  };
+
+  void loadUser();
+
+  const syncAuthState = () => {
     void loadUser();
+  };
 
-    const syncAuthState = () => {
-      void loadUser();
-    };
-    window.addEventListener('ardenby-auth-changed', syncAuthState);
-    window.addEventListener('storage', syncAuthState);
+  window.addEventListener(
+    'ardenby-auth-changed',
+    syncAuthState,
+  );
 
-    return () => {
-      cancelled = true;
-      window.removeEventListener('ardenby-auth-changed', syncAuthState);
-      window.removeEventListener('storage', syncAuthState);
-    };
-  }, [pathname]);
+  window.addEventListener(
+    'storage',
+    syncAuthState,
+  );
 
+  return () => {
+    cancelled = true;
+
+    window.removeEventListener(
+      'ardenby-auth-changed',
+      syncAuthState,
+    );
+
+    window.removeEventListener(
+      'storage',
+      syncAuthState,
+    );
+  };
+}, [
+  pathname,
+  syncWishlist,
+  clearWishlistLocal,
+]);
   // ============================================================
   // ESC KEY
   // ============================================================
@@ -747,20 +790,27 @@ export function Navbar() {
   // ============================================================
   // LOGOUT
   // ============================================================
+const handleLogout = () => {
+  clearToken();
 
-  const handleLogout = () => {
-    clearToken();
-    setUser(null);
-    window.dispatchEvent(new Event('ardenby-auth-changed'));
-    setEmail('');
-    setPassword('');
-    setOtp(Array(6).fill(''));
-    setOtpPurpose('login');
-    setError('');
-    setStep('LOGIN');
-    setIsOpen(false);
-    router.push('/');
-  };
+  clearWishlistLocal();
+
+  setUser(null);
+
+  window.dispatchEvent(
+    new Event('ardenby-auth-changed')
+  );
+
+  setEmail('');
+  setPassword('');
+  setOtp(Array(6).fill(''));
+  setOtpPurpose('login');
+  setError('');
+  setStep('LOGIN');
+  setIsOpen(false);
+
+  router.push('/');
+};
 
   // ============================================================
   // SEARCH
