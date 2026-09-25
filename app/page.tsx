@@ -1021,100 +1021,55 @@ export default function HomePage() {
 
         </div>
       </section>
-{/*================================================================
-
-    ARDENBY — SHOP BY CATEGORY
-
-    SHOPRZ-STYLE 5-TILE EDITORIAL LAYOUT
-
-
-
-    Layout:
-
-      LEFT  : 2 stacked category cards
-
-      CENTER: 1 tall featured card
-
-      RIGHT : 2 stacked category cards
-
-
-
-    Existing categories / product lookup / category hrefs remain intact.
-
-================================================================ */}
-
 <section className="w-full overflow-hidden bg-[#F6F3EC] px-4 py-8 sm:px-6 sm:py-10 lg:px-8 lg:py-12">
 
-
-
-  {/* SECTION HEADER */}
+  {/* ============================================================
+      SECTION HEADER
+  ============================================================ */}
 
   <div className="mx-auto mb-7 flex w-full max-w-[1380px] items-end justify-between gap-6 sm:mb-9 lg:mb-10">
 
     <div>
 
       <div className="mb-2 flex items-center gap-2.5">
-
         <span className="h-px w-7 bg-[#181714]" />
 
         <span className="text-[8px] font-semibold uppercase tracking-[0.28em] text-[#77716A] sm:text-[9px]">
-
           ARDENBY COLLECTIONS
-
         </span>
-
       </div>
 
-
-
       <h2
-
         className="text-[38px] font-normal leading-[0.9] tracking-[-0.055em] text-[#11100F] sm:text-[48px] lg:text-[58px]"
-
-        style={{ fontFamily: "Bodoni MT, Didot, Times New Roman, serif" }}
-
+        style={{
+          fontFamily: "Bodoni MT, Didot, Times New Roman, serif",
+        }}
       >
-
         Shop by Category
-
       </h2>
 
-
-
       <p className="mt-2 font-serif text-[13px] italic tracking-[-0.01em] text-[#77716A] sm:text-[14px]">
-
         Find your everyday uniform.
-
       </p>
 
     </div>
 
-
+    {/* DESKTOP EXPLORE LINK */}
 
     <Link
-
       href="/shop"
-
       className="group hidden items-center gap-2 border-b border-[#11100F] pb-1.5 text-[8px] font-semibold uppercase tracking-[0.24em] text-[#11100F] sm:flex"
-
     >
-
       <span>Explore Ardenby</span>
 
       <ArrowRight className="h-3.5 w-3.5 transition-transform duration-300 group-hover:translate-x-1" />
-
     </Link>
 
   </div>
 
 
-
   {/* ============================================================
-
-      DESKTOP — 3 COLUMN / 5 TILE COMPOSITION
-
-      LEFT 2 STACKED | CENTER TALL | RIGHT 2 STACKED
-
+      DESKTOP — 3 COLUMN / 5 TILE
   ============================================================ */}
 
   <div className="mx-auto hidden w-full max-w-[1380px] gap-3 lg:grid lg:grid-cols-[1fr_1.02fr_1fr]">
@@ -1122,152 +1077,123 @@ export default function HomePage() {
     {categories.slice(0, 4).map((cat, index) => {
 
       const staticCatProduct = staticHomeProducts.find(
-
         (p) => p.category === cat.slug
-
       );
-
-
 
       const catProduct = products.find(
-
         (p) => p.category === cat.slug
-
       );
 
-
-
       const productImage =
-
         staticCatProduct?.images?.[0] ||
-
         catProduct?.images?.[0] ||
-
         "https://images.unsplash.com/photo-1521572267360-ee0c2909d518?q=80&w=1200&auto=format&fit=crop";
-
-
 
       const isCenter = index === 1;
 
-
-
       const cardCopy = [
-
         "Heavyweight silhouettes for your everyday rotation.",
-
         "Distinct graphics with a premium streetwear finish.",
-
         "Elevated essentials built for everyday luxury.",
-
         "Statement pieces made to stand apart.",
-
       ][index];
-
-
 
       const cardLabel = [
-
         "HEAVYWEIGHT ESSENTIALS",
-
         "GRAPHIC COLLECTION",
-
         "EVERYDAY LUXURY",
-
         "STATEMENT EDIT",
-
       ][index];
 
-
-
       return (
-
         <motion.div
-
           key={cat.slug}
-
           className={isCenter ? "row-span-2" : ""}
-
           initial={{ opacity: 0, y: 14 }}
-
           whileInView={{ opacity: 1, y: 0 }}
-
-          viewport={{ once: true, amount: 0.12 }}
-
-          transition={{ duration: 0.5, delay: index * 0.06 }}
-
+          viewport={{
+            once: true,
+            amount: 0.12,
+          }}
+          transition={{
+            duration: 0.5,
+            delay: index * 0.06,
+          }}
         >
 
           <Link
-
             href={`/shop?category=${cat.slug}`}
-
             className="group block h-full overflow-hidden rounded-[16px] bg-[#E9E1D5]"
-
           >
 
-            <div className={isCenter ? "relative h-full min-h-[620px]" : "relative h-[304px]"}>
+            <div
+              className={
+                isCenter
+                  ? "relative h-full min-h-[620px]"
+                  : "relative h-[304px]"
+              }
+            >
+
+              {/* IMAGE */}
 
               <img
-
                 src={productImage}
-
                 alt={cat.name}
-
-                className="h-full w-full object-cover object-center transition-transform duration-700 ease-out group-hover:scale-[1.025]"
-
+                className={
+                  isCenter
+                    ? "h-full w-full object-cover object-[center_20%] transition-transform duration-700 ease-out group-hover:scale-[1.025]"
+                    : "h-full w-full object-cover object-[center_18%] transition-transform duration-700 ease-out group-hover:scale-[1.025]"
+                }
               />
 
+              {/* SOFT DARK SHADOW FOR TEXT */}
+
+              <div className="pointer-events-none absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-black/55 via-black/20 to-transparent" />
 
 
-              {/* Very soft readability wash — image stays dominant */}
-
-              <div className="absolute inset-x-0 bottom-0 h-28 bg-gradient-to-t from-black/28 to-transparent" />
-
-
-
-              {/* Center card */}
+              {/* CENTER CARD */}
 
               {isCenter ? (
 
-                <div className="absolute inset-x-0 bottom-0 p-5 text-white xl:p-6">
+                <div className="absolute inset-x-0 bottom-0 z-10 p-5 text-white xl:p-6">
 
                   <div className="mb-3 flex items-center gap-2">
 
-                    <span className="h-px w-6 bg-white/80" />
+                    <span className="h-px w-6 bg-white/90" />
 
-                    <span className="text-[7px] font-semibold uppercase tracking-[0.22em] text-white/85">
-
+                    <span
+                      className="text-[7px] font-semibold uppercase tracking-[0.22em] text-white"
+                      style={{
+                        textShadow: "0 1px 5px rgba(0,0,0,0.8)",
+                      }}
+                    >
                       Featured Collection
-
                     </span>
 
                   </div>
 
-
-
                   <h3
-
-                    className="max-w-[360px] text-[38px] font-normal leading-[0.88] tracking-[-0.045em] sm:text-[44px] xl:text-[50px]"
-
-                    style={{ fontFamily: "Bodoni MT, Didot, Times New Roman, serif" }}
-
+                    className="max-w-[360px] text-[38px] font-normal leading-[0.88] tracking-[-0.045em] text-white sm:text-[44px] xl:text-[50px]"
+                    style={{
+                      fontFamily:
+                        "Bodoni MT, Didot, Times New Roman, serif",
+                      textShadow:
+                        "0 2px 8px rgba(0,0,0,0.75), 0 1px 2px rgba(0,0,0,0.9)",
+                    }}
                   >
-
                     {cat.name}
-
                   </h3>
 
-
-
-                  <p className="mt-2 max-w-[330px] text-[9px] leading-relaxed text-white/80">
-
+                  <p
+                    className="mt-2 max-w-[330px] text-[9px] leading-relaxed text-white"
+                    style={{
+                      textShadow: "0 1px 6px rgba(0,0,0,0.9)",
+                    }}
+                  >
                     {cardCopy}
-
                   </p>
 
-
-
-                  <span className="mt-4 inline-flex items-center gap-2 rounded-full bg-white px-4 py-2 text-[7px] font-bold uppercase tracking-[0.2em] text-[#11100F] transition-transform duration-300 group-hover:translate-y-[-2px]">
+                  <span className="mt-4 inline-flex items-center gap-2 rounded-full bg-white px-4 py-2 text-[7px] font-bold uppercase tracking-[0.2em] text-[#11100F] shadow-[0_3px_12px_rgba(0,0,0,0.25)] transition-transform duration-300 group-hover:-translate-y-0.5">
 
                     Shop Collection
 
@@ -1279,33 +1205,34 @@ export default function HomePage() {
 
               ) : (
 
-                <div className="absolute inset-x-0 bottom-0 p-4 text-white xl:p-5">
+                /* NORMAL CARD */
 
-                  <p className="mb-1.5 text-[7px] font-semibold uppercase tracking-[0.2em] text-white/80">
+                <div className="absolute inset-x-0 bottom-0 z-10 p-4 text-white xl:p-5">
 
+                  <p
+                    className="mb-1.5 text-[7px] font-semibold uppercase tracking-[0.2em] text-white"
+                    style={{
+                      textShadow: "0 1px 6px rgba(0,0,0,0.9)",
+                    }}
+                  >
                     {cardLabel}
-
                   </p>
-
-
 
                   <div className="flex items-end justify-between gap-3">
 
                     <h3
-
-                      className="text-[25px] font-normal leading-[0.9] tracking-[-0.035em] xl:text-[29px]"
-
-                      style={{ fontFamily: "Bodoni MT, Didot, Times New Roman, serif" }}
-
+                      className="text-[25px] font-normal leading-[0.9] tracking-[-0.035em] text-white xl:text-[29px]"
+                      style={{
+                        fontFamily:
+                          "Bodoni MT, Didot, Times New Roman, serif",
+                        textShadow:
+                          "0 2px 8px rgba(0,0,0,0.8), 0 1px 2px rgba(0,0,0,0.9)",
+                      }}
                     >
-
                       {cat.name}
-
                     </h3>
 
-
-
-                    <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-white/70 bg-white/10 backdrop-blur-sm transition-all duration-300 group-hover:bg-white group-hover:text-[#11100F]">
+                    <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-white/80 bg-black/20 text-white shadow-[0_2px_8px_rgba(0,0,0,0.25)] backdrop-blur-sm transition-all duration-300 group-hover:bg-white group-hover:text-[#11100F]">
 
                       <ArrowUpRight className="h-3.5 w-3.5" />
 
@@ -1322,84 +1249,79 @@ export default function HomePage() {
           </Link>
 
         </motion.div>
-
       );
-
     })}
 
 
-
-    {/* FIFTH TILE — ALL PRODUCTS / ARDENBY FEATURE */}
+    {/* ============================================================
+        FIFTH TILE — ALL PRODUCTS
+    ============================================================ */}
 
     <motion.div
-
       className="row-start-2"
-
-      initial={{ opacity: 0, y: 14 }}
-
-      whileInView={{ opacity: 1, y: 0 }}
-
-      viewport={{ once: true, amount: 0.12 }}
-
-      transition={{ duration: 0.5, delay: 0.22 }}
-
+      initial={{
+        opacity: 0,
+        y: 14,
+      }}
+      whileInView={{
+        opacity: 1,
+        y: 0,
+      }}
+      viewport={{
+        once: true,
+        amount: 0.12,
+      }}
+      transition={{
+        duration: 0.5,
+        delay: 0.22,
+      }}
     >
 
       <Link
-
         href="/shop"
-
         className="group block h-[304px] overflow-hidden rounded-[16px] bg-[#DDD4C7]"
-
       >
 
         <div className="relative h-full">
 
           <img
-
             src={
-
               staticHomeProducts?.[4]?.images?.[0] ||
-
               staticHomeProducts?.[0]?.images?.[0] ||
-
               "https://images.unsplash.com/photo-1496747611176-843222e1e57c?q=80&w=1200&auto=format&fit=crop"
-
             }
-
             alt="All Ardenby Products"
-
-            className="h-full w-full object-cover object-center transition-transform duration-700 ease-out group-hover:scale-[1.025]"
-
+            className="h-full w-full object-cover object-[center_18%] transition-transform duration-700 ease-out group-hover:scale-[1.025]"
           />
 
-          <div className="absolute inset-0 bg-gradient-to-t from-black/42 via-black/5 to-transparent" />
+          <div className="pointer-events-none absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-black/58 via-black/20 to-transparent" />
 
+          <div className="absolute inset-x-0 bottom-0 z-10 p-4 text-white xl:p-5">
 
-
-          <div className="absolute inset-x-0 bottom-0 p-4 text-white xl:p-5">
-
-            <p className="mb-1.5 text-[7px] font-semibold uppercase tracking-[0.2em] text-white/80">
-
+            <p
+              className="mb-1.5 text-[7px] font-semibold uppercase tracking-[0.2em] text-white"
+              style={{
+                textShadow: "0 1px 6px rgba(0,0,0,0.9)",
+              }}
+            >
               Complete Collection
-
             </p>
 
             <div className="flex items-end justify-between gap-3">
 
               <h3
-
-                className="text-[25px] font-normal leading-[0.9] tracking-[-0.035em] xl:text-[29px]"
-
-                style={{ fontFamily: "Bodoni MT, Didot, Times New Roman, serif" }}
-
+                className="text-[25px] font-normal leading-[0.9] tracking-[-0.035em] text-white xl:text-[29px]"
+                style={{
+                  fontFamily:
+                    "Bodoni MT, Didot, Times New Roman, serif",
+                  textShadow:
+                    "0 2px 8px rgba(0,0,0,0.8), 0 1px 2px rgba(0,0,0,0.9)",
+                }}
               >
-
                 All Products
-
               </h3>
 
-              <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-white/70 bg-white/10 backdrop-blur-sm transition-all duration-300 group-hover:bg-white group-hover:text-[#11100F]">
+              <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-white/80 bg-black/20 text-white shadow-[0_2px_8px_rgba(0,0,0,0.25)] backdrop-blur-sm transition-all duration-300 group-hover:bg-white group-hover:text-[#11100F]">
 
                 <ArrowUpRight className="h-3.5 w-3.5" />
 
@@ -1418,11 +1340,8 @@ export default function HomePage() {
   </div>
 
 
-
   {/* ============================================================
-
-      MOBILE — 2 COLUMN SHOPRZ STYLE
-
+      MOBILE — 2 COLUMN
   ============================================================ */}
 
   <div className="mx-auto grid w-full max-w-[1380px] grid-cols-2 gap-2.5 lg:hidden">
@@ -1430,96 +1349,91 @@ export default function HomePage() {
     {categories.slice(0, 4).map((cat, index) => {
 
       const staticCatProduct = staticHomeProducts.find(
-
         (p) => p.category === cat.slug
-
       );
-
-
 
       const catProduct = products.find(
-
         (p) => p.category === cat.slug
-
       );
 
-
-
       const productImage =
-
         staticCatProduct?.images?.[0] ||
-
         catProduct?.images?.[0] ||
-
         "https://images.unsplash.com/photo-1521572267360-ee0c2909d518?q=80&w=1000&auto=format&fit=crop";
 
-
-
       return (
-
         <motion.div
-
           key={cat.slug}
-
           className={index === 1 ? "row-span-2" : ""}
-
-          initial={{ opacity: 0, y: 10 }}
-
-          whileInView={{ opacity: 1, y: 0 }}
-
-          viewport={{ once: true, amount: 0.08 }}
-
-          transition={{ duration: 0.4, delay: index * 0.04 }}
-
+          initial={{
+            opacity: 0,
+            y: 10,
+          }}
+          whileInView={{
+            opacity: 1,
+            y: 0,
+          }}
+          viewport={{
+            once: true,
+            amount: 0.08,
+          }}
+          transition={{
+            duration: 0.4,
+            delay: index * 0.04,
+          }}
         >
 
           <Link
-
             href={`/shop?category=${cat.slug}`}
-
             className="group block h-full overflow-hidden rounded-[12px] bg-[#E9E1D5]"
-
           >
 
-            <div className={index === 1 ? "relative h-[390px]" : "relative h-[190px]"}>
+            <div
+              className={
+                index === 1
+                  ? "relative h-[390px]"
+                  : "relative h-[190px]"
+              }
+            >
 
               <img
-
                 src={productImage}
-
                 alt={cat.name}
-
-                className="h-full w-full object-cover object-center transition-transform duration-700 group-hover:scale-[1.025]"
-
+                className="h-full w-full object-cover object-[center_18%] transition-transform duration-700 group-hover:scale-[1.025]"
               />
 
-              <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-black/38 to-transparent" />
+              {/* MOBILE SHADOW */}
 
+              <div className="pointer-events-none absolute inset-x-0 bottom-0 h-28 bg-gradient-to-t from-black/55 via-black/15 to-transparent" />
 
+              {/* MOBILE TEXT */}
 
-              <div className="absolute inset-x-0 bottom-0 p-3 text-white">
+              <div className="absolute inset-x-0 bottom-0 z-10 p-3 text-white">
 
-                <p className="mb-1 text-[6px] font-semibold uppercase tracking-[0.18em] text-white/80">
-
+                <p
+                  className="mb-1 text-[6px] font-semibold uppercase tracking-[0.18em] text-white"
+                  style={{
+                    textShadow: "0 1px 6px rgba(0,0,0,0.9)",
+                  }}
+                >
                   0{index + 1} / COLLECTION
-
                 </p>
 
                 <div className="flex items-end justify-between gap-2">
 
                   <h3
-
-                    className="text-[19px] font-normal leading-[0.9] tracking-[-0.03em]"
-
-                    style={{ fontFamily: "Bodoni MT, Didot, Times New Roman, serif" }}
-
+                    className="text-[19px] font-normal leading-[0.9] tracking-[-0.03em] text-white"
+                    style={{
+                      fontFamily:
+                        "Bodoni MT, Didot, Times New Roman, serif",
+                      textShadow:
+                        "0 2px 8px rgba(0,0,0,0.85), 0 1px 2px rgba(0,0,0,0.9)",
+                    }}
                   >
-
                     {cat.name}
-
                   </h3>
 
-                  <ArrowUpRight className="h-3.5 w-3.5 shrink-0" />
+                  <ArrowUpRight className="h-3.5 w-3.5 shrink-0 text-white drop-shadow-[0_1px_4px_rgba(0,0,0,0.8)]" />
 
                 </div>
 
@@ -1530,31 +1444,35 @@ export default function HomePage() {
           </Link>
 
         </motion.div>
-
       );
-
     })}
 
 
+    {/* ============================================================
+        MOBILE — PREMIUM TEXT LINK
+        NO BLACK BUTTON
+    ============================================================ */}
 
-    <Link
+    <div className="col-span-2 flex justify-center pt-3 pb-1">
 
-      href="/shop"
+      <Link
+        href="/shop"
+        className="group inline-flex items-center gap-2 border-b border-[#11100F]/50 pb-1.5 text-[8px] font-semibold uppercase tracking-[0.24em] text-[#11100F] shadow-[0_3px_8px_rgba(17,16,15,0.08)] transition-all duration-300 hover:border-[#11100F] hover:shadow-[0_4px_10px_rgba(17,16,15,0.14)]"
+      >
 
-      className="col-span-2 flex h-11 items-center justify-center gap-2 rounded-[10px] bg-[#11100F] text-[7px] font-bold uppercase tracking-[0.23em] text-white"
+        <span>
+          Explore All Products
+        </span>
 
-    >
+        <ArrowRight className="h-3.5 w-3.5 transition-transform duration-300 group-hover:translate-x-1" />
 
-      Explore All Products
+      </Link>
 
-      <ArrowRight className="h-3 w-3" />
-
-    </Link>
+    </div>
 
   </div>
 
 </section>
-     
     
 
       {/* ================= BEST SELLERS ================= */}
