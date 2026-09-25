@@ -506,1642 +506,1022 @@ export default function HomePage() {
 
   return (
     <main className="w-full overflow-x-hidden bg-[#F6F5F0] text-[#111111] selection:bg-neutral-900 selection:text-white">
-      {/* ================= HERO SECTION ================= */}
-     {/* =========================================================
-    HERO SECTION
-========================================================= */}
-
-<section
-  className="
-    relative
-    z-0
-    w-full
-    h-[600px]
-    overflow-hidden
-    bg-[#F4F2ED]
-
-    sm:h-[640px]
-    md:h-[680px]
-
-    lg:h-[calc(100vh-90px)]
-    lg:min-h-[580px]
-    lg:max-h-[700px]
-  "
-  onMouseEnter={() => setIsPaused(true)}
-  onMouseLeave={() => setIsPaused(false)}
->
-  <div className="relative mx-auto h-full w-full max-w-[1500px]">
-
-    {/* =====================================================
-        BACKGROUND TRANSITION / BLEND LAYER
-    ====================================================== */}
-    <div
-      aria-hidden="true"
-      className="
-        pointer-events-none
-        absolute inset-0 z-0
-        bg-[radial-gradient(ellipse_at_center,rgba(246,245,240,0)_0%,rgba(246,245,240,0.08)_28%,rgba(246,245,240,0.58)_72%,rgba(246,245,240,0.94)_100%)]
-      "
-    />
-
-    <div
-      aria-hidden="true"
-      className="
-        pointer-events-none
-        absolute inset-x-0 bottom-0 z-0 h-36
-        bg-gradient-to-t from-[#F6F5F0] via-[#F6F5F0]/55 to-transparent
-      "
-    />
-
-    {/* =====================================================
-        PREMIUM DROP LABEL
-    ====================================================== */}
-
-    <motion.div
-      initial={{ opacity: 0, y: -8 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5 }}
-      className="
-        absolute
-        left-4
-        top-5
-        z-30
-
-        sm:left-6
-        sm:top-7
-
-        lg:left-8
-        lg:top-9
-      "
-    >
-      <div
-        className="
-          rounded-md
-          border
-          border-neutral-300/80
-          bg-white/75
-          px-3
-          py-1.5
-          backdrop-blur-md
-          shadow-[0_5px_16px_rgba(0,0,0,0.06)]
-
-          sm:px-3.5
-          sm:py-2
-        "
+      {/* ================= HERO SECTION ================= */
+      <section
+        className="relative z-0 w-full overflow-hidden bg-[#F6F5F0] h-[500px] sm:h-[540px] md:h-[520px] lg:h-[540px]"
+        onMouseEnter={() => setIsPaused(true)}
+        onMouseLeave={() => setIsPaused(false)}
       >
-        <p
-          className="
-            text-[6.5px]
-            font-bold
-            uppercase
-            tracking-[0.2em]
-            text-neutral-900
-
-            sm:text-[7px]
-          "
-        >
-          Premium Drop • SS26
-        </p>
-
-        <p
-          className="
-            mt-0.5
-            text-[7px]
-            font-light
-            text-neutral-500
-
-            sm:text-[8px]
-          "
-        >
-          Heavyweight • Drop Shoulder
-        </p>
-      </div>
-    </motion.div>
-
-
-    {/* =====================================================
-        HUGE EDITORIAL TYPOGRAPHY
-
-        z-10 = BEHIND MODEL
-    ====================================================== */}
-
-    <AnimatePresence mode="wait">
-      <motion.div
-        key={`headline-${slide}`}
-        initial={{
-          opacity: 0,
-          y: 12,
-        }}
-        animate={{
-          opacity: 1,
-          y: 0,
-        }}
-        exit={{
-          opacity: 0,
-          y: -8,
-        }}
-        transition={{
-          duration: 0.55,
-          ease,
-        }}
-        className="
-          absolute
-          left-0
-          right-0
-
-          top-[105px]
-
-          z-10
-
-          flex
-          justify-center
-
-          px-2
-
-          sm:top-[115px]
-          sm:px-4
-
-          md:top-[120px]
-
-          lg:top-[88px]
-          lg:px-8
-        "
-      >
-        <h1
-          className="
-            w-full
-            max-w-[1350px]
-
-            text-center
-
-            font-serif
-            font-black
-            uppercase
-
-            leading-[0.76]
-
-            tracking-[-0.055em]
-
-            text-neutral-950
-
-            /* MOBILE */
-            text-[54px]
-
-            /* LARGE PHONE */
-            sm:text-[68px]
-
-            /* TABLET */
-            md:text-[86px]
-
-            /* DESKTOP */
-            lg:text-[clamp(86px,8.7vw,132px)]
-          "
-          style={{
-            fontFamily:
-              "Bodoni MT, Didot, Times New Roman, serif",
-
-            textShadow:
-              "0 1px 0 rgba(0,0,0,0.08)",
-          }}
-        >
-          {activeHero.headline}
-        </h1>
-      </motion.div>
-    </AnimatePresence>
-
-
-    {/* =====================================================
-        MODEL LAYER
-
-        z-50 = ABOVE HEADLINE
-    ====================================================== */}
-
-    <div
-      className="
-        pointer-events-none
-
-        absolute
-        inset-0
-
-        z-50
-
-        flex
-        items-end
-        justify-center
-      "
-    >
-
-      <AnimatePresence mode="wait">
-        <motion.div
-          key={`model-${slide}`}
-          initial={{
-            opacity: 0,
-            y: 25,
-            scale: 1.02,
-          }}
-          animate={{
-            opacity: 1,
-            y: 35,
-            scale: 1,
-          }}
-          exit={{
-            opacity: 0,
-            y: 20,
-          }}
-          transition={{
-            duration: 0.65,
-            ease,
-          }}
-          className="
-            relative
-            z-50
-
-            flex
-            h-full
-            w-full
-
-            items-end
-            justify-center
-
-            sm:translate-y-[25px]
-
-            md:translate-y-0
-          "
-        >
-
-          {/* =================================================
-              SOFT MODEL SHADOW
-          ================================================== */}
-
-          <div
-            className="
-              absolute
-
-              bottom-[35px]
-              left-1/2
-
-              h-[340px]
-              w-[290px]
-
-              -translate-x-1/2
-
-              rounded-full
-
-              bg-neutral-400/10
-
-              blur-[70px]
-
-              sm:h-[390px]
-              sm:w-[340px]
-
-              md:h-[440px]
-              md:w-[390px]
-
-              lg:h-[470px]
-              lg:w-[430px]
-            "
-          />
-
-
-          {/* =================================================
-              TRANSPARENT MODEL IMAGE
-          ================================================== */}
-
-          <img
-            src={
-              transparentHeroImages[
-                slide % transparentHeroImages.length
-              ]
-            }
-            alt={activeHero.headline}
-            className="
-              relative
-              z-50
-
-              /* MOBILE */
-              h-[86%]
-
-              w-auto
-
-              max-w-[105%]
-
-              object-contain
-              object-bottom
-
-              drop-shadow-[0_20px_32px_rgba(0,0,0,0.18)]
-
-              /* LARGE PHONE */
-              sm:h-[88%]
-              sm:max-w-[100%]
-
-              /* TABLET */
-              md:h-[88%]
-
-              /* DESKTOP */
-              lg:h-[92%]
-              lg:max-w-[64%]
-
-              lg:drop-shadow-[0_22px_35px_rgba(0,0,0,0.20)]
-            "
-          />
-
-        </motion.div>
-      </AnimatePresence>
-
-    </div>
-
-
-    {/* =====================================================
-        MOBILE SUBTITLE
-    ====================================================== */}
-
-    <AnimatePresence mode="wait">
-      <motion.div
-        key={`mobile-sub-${slide}`}
-        initial={{
-          opacity: 0,
-        }}
-        animate={{
-          opacity: 1,
-        }}
-        exit={{
-          opacity: 0,
-        }}
-        transition={{
-          duration: 0.4,
-        }}
-        className="
-          absolute
-
-          left-0
-          right-0
-
-          top-[218px]
-
-          z-30
-
-          flex
-          justify-center
-
-          px-4
-
-          sm:top-[245px]
-
-          md:hidden
-        "
-      >
-        <div className="flex items-center gap-2">
-
-          <span className="h-px w-5 bg-neutral-400" />
-
-          <span
-            className="
-              text-[6px]
-              font-semibold
-              uppercase
-              tracking-[0.23em]
-              text-neutral-600
-            "
-          >
-            {activeHero.sub}
-          </span>
-
-          <span className="h-px w-5 bg-neutral-400" />
+        <div className="relative h-full w-full">
+
+          {/* =====================================================
+              MOBILE HERO — purpose-built composition
+          ====================================================== */}
+          <div className="absolute inset-0 block md:hidden">
+
+            {/* subtle background */}
+            <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(255,255,255,0)_35%,rgba(246,245,240,0.28)_100%)]" />
+
+            {/* premium badge */}
+            <motion.div
+              initial={{ opacity: 0, y: -5 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.4 }}
+              className="absolute left-4 top-4 z-[70]"
+            >
+              <div className="rounded-md border border-neutral-300/70 bg-white/75 px-3 py-1.5 backdrop-blur-sm">
+                <p className="text-[6px] font-bold uppercase tracking-[0.18em] text-neutral-900">
+                  Premium Drop • SS26
+                </p>
+                <p className="mt-0.5 text-[6.5px] text-neutral-500">
+                  Heavyweight • Drop Shoulder
+                </p>
+              </div>
+            </motion.div>
+
+            {/* MOBILE EDITORIAL HEADLINE — intentionally BEHIND the model */}
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={`mobile-headline-${slide}`}
+                initial={{ opacity: 0, y: 8 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -6 }}
+                transition={{ duration: 0.45, ease }}
+                className="absolute inset-x-1 top-[82px] z-10 flex justify-center text-center"
+              >
+                <h1
+                  className="
+                    w-full px-2
+                    font-serif font-black uppercase
+                    text-[52px] leading-[0.74] tracking-[-0.065em]
+                    text-neutral-950
+                    sm:text-[62px]
+                  "
+                  style={{
+                    fontFamily: "Bodoni MT, Didot, Times New Roman, serif",
+                    textShadow: "0 1px 0 rgba(0,0,0,0.03)",
+                  }}
+                >
+                  {activeHero.headline}
+                </h1>
+              </motion.div>
+            </AnimatePresence>
+
+            {/* MOBILE MODEL — sits IN FRONT of the headline */}
+            <div className="pointer-events-none absolute inset-x-0 bottom-0 z-20 flex h-[430px] items-end justify-center sm:h-[450px]">
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={`mobile-model-${slide}`}
+                  initial={{ opacity: 0, y: 18, scale: 1.02 }}
+                  animate={{ opacity: 1, y: 0, scale: 1 }}
+                  exit={{ opacity: 0, y: 10 }}
+                  transition={{ duration: 0.55, ease }}
+                  className="relative flex h-full w-full items-end justify-center"
+                >
+                  {/* very subtle grounding shadow */}
+                  <div className="absolute bottom-5 left-1/2 h-[190px] w-[175px] -translate-x-1/2 rounded-full bg-neutral-400/[0.018] blur-[38px]" />
+
+                  <img
+                    src={transparentHeroImages[slide % transparentHeroImages.length]}
+                    alt={activeHero.headline}
+                    className="
+                      relative z-20
+                      h-full w-auto max-w-[108%]
+                      scale-[1.08]
+                      object-contain object-bottom
+                      drop-shadow-[0_4px_8px_rgba(0,0,0,0.035)]
+                      sm:max-w-[105%] sm:scale-[1.05]
+                    "
+                  />
+                </motion.div>
+              </AnimatePresence>
+            </div>
+
+            {/* mobile slide counter */}
+            <div className="absolute bottom-4 left-4 z-[80] flex items-center gap-2">
+              <span className="text-[7px] font-bold tracking-[0.2em] text-neutral-900">
+                {String(slide + 1).padStart(2, "0")}
+              </span>
+              <span className="h-px w-7 bg-neutral-300" />
+              <span className="text-[7px] tracking-[0.2em] text-neutral-400">
+                {String(heroSlides.length).padStart(2, "0")}
+              </span>
+            </div>
+
+            {/* mobile indicators */}
+            <div className="absolute bottom-4 right-4 z-[80] flex items-center gap-1.5">
+              {heroSlides.map((_, index) => (
+                <button
+                  key={index}
+                  type="button"
+                  onClick={() => setSlide(index)}
+                  aria-label={`Go to slide ${index + 1}`}
+                  className="p-1"
+                >
+                  <span
+                    className={`block h-[2px] transition-all duration-300 ${
+                      index === slide ? "w-7 bg-neutral-950" : "w-2.5 bg-neutral-300"
+                    }`}
+                  />
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* =====================================================
+              DESKTOP / TABLET HERO
+          ====================================================== */}
+          <div className="absolute inset-0 hidden md:block">
+
+            <div
+              aria-hidden="true"
+              className="pointer-events-none absolute inset-0 z-0 bg-[radial-gradient(ellipse_at_center,rgba(246,245,240,0)_0%,rgba(246,245,240,0.06)_48%,rgba(246,245,240,0.30)_100%)]"
+            />
+
+            {/* PREMIUM DROP LABEL */}
+            <motion.div
+              initial={{ opacity: 0, y: -6 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.45 }}
+              className="absolute left-7 top-7 z-30 lg:left-9 lg:top-8"
+            >
+              <div className="rounded-md border border-neutral-300/70 bg-white/65 px-3.5 py-2 backdrop-blur-sm">
+                <p className="text-[7px] font-bold uppercase tracking-[0.2em] text-neutral-900">
+                  Premium Drop • SS26
+                </p>
+                <p className="mt-0.5 text-[8px] font-light text-neutral-500">
+                  Heavyweight • Drop Shoulder
+                </p>
+              </div>
+            </motion.div>
+
+            {/* desktop headline */}
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={`desktop-headline-${slide}`}
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -8 }}
+                transition={{ duration: 0.5, ease }}
+                className="absolute left-0 right-0 top-[70px] z-10 flex justify-center px-4 lg:top-[58px] lg:px-8"
+              >
+                <h1
+                  className="w-full max-w-[1450px] text-center font-serif text-[56px] font-black uppercase leading-[0.76] tracking-[-0.055em] text-neutral-950 md:text-[70px] lg:text-[clamp(76px,8vw,118px)]"
+                  style={{
+                    fontFamily: "Bodoni MT, Didot, Times New Roman, serif",
+                    textShadow: "0 1px 0 rgba(0,0,0,0.05)",
+                  }}
+                >
+                  {activeHero.headline}
+                </h1>
+              </motion.div>
+            </AnimatePresence>
+
+            {/* desktop model */}
+            <div className="pointer-events-none absolute inset-0 z-50 flex items-end justify-center">
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={`desktop-model-${slide}`}
+                  initial={{ opacity: 0, y: 18, scale: 1.01 }}
+                  animate={{ opacity: 1, y: 28, scale: 1 }}
+                  exit={{ opacity: 0, y: 16 }}
+                  transition={{ duration: 0.6, ease }}
+                  className="relative z-50 flex h-full w-full items-end justify-center md:translate-y-0"
+                >
+                  <div className="absolute bottom-[28px] left-1/2 h-[390px] w-[340px] -translate-x-1/2 rounded-full bg-neutral-400/[0.035] blur-[42px] lg:h-[420px] lg:w-[380px]" />
+
+                  <img
+                    src={transparentHeroImages[slide % transparentHeroImages.length]}
+                    alt={activeHero.headline}
+                    className="relative z-50 h-[82%] w-auto max-w-[96%] object-contain object-bottom drop-shadow-[0_7px_12px_rgba(0,0,0,0.06)] lg:h-[84%] lg:max-w-[61%]"
+                  />
+                </motion.div>
+              </AnimatePresence>
+            </div>
+
+            {/* desktop left copy */}
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={`left-${slide}`}
+                initial={{ opacity: 0, x: -10 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.4 }}
+                className="absolute left-5 top-[235px] z-30 hidden w-[210px] md:block lg:left-9"
+              >
+                <p className="text-[8px] font-bold uppercase tracking-[0.24em] text-neutral-900">
+                  Move Comfortably
+                </p>
+                <div className="mt-2 h-px w-10 bg-neutral-300" />
+                <p className="mt-3 max-w-[195px] text-[8px] font-light leading-[1.65] text-neutral-500">
+                  Designed for everyday comfort, refined details, and modern silhouettes.
+                </p>
+              </motion.div>
+            </AnimatePresence>
+
+            {/* desktop right copy */}
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={`right-${slide}`}
+                initial={{ opacity: 0, x: 10 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.4 }}
+                className="absolute right-5 top-[235px] z-30 hidden w-[210px] text-right md:block lg:right-9"
+              >
+                <p className="text-[8px] font-bold uppercase tracking-[0.24em] text-neutral-900">
+                  Feel Confident
+                </p>
+                <div className="mt-2 ml-auto h-px w-10 bg-neutral-300" />
+                <p className="mt-3 ml-auto max-w-[195px] text-[8px] font-light leading-[1.65] text-neutral-500">
+                  Crafted for a refined everyday look with effortless comfort.
+                </p>
+              </motion.div>
+            </AnimatePresence>
+
+            {/* desktop editorial note */}
+            <div className="absolute bottom-[76px] left-7 z-[55] hidden max-w-[210px] lg:block xl:left-10">
+              <div className="mb-2 flex items-center gap-2">
+                <span className="h-px w-7 bg-neutral-900/35" />
+                <span className="text-[7px] font-semibold uppercase tracking-[0.28em] text-neutral-700/80">
+                  ARDENBY / 01
+                </span>
+              </div>
+              <p
+                className="font-serif text-[18px] leading-[0.95] tracking-[-0.025em] text-neutral-900 xl:text-[20px]"
+                style={{ fontFamily: "Bodoni MT, Didot, Times New Roman, serif" }}
+              >
+                Everyday pieces,
+                <br />
+                considered differently.
+              </p>
+              <p className="mt-2 max-w-[190px] text-[7px] leading-[1.6] text-neutral-600/75">
+                Refined silhouettes, premium fabric and quiet confidence.
+              </p>
+            </div>
+
+            {/* desktop counter */}
+            <div className="absolute bottom-4 left-5 z-[60] flex items-center gap-2 sm:bottom-5 sm:left-7 lg:left-9">
+              <span className="text-[7px] font-bold tracking-[0.2em] text-neutral-900 sm:text-[8px]">
+                {String(slide + 1).padStart(2, "0")}
+              </span>
+              <span className="h-px w-6 bg-neutral-300 sm:w-8" />
+              <span className="text-[7px] tracking-[0.2em] text-neutral-400 sm:text-[8px]">
+                {String(heroSlides.length).padStart(2, "0")}
+              </span>
+            </div>
+
+            {/* desktop indicators */}
+            <div className="absolute bottom-5 right-5 z-[60] hidden items-center gap-2 lg:right-9 lg:flex">
+              {heroSlides.map((_, index) => (
+                <button
+                  key={index}
+                  type="button"
+                  onClick={() => setSlide(index)}
+                  aria-label={`Go to slide ${index + 1}`}
+                  className="group p-1"
+                >
+                  <span
+                    className={`block h-[2px] transition-all duration-500 ${
+                      index === slide
+                        ? "w-8 bg-neutral-950"
+                        : "w-3.5 bg-neutral-300 group-hover:bg-neutral-500"
+                    }`}
+                  />
+                </button>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      /* =========================================================
+          ARDENBY STANDARD — MATCHED EDITORIAL SPLIT
+          Full width / no max-width / no heavy shadow
+      ========================================================= */}
+      <section className="w-full overflow-hidden bg-[#F6F5F0]">
+
+        {/* SAME VISUAL LANGUAGE AS HERO */}
+        <div className="grid w-full grid-cols-1 lg:grid-cols-[55%_45%]">
+
+          {/* IMAGE */}
+          <div className="group relative h-[360px] w-full overflow-hidden sm:h-[440px] lg:h-[500px]">
+            <img
+              src="https://images.unsplash.com/photo-1490481651871-ab68de25d43d?auto=format&fit=crop&w=1800&q=90"
+              alt="ARDENBY craft and collection"
+              className="
+                absolute inset-0 h-full w-full object-cover
+                object-center
+                transition-transform duration-1000
+                group-hover:scale-[1.02]
+              "
+            />
+
+            <div className="absolute inset-0 bg-gradient-to-t from-black/62 via-black/10 to-transparent" />
+
+            <div className="absolute left-6 top-6 sm:left-8 sm:top-8">
+              <span className="text-[7px] font-semibold uppercase tracking-[0.32em] text-white [text-shadow:0_1px_6px_rgba(0,0,0,0.55)]">
+                ARDENBY / CRAFT
+              </span>
+            </div>
+
+            <div className="absolute bottom-8 left-6 sm:bottom-10 sm:left-8">
+              <p className="mb-2 text-[7px] font-semibold uppercase tracking-[0.3em] text-white [text-shadow:0_2px_10px_rgba(0,0,0,0.65)]">
+                Quality · Craft · Intention
+              </p>
+
+              <h2
+                className="
+                  font-serif text-[42px] leading-[0.88]
+                  tracking-[-0.045em] text-white [text-shadow:0_2px_12px_rgba(0,0,0,0.58)]
+                  sm:text-[52px] lg:text-[60px]
+                "
+                style={{
+                  fontFamily: "Bodoni MT, Didot, Times New Roman, serif",
+                }}
+              >
+                Made for
+                <br />
+                everyday.
+              </h2>
+            </div>
+          </div>
+
+          {/* RIGHT EDITORIAL PANEL */}
+          <div className="flex min-h-[390px] flex-col bg-[#F6F5F0] sm:min-h-[440px] lg:min-h-[500px]">
+
+            <div className="flex flex-1 flex-col justify-center px-7 py-12 sm:px-10 lg:px-14">
+
+              <div className="flex items-center justify-between">
+                <span className="text-[8px] font-semibold uppercase tracking-[0.32em] text-neutral-500">
+                  01 — Philosophy
+                </span>
+
+                <span className="text-[7px] uppercase tracking-[0.2em] text-neutral-400">
+                  AR / 01
+                </span>
+              </div>
+
+              <h2
+                className="
+                  mt-8 font-serif text-[48px] leading-[0.86]
+                  tracking-[-0.05em] text-neutral-950 [text-shadow:0_1px_0_rgba(255,255,255,0.7)]
+                  sm:text-[58px] lg:text-[68px]
+                "
+                style={{
+                  fontFamily: "Bodoni MT, Didot, Times New Roman, serif",
+                }}
+              >
+                Made With
+                <br />
+                Intention.
+              </h2>
+
+              <p className="mt-6 max-w-[520px] text-[10px] leading-[1.8] text-neutral-500 sm:text-[11px] lg:text-[12px]">
+                From the first stitch to the final delivery, every detail is
+                considered. Premium clothing doesn't need to shout — quality
+                speaks through the fabric, construction and fit.
+              </p>
+
+              <Link
+                href="/shop"
+                className="
+                  group mt-7 flex w-fit items-center gap-4
+                  border-b border-neutral-900 pb-2
+                  text-[8px] font-bold uppercase tracking-[0.22em]
+                  text-neutral-900
+                "
+              >
+                Explore the standard
+                <ArrowRight className="h-3.5 w-3.5 transition-transform duration-300 group-hover:translate-x-1" />
+              </Link>
+            </div>
+
+            {/* DETAIL GRID — SAME CLEAN LANGUAGE */}
+            <div className="grid grid-cols-1 border-t border-neutral-300/70 sm:grid-cols-3">
+
+              <div className="border-b border-neutral-300/70 bg-[#EFEEE9] p-5 sm:border-b-0 sm:p-7">
+                <span className="text-[7px] font-semibold uppercase tracking-[0.28em] text-neutral-500">
+                  Material
+                </span>
+
+                <div className="mt-4 flex items-end gap-2">
+                  <span
+                    className="font-serif text-[38px] leading-none tracking-[-0.04em] text-neutral-950"
+                    style={{
+                      fontFamily: "Bodoni MT, Didot, Times New Roman, serif",
+                    }}
+                  >
+                    240
+                  </span>
+                  <span className="mb-1 text-[8px] font-semibold uppercase tracking-[0.18em] text-neutral-500">
+                    GSM
+                  </span>
+                </div>
+
+                <p className="mt-3 text-[7px] leading-[1.6] text-neutral-500">
+                  Heavyweight
+                  <br />
+                  combed cotton.
+                </p>
+              </div>
+
+              <div className="border-b border-neutral-300/70 bg-[#E9E7E1] p-5 sm:border-b-0 sm:border-l sm:p-7">
+                <span className="text-[7px] font-semibold uppercase tracking-[0.28em] text-neutral-500">
+                  Construction
+                </span>
+
+                <h3
+                  className="mt-4 font-serif text-[25px] leading-[0.9] tracking-[-0.035em] text-neutral-950 sm:text-[30px]"
+                  style={{
+                    fontFamily: "Bodoni MT, Didot, Times New Roman, serif",
+                  }}
+                >
+                  Precision
+                  <br />
+                  in every stitch.
+                </h3>
+              </div>
+
+              <div className="bg-[#E2E0DA] p-5 sm:border-l sm:border-neutral-300/70 sm:p-7">
+                <span className="text-[7px] font-semibold uppercase tracking-[0.28em] text-neutral-500">
+                  Philosophy
+                </span>
+
+                <h3
+                  className="mt-4 font-serif text-[25px] leading-[0.9] tracking-[-0.035em] text-neutral-950 sm:text-[30px]"
+                  style={{
+                    fontFamily: "Bodoni MT, Didot, Times New Roman, serif",
+                  }}
+                >
+                  Built
+                  <br />
+                  beyond seasons.
+                </h3>
+              </div>
+
+            </div>
+          </div>
+        </div>
+
+        {/* FOUR TRUST CARDS */}
+        <div className="grid w-full grid-cols-1 border-t border-neutral-300/70 sm:grid-cols-2 lg:grid-cols-4">
+
+          <div className="border-b border-neutral-300/70 p-5 sm:p-6 sm:border-r">
+            <div className="flex items-center justify-between">
+              <span className="text-[7px] text-neutral-400">01</span>
+              <ShieldCheck className="h-4 w-4 text-neutral-500" />
+            </div>
+            <p className="mt-4 text-[9px] font-semibold text-neutral-900">
+              Encrypted Payments
+            </p>
+            <p className="mt-1 text-[7px] text-neutral-500">
+              UPI, Cards & COD.
+            </p>
+          </div>
+
+          <div className="border-b border-neutral-300/70 p-5 sm:p-6 sm:border-r">
+            <div className="flex items-center justify-between">
+              <span className="text-[7px] text-neutral-400">02</span>
+              <Truck className="h-4 w-4 text-neutral-500" />
+            </div>
+            <p className="mt-4 text-[9px] font-semibold text-neutral-900">
+              Free Express Shipping
+            </p>
+            <p className="mt-1 text-[7px] text-neutral-500">
+              2-4 business days.
+            </p>
+          </div>
+
+          <div className="border-b border-neutral-300/70 p-5 sm:p-6 sm:border-r">
+            <div className="flex items-center justify-between">
+              <span className="text-[7px] text-neutral-400">03</span>
+              <RefreshCw className="h-4 w-4 text-neutral-500" />
+            </div>
+            <p className="mt-4 text-[9px] font-semibold text-neutral-900">
+              7-Day Returns
+            </p>
+            <p className="mt-1 text-[7px] text-neutral-500">
+              Easy exchange.
+            </p>
+          </div>
+
+          <div className="p-5 sm:p-6">
+            <div className="flex items-center justify-between">
+              <span className="text-[7px] text-neutral-400">04</span>
+              <Star className="h-4 w-4 text-neutral-500" />
+            </div>
+            <p className="mt-4 text-[9px] font-semibold text-neutral-900">
+              ARDENBY Standard
+            </p>
+            <p className="mt-1 text-[7px] text-neutral-500">
+              Beyond ordinary.
+            </p>
+          </div>
 
         </div>
-      </motion.div>
-    </AnimatePresence>
+      </section>
+{/*================================================================
 
+    ARDENBY — SHOP BY CATEGORY
 
-    {/* =====================================================
-        MOBILE LEFT EDITORIAL TEXT
-    ====================================================== */}
+    SHOPRZ-STYLE 5-TILE EDITORIAL LAYOUT
 
-    <AnimatePresence mode="wait">
-      <motion.div
-        key={`mobile-left-${slide}`}
-        initial={{
-          opacity: 0,
-          x: -8,
-        }}
-        animate={{
-          opacity: 1,
-          x: 0,
-        }}
-        exit={{
-          opacity: 0,
-        }}
-        transition={{
-          duration: 0.4,
-        }}
-        className="
-          absolute
 
-          left-4
-          bottom-[145px]
 
-          z-30
+    Layout:
 
-          w-[110px]
+      LEFT  : 2 stacked category cards
 
-          sm:left-6
-          sm:bottom-[150px]
-          sm:w-[135px]
+      CENTER: 1 tall featured card
 
-          md:hidden
-        "
-      >
-        <p
-          className="
-            text-[6px]
-            font-bold
-            uppercase
-            tracking-[0.2em]
-            text-neutral-900
-          "
-        >
-          Move Comfortably
-        </p>
+      RIGHT : 2 stacked category cards
 
-        <div
-          className="
-            mt-1.5
-            h-px
-            w-7
-            bg-neutral-300
-          "
-        />
 
-        <p
-          className="
-            mt-2
-            text-[6.5px]
-            font-light
-            leading-[1.5]
-            text-neutral-500
-          "
-        >
-          Designed for everyday
-          comfort, refined details,
-          and modern silhouettes.
-        </p>
-      </motion.div>
-    </AnimatePresence>
 
+    Existing categories / product lookup / category hrefs remain intact.
 
-    {/* =====================================================
-        MOBILE RIGHT EDITORIAL TEXT
-    ====================================================== */}
-
-    <AnimatePresence mode="wait">
-      <motion.div
-        key={`mobile-right-${slide}`}
-        initial={{
-          opacity: 0,
-          x: 8,
-        }}
-        animate={{
-          opacity: 1,
-          x: 0,
-        }}
-        exit={{
-          opacity: 0,
-        }}
-        transition={{
-          duration: 0.4,
-        }}
-        className="
-          absolute
-
-          right-4
-          bottom-[145px]
-
-          z-30
-
-          w-[110px]
-
-          text-right
-
-          sm:right-6
-          sm:bottom-[150px]
-          sm:w-[135px]
-
-          md:hidden
-        "
-      >
-        <p
-          className="
-            text-[6px]
-            font-bold
-            uppercase
-            tracking-[0.2em]
-            text-neutral-900
-          "
-        >
-          Feel Confident
-        </p>
-
-        <div
-          className="
-            mt-1.5
-            ml-auto
-            h-px
-            w-7
-            bg-neutral-300
-          "
-        />
-
-        <p
-          className="
-            mt-2
-            text-[6.5px]
-            font-light
-            leading-[1.5]
-            text-neutral-500
-          "
-        >
-          Crafted for a refined
-          everyday look with
-          effortless comfort.
-        </p>
-      </motion.div>
-    </AnimatePresence>
-
-
-    {/* =====================================================
-        DESKTOP LEFT TEXT
-    ====================================================== */}
-
-    <AnimatePresence mode="wait">
-      <motion.div
-        key={`left-${slide}`}
-        initial={{
-          opacity: 0,
-          x: -12,
-        }}
-        animate={{
-          opacity: 1,
-          x: 0,
-        }}
-        exit={{
-          opacity: 0,
-        }}
-        className="
-          absolute
-
-          left-7
-          top-[275px]
-
-          z-30
-
-          hidden
-
-          w-[205px]
-
-          md:block
-
-          xl:left-10
-        "
-      >
-        <p
-          className="
-            text-[8px]
-            font-bold
-            uppercase
-            tracking-[0.24em]
-            text-neutral-900
-          "
-        >
-          Move Comfortably
-        </p>
-
-        <div className="mt-2 h-px w-11 bg-neutral-300" />
-
-        <p
-          className="
-            mt-3
-            max-w-[190px]
-            text-[8px]
-            font-light
-            leading-[1.65]
-            text-neutral-500
-          "
-        >
-          Designed for everyday comfort,
-          refined details, and modern
-          silhouettes.
-        </p>
-      </motion.div>
-    </AnimatePresence>
-
-
-    {/* =====================================================
-        DESKTOP RIGHT TEXT
-    ====================================================== */}
-
-    <AnimatePresence mode="wait">
-      <motion.div
-        key={`right-${slide}`}
-        initial={{
-          opacity: 0,
-          x: 12,
-        }}
-        animate={{
-          opacity: 1,
-          x: 0,
-        }}
-        exit={{
-          opacity: 0,
-        }}
-        className="
-          absolute
-
-          right-7
-          top-[275px]
-
-          z-30
-
-          hidden
-
-          w-[205px]
-
-          md:block
-
-          xl:right-10
-        "
-      >
-        <p
-          className="
-            text-[8px]
-            font-bold
-            uppercase
-            tracking-[0.24em]
-            text-neutral-900
-          "
-        >
-          Feel Confident
-        </p>
-
-        <div className="mt-2 h-px w-11 bg-neutral-300" />
-
-        <p
-          className="
-            mt-3
-            max-w-[190px]
-            text-[8px]
-            font-light
-            leading-[1.65]
-            text-neutral-500
-          "
-        >
-          Crafted for a refined everyday
-          look with effortless comfort.
-        </p>
-      </motion.div>
-    </AnimatePresence>
-
-
-    {/* =====================================================
-        CTA BUTTONS
-    ====================================================== */}
-
-    <AnimatePresence mode="wait">
-      <motion.div
-        key={`cta-${slide}`}
-        initial={{
-          opacity: 0,
-          y: 10,
-        }}
-        animate={{
-          opacity: 1,
-          y: 0,
-        }}
-        exit={{
-          opacity: 0,
-          y: 8,
-        }}
-        transition={{
-          delay: 0.15,
-          duration: 0.45,
-        }}
-        className="
-          absolute
-
-          bottom-8
-
-          left-0
-          right-0
-
-          z-[60]
-
-          flex
-          flex-wrap
-          items-center
-          justify-center
-
-          gap-2
-
-          px-3
-
-          sm:bottom-9
-          sm:gap-3
-
-          lg:bottom-9
-        "
-      >
-
-        {/* PRIMARY BUTTON */}
-
-        <Link
-    href={activeHero.href}
-    className="
-      group
-      inline-flex
-      h-12
-      min-w-[158px]
-      items-center
-      justify-center
-      gap-2
-      rounded-sm
-      bg-neutral-950
-      px-6
-      text-[10px]
-      font-bold
-      uppercase
-      tracking-[0.16em]
-      text-white
-      shadow-[0_8px_24px_rgba(0,0,0,0.14)]
-      transition-all
-      duration-300
-      hover:-translate-y-0.5
-      hover:bg-neutral-800
-      sm:h-[50px]
-      sm:min-w-[168px]
-      sm:px-7
-    "
-  >
-    {activeHero.cta}
-
-    <ArrowRight
-      className="
-        h-3.5
-        w-3.5
-        transition-transform
-        duration-300
-        group-hover:translate-x-1
-      "
-    />
-  </Link>
-
-
-  {/* EXPLORE COLLECTION */}
-  <Link
-    href="/shop"
-    className="
-      inline-flex
-      h-12
-      min-w-[190px]
-      items-center
-      justify-center
-      rounded-sm
-      border
-      border-neutral-300
-      bg-white/90
-      px-6
-      text-[10px]
-      font-bold
-      uppercase
-      tracking-[0.16em]
-      text-neutral-800
-      shadow-[0_8px_24px_rgba(0,0,0,0.08)]
-      backdrop-blur-sm
-      transition-all
-      duration-300
-      hover:-translate-y-0.5
-      hover:border-neutral-950
-      hover:bg-white
-      sm:h-[50px]
-      sm:min-w-[202px]
-      sm:px-7
-    "
-  >
-    Explore Collection
-  </Link>
-      </motion.div>
-    </AnimatePresence>
-
-
-    {/* =====================================================
-        SLIDE COUNTER
-    ====================================================== */}
-
-    <div
-      className="
-        absolute
-
-        bottom-4
-        left-4
-
-        z-[60]
-
-        flex
-        items-center
-        gap-2
-
-        sm:bottom-5
-        sm:left-6
-        sm:gap-2.5
-
-        lg:left-10
-      "
-    >
-      <span
-        className="
-          text-[7px]
-          font-bold
-          tracking-[0.2em]
-          text-neutral-900
-
-          sm:text-[8px]
-        "
-      >
-        {String(slide + 1).padStart(2, "0")}
-      </span>
-
-      <span
-        className="
-          h-px
-          w-6
-          bg-neutral-300
-
-          sm:w-8
-        "
-      />
-
-      <span
-        className="
-          text-[7px]
-          tracking-[0.2em]
-          text-neutral-400
-
-          sm:text-[8px]
-        "
-      >
-        {String(heroSlides.length).padStart(2, "0")}
-      </span>
-    </div>
-
-
-    {/* =====================================================
-        DESKTOP SLIDE INDICATORS
-    ====================================================== */}
-
-    <div
-      className="
-        absolute
-
-        bottom-5
-        right-5
-
-        z-[60]
-
-        hidden
-
-        items-center
-        gap-2
-
-        lg:right-10
-        lg:flex
-      "
-    >
-      {heroSlides.map((_, index) => (
-        <button
-          key={index}
-          type="button"
-          onClick={() => setSlide(index)}
-          aria-label={`Go to slide ${index + 1}`}
-          className="group p-1"
-        >
-          <span
-            className={`
-              block
-              h-[2px]
-              transition-all
-              duration-500
-
-              ${
-                index === slide
-                  ? "w-8 bg-neutral-950"
-                  : "w-3.5 bg-neutral-300 group-hover:bg-neutral-500"
-              }
-            `}
-          />
-        </button>
-      ))}
-    </div>
-
-  </div>
-</section>
-
-      {/* ================= FULL-WIDTH TRUST STRIP ================= */}
-      <section className="relative w-full overflow-hidden bg-[#F4F3F0] py-16 sm:py-20 lg:py-24">
-  <style>{`
-    @keyframes ardenbyTrustMarquee {
-      0% {
-        transform: translate3d(0, 0, 0);
-      }
-      100% {
-        transform: translate3d(-50%, 0, 0);
-      }
-    }
-
-    .ardenby-trust-marquee {
-      width: max-content;
-      animation: ardenbyTrustMarquee 34s linear infinite;
-      will-change: transform;
-    }
-
-    .ardenby-trust-track:hover .ardenby-trust-marquee {
-      animation-play-state: paused;
-    }
-
-    @media (max-width: 640px) {
-      .ardenby-trust-marquee {
-        animation-duration: 28s;
-      }
-    }
-
-    @media (prefers-reduced-motion: reduce) {
-      .ardenby-trust-marquee {
-        animation: none;
-      }
-    }
-  `}</style>
-
-  {/* ================= HEADER ================= */}
-  <div className="mx-auto mb-12 max-w-3xl px-5 text-center sm:mb-16">
-    <div className="mb-5 flex items-center justify-center gap-3">
-      <span className="h-px w-10 bg-neutral-300" />
-
-      <span className="text-[9px] font-semibold uppercase tracking-[0.38em] text-neutral-400">
-        The ARDENBY Standard
-      </span>
-
-      <span className="h-px w-10 bg-neutral-300" />
-    </div>
-
-    <h2 className="font-serif text-[32px] leading-none tracking-[-0.025em] text-neutral-950 sm:text-[40px] lg:text-[48px]">
-      Made With Intention.
-    </h2>
-
-    <p className="mx-auto mt-4 max-w-lg text-[11px] leading-6 text-neutral-500 sm:text-xs">
-      From the first stitch to the final delivery, every detail is
-      considered to make your ARDENBY experience exceptional.
-    </p>
-  </div>
-
-  {/* ================= MARQUEE ================= */}
-  <div className="ardenby-trust-track relative w-full overflow-hidden">
-    
-    {/* Edge fade */}
-    <div className="pointer-events-none absolute inset-y-0 left-0 z-20 w-20 bg-gradient-to-r from-[#F4F3F0] via-[#F4F3F0]/80 to-transparent sm:w-36" />
-
-    <div className="pointer-events-none absolute inset-y-0 right-0 z-20 w-20 bg-gradient-to-l from-[#F4F3F0] via-[#F4F3F0]/80 to-transparent sm:w-36" />
-
-    <div className="ardenby-trust-marquee flex">
-      {[...trustItems, ...trustItems].map(
-        ({ Icon, title, desc }, index) => (
-          <div
-            key={`${title}-${index}`}
-            className="
-              group relative mx-2.5
-              flex w-[290px] shrink-0
-              items-center gap-5
-              overflow-hidden
-              rounded-[18px]
-              border border-neutral-200/80
-              bg-white
-              px-5 py-5
-              shadow-[0_8px_30px_rgba(0,0,0,0.045)]
-              transition-all duration-500
-              hover:-translate-y-1
-              hover:border-neutral-300
-              hover:shadow-[0_18px_45px_rgba(0,0,0,0.10)]
-              sm:w-[360px]
-              sm:px-6
-              sm:py-6
-            "
-          >
-            {/* Subtle inner glow */}
-            <div
-              className="
-                pointer-events-none absolute
-                -right-10 -top-10
-                h-24 w-24
-                rounded-full
-                bg-neutral-100/70
-                blur-2xl
-                transition-all duration-500
-                group-hover:bg-neutral-200
-              "
-            />
-
-            {/* Number */}
-            <div
-              className="
-                absolute right-4 top-3
-                text-[8px] font-medium
-                tracking-[0.2em]
-                text-neutral-300
-              "
-            >
-              {String((index % trustItems.length) + 1).padStart(2, "0")}
-            </div>
-
-            {/* Icon */}
-            <div
-              className="
-                relative z-10
-                flex h-12 w-12 shrink-0
-                items-center justify-center
-                rounded-xl
-                border border-neutral-200
-                bg-[#FAF9F5]
-                shadow-[0_4px_14px_rgba(0,0,0,0.06)]
-                transition-all duration-500
-                group-hover:border-neutral-950
-                group-hover:bg-neutral-950
-                group-hover:shadow-[0_8px_20px_rgba(0,0,0,0.18)]
-              "
-            >
-              <Icon
-                className="
-                  h-[18px] w-[18px]
-                  stroke-[1.5]
-                  text-neutral-800
-                  transition-all duration-500
-                  group-hover:scale-110
-                  group-hover:text-white
-                "
-              />
-            </div>
-
-            {/* Content */}
-            <div className="relative z-10 min-w-0 pr-4">
-              <p className="mb-1.5 text-[8px] font-semibold uppercase tracking-[0.24em] text-neutral-400">
-                ARDENBY Promise
-              </p>
-
-              <h3 className="text-[12px] font-semibold leading-tight tracking-wide text-neutral-950">
-                {title}
-              </h3>
-
-              <p className="mt-1.5 line-clamp-2 text-[10px] leading-[1.65] text-neutral-500">
-                {desc}
-              </p>
-            </div>
-
-            {/* Bottom accent */}
-            <div
-              className="
-                absolute bottom-0 left-5 right-5
-                h-px
-                origin-left
-                scale-x-0
-                bg-neutral-950
-                transition-transform duration-500
-                group-hover:scale-x-100
-              "
-            />
-          </div>
-        )
-      )}
-    </div>
-  </div>
-
-  {/* ================= BOTTOM STATEMENT ================= */}
-  <div className="mx-auto mt-14 max-w-6xl px-5 sm:mt-16">
-    <div className="flex items-center gap-4">
-      <div className="h-px flex-1 bg-neutral-200" />
-
-      <div className="flex items-center gap-3">
-        <span className="h-1.5 w-1.5 rounded-full bg-neutral-950" />
-
-        <span className="text-[8px] font-semibold uppercase tracking-[0.32em] text-neutral-400">
-          Beyond Ordinary
-        </span>
-
-        <span className="h-1.5 w-1.5 rounded-full bg-neutral-950" />
-      </div>
-
-      <div className="h-px flex-1 bg-neutral-200" />
-    </div>
-  </div>
-</section>
-      {/* ================= SHOP BY CATEGORY ================= */}
-    {/* ================================================================
-    SHOP BY SUB-CATEGORY
-    Desktop + Mobile Production Section
 ================================================================ */}
 
-<section className="w-full bg-[#F8F7F3] px-4 py-10 sm:px-6 lg:px-9 lg:py-14">
+<section className="w-full overflow-hidden bg-[#F6F3EC] px-4 py-8 sm:px-6 sm:py-10 lg:px-8 lg:py-12">
 
-  {/* ================================================================
-      DESKTOP SECTION HEADER
-  ================================================================= */}
 
-  <div className="mb-8 hidden items-end justify-between gap-10 lg:flex">
 
-    {/* LEFT CONTENT */}
+  {/* SECTION HEADER */}
+
+  <div className="mx-auto mb-7 flex w-full max-w-[1380px] items-end justify-between gap-6 sm:mb-9 lg:mb-10">
+
     <div>
 
-      {/* Eyebrow */}
-      <div className="mb-4 flex items-center gap-3">
+      <div className="mb-2 flex items-center gap-2.5">
 
-        <span className="h-px w-7 bg-neutral-500" />
+        <span className="h-px w-7 bg-[#181714]" />
 
-        <span className="text-[10px] font-medium uppercase tracking-[0.28em] text-neutral-500">
-          Architectural Fits
+        <span className="text-[8px] font-semibold uppercase tracking-[0.28em] text-[#77716A] sm:text-[9px]">
+
+          ARDENBY COLLECTIONS
+
         </span>
 
       </div>
 
-      {/* Main Heading */}
-     <h4 className="font-serif text-[36px] font-normal leading-[1] tracking-[-0.02em] text-neutral-950 sm:text-[40px] lg:text-[44px]">
-  Shop by Sub-Category.
-</h4>
 
-      {/* Subtitle */}
-      <p className="mt-4 font-serif text-[19px] text-neutral-500">
-        Four distinct collections. One attitude.
+
+      <h2
+
+        className="text-[38px] font-normal leading-[0.9] tracking-[-0.055em] text-[#11100F] sm:text-[48px] lg:text-[58px]"
+
+        style={{ fontFamily: "Bodoni MT, Didot, Times New Roman, serif" }}
+
+      >
+
+        Shop by Category
+
+      </h2>
+
+
+
+      <p className="mt-2 font-serif text-[13px] italic tracking-[-0.01em] text-[#77716A] sm:text-[14px]">
+
+        Find your everyday uniform.
+
       </p>
 
     </div>
 
 
-    {/* RIGHT CONTENT */}
-    <div className="flex flex-col items-end gap-5 pb-1">
 
-      <p className="max-w-[190px] text-right text-[9px] uppercase leading-5 tracking-[0.25em] text-neutral-400">
-        More than clothing.
-        <br />
-        A lifestyle.
-      </p>
+    <Link
 
-      <Link
-        href="/shop"
-        className="
-          group
-          inline-flex
-          h-11
-          items-center
-          gap-4
-          rounded-full
-          bg-neutral-950
-          px-6
-          text-[9px]
-          font-bold
-          uppercase
-          tracking-[0.2em]
-          text-white
-          transition-all
-          duration-300
-          hover:bg-neutral-800
-        "
-      >
+      href="/shop"
 
-        <span>
-          Explore All Categories
-        </span>
+      className="group hidden items-center gap-2 border-b border-[#11100F] pb-1.5 text-[8px] font-semibold uppercase tracking-[0.24em] text-[#11100F] sm:flex"
 
-        <ArrowRight
-          className="
-            h-3.5
-            w-3.5
-            transition-transform
-            duration-300
-            group-hover:translate-x-1
-          "
-        />
+    >
 
-      </Link>
+      <span>Explore Ardenby</span>
 
-    </div>
+      <ArrowRight className="h-3.5 w-3.5 transition-transform duration-300 group-hover:translate-x-1" />
+
+    </Link>
 
   </div>
 
 
-  {/* ================================================================
-      MOBILE SECTION HEADER
-  ================================================================= */}
 
-  <div className="mb-6 lg:hidden">
+  {/* ============================================================
 
-    {/* Eyebrow */}
-    <div className="mb-3 flex items-center gap-2.5">
+      DESKTOP — 3 COLUMN / 5 TILE COMPOSITION
 
-      <span className="h-px w-6 bg-neutral-400" />
+      LEFT 2 STACKED | CENTER TALL | RIGHT 2 STACKED
 
-      <span className="text-[8px] font-medium uppercase tracking-[0.25em] text-neutral-500">
-        Architectural Fits
-      </span>
+  ============================================================ */}
 
-    </div>
-
-
-    {/* Mobile Heading */}
-    <h2 className="font-serif text-[36px] font-normal leading-[0.9] tracking-[-0.04em] text-neutral-950">
-      Shop by
-      <br />
-      Sub-Category.
-    </h2>
-
-
-    {/* Mobile Subtitle */}
-    <p className="mt-3 font-serif text-[14px] text-neutral-500">
-      Four distinct collections. One attitude.
-    </p>
-
-
-    {/* ================================================================
-        MOBILE CATEGORY PILLS
-    ================================================================= */}
-
-    <div className="mt-5 flex gap-2 overflow-x-auto pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-
-      {/* ALL */}
-      <Link
-        href="/shop"
-        className="
-          shrink-0
-          rounded-full
-          bg-neutral-950
-          px-4
-          py-2
-          text-[7px]
-          font-bold
-          uppercase
-          tracking-[0.14em]
-          text-white
-        "
-      >
-        All
-      </Link>
-
-
-      {/* SUPREME */}
-      <Link
-        href="/shop?category=supreme-edition"
-        className="
-          shrink-0
-          rounded-full
-          bg-white
-          px-4
-          py-2
-          text-[7px]
-          font-semibold
-          uppercase
-          tracking-[0.12em]
-          text-neutral-700
-        "
-      >
-        Supreme Edition
-      </Link>
-
-
-      {/* EPIC THREAD */}
-      <Link
-        href="/shop?category=epic-thread"
-        className="
-          shrink-0
-          rounded-full
-          bg-white
-          px-4
-          py-2
-          text-[7px]
-          font-semibold
-          uppercase
-          tracking-[0.12em]
-          text-neutral-700
-        "
-      >
-        Epic Thread
-      </Link>
-
-
-      {/* PREMIUM */}
-      <Link
-        href="/shop?category=ardenby-premium"
-        className="
-          shrink-0
-          rounded-full
-          bg-white
-          px-4
-          py-2
-          text-[7px]
-          font-semibold
-          uppercase
-          tracking-[0.12em]
-          text-neutral-700
-        "
-      >
-        Premium
-      </Link>
-
-    </div>
-
-  </div>
-
-
-  {/* ================================================================
-      DESKTOP — FOUR COLLECTION CARDS
-  ================================================================= */}
-
-  <div className="hidden grid-cols-4 gap-4 lg:grid">
+  <div className="mx-auto hidden w-full max-w-[1380px] gap-3 lg:grid lg:grid-cols-[1fr_1.02fr_1fr]">
 
     {categories.slice(0, 4).map((cat, index) => {
 
       const staticCatProduct = staticHomeProducts.find(
+
         (p) => p.category === cat.slug
+
       );
+
+
 
       const catProduct = products.find(
+
         (p) => p.category === cat.slug
+
       );
 
+
+
       const productImage =
+
         staticCatProduct?.images?.[0] ||
+
         catProduct?.images?.[0] ||
-        "https://images.unsplash.com/photo-1521572267360-ee0c2909d518?q=80&w=1000&auto=format&fit=crop";
+
+        "https://images.unsplash.com/photo-1521572267360-ee0c2909d518?q=80&w=1200&auto=format&fit=crop";
 
 
-      const cardData = [
-        {
-          top: "240 GSM",
-          label: "HEAVYWEIGHT OVERSIZED DROPS",
-          description: "Bold silhouettes. Timeless essentials.",
-          position: "object-center",
-        },
 
-        {
-          top: "GRAPHIC TEES",
-          label: "GRAPHIC & PRINTED TEES",
-          description: "Premium prints. Bolder stories.",
-          position: "object-center",
-        },
+      const isCenter = index === 1;
 
-        {
-          top: "EVERYDAY LUXURY",
-          label: "LONG-STAPLE COTTON ESSENTIALS",
-          description: "Everyday luxury. Elevated basics.",
-          position: "object-center",
-        },
 
-        {
-          top: "BOLD PRINTS",
-          label: "STATEMENT PIECES",
-          description: "No limits. Just expression.",
-          position: "object-center",
-        },
+
+      const cardCopy = [
+
+        "Heavyweight silhouettes for your everyday rotation.",
+
+        "Distinct graphics with a premium streetwear finish.",
+
+        "Elevated essentials built for everyday luxury.",
+
+        "Statement pieces made to stand apart.",
+
       ][index];
 
 
+
+      const cardLabel = [
+
+        "HEAVYWEIGHT ESSENTIALS",
+
+        "GRAPHIC COLLECTION",
+
+        "EVERYDAY LUXURY",
+
+        "STATEMENT EDIT",
+
+      ][index];
+
+
+
       return (
+
         <motion.div
+
           key={cat.slug}
-          initial={{
-            opacity: 0,
-            y: 18,
-          }}
-          whileInView={{
-            opacity: 1,
-            y: 0,
-          }}
-          viewport={{
-            once: true,
-            amount: 0.15,
-          }}
-          transition={{
-            duration: 0.55,
-            delay: index * 0.06,
-            ease: [0.22, 1, 0.36, 1],
-          }}
+
+          className={isCenter ? "row-span-2" : ""}
+
+          initial={{ opacity: 0, y: 14 }}
+
+          whileInView={{ opacity: 1, y: 0 }}
+
+          viewport={{ once: true, amount: 0.12 }}
+
+          transition={{ duration: 0.5, delay: index * 0.06 }}
+
         >
 
           <Link
+
             href={`/shop?category=${cat.slug}`}
-            className="
-              group
-              relative
-              block
-              aspect-[0.69]
-              w-full
-              overflow-hidden
-              rounded-[14px]
-              bg-neutral-200
-            "
+
+            className="group block h-full overflow-hidden rounded-[16px] bg-[#E9E1D5]"
+
           >
 
-            {/* ======================================================
-                DESKTOP IMAGE
-            ======================================================= */}
+            <div className={isCenter ? "relative h-full min-h-[620px]" : "relative h-[304px]"}>
 
-            <img
-              src={productImage}
-              alt={cat.name}
-              className={`
-                absolute
-                inset-0
-                h-full
-                w-full
-                object-cover
-                ${cardData.position}
-                transition-transform
-                duration-700
-                ease-out
-                group-hover:scale-[1.035]
-              `}
-            />
+              <img
+
+                src={productImage}
+
+                alt={cat.name}
+
+                className="h-full w-full object-cover object-center transition-transform duration-700 ease-out group-hover:scale-[1.025]"
+
+              />
 
 
-            {/* ======================================================
-                TOP IMAGE GRADIENT
-            ======================================================= */}
 
-            <div
-              className="
-                pointer-events-none
-                absolute
-                inset-x-0
-                top-0
-                h-32
-                bg-gradient-to-b
-                from-black/20
-                to-transparent
-              "
-            />
+              {/* Very soft readability wash — image stays dominant */}
+
+              <div className="absolute inset-x-0 bottom-0 h-28 bg-gradient-to-t from-black/28 to-transparent" />
 
 
-            {/* ======================================================
-                BOTTOM IMAGE GRADIENT
-            ======================================================= */}
 
-            <div
-              className="
-                pointer-events-none
-                absolute
-                inset-x-0
-                bottom-0
-                h-[60%]
-                bg-gradient-to-t
-                from-black/[0.94]
-                via-black/50
-                to-transparent
-              "
-            />
+              {/* Center card */}
 
+              {isCenter ? (
 
-            {/* ======================================================
-                TOP META
-            ======================================================= */}
+                <div className="absolute inset-x-0 bottom-0 p-5 text-white xl:p-6">
 
-            <div
-              className="
-                absolute
-                inset-x-0
-                top-0
-                z-10
-                flex
-                items-center
-                justify-between
-                p-5
-              "
-            >
+                  <div className="mb-3 flex items-center gap-2">
 
-              <div className="flex items-center gap-3 text-white">
+                    <span className="h-px w-6 bg-white/80" />
 
-                <span className="font-mono text-[10px] tracking-[0.18em]">
-                  0{index + 1}
-                </span>
+                    <span className="text-[7px] font-semibold uppercase tracking-[0.22em] text-white/85">
 
-                <span className="h-px w-7 bg-white/70" />
+                      Featured Collection
 
-              </div>
+                    </span>
+
+                  </div>
 
 
-              <span className="text-[7px] font-semibold uppercase tracking-[0.18em] text-white">
-                {cardData.top}
+
+                  <h3
+
+                    className="max-w-[360px] text-[38px] font-normal leading-[0.88] tracking-[-0.045em] sm:text-[44px] xl:text-[50px]"
+
+                    style={{ fontFamily: "Bodoni MT, Didot, Times New Roman, serif" }}
+
+                  >
+
+                    {cat.name}
+
+                  </h3>
+
+
+
+                  <p className="mt-2 max-w-[330px] text-[9px] leading-relaxed text-white/80">
+
+                    {cardCopy}
+
+                  </p>
+
+
+
+                  <span className="mt-4 inline-flex items-center gap-2 rounded-full bg-white px-4 py-2 text-[7px] font-bold uppercase tracking-[0.2em] text-[#11100F] transition-transform duration-300 group-hover:translate-y-[-2px]">
+
+                    Shop Collection
+
+                    <ArrowUpRight className="h-3 w-3" />
+
+                  </span>
+
+                </div>
+
+              ) : (
+
+                <div className="absolute inset-x-0 bottom-0 p-4 text-white xl:p-5">
+
+                  <p className="mb-1.5 text-[7px] font-semibold uppercase tracking-[0.2em] text-white/80">
+
+                    {cardLabel}
+
+                  </p>
+
+
+
+                  <div className="flex items-end justify-between gap-3">
+
+                    <h3
+
+                      className="text-[25px] font-normal leading-[0.9] tracking-[-0.035em] xl:text-[29px]"
+
+                      style={{ fontFamily: "Bodoni MT, Didot, Times New Roman, serif" }}
+
+                    >
+
+                      {cat.name}
+
+                    </h3>
+
+
+
+                    <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-white/70 bg-white/10 backdrop-blur-sm transition-all duration-300 group-hover:bg-white group-hover:text-[#11100F]">
+
+                      <ArrowUpRight className="h-3.5 w-3.5" />
+
+                    </span>
+
+                  </div>
+
+                </div>
+
+              )}
+
+            </div>
+
+          </Link>
+
+        </motion.div>
+
+      );
+
+    })}
+
+
+
+    {/* FIFTH TILE — ALL PRODUCTS / ARDENBY FEATURE */}
+
+    <motion.div
+
+      className="row-start-2"
+
+      initial={{ opacity: 0, y: 14 }}
+
+      whileInView={{ opacity: 1, y: 0 }}
+
+      viewport={{ once: true, amount: 0.12 }}
+
+      transition={{ duration: 0.5, delay: 0.22 }}
+
+    >
+
+      <Link
+
+        href="/shop"
+
+        className="group block h-[304px] overflow-hidden rounded-[16px] bg-[#DDD4C7]"
+
+      >
+
+        <div className="relative h-full">
+
+          <img
+
+            src={
+
+              staticHomeProducts?.[4]?.images?.[0] ||
+
+              staticHomeProducts?.[0]?.images?.[0] ||
+
+              "https://images.unsplash.com/photo-1496747611176-843222e1e57c?q=80&w=1200&auto=format&fit=crop"
+
+            }
+
+            alt="All Ardenby Products"
+
+            className="h-full w-full object-cover object-center transition-transform duration-700 ease-out group-hover:scale-[1.025]"
+
+          />
+
+          <div className="absolute inset-0 bg-gradient-to-t from-black/42 via-black/5 to-transparent" />
+
+
+
+          <div className="absolute inset-x-0 bottom-0 p-4 text-white xl:p-5">
+
+            <p className="mb-1.5 text-[7px] font-semibold uppercase tracking-[0.2em] text-white/80">
+
+              Complete Collection
+
+            </p>
+
+            <div className="flex items-end justify-between gap-3">
+
+              <h3
+
+                className="text-[25px] font-normal leading-[0.9] tracking-[-0.035em] xl:text-[29px]"
+
+                style={{ fontFamily: "Bodoni MT, Didot, Times New Roman, serif" }}
+
+              >
+
+                All Products
+
+              </h3>
+
+              <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-white/70 bg-white/10 backdrop-blur-sm transition-all duration-300 group-hover:bg-white group-hover:text-[#11100F]">
+
+                <ArrowUpRight className="h-3.5 w-3.5" />
+
               </span>
 
             </div>
 
+          </div>
 
-            {/* ======================================================
-                DESKTOP CENTER HOVER ARROW
-            ======================================================= */}
+        </div>
 
-            <div
-              className="
-                absolute
-                right-5
-                top-1/2
-                z-20
-                hidden
-                h-10
-                w-10
-                -translate-y-1/2
-                items-center
-                justify-center
-                rounded-full
-                border
-                border-white/60
-                bg-white/10
-                text-white
-                opacity-0
-                backdrop-blur-sm
-                transition-all
-                duration-500
-                group-hover:opacity-100
-                lg:flex
-              "
-            >
+      </Link>
 
-              <ArrowUpRight className="h-4 w-4" />
+    </motion.div>
 
-            </div>
+  </div>
 
 
-            {/* ======================================================
-                DESKTOP BOTTOM CONTENT
-            ======================================================= */}
 
-            <div
-              className="
-                absolute
-                inset-x-0
-                bottom-0
-                z-10
-                p-5
-              "
-            >
+  {/* ============================================================
 
-              {/* Label */}
-              <div className="mb-2 flex items-center gap-2">
+      MOBILE — 2 COLUMN SHOPRZ STYLE
 
-                <span className="h-px w-5 bg-white/80" />
+  ============================================================ */}
 
-                <span className="text-[7px] font-bold uppercase tracking-[0.19em] text-white">
-                  {cardData.label}
-                </span>
+  <div className="mx-auto grid w-full max-w-[1380px] grid-cols-2 gap-2.5 lg:hidden">
 
-              </div>
+    {categories.slice(0, 4).map((cat, index) => {
+
+      const staticCatProduct = staticHomeProducts.find(
+
+        (p) => p.category === cat.slug
+
+      );
 
 
-              {/* Title */}
-              <h3 className="font-serif text-[28px] font-normal leading-none tracking-[-0.025em] text-white">
-                {cat.name}
-              </h3>
+
+      const catProduct = products.find(
+
+        (p) => p.category === cat.slug
+
+      );
 
 
-              {/* Description */}
-              <p className="mt-2 max-w-[190px] text-[10px] leading-[1.45] text-white/80">
-                {cardData.description}
-              </p>
+
+      const productImage =
+
+        staticCatProduct?.images?.[0] ||
+
+        catProduct?.images?.[0] ||
+
+        "https://images.unsplash.com/photo-1521572267360-ee0c2909d518?q=80&w=1000&auto=format&fit=crop";
 
 
-              {/* Divider */}
-              <div className="my-4 border-t border-white/25" />
+
+      return (
+
+        <motion.div
+
+          key={cat.slug}
+
+          className={index === 1 ? "row-span-2" : ""}
+
+          initial={{ opacity: 0, y: 10 }}
+
+          whileInView={{ opacity: 1, y: 0 }}
+
+          viewport={{ once: true, amount: 0.08 }}
+
+          transition={{ duration: 0.4, delay: index * 0.04 }}
+
+        >
+
+          <Link
+
+            href={`/shop?category=${cat.slug}`}
+
+            className="group block h-full overflow-hidden rounded-[12px] bg-[#E9E1D5]"
+
+          >
+
+            <div className={index === 1 ? "relative h-[390px]" : "relative h-[190px]"}>
+
+              <img
+
+                src={productImage}
+
+                alt={cat.name}
+
+                className="h-full w-full object-cover object-center transition-transform duration-700 group-hover:scale-[1.025]"
+
+              />
+
+              <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-black/38 to-transparent" />
 
 
-              {/* Action */}
-              <div className="flex items-center justify-between">
 
-                <span className="text-[7px] font-bold uppercase tracking-[0.2em] text-white">
-                  Explore
-                </span>
+              <div className="absolute inset-x-0 bottom-0 p-3 text-white">
 
+                <p className="mb-1 text-[6px] font-semibold uppercase tracking-[0.18em] text-white/80">
 
-                <span
-                  className="
-                    flex
-                    h-10
-                    w-10
-                    items-center
-                    justify-center
-                    rounded-full
-                    border
-                    border-white/70
-                    text-white
-                    transition-all
-                    duration-300
-                    group-hover:bg-white
-                    group-hover:text-neutral-950
-                  "
-                >
+                  0{index + 1} / COLLECTION
 
-                  <ArrowRight className="h-4 w-4" />
+                </p>
 
-                </span>
+                <div className="flex items-end justify-between gap-2">
+
+                  <h3
+
+                    className="text-[19px] font-normal leading-[0.9] tracking-[-0.03em]"
+
+                    style={{ fontFamily: "Bodoni MT, Didot, Times New Roman, serif" }}
+
+                  >
+
+                    {cat.name}
+
+                  </h3>
+
+                  <ArrowUpRight className="h-3.5 w-3.5 shrink-0" />
+
+                </div>
 
               </div>
 
@@ -2150,352 +1530,29 @@ export default function HomePage() {
           </Link>
 
         </motion.div>
+
       );
+
     })}
+
+
+
+    <Link
+
+      href="/shop"
+
+      className="col-span-2 flex h-11 items-center justify-center gap-2 rounded-[10px] bg-[#11100F] text-[7px] font-bold uppercase tracking-[0.23em] text-white"
+
+    >
+
+      Explore All Products
+
+      <ArrowRight className="h-3 w-3" />
+
+    </Link>
 
   </div>
 
-
-  {/* ================================================================
-      MOBILE — FOUR HORIZONTAL EDITORIAL CARDS
-  ================================================================= */}
-
-  <div className="flex flex-col gap-3 lg:hidden">
-
-    {categories.slice(0, 4).map((cat, index) => {
-
-      const staticCatProduct = staticHomeProducts.find(
-        (p) => p.category === cat.slug
-      );
-
-      const catProduct = products.find(
-        (p) => p.category === cat.slug
-      );
-
-      const productImage =
-        staticCatProduct?.images?.[0] ||
-        catProduct?.images?.[0] ||
-        "https://images.unsplash.com/photo-1521572267360-ee0c2909d518?q=80&w=1000&auto=format&fit=crop";
-
-
-      /* --------------------------------------------------------------
-          IMPORTANT:
-          Different object positions prevent heads/faces from being
-          unnecessarily pushed outside the mobile crop.
-      -------------------------------------------------------------- */
-
-      const cardData = [
-        {
-          top: "240 GSM",
-          label: "HEAVYWEIGHT OVERSIZED DROPS",
-          description: "Bold silhouettes. Timeless essentials.",
-          position: "object-[center_18%]",
-        },
-
-        {
-          top: "GRAPHIC TEES",
-          label: "GRAPHIC & PRINTED TEES",
-          description: "Premium prints. Bolder stories.",
-          position: "object-[center_18%]",
-        },
-
-        {
-          top: "EVERYDAY LUXURY",
-          label: "LONG-STAPLE COTTON ESSENTIALS",
-          description: "Everyday luxury. Elevated basics.",
-          position: "object-[center_18%]",
-        },
-
-        {
-          top: "BOLD PRINTS",
-          label: "STATEMENT PIECES",
-          description: "No limits. Just expression.",
-          position: "object-[center_15%]",
-        },
-      ][index];
-
-
-      return (
-        <motion.div
-          key={cat.slug}
-          initial={{
-            opacity: 0,
-            y: 12,
-          }}
-          whileInView={{
-            opacity: 1,
-            y: 0,
-          }}
-          viewport={{
-            once: true,
-            amount: 0.15,
-          }}
-          transition={{
-            duration: 0.45,
-            delay: index * 0.05,
-            ease: [0.22, 1, 0.36, 1],
-          }}
-        >
-
-          <Link
-            href={`/shop?category=${cat.slug}`}
-            className="
-              group
-              relative
-              block
-              h-[158px]
-              w-full
-              overflow-hidden
-              rounded-[14px]
-              bg-neutral-900
-              sm:h-[175px]
-            "
-          >
-
-            {/* ======================================================
-                MOBILE SINGLE IMAGE
-            ======================================================= */}
-
-            <img
-              src={productImage}
-              alt={cat.name}
-              className={`
-                absolute
-                inset-0
-                h-full
-                w-full
-                object-cover
-                ${cardData.position}
-                transition-transform
-                duration-700
-                ease-out
-                group-hover:scale-[1.025]
-              `}
-            />
-
-
-            {/* ======================================================
-                MOBILE LEFT GRADIENT
-            ======================================================= */}
-
-            <div
-              className="
-                pointer-events-none
-                absolute
-                inset-0
-                bg-gradient-to-r
-                from-black/75
-                via-black/30
-                to-transparent
-              "
-            />
-
-
-            {/* ======================================================
-                MOBILE BOTTOM GRADIENT
-            ======================================================= */}
-
-            <div
-              className="
-                pointer-events-none
-                absolute
-                inset-x-0
-                bottom-0
-                h-24
-                bg-gradient-to-t
-                from-black/75
-                to-transparent
-              "
-            />
-
-
-            {/* ======================================================
-                MOBILE TOP META
-            ======================================================= */}
-
-            <div
-              className="
-                absolute
-                inset-x-0
-                top-0
-                z-10
-                flex
-                items-center
-                justify-between
-                px-4
-                py-3.5
-              "
-            >
-
-              <div className="flex items-center gap-2.5 text-white">
-
-                <span className="font-mono text-[8px] tracking-[0.18em]">
-                  0{index + 1}
-                </span>
-
-                <span className="h-px w-5 bg-white/70" />
-
-              </div>
-
-
-              <span className="text-[6px] font-semibold uppercase tracking-[0.15em] text-white">
-                {cardData.top}
-              </span>
-
-            </div>
-
-
-            {/* ======================================================
-                MOBILE CONTENT
-            ======================================================= */}
-
-            <div
-              className="
-                absolute
-                bottom-0
-                left-0
-                z-10
-                w-full
-                px-4
-                pb-3.5
-                pr-16
-              "
-            >
-
-              {/* Label */}
-              <div className="mb-1.5 flex items-center gap-1.5">
-
-                <span className="h-px w-4 bg-white/70" />
-
-                <span className="text-[6px] font-bold uppercase tracking-[0.17em] text-white">
-                  {cardData.label}
-                </span>
-
-              </div>
-
-
-              {/* Title */}
-              <h3 className="font-serif text-[22px] font-normal leading-none tracking-[-0.025em] text-white">
-                {cat.name}
-              </h3>
-
-
-              {/* Description */}
-              <p className="mt-1.5 max-w-[210px] text-[8px] leading-3.5 text-white/75">
-                {cardData.description}
-              </p>
-
-
-              {/* Explore */}
-              <div className="mt-2.5 flex items-center gap-1.5">
-
-                <span className="text-[6px] font-bold uppercase tracking-[0.18em] text-white">
-                  Explore
-                </span>
-
-                <ArrowRight className="h-2.5 w-2.5 text-white" />
-
-              </div>
-
-            </div>
-
-
-            {/* ======================================================
-                MOBILE ROUND ARROW
-            ======================================================= */}
-
-            <span
-              className="
-                absolute
-                bottom-3.5
-                right-4
-                z-20
-                flex
-                h-9
-                w-9
-                items-center
-                justify-center
-                rounded-full
-                bg-white
-                text-neutral-950
-                shadow-lg
-                transition-transform
-                duration-300
-                group-active:scale-95
-              "
-            >
-
-              <ArrowRight className="h-3.5 w-3.5" />
-
-            </span>
-
-          </Link>
-
-        </motion.div>
-      );
-    })}
-
-  </div>
-
-
-  {/* ================================================================
-      MOBILE EXPLORE CTA
-  ================================================================= */}
-
-  <Link
-    href="/shop"
-    className="
-      group
-      mt-4
-      flex
-      h-12
-      w-full
-      items-center
-      justify-center
-      gap-3
-      rounded-full 
-      bg-neutral-950
-      text-[8px]
-      font-bold
-      uppercase
-      tracking-[0.2em]
-      text-white
-      transition-colors
-      duration-300
-      hover:bg-neutral-800
-      lg:hidden
-    "
-  >
-
-    <span>
-      Explore All Categories
-    </span>
-
-    <ArrowRight
-      className="
-        h-3.5
-        w-3.5
-        transition-transform
-        duration-300
-        group-hover:translate-x-1
-      "
-    />
-
-  </Link>
-
-
-  {/* ================================================================
-      DESKTOP TRUST STRIP
-  ================================================================= */}
-
-
-
-
-  {/* ================================================================
-      MOBILE BENEFITS
-  ================================================================= */}
-
-  
 </section>
      
     
@@ -2871,7 +1928,7 @@ export default function HomePage() {
               The ARDENBY Standard
             </p>
 
-            <p className="mt-4 font-serif text-[17px] leading-[1.45] text-white/75 sm:text-[20px]">
+            <p className="mt-4 font-serif text-[17px] leading-[1.45] text-white [text-shadow:0_1px_6px_rgba(0,0,0,0.55)] sm:text-[20px]">
               Every silhouette is engineered around quality, comfort and
               individuality — without unnecessary compromise.
             </p>

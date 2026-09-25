@@ -23,6 +23,12 @@ import {
   Package,
   AlertTriangle,
   ArrowUpDown,
+  ExternalLink,
+  Copy,
+  PackageCheck,
+  Tag,
+  Layers3,
+  MoreHorizontal,
 } from "lucide-react";
 
 type Variant = {
@@ -204,6 +210,7 @@ export default function AdminProductsPage() {
   }, []);
 
   const openAdd = () => {
+    setPreviewProduct(null);
     setEditingId(null);
     setForm(emptyForm);
     setFiles([]);
@@ -211,6 +218,7 @@ export default function AdminProductsPage() {
   };
 
   const openEdit = (product: Product) => {
+    setPreviewProduct(null);
     setEditingId(product.id);
 
     setForm({
@@ -454,6 +462,8 @@ export default function AdminProductsPage() {
   const [perPage, setPerPage] = useState(10);
   const [page, setPage] = useState(1);
   const [selected, setSelected] = useState<string[]>([]);
+  const [previewProduct, setPreviewProduct] = useState<Product | null>(null);
+  const [previewImageIndex, setPreviewImageIndex] = useState(0);
   const searchRef = useRef<HTMLInputElement>(null);
 
   // press "/" anywhere to jump to search
@@ -490,6 +500,16 @@ export default function AdminProductsPage() {
 
   const filtered = products
     .filter((p) => {
+      // Category filtering is handled locally as well, so the dropdown
+      // works even if the backend does not implement ?category=...
+      if (
+        category &&
+        p.category_slug !== category &&
+        p.category_label !== category
+      ) {
+        return false;
+      }
+
       if (tagFilter === "best_seller" && !p.best_seller) return false;
       if (tagFilter === "new_arrival" && !p.new_arrival) return false;
       if (tagFilter === "trending" && !p.trending) return false;
@@ -544,7 +564,7 @@ export default function AdminProductsPage() {
       label: catName?.name || catName?.label || category,
       clear: () => {
         setCategory("");
-        setTimeout(loadProducts, 0);
+        setPage(1);
       },
     });
   if (tagFilter) chips.push({ label: tagLabels[tagFilter], clear: () => setTagFilter("") });
@@ -638,8 +658,19 @@ export default function AdminProductsPage() {
     </div>
   );
 
+  const openPreview = (product: Product) => {
+    setPreviewProduct(product);
+    setPreviewImageIndex(0);
+  };
+
+  const previewImages = previewProduct?.images?.filter((img) => img.image_url) || [];
+  const previewStock = previewProduct ? stockOf(previewProduct) : 0;
+  const previewPrice = previewProduct ? priceOf(previewProduct) : 0;
+  const previewStatus =
+    previewStock === 0 ? "Out of stock" : previewStock <= 5 ? "Low Stock" : "Published";
+
   const rowGrid =
-    "md:grid-cols-[28px_minmax(0,2.2fr)_1fr_1.1fr_1.1fr_1.5fr_84px]";
+    "md:grid-cols-[32px_minmax(245px,2.35fr)_minmax(105px,1fr)_minmax(100px,.9fr)_minmax(125px,1.1fr)_minmax(135px,1.35fr)_88px]";
 
   const bannerImgs = products.filter((p) => p.images?.[0]?.image_url).slice(0, 3);
   const fan = [
@@ -666,474 +697,351 @@ export default function AdminProductsPage() {
         }
       `}</style>
 
-      <div className="mx-auto w-full max-w-[1440px] px-3 pb-20 sm:px-5 lg:px-8 2xl:px-10">
-        {/* HEADER */}
-
-        <div className="mb-6 flex flex-col gap-5 border-b border-[#e8e2d8]/80 pb-6 md:mb-8 md:flex-row md:items-end md:justify-between md:pb-7">
-          <div>
-            <h1 className="font-serif text-[2.35rem] font-semibold tracking-[-0.04em] sm:text-5xl">
-              Products
-            </h1>
-            <p className="mt-2 max-w-xl text-sm leading-6 text-[#6f6a5f] sm:text-base">
-              Manage your Ardenby product collection
-            </p>
-          </div>
-
-          <div className="flex w-full flex-col-reverse gap-4 sm:flex-row sm:items-center sm:justify-end md:gap-8">
-            {!loading && totalCount > 0 && (
-              <div className="grid grid-cols-2 gap-4 border-t border-[#e8e2d8] pt-4 sm:flex sm:border-t-0 sm:pt-0 sm:pr-8 sm:border-r">
-                <div>
-                  <p className="text-[11px] uppercase tracking-[0.14em] text-[#8e887b]">Units on hand</p>
-                  <p className="font-serif text-2xl font-semibold tabular-nums">{inr(unitsOnHand)}</p>
-                </div>
-                <div>
-                  <p className="text-[11px] uppercase tracking-[0.14em] text-[#8e887b]">Stock value</p>
-                  <p className="font-serif text-2xl font-semibold tabular-nums">₹{inr(stockValue)}</p>
-                </div>
-              </div>
-            )}
-
-            <button
-              onClick={openAdd}
-              className="flex min-h-12 w-full items-center justify-center gap-2 rounded-xl bg-[#111] px-5 py-3.5 text-sm font-medium text-white shadow-[0_10px_24px_-10px_rgba(0,0,0,0.55)] transition duration-200 hover:-translate-y-0.5 hover:bg-[#262626] active:translate-y-0 active:scale-[0.97] sm:w-auto sm:px-6"
-            >
-              <Plus className="h-4 w-4" />
-              Add Product
-            </button>
-          </div>
-        </div>
-
-        {/* STATS */}
-
-        <div className="mb-5 grid grid-cols-2 gap-2.5 sm:gap-3 lg:grid-cols-4 lg:gap-4">
-          {stats.map((s) => (
-            <div
-              key={s.label}
-              className="group rounded-2xl border border-[#eee8dd] bg-white p-3.5 shadow-[0_4px_18px_-10px_rgba(60,45,20,0.16)] transition duration-200 hover:-translate-y-0.5 hover:border-[#ded5c7] hover:shadow-[0_16px_32px_-16px_rgba(60,45,20,0.28)] sm:p-5"
-            >
-              <div className="flex items-center gap-3.5 sm:gap-4">
-                <div className="hidden h-14 w-14 shrink-0 items-center justify-center rounded-xl bg-[#f5ebdd] text-[#5b4526] sm:flex">
-                  <s.icon className="h-6 w-6" strokeWidth={1.5} />
-                </div>
-
-                <div className="min-w-0">
-                  <p className="text-[11px] font-medium uppercase tracking-[0.08em] text-[#777064] sm:text-sm sm:normal-case sm:tracking-normal">{s.label}</p>
-                  <p className="font-serif text-3xl font-semibold leading-tight tabular-nums">
-                    {loading ? (
-                      <span className="inline-block h-7 w-8 animate-pulse rounded bg-[#efe9dd] align-middle" />
-                    ) : (
-                      s.value
-                    )}
-                  </p>
-                  <p className="truncate text-xs text-[#8e887b]">{s.sub}</p>
-                </div>
+      <div className="min-h-[calc(100vh-72px)] bg-[#f7f6f3]">
+        {/* HEADER — closely follows the supplied StoreToLet reference */}
+        <div className="border-b border-[#e5e2dc] bg-white">
+          <div className="px-5 py-5 sm:px-7 lg:px-8">
+            <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+              <div>
+                <p className="mb-1 text-[10px] font-semibold uppercase tracking-[0.24em] text-[#9b8258]">
+                  ARDENBY
+                </p>
+                <h1 className="font-serif text-[30px] font-semibold leading-none tracking-[-0.035em] text-[#171717]">
+                  Products
+                </h1>
+                <p className="mt-2 text-xs text-[#8b887f]">
+                  Manage all your products and stock
+                </p>
               </div>
 
-              <div className="mt-4 h-1 overflow-hidden rounded-full bg-[#f1ece2]">
-                <div
-                  className={`h-full rounded-full transition-all duration-700 ${s.bar}`}
-                  style={{ width: `${totalCount ? Math.round((s.value / totalCount) * 100) : 0}%` }}
-                />
-              </div>
-            </div>
-          ))}
-        </div>
-
-        {/* FILTER BAR */}
-
-        <div className="sticky top-2 z-20 mb-3 flex flex-col gap-3 rounded-2xl border border-[#eee8dd] bg-white/95 p-2.5 shadow-[0_10px_30px_-18px_rgba(60,45,20,0.35)] backdrop-blur-xl sm:p-3 lg:static lg:flex-row lg:items-center">
-          <div className="relative min-w-0 flex-1">
-            <Search className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-[#8e887b]" />
-            <input
-              ref={searchRef}
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              onKeyDown={(e) => {
-                if (e.key === "Enter") loadProducts();
-              }}
-              placeholder="Search products..."
-              className="h-11 w-full rounded-xl border border-[#e8e2d8] bg-[#fbfaf7] pl-10 pr-10 text-sm outline-none transition placeholder:text-[#9a9486] hover:border-[#d6cfc1] focus:border-[#111] focus:bg-white focus:ring-4 focus:ring-[#111]/5"
-            />
-            <kbd className="pointer-events-none absolute right-3 top-1/2 hidden h-6 w-6 -translate-y-1/2 items-center justify-center rounded-md border border-[#e8e2d8] bg-[#f8f5f0] text-xs text-[#8e887b] md:flex">
-              /
-            </kbd>
-          </div>
-
-          <div className="grid grid-cols-2 gap-2.5 sm:grid-cols-3 sm:gap-3 lg:flex lg:items-center">
-            <div className="relative lg:w-44">
-              <select
-                value={category}
-                onChange={(e) => {
-                  setCategory(e.target.value);
-
-                  setTimeout(loadProducts, 0);
-                }}
-                className={selectCls}
-              >
-                <option value="">All Categories</option>
-
-                {categories.map((cat) => (
-                  <option key={cat.slug || cat.id} value={cat.slug}>
-                    {cat.name || cat.label}
-                  </option>
-                ))}
-              </select>
-              <ChevronDown className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2" />
-            </div>
-
-            <div className="relative lg:w-36">
-              <select
-                value={tagFilter}
-                onChange={(e) => {
-                  setTagFilter(e.target.value);
-                  setPage(1);
-                }}
-                className={selectCls}
-              >
-                <option value="">All Tags</option>
-                <option value="best_seller">Best Seller</option>
-                <option value="new_arrival">New</option>
-                <option value="trending">Trending</option>
-                <option value="limited_edition">Limited</option>
-              </select>
-              <ChevronDown className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2" />
-            </div>
-
-            <div className="relative lg:w-36">
-              <select
-                value={statusFilter}
-                onChange={(e) => {
-                  setStatusFilter(e.target.value);
-                  setPage(1);
-                }}
-                className={selectCls}
-              >
-                <option value="">All Status</option>
-                <option value="in">In Stock</option>
-                <option value="low">Low Stock</option>
-                <option value="out">Out of Stock</option>
-              </select>
-              <ChevronDown className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2" />
-            </div>
-
-            <button
-              onClick={loadProducts}
-              className="col-span-2 flex h-11 items-center justify-center gap-2 rounded-xl border border-[#e8e2d8] bg-white px-5 text-sm font-medium transition duration-200 hover:border-[#111] hover:bg-[#111] hover:text-white active:scale-[0.97] sm:col-span-1"
-            >
-              <Filter className="h-4 w-4" />
-              Filter
-            </button>
-          </div>
-
-          <div className="hidden items-center gap-1 rounded-xl bg-[#f3efe8] p-1 lg:flex">
-            {(["list", "grid"] as const).map((m) => (
-              <button
-                key={m}
-                onClick={() => setViewMode(m)}
-                aria-label={`${m} view`}
-                className={`flex h-9 w-9 items-center justify-center rounded-lg transition ${
-                  viewMode === m ? "bg-[#111] text-white" : "text-[#6f6a5f] hover:text-[#111]"
-                }`}
-              >
-                {m === "list" ? <List className="h-4 w-4" /> : <LayoutGrid className="h-4 w-4" />}
-              </button>
-            ))}
-          </div>
-        </div>
-
-        {/* ACTIVE FILTER CHIPS + SORT */}
-
-        <div className="mb-3 flex flex-wrap items-center justify-between gap-3 px-1">
-          <div className="flex flex-wrap items-center gap-2">
-            <span className="text-sm text-[#6f6a5f]">
-              {loading ? "Loading…" : `${filtered.length} ${filtered.length === 1 ? "product" : "products"}`}
-            </span>
-            {chips.map((c) => (
-              <button
-                key={c.label}
-                onClick={c.clear}
-                className="flex items-center gap-1.5 rounded-full border border-[#e8e2d8] bg-white py-1 pl-3 pr-2 text-xs font-medium transition hover:border-[#111]"
-              >
-                {c.label}
-                <X className="h-3 w-3 text-[#8e887b]" />
-              </button>
-            ))}
-            {chips.length > 1 && (
-              <button
-                onClick={() => {
-                  setTagFilter("");
-                  setStatusFilter("");
-                  if (category) {
-                    setCategory("");
-                    setTimeout(loadProducts, 0);
-                  }
-                }}
-                className="text-xs text-[#8e887b] underline underline-offset-4 hover:text-[#111]"
-              >
-                Clear all
-              </button>
-            )}
-          </div>
-
-          <div className="relative">
-            <ArrowUpDown className="pointer-events-none absolute left-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-[#8e887b]" />
-            <select
-              value={sortBy}
-              onChange={(e) => setSortBy(e.target.value)}
-              aria-label="Sort products"
-              className="h-9 cursor-pointer appearance-none rounded-lg border border-[#e8e2d8] bg-white pl-8 pr-8 text-xs font-medium outline-none transition hover:border-[#d6cfc1] focus:border-[#111]"
-            >
-              <option value="default">Sort: Default</option>
-              <option value="name">Name A–Z</option>
-              <option value="price_asc">Price: Low to High</option>
-              <option value="price_desc">Price: High to Low</option>
-              <option value="stock_asc">Stock: Lowest first</option>
-            </select>
-            <ChevronDown className="pointer-events-none absolute right-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2" />
-          </div>
-        </div>
-
-        {/* PRODUCTS */}
-
-        <div className="overflow-hidden rounded-2xl border border-[#eee8dd] bg-white shadow-[0_8px_28px_-20px_rgba(60,45,20,0.35)]">
-          {viewMode === "list" && (
-            <div
-              className={`hidden items-center gap-4 border-b border-[#f0ebe1] px-6 py-4 text-[11px] font-medium uppercase tracking-[0.12em] text-[#7d776b] md:grid ${rowGrid}`}
-            >
-              <input
-                type="checkbox"
-                checked={allSelected}
-                onChange={toggleAll}
-                aria-label="Select all"
-                className="h-4 w-4 cursor-pointer rounded border-[#cfc8b8] accent-[#111]"
-              />
-              <span>Product</span>
-              <span>Category</span>
-              <span>Price</span>
-              <span>Inventory</span>
-              <span>Tags</span>
-              <span className="text-right">Actions</span>
-            </div>
-          )}
-
-          {loading ? (
-            <div className="divide-y divide-[#f3eee5]">
-              {Array.from({ length: 4 }).map((_, i) => (
-                <div key={i} className="flex items-center gap-4 px-6 py-5">
-                  <div className="h-[72px] w-[72px] shrink-0 animate-pulse rounded-2xl bg-[#f1ece2]" />
-                  <div className="flex-1 space-y-2.5">
-                    <div className="h-3.5 w-1/3 animate-pulse rounded bg-[#f1ece2]" />
-                    <div className="h-3 w-1/4 animate-pulse rounded bg-[#f1ece2]" />
-                  </div>
-                  <div className="hidden h-3.5 w-24 animate-pulse rounded bg-[#f1ece2] md:block" />
-                  <div className="hidden h-3.5 w-20 animate-pulse rounded bg-[#f1ece2] md:block" />
-                </div>
-              ))}
-            </div>
-          ) : filtered.length === 0 ? (
-            <div className="flex flex-col items-center px-6 py-20 text-center">
-              <div className="mb-5 flex h-16 w-16 items-center justify-center rounded-full bg-[#f5ebdd]">
-                <PackageOpen className="h-8 w-8 text-[#a08a63]" strokeWidth={1.25} />
-              </div>
-              {products.length === 0 ? (
-                <>
-                  <h3 className="font-serif text-2xl font-semibold">No products yet</h3>
-                  <p className="mt-1.5 text-sm text-[#6f6a5f]">
-                    Start building the ARDENBY collection.
-                  </p>
-                  <button
-                    onClick={openAdd}
-                    className="mt-6 flex items-center gap-2 rounded-xl bg-[#111] px-5 py-3 text-sm font-medium text-white transition hover:bg-[#262626] active:scale-[0.97]"
-                  >
-                    <Plus className="h-4 w-4" />
-                    Add Product
-                  </button>
-                </>
-              ) : (
-                <>
-                  <h3 className="font-serif text-2xl font-semibold">Nothing matches</h3>
-                  <p className="mt-1.5 text-sm text-[#6f6a5f]">
-                    Try removing a filter to see more of the collection.
-                  </p>
-                  <button
-                    onClick={() => {
-                      setTagFilter("");
-                      setStatusFilter("");
-                    }}
-                    className="mt-6 rounded-xl border border-[#e8e2d8] px-5 py-3 text-sm font-medium transition hover:bg-[#f3efe8]"
-                  >
-                    Reset tag and status filters
-                  </button>
-                </>
-              )}
-            </div>
-          ) : viewMode === "list" ? (
-            <ul className="divide-y divide-[#f3eee5]">
-              {pageItems.map((product, i) => {
-                const isSel = selected.includes(product.id);
-                const low = stockOf(product) <= 5;
-                return (
-                  <li
-                    key={product.id}
-                    style={{ animationDelay: `${i * 45}ms` }}
-                    className={`ard-rise group grid grid-cols-[auto_1fr] items-center gap-x-4 gap-y-3 border-l-[3px] px-4 py-4 transition-colors duration-200 md:gap-4 md:px-6 ${rowGrid} ${
-                      low ? "border-l-[#e0483a]/60" : "border-l-transparent"
-                    } ${isSel ? "bg-[#faf5ec]" : "hover:bg-[#fcfaf6]"}`}
-                  >
-                    <input
-                      type="checkbox"
-                      checked={isSel}
-                      onChange={() => toggleOne(product.id)}
-                      aria-label={`Select ${product.name}`}
-                      className="hidden h-4 w-4 cursor-pointer rounded border-[#cfc8b8] accent-[#111] md:block"
-                    />
-
-                    <div className="contents md:flex md:min-w-0 md:items-center md:gap-4">
-                      {thumb(product, "h-20 w-20 md:h-[76px] md:w-[76px]")}
-                      <div className="min-w-0">
-                        <p className="line-clamp-2 text-[15px] font-semibold leading-snug">
-                          {product.name}
-                        </p>
-                        <p className="mt-0.5 truncate text-xs text-[#8e887b]">
-                          ID: {product.id}
-                        </p>
-                        <div className="mt-2 flex flex-wrap gap-1.5 md:hidden">
-                          {tagsOf(product)}
-                        </div>
-                      </div>
-                    </div>
-
-                    <div className="col-span-2 grid grid-cols-3 gap-3 border-t border-[#f3eee5] pt-3 md:contents md:border-0 md:pt-0">
-                      <span className="text-sm text-[#6f6a5f]">
-                        {product.category_label || "Uncategorized"}
-                      </span>
-
-                      {priceView(product)}
-
-                      {stockView(product)}
-                    </div>
-
-                    <div className="hidden flex-wrap gap-1.5 md:flex">{tagsOf(product)}</div>
-
-                    <div className="col-span-2 flex justify-end md:col-span-1">
-                      {actions(product)}
-                    </div>
-                  </li>
-                );
-              })}
-            </ul>
-          ) : (
-            <div className="grid gap-3 p-3 sm:grid-cols-2 sm:gap-4 sm:p-4 lg:grid-cols-3 xl:grid-cols-4">
-              {pageItems.map((product, i) => (
-                <div
-                  key={product.id}
-                  style={{ animationDelay: `${i * 45}ms` }}
-                  className="ard-rise group rounded-2xl border border-[#eee8dd] bg-[#fffefa] p-2.5 transition duration-300 hover:-translate-y-1 hover:border-[#ddd3c3] hover:shadow-[0_18px_40px_-20px_rgba(60,45,20,0.35)] sm:p-3"
+              <div className="flex gap-2">
+                <button
+                  type="button"
+                  onClick={() => document.getElementById("ardenby-category-filter")?.focus()}
+                  className="hidden h-10 items-center gap-2 rounded-lg border border-[#bfc0c3] bg-white px-4 text-xs font-medium text-[#303136] hover:bg-[#f7f7f7] sm:flex"
                 >
-                  <div className="relative">
-                    {thumb(product, "aspect-square w-full")}
-                    <div className="absolute right-2 top-2 transition focus-within:opacity-100 lg:opacity-0 lg:group-hover:opacity-100">
-                      {actions(product)}
-                    </div>
-                  </div>
-                  <p className="mt-3 truncate text-[15px] font-semibold">{product.name}</p>
-                  <p className="text-xs text-[#8e887b]">
-                    {product.category_label || "Uncategorized"}
-                  </p>
-                  <div className="mt-2">{priceView(product)}</div>
-                  <div className="mt-2">{stockView(product)}</div>
-                  <div className="mt-3 flex flex-wrap gap-1.5">{tagsOf(product)}</div>
-                </div>
-              ))}
+                  <Layers3 className="h-4 w-4" />
+                  Categories
+                </button>
+
+                <button
+                  type="button"
+                  onClick={openAdd}
+                  className="flex h-10 items-center gap-2 rounded-lg bg-[#17244f] px-4 text-xs font-semibold text-white shadow-sm transition hover:bg-[#101a3b] active:scale-[.99]"
+                >
+                  <Plus className="h-4 w-4" />
+                  Add New Product
+                </button>
+              </div>
             </div>
-          )}
+          </div>
+        </div>
 
-          {/* PAGINATION */}
+        <div className="px-4 py-5 sm:px-7 lg:px-8 lg:py-6">
+          {/* TOOLBAR */}
+          <div className="rounded-xl border border-[#e2dfd9] bg-white">
+            <div className="flex flex-col gap-3 border-b border-[#ece9e4] px-3 py-3 sm:px-4 lg:flex-row lg:items-center lg:justify-between">
+              <div className="flex items-center gap-2">
+                <span className="text-xs font-medium text-[#383838] sm:text-sm">
+                  Products : {filtered.length}
+                </span>
+                {selected.length > 0 && (
+                  <span className="rounded-full bg-[#17244f] px-2.5 py-1 text-[10px] font-medium text-white">
+                    {selected.length} selected
+                  </span>
+                )}
+              </div>
 
-          {!loading && filtered.length > 0 && (
-            <div className="flex flex-col gap-3 border-t border-[#f0ebe1] px-5 py-4 text-sm text-[#6f6a5f] sm:flex-row sm:items-center sm:justify-between">
-              <div className="flex items-center gap-3">
-                <span>Show</span>
-                <div className="relative">
+              <div className="flex w-full flex-col gap-2 sm:flex-row lg:w-auto">
+                <div className="relative min-w-0 flex-1 sm:w-[270px] lg:w-[300px]">
+                  <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[#9b9891]" />
+                  <input
+                    ref={searchRef}
+                    value={search}
+                    onChange={(e) => setSearch(e.target.value)}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter") loadProducts();
+                    }}
+                    placeholder="Search here..."
+                    className="h-10 w-full rounded-lg border border-[#ddd9d2] bg-white pl-9 pr-9 text-xs text-[#222] outline-none placeholder:text-[#aaa59c] focus:border-[#17244f]"
+                  />
+                  <kbd className="pointer-events-none absolute right-2.5 top-1/2 hidden h-6 w-6 -translate-y-1/2 items-center justify-center rounded border border-[#e3dfd8] bg-white text-[11px] text-[#aaa59c] sm:flex">
+                    /
+                  </kbd>
+                </div>
+
+                <div className="relative sm:w-[175px]">
                   <select
-                    value={perPage}
+                    id="ardenby-category-filter"
+                    value={category}
                     onChange={(e) => {
-                      setPerPage(Number(e.target.value));
+                      setCategory(e.target.value);
                       setPage(1);
                     }}
-                    className="h-10 cursor-pointer appearance-none rounded-xl border border-[#e8e2d8] bg-white pl-3 pr-8 text-sm text-[#111] outline-none focus:border-[#111]"
+                    className="h-10 w-full appearance-none rounded-lg border border-[#ddd9d2] bg-white px-3 pr-9 text-xs text-[#383838] outline-none focus:border-[#17244f]"
                   >
-                    {[10, 20, 50].map((n) => (
-                      <option key={n} value={n}>
-                        {n}
+                    <option value="">All Categories</option>
+                    {categories.map((cat) => (
+                      <option key={cat.slug || cat.id} value={cat.slug}>
+                        {cat.name || cat.label}
                       </option>
                     ))}
                   </select>
-                  <ChevronDown className="pointer-events-none absolute right-2.5 top-1/2 h-4 w-4 -translate-y-1/2" />
+                  <ChevronDown className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[#85817a]" />
                 </div>
-                <span>products per page</span>
-              </div>
 
-              <div className="flex items-center gap-3">
-                <span>
-                  {start + 1}–{Math.min(start + perPage, filtered.length)} of {filtered.length} products
+                <button
+                  type="button"
+                  onClick={loadProducts}
+                  className="flex h-10 items-center justify-center gap-2 rounded-lg border border-[#ddd9d2] bg-white px-4 text-xs font-medium text-[#343434] hover:bg-[#f8f7f5]"
+                >
+                  <Filter className="h-3.5 w-3.5" />
+                  Filter
+                </button>
+              </div>
+            </div>
+
+            {/* DESKTOP TABLE */}
+            <div className="hidden overflow-x-auto md:block">
+              <div className="min-w-[850px]">
+                <div className="grid grid-cols-[48px_minmax(300px,2.3fr)_minmax(120px,1fr)_minmax(135px,1fr)_minmax(135px,1fr)_82px] items-center border-b border-[#e8e5df] bg-[#fafafa] px-4 py-3 text-[10px] font-medium uppercase tracking-[0.12em] text-[#77736c] lg:px-5">
+                  <div>
+                    <input
+                      type="checkbox"
+                      checked={allSelected}
+                      onChange={toggleAll}
+                      aria-label="Select all products"
+                      className="h-4 w-4 accent-[#17244f]"
+                    />
+                  </div>
+                  <span>Image / Name</span>
+                  <span>Total Price</span>
+                  <span>Category</span>
+                  <span>Status</span>
+                  <span className="text-right">Actions</span>
+                </div>
+
+                <div className="divide-y divide-[#ebe8e2]">
+                  {pageItems.map((product, i) => {
+                    const stock = stockOf(product);
+                    const isSel = selected.includes(product.id);
+
+                    return (
+                      <div
+                        key={product.id}
+                        style={{ animationDelay: `${i * 25}ms` }}
+                        className={`ard-rise grid min-h-[78px] grid-cols-[48px_minmax(300px,2.3fr)_minmax(120px,1fr)_minmax(135px,1fr)_minmax(135px,1fr)_82px] items-center px-4 transition-colors hover:bg-[#fcfbf9] lg:px-5 ${
+                          isSel ? "bg-[#fbf7ef]" : "bg-white"
+                        }`}
+                      >
+                        <div>
+                          <input
+                            type="checkbox"
+                            checked={isSel}
+                            onChange={() => toggleOne(product.id)}
+                            aria-label={`Select ${product.name}`}
+                            className="h-4 w-4 accent-[#17244f]"
+                          />
+                        </div>
+
+                        <button
+                          type="button"
+                          onClick={() => openPreview(product)}
+                          className="flex min-w-0 items-center gap-3 text-left"
+                        >
+                          {thumb(
+                            product,
+                            "h-[52px] w-[52px] rounded-lg lg:h-[56px] lg:w-[56px]"
+                          )}
+                          <span className="min-w-0">
+                            <span className="block truncate text-[13px] font-semibold text-[#2b2b2b]">
+                              {product.name}
+                            </span>
+                            <span className="mt-1 block truncate text-[10px] text-[#9b978f]">
+                              {product.variants?.[0]?.sku || product.id}
+                            </span>
+                          </span>
+                        </button>
+
+                        <div>{priceView(product)}</div>
+
+                        <span className="truncate pr-4 text-xs text-[#68645d]">
+                          {product.category_label || "Uncategorized"}
+                        </span>
+
+                        <div>
+                          <span
+                            className={`inline-flex rounded-full px-3 py-1.5 text-[10px] font-medium ${
+                              stock === 0
+                                ? "bg-[#f7dfdc] text-[#b43b31]"
+                                : stock <= 5
+                                  ? "bg-[#fff0d2] text-[#a16a13]"
+                                  : "bg-[#dff2e9] text-[#28805c]"
+                            }`}
+                          >
+                            {stock === 0
+                              ? "Out of Stock"
+                              : stock <= 5
+                                ? "Low Stock"
+                                : "In Stock"}
+                          </span>
+                        </div>
+
+                        <div className="flex justify-end" onClick={(e) => e.stopPropagation()}>
+                          {actions(product)}
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            </div>
+
+            {/* MOBILE PRODUCT LIST */}
+            <div className="divide-y divide-[#ebe8e2] md:hidden">
+              {pageItems.map((product) => {
+                const stock = stockOf(product);
+                const isSel = selected.includes(product.id);
+
+                return (
+                  <div
+                    key={product.id}
+                    className={`p-3.5 ${isSel ? "bg-[#fbf7ef]" : "bg-white"}`}
+                  >
+                    <div className="flex gap-3">
+                      <input
+                        type="checkbox"
+                        checked={isSel}
+                        onChange={() => toggleOne(product.id)}
+                        className="mt-2 h-4 w-4 shrink-0 accent-[#17244f]"
+                        aria-label={`Select ${product.name}`}
+                      />
+
+                      <button
+                        type="button"
+                        onClick={() => openPreview(product)}
+                        className="h-[76px] w-[76px] shrink-0 overflow-hidden rounded-lg bg-[#f1efeb]"
+                      >
+                        {product.images?.[0]?.image_url ? (
+                          <img
+                            src={product.images[0].image_url}
+                            alt={product.name}
+                            className="h-full w-full object-cover"
+                          />
+                        ) : (
+                          <div className="flex h-full items-center justify-center text-[#aaa49b]">
+                            <ImageOff className="h-5 w-5" />
+                          </div>
+                        )}
+                      </button>
+
+                      <div className="min-w-0 flex-1">
+                        <div className="flex items-start justify-between gap-2">
+                          <button
+                            type="button"
+                            onClick={() => openPreview(product)}
+                            className="min-w-0 text-left"
+                          >
+                            <p className="line-clamp-2 text-[13px] font-semibold leading-5 text-[#272727]">
+                              {product.name}
+                            </p>
+                            <p className="mt-0.5 truncate text-[10px] text-[#9b978f]">
+                              {product.variants?.[0]?.sku || product.id}
+                            </p>
+                          </button>
+
+                          <div className="shrink-0" onClick={(e) => e.stopPropagation()}>
+                            {actions(product)}
+                          </div>
+                        </div>
+
+                        <div className="mt-2">{priceView(product)}</div>
+                      </div>
+                    </div>
+
+                    <div className="mt-3 grid grid-cols-2 gap-3 border-t border-[#eeeae4] pt-3">
+                      <div className="min-w-0">
+                        <p className="text-[9px] uppercase tracking-[0.12em] text-[#99948b]">
+                          Category
+                        </p>
+                        <p className="mt-1 truncate text-xs font-medium text-[#625e57]">
+                          {product.category_label || "Uncategorized"}
+                        </p>
+                      </div>
+
+                      <div>
+                        <p className="text-[9px] uppercase tracking-[0.12em] text-[#99948b]">
+                          Status
+                        </p>
+                        <span
+                          className={`mt-1 inline-flex rounded-full px-2.5 py-1 text-[10px] font-medium ${
+                            stock === 0
+                              ? "bg-[#f7dfdc] text-[#b43b31]"
+                              : stock <= 5
+                                ? "bg-[#fff0d2] text-[#a16a13]"
+                                : "bg-[#dff2e9] text-[#28805c]"
+                          }`}
+                        >
+                          {stock === 0
+                            ? "Out of Stock"
+                            : stock <= 5
+                              ? "Low Stock"
+                              : "In Stock"}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+
+            {/* PAGINATION — reference style */}
+            {!loading && filtered.length > 0 && (
+              <div className="flex flex-col gap-3 border-t border-[#e8e5df] px-4 py-3.5 sm:flex-row sm:items-center sm:justify-between">
+                <span className="text-[11px] text-[#817d75]">
+                  Showing {start + 1}–{Math.min(start + perPage, filtered.length)} of{" "}
+                  {filtered.length}
                 </span>
-                <div className="flex items-center gap-1.5">
+
+                <div className="flex items-center justify-center gap-1.5">
                   <button
+                    type="button"
                     onClick={() => setPage(Math.max(1, safePage - 1))}
                     disabled={safePage === 1}
+                    className="flex h-8 w-8 items-center justify-center rounded-md bg-[#17244f] text-white disabled:cursor-not-allowed disabled:opacity-35"
                     aria-label="Previous page"
-                    className="flex h-9 w-9 items-center justify-center rounded-lg border border-[#e8e2d8] transition hover:bg-[#f3efe8] disabled:opacity-40"
                   >
                     <ChevronLeft className="h-4 w-4" />
                   </button>
-                  <span className="flex h-9 min-w-9 items-center justify-center rounded-lg bg-[#111] px-2 text-sm font-medium text-white">
-                    {safePage}
-                  </span>
+
+                  {Array.from({ length: Math.min(pageCount, 5) }, (_, i) => i + 1).map((n) => (
+                    <button
+                      type="button"
+                      key={n}
+                      onClick={() => setPage(n)}
+                      className={`h-8 min-w-8 rounded-md px-2 text-[11px] ${
+                        n === safePage
+                          ? "border border-[#17244f] bg-white font-semibold text-[#17244f]"
+                          : "text-[#858078] hover:bg-[#f4f2ee]"
+                      }`}
+                    >
+                      {n}
+                    </button>
+                  ))}
+
                   <button
+                    type="button"
                     onClick={() => setPage(Math.min(pageCount, safePage + 1))}
                     disabled={safePage === pageCount}
+                    className="flex h-8 w-8 items-center justify-center rounded-md bg-[#17244f] text-white disabled:cursor-not-allowed disabled:opacity-35"
                     aria-label="Next page"
-                    className="flex h-9 w-9 items-center justify-center rounded-lg border border-[#e8e2d8] transition hover:bg-[#f3efe8] disabled:opacity-40"
                   >
                     <ChevronRight className="h-4 w-4" />
                   </button>
                 </div>
               </div>
-            </div>
-          )}
-        </div>
-
-        {/* CREATE BANNER — fans out your real product photos */}
-
-        <div className="group/banner relative mt-5 overflow-hidden rounded-2xl bg-[#141210] bg-[radial-gradient(ellipse_at_85%_50%,rgba(184,151,90,0.30),transparent_60%)] p-6 text-white md:p-9">
-          <div className="relative z-10">
-            <h3 className="font-serif text-2xl font-semibold md:text-3xl">Create amazing products</h3>
-            <p className="mt-1.5 max-w-md text-sm text-white/70">
-              Add new products with images, variants, sizes and more.
-            </p>
-            <button
-              onClick={openAdd}
-              className="mt-6 flex items-center gap-2 rounded-xl bg-white px-5 py-3 text-sm font-medium text-[#111] transition hover:bg-[#f5ecd7] active:scale-[0.97]"
-            >
-              <Plus className="h-4 w-4" />
-              Add New Product
-            </button>
+            )}
           </div>
-
-          {bannerImgs.length > 0 && (
-            <div className="pointer-events-none absolute right-10 top-1/2 hidden h-44 w-[300px] -translate-y-1/2 md:block lg:right-16">
-              {bannerImgs.map((p, i) => (
-                <img
-                  key={p.id}
-                  src={p.images![0].image_url}
-                  alt=""
-                  className={`absolute left-0 top-0 h-44 w-36 rounded-2xl border-2 border-white/15 object-cover shadow-2xl transition duration-500 ease-out ${fan[i]}`}
-                  style={{ zIndex: i }}
-                />
-              ))}
-            </div>
-          )}
         </div>
       </div>
 
@@ -1157,6 +1065,250 @@ export default function AdminProductsPage() {
             Clear
           </button>
         </div>
+      )}
+
+      {/* PRODUCT PREVIEW DRAWER — intentionally no sidebar; this page sits inside the existing admin shell */}
+      {previewProduct && (
+        <>
+          <button
+            aria-label="Close product preview"
+            onClick={() => setPreviewProduct(null)}
+            className="fixed inset-0 z-[55] cursor-default bg-black/20 backdrop-blur-[2px]"
+          />
+
+          <aside
+            className="fixed inset-y-0 right-0 z-[60] flex w-full max-w-[430px] flex-col border-l border-[#e7e1d6] bg-[#fffefa] shadow-[-24px_0_70px_-35px_rgba(0,0,0,.45)]"
+            aria-label="Product details"
+          >
+            <div className="flex items-center justify-between border-b border-[#eee8dd] px-5 py-4">
+              <div>
+                <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-[#a18a65]">
+                  Product details
+                </p>
+                <p className="mt-0.5 text-xs text-[#8e887b]">Catalog / {previewProduct.category_label || "Uncategorized"}</p>
+              </div>
+
+              <button
+                onClick={() => setPreviewProduct(null)}
+                className="flex h-9 w-9 items-center justify-center rounded-full border border-[#e8e2d8] bg-white text-[#6f6a5f] transition hover:bg-[#111] hover:text-white"
+              >
+                <X className="h-4 w-4" />
+              </button>
+            </div>
+
+            <div className="min-h-0 flex-1 overflow-y-auto">
+              <div className="p-5">
+                <div className="relative overflow-hidden rounded-2xl bg-[#f1eee8]">
+                  {previewImages.length ? (
+                    <img
+                      src={previewImages[previewImageIndex]?.image_url || previewImages[0].image_url}
+                      alt={previewProduct.name}
+                      className="aspect-[4/4.35] w-full object-cover"
+                    />
+                  ) : (
+                    <div className="flex aspect-[4/4.35] items-center justify-center text-[#b7afa2]">
+                      <ImageOff className="h-10 w-10" />
+                    </div>
+                  )}
+
+                  {previewImages.length > 1 && (
+                    <>
+                      <button
+                        onClick={() =>
+                          setPreviewImageIndex((i) =>
+                            i === 0 ? previewImages.length - 1 : i - 1
+                          )
+                        }
+                        className="absolute left-3 top-1/2 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full bg-white/90 shadow-sm backdrop-blur"
+                      >
+                        <ChevronLeft className="h-4 w-4" />
+                      </button>
+                      <button
+                        onClick={() =>
+                          setPreviewImageIndex((i) =>
+                            i === previewImages.length - 1 ? 0 : i + 1
+                          )
+                        }
+                        className="absolute right-3 top-1/2 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full bg-white/90 shadow-sm backdrop-blur"
+                      >
+                        <ChevronRight className="h-4 w-4" />
+                      </button>
+                    </>
+                  )}
+                </div>
+
+                {previewImages.length > 1 && (
+                  <div className="mt-3 flex gap-2 overflow-x-auto pb-1">
+                    {previewImages.map((image, index) => (
+                      <button
+                        key={image.id || image.image_url}
+                        onClick={() => setPreviewImageIndex(index)}
+                        className={`h-16 w-14 shrink-0 overflow-hidden rounded-xl border-2 bg-[#f3efe8] ${
+                          index === previewImageIndex ? "border-[#111]" : "border-transparent"
+                        }`}
+                      >
+                        <img
+                          src={image.image_url}
+                          alt=""
+                          className="h-full w-full object-cover"
+                        />
+                      </button>
+                    ))}
+                  </div>
+                )}
+
+                <div className="mt-5">
+                  <div className="flex items-start justify-between gap-3">
+                    <div className="min-w-0">
+                      <h2 className="text-[22px] font-semibold tracking-[-0.025em] text-[#111]">
+                        {previewProduct.name}
+                      </h2>
+                      <div className="mt-1 flex items-center gap-2 text-xs text-[#8e887b]">
+                        <span>SKU: {previewProduct.variants?.[0]?.sku || previewProduct.id}</span>
+                        <button
+                          onClick={() =>
+                            navigator.clipboard?.writeText(
+                              previewProduct.variants?.[0]?.sku || previewProduct.id
+                            )
+                          }
+                          className="rounded p-1 hover:bg-[#f1eee8]"
+                          title="Copy SKU"
+                        >
+                          <Copy className="h-3 w-3" />
+                        </button>
+                      </div>
+                    </div>
+
+                    <span
+                      className={`shrink-0 rounded-full px-3 py-1.5 text-[11px] font-semibold ${
+                        previewStatus === "Published"
+                          ? "bg-[#e5f4e9] text-[#287548]"
+                          : previewStatus === "Low Stock"
+                          ? "bg-[#fff0d7] text-[#a66a11]"
+                          : "bg-[#f5e7e5] text-[#a63b32]"
+                      }`}
+                    >
+                      {previewStatus}
+                    </span>
+                  </div>
+
+                  <div className="mt-3 flex items-end gap-2">
+                    <span className="text-[25px] font-semibold tabular-nums">₹{inr(previewPrice)}</span>
+                    {previewProduct.mrp && previewProduct.mrp > previewPrice && (
+                      <span className="pb-1 text-sm text-[#9a9486] line-through">
+                        ₹{inr(previewProduct.mrp)}
+                      </span>
+                    )}
+                  </div>
+                </div>
+
+                <div className="mt-6 divide-y divide-[#eee8dd] rounded-2xl border border-[#eee8dd] bg-white">
+                  <div className="flex items-center justify-between px-4 py-4">
+                    <div className="flex items-center gap-3">
+                      <PackageCheck className="h-5 w-5 text-[#8a7350]" />
+                      <div>
+                        <p className="text-sm font-medium">Inventory</p>
+                        <p className="text-xs text-[#8e887b]">
+                          {previewStock === 0 ? "No units available" : `${previewStock} units available`}
+                        </p>
+                      </div>
+                    </div>
+                    <button
+                      onClick={() => openEdit(previewProduct)}
+                      className="rounded-lg border border-[#e8e2d8] px-3 py-2 text-xs font-medium hover:border-[#111]"
+                    >
+                      Manage
+                    </button>
+                  </div>
+
+                  <div className="flex items-start gap-3 px-4 py-4">
+                    <Tag className="mt-0.5 h-5 w-5 text-[#8a7350]" />
+                    <div>
+                      <p className="text-sm font-medium">Category</p>
+                      <p className="mt-0.5 text-xs text-[#8e887b]">
+                        {previewProduct.category_label || "Uncategorized"}
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="flex items-start gap-3 px-4 py-4">
+                    <Layers3 className="mt-0.5 h-5 w-5 text-[#8a7350]" />
+                    <div className="min-w-0">
+                      <p className="text-sm font-medium">Collections & tags</p>
+                      <div className="mt-2 flex flex-wrap gap-1.5">
+                        {previewProduct.best_seller && <Badge label="Best Seller" tone="amber" />}
+                        {previewProduct.new_arrival && <Badge label="New" tone="blue" />}
+                        {previewProduct.trending && <Badge label="Trending" tone="pink" />}
+                        {previewProduct.limited_edition && <Badge label="Limited" tone="violet" />}
+                        {!previewProduct.best_seller &&
+                          !previewProduct.new_arrival &&
+                          !previewProduct.trending &&
+                          !previewProduct.limited_edition && (
+                            <span className="text-xs text-[#a9a294]">No tags assigned</span>
+                          )}
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="px-4 py-4">
+                    <div className="flex items-center justify-between">
+                      <p className="text-sm font-medium">Variants</p>
+                      <span className="text-xs text-[#8e887b]">
+                        {previewProduct.variants?.length || 0} variants
+                      </span>
+                    </div>
+
+                    <div className="mt-3 flex flex-wrap gap-2">
+                      {(previewProduct.variants || []).slice(0, 8).map((variant, index) => (
+                        <div
+                          key={variant.id || index}
+                          className="min-w-[76px] rounded-xl border border-[#e8e2d8] bg-[#faf8f4] px-3 py-2"
+                        >
+                          <p className="text-xs font-semibold">
+                            {variant.size || "—"} · {variant.color || "—"}
+                          </p>
+                          <p className="mt-0.5 text-[10px] text-[#8e887b]">
+                            {variant.inventory} stock
+                          </p>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+
+                {previewProduct.description && (
+                  <div className="mt-5">
+                    <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-[#8e887b]">
+                      Description
+                    </p>
+                    <p className="mt-2 text-sm leading-6 text-[#5f5a50]">
+                      {previewProduct.description}
+                    </p>
+                  </div>
+                )}
+              </div>
+            </div>
+
+            <div className="border-t border-[#eee8dd] bg-white p-4">
+              <div className="grid grid-cols-2 gap-2.5">
+                <button
+                  onClick={() => openEdit(previewProduct)}
+                  className="flex h-11 items-center justify-center gap-2 rounded-xl bg-[#111] text-sm font-medium text-white transition hover:bg-[#2a2a2a]"
+                >
+                  <Pencil className="h-4 w-4" />
+                  Edit Product
+                </button>
+                <button
+                  onClick={() => setPreviewProduct(null)}
+                  className="flex h-11 items-center justify-center gap-2 rounded-xl border border-[#e8e2d8] bg-white text-sm font-medium text-[#222] transition hover:border-[#111]"
+                >
+                  <ExternalLink className="h-4 w-4" />
+                  View Store
+                </button>
+              </div>
+            </div>
+          </aside>
+        </>
       )}
 
       {/* MODAL */}
