@@ -62,7 +62,7 @@ export function CartDrawer() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black/50 z-[60]"
+            className="fixed inset-0 bg-black/50 z-[110]"
             onClick={closeCart}
           />
           <motion.div
@@ -70,17 +70,17 @@ export function CartDrawer() {
             animate={{ x: 0 }}
             exit={{ x: '100%' }}
             transition={{ type: 'tween', duration: 0.3 }}
-            className="fixed top-0 right-0 bottom-0 w-full sm:w-[440px] bg-cream z-[60] flex flex-col"
+            className="fixed left-0 right-0 bottom-0 top-0 sm:left-auto sm:w-[500px] lg:w-[500px] bg-cream z-[120] flex flex-col min-h-0 overflow-hidden"
           >
             {/* Header */}
-            <div className="flex items-center justify-between p-5 border-b border-border">
+            <div className="flex h-[72px] shrink-0 items-center justify-between border-b border-border bg-cream px-4">
               <div className="flex items-center gap-2">
                 <ShoppingBag className="h-5 w-5" />
                 <h2 className="font-display text-lg font-bold">
                   Cart {items.length > 0 && `(${items.length})`}
                 </h2>
               </div>
-              <button onClick={closeCart} className="p-2 hover:bg-muted rounded-full transition-colors">
+              <button onClick={closeCart} className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full p-2 hover:bg-muted transition-colors" aria-label="Close cart">
                 <X className="h-5 w-5" />
               </button>
             </div>
@@ -106,7 +106,7 @@ export function CartDrawer() {
               <>
                 {/* Progress bar */}
                 {remaining > 0 && (
-                  <div className="p-4 bg-sand/20 border-b border-border">
+                  <div className="shrink-0 p-3 bg-sand/20 border-b border-border">
                     <p className="text-xs text-ink-soft mb-2">
                       Spend <span className="font-bold">{formatINR(remaining)}</span> more to unlock{' '}
                       <span className="font-bold">{TIER_DISCOUNT}% OFF</span>
@@ -115,7 +115,7 @@ export function CartDrawer() {
                   </div>
                 )}
                 {remaining <= 0 && !couponCode && (
-                  <div className="p-4 bg-olive/10 border-b border-border">
+                  <div className="shrink-0 p-3 bg-olive/10 border-b border-border">
                     <p className="text-xs font-medium text-olive">
                       You unlocked 10% OFF! Use code ARDENBY10
                     </p>
@@ -123,7 +123,7 @@ export function CartDrawer() {
                 )}
 
                 {/* Items */}
-                <div className="flex-1 overflow-y-auto p-4 space-y-3">
+                <div className="min-h-0 flex-1 overflow-y-auto p-4 space-y-3 overscroll-contain">
                   {items.map((item) => (
                     <div
                       key={`${item.productId}-${item.size}-${item.color}`}
@@ -133,7 +133,7 @@ export function CartDrawer() {
                       <img
                         src={item.image}
                         alt={item.name}
-                        className="w-20 h-24 rounded-lg object-cover flex-shrink-0"
+                        className="w-24 h-28 rounded-lg object-cover flex-shrink-0"
                       />
                       <div className="flex-1 min-w-0">
                         <h4 className="text-sm font-medium line-clamp-1">{item.name}</h4>
@@ -178,8 +178,10 @@ export function CartDrawer() {
                   ))}
                 </div>
 
+                {/* Coupon + Summary: scrollable when the viewport is short */}
+                <div className="shrink-0 bg-cream">
                 {/* Coupon */}
-                <div className="p-4 border-t border-border">
+                <div className="p-2.5 border-t border-border shrink-0">
                   {couponCode ? (
                     <div className="flex items-center justify-between p-3 bg-olive/10 rounded-xl">
                       <div className="flex items-center gap-2">
@@ -216,7 +218,7 @@ export function CartDrawer() {
                 </div>
 
                 {/* Summary */}
-                <div className="p-4 border-t border-border space-y-2 bg-white">
+                <div className="p-2.5 border-t border-border space-y-1 bg-white shrink-0">
                   <div className="flex justify-between text-sm">
                     <span className="text-muted-foreground">Subtotal</span>
                     <span className="font-medium">{formatINR(subtotal)}</span>
@@ -247,19 +249,21 @@ export function CartDrawer() {
                   </div>
                 </div>
 
-                {/* Actions */}
-                <div className="p-4 border-t border-border flex gap-3">
+                </div>
+
+                {/* Actions — always visible */}
+                <div className="shrink-0 p-2.5 border-t border-border flex gap-3 bg-cream">
                   <Link
                     href="/cart"
                     onClick={closeCart}
-                    className="flex-1 py-3 text-center text-sm font-semibold border border-ink rounded-full hover:bg-ink hover:text-cream transition-colors"
+                    className="flex-1 py-2.5 text-center text-sm font-semibold border border-ink rounded-full hover:bg-ink hover:text-cream transition-colors"
                   >
                     View Cart
                   </Link>
                   <Link
                     href="/checkout"
                     onClick={closeCart}
-                    className="flex-1 py-3 text-center text-sm font-semibold bg-ink text-cream rounded-full hover:bg-ink-soft transition-colors flex items-center justify-center gap-2"
+                    className="flex-1 py-2.5 text-center text-sm font-semibold bg-ink text-cream rounded-full hover:bg-ink-soft transition-colors flex items-center justify-center gap-2"
                   >
                     Checkout
                     <ArrowRight className="h-4 w-4" />

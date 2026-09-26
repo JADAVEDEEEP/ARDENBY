@@ -139,6 +139,7 @@ export function Navbar() {
 
   const cartItems = useCartStore((s) => s.items);
   const openCart = useCartStore((s) => s.openCart);
+  const closeCart = useCartStore((s) => s.closeCart);
   const cartCount = getCartCount(cartItems);
 
   const wishlistCount = useWishlistStore((s) => s.items.length);
@@ -843,6 +844,7 @@ const handleLogout = () => {
         wishlistCount={wishlistCount}
         cartCount={cartCount}
         openCart={openCart}
+        closeCart={closeCart}
       />
 
       <NavbarMobileDrawer
