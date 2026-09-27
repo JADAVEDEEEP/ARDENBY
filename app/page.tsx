@@ -506,9 +506,22 @@ export default function HomePage() {
 
   return (
     <main className="w-full overflow-x-hidden bg-[#F6F5F0] text-[#111111] selection:bg-neutral-900 selection:text-white">
+      <style jsx global>{`
+        .ardenby-product-section img,
+        .ardenby-product-section [class*="rounded-xl"],
+        .ardenby-product-section [class*="rounded-2xl"],
+        .ardenby-product-section [class*="rounded-lg"] {
+          border-radius: 0 !important;
+        }
+
+        .ardenby-product-section button:has(.lucide-plus),
+        .ardenby-product-section button:has([data-lucide="plus"]) {
+          display: none !important;
+        }
+      `}</style>
       {/* ================= HERO SECTION ================= */
-      <section
-        className="relative z-0 w-full overflow-hidden bg-[#F6F5F0] h-[500px] sm:h-[540px] md:h-[520px] lg:h-[540px]"
+     <section
+        className="relative z-0 w-full max-w-none overflow-hidden bg-[#F6F5F0] min-h-[560px] h-[calc(100svh-76px)] sm:h-[calc(100svh-84px)] md:h-[calc(100svh-76px)] lg:h-[calc(100svh-128px)] lg:min-h-0"
         onMouseEnter={() => setIsPaused(true)}
         onMouseLeave={() => setIsPaused(false)}
       >
@@ -530,10 +543,10 @@ export default function HomePage() {
               className="absolute left-4 top-4 z-[70]"
             >
               <div className="rounded-md border border-neutral-300/70 bg-white/75 px-3 py-1.5 backdrop-blur-sm">
-                <p className="text-[6px] font-bold uppercase tracking-[0.18em] text-neutral-900">
+                <p className="text-[8px] font-bold uppercase tracking-[0.16em] text-neutral-900">
                   Premium Drop • SS26
                 </p>
-                <p className="mt-0.5 text-[6.5px] text-neutral-500">
+                <p className="mt-1 text-[8px] text-neutral-500">
                   Heavyweight • Drop Shoulder
                 </p>
               </div>
@@ -547,15 +560,15 @@ export default function HomePage() {
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -6 }}
                 transition={{ duration: 0.45, ease }}
-                className="absolute inset-x-1 top-[82px] z-10 flex justify-center text-center"
+                className="absolute inset-x-0 top-[72px] z-10 flex w-full justify-center overflow-visible px-0 text-center"
               >
                 <h1
                   className="
-                    w-full px-2
+                    w-full max-w-none px-0
                     font-serif font-black uppercase
-                    text-[52px] leading-[0.74] tracking-[-0.065em]
+                    text-[72px] leading-[0.74] tracking-[-0.065em]
                     text-neutral-950
-                    sm:text-[62px]
+                    sm:text-[82px]
                   "
                   style={{
                     fontFamily: "Bodoni MT, Didot, Times New Roman, serif",
@@ -567,8 +580,22 @@ export default function HomePage() {
               </motion.div>
             </AnimatePresence>
 
+            {/* transparent red sprint / screen-print shadow behind model */}
+            <div
+              aria-hidden="true"
+              className="pointer-events-none absolute inset-0 z-[15] overflow-hidden"
+            >
+              <div className="absolute left-1/2 top-[56%] h-[230px] w-[520px] -translate-x-1/2 -translate-y-1/2 rotate-[-8deg] opacity-90">
+                <div className="absolute inset-[10%] rounded-[45%] bg-[#A51F2A]/[0.035] blur-[10px]" />
+                <div className="absolute left-[3%] top-[27%] h-[16px] w-[70%] -rotate-[3deg] -skew-x-[18deg] rounded-full bg-[#A51F2A]/[0.045] blur-[3px]" />
+                <div className="absolute right-[6%] top-[39%] h-[6px] w-[62%] rotate-[2deg] -skew-x-[18deg] rounded-full bg-[#C42B35]/[0.06] blur-[1px]" />
+                <div className="absolute left-[8%] top-[51%] h-[3px] w-[82%] -rotate-[4deg] -skew-x-[18deg] rounded-full bg-[#A51F2A]/[0.075]" />
+                <div className="absolute left-[22%] top-[64%] h-[4px] w-[55%] rotate-[1deg] -skew-x-[18deg] rounded-full bg-[#C42B35]/[0.055] blur-[1px]" />
+              </div>
+            </div>
+
             {/* MOBILE MODEL — sits IN FRONT of the headline */}
-            <div className="pointer-events-none absolute inset-x-0 bottom-0 z-20 flex h-[430px] items-end justify-center sm:h-[450px]">
+            <div className="pointer-events-none absolute inset-x-0 bottom-0 z-20 flex h-[78%] w-full items-end justify-center sm:h-[82%]">
               <AnimatePresence mode="wait">
                 <motion.div
                   key={`mobile-model-${slide}`}
@@ -586,11 +613,11 @@ export default function HomePage() {
                     alt={activeHero.headline}
                     className="
                       relative z-20
-                      h-full w-auto max-w-[108%]
-                      scale-[1.08]
+                      h-full w-auto max-w-none
+                      scale-[1.18]
                       object-contain object-bottom
                       drop-shadow-[0_4px_8px_rgba(0,0,0,0.035)]
-                      sm:max-w-[105%] sm:scale-[1.05]
+                      sm:scale-[1.12]
                     "
                   />
                 </motion.div>
@@ -599,11 +626,11 @@ export default function HomePage() {
 
             {/* mobile slide counter */}
             <div className="absolute bottom-4 left-4 z-[80] flex items-center gap-2">
-              <span className="text-[7px] font-bold tracking-[0.2em] text-neutral-900">
+              <span className="text-[9px] font-bold tracking-[0.18em] text-neutral-900">
                 {String(slide + 1).padStart(2, "0")}
               </span>
               <span className="h-px w-7 bg-neutral-300" />
-              <span className="text-[7px] tracking-[0.2em] text-neutral-400">
+              <span className="text-[9px] tracking-[0.18em] text-neutral-400">
                 {String(heroSlides.length).padStart(2, "0")}
               </span>
             </div>
@@ -646,10 +673,10 @@ export default function HomePage() {
               className="absolute left-7 top-7 z-30 lg:left-9 lg:top-8"
             >
               <div className="rounded-md border border-neutral-300/70 bg-white/65 px-3.5 py-2 backdrop-blur-sm">
-                <p className="text-[7px] font-bold uppercase tracking-[0.2em] text-neutral-900">
+                <p className="text-[9px] font-bold uppercase tracking-[0.18em] text-neutral-900">
                   Premium Drop • SS26
                 </p>
-                <p className="mt-0.5 text-[8px] font-light text-neutral-500">
+                <p className="mt-1 text-[10px] font-light text-neutral-500">
                   Heavyweight • Drop Shoulder
                 </p>
               </div>
@@ -666,7 +693,7 @@ export default function HomePage() {
                 className="absolute left-0 right-0 top-[70px] z-10 flex justify-center px-4 lg:top-[58px] lg:px-8"
               >
                 <h1
-                  className="w-full max-w-[1450px] text-center font-serif text-[56px] font-black uppercase leading-[0.76] tracking-[-0.055em] text-neutral-950 md:text-[70px] lg:text-[clamp(76px,8vw,118px)]"
+                  className="w-full max-w-[1450px] text-center font-serif text-[64px] font-black uppercase leading-[0.78] tracking-[-0.05em] text-neutral-950 md:text-[78px] lg:text-[clamp(84px,8.5vw,132px)]"
                   style={{
                     fontFamily: "Bodoni MT, Didot, Times New Roman, serif",
                     textShadow: "0 1px 0 rgba(0,0,0,0.05)",
@@ -677,13 +704,39 @@ export default function HomePage() {
               </motion.div>
             </AnimatePresence>
 
+            {/* transparent red sprint / screen-print shadow behind model */}
+            <div
+              aria-hidden="true"
+              className="pointer-events-none absolute inset-0 z-30 overflow-hidden"
+            >
+              <div className="absolute left-1/2 top-[54%] h-[360px] w-[720px] -translate-x-1/2 -translate-y-1/2 rotate-[-7deg] opacity-95 lg:h-[430px] lg:w-[900px]">
+                {/* broad transparent red ghost */}
+                <div className="absolute inset-[8%] rounded-[45%] bg-[#A51F2A]/[0.035] blur-[14px]" />
+
+                {/* organic screen-print / sprint streaks */}
+                <div className="absolute left-[1%] top-[19%] h-[28px] w-[72%] -rotate-[2deg] -skew-x-[17deg] rounded-full bg-[#A51F2A]/[0.045] blur-[4px]" />
+                <div className="absolute right-[2%] top-[28%] h-[13px] w-[48%] rotate-[1deg] -skew-x-[19deg] rounded-full bg-[#C42B35]/[0.065] blur-[2px]" />
+                <div className="absolute left-[4%] top-[38%] h-[7px] w-[91%] -rotate-[4deg] -skew-x-[18deg] rounded-full bg-[#A51F2A]/[0.075] blur-[1px]" />
+                <div className="absolute left-[17%] top-[48%] h-[4px] w-[68%] rotate-[-2deg] -skew-x-[20deg] rounded-full bg-[#C42B35]/[0.065]" />
+                <div className="absolute right-[7%] top-[56%] h-[10px] w-[61%] rotate-[2deg] -skew-x-[18deg] rounded-full bg-[#A51F2A]/[0.055] blur-[2px]" />
+                <div className="absolute left-[8%] top-[66%] h-[5px] w-[52%] rotate-[-3deg] -skew-x-[19deg] rounded-full bg-[#C42B35]/[0.06] blur-[1px]" />
+                <div className="absolute left-[27%] top-[75%] h-[3px] w-[63%] rotate-[1deg] -skew-x-[18deg] rounded-full bg-[#A51F2A]/[0.05]" />
+
+                {/* broken ink fragments */}
+                <div className="absolute left-[11%] top-[25%] h-[2px] w-[76px] rotate-[-9deg] bg-[#A51F2A]/[0.075]" />
+                <div className="absolute right-[17%] top-[35%] h-[2px] w-[105px] rotate-[5deg] bg-[#C42B35]/[0.065]" />
+                <div className="absolute left-[19%] top-[61%] h-[2px] w-[64px] rotate-[-6deg] bg-[#A51F2A]/[0.07]" />
+                <div className="absolute right-[22%] top-[72%] h-[2px] w-[88px] rotate-[4deg] bg-[#C42B35]/[0.06]" />
+              </div>
+            </div>
+
             {/* desktop model */}
             <div className="pointer-events-none absolute inset-0 z-50 flex items-end justify-center">
               <AnimatePresence mode="wait">
                 <motion.div
                   key={`desktop-model-${slide}`}
                   initial={{ opacity: 0, y: 18, scale: 1.01 }}
-                  animate={{ opacity: 1, y: 28, scale: 1 }}
+                  animate={{ opacity: 1, y: 0, scale: 1 }}
                   exit={{ opacity: 0, y: 16 }}
                   transition={{ duration: 0.6, ease }}
                   className="relative z-50 flex h-full w-full items-end justify-center md:translate-y-0"
@@ -693,7 +746,7 @@ export default function HomePage() {
                   <img
                     src={transparentHeroImages[slide % transparentHeroImages.length]}
                     alt={activeHero.headline}
-                    className="relative z-50 h-[82%] w-auto max-w-[96%] object-contain object-bottom drop-shadow-[0_7px_12px_rgba(0,0,0,0.06)] lg:h-[84%] lg:max-w-[61%]"
+                    className="relative z-50 h-[79%] w-auto max-w-[96%] object-contain object-bottom drop-shadow-[0_7px_12px_rgba(0,0,0,0.06)] lg:h-[82%] lg:max-w-[60%]"
                   />
                 </motion.div>
               </AnimatePresence>
@@ -707,13 +760,13 @@ export default function HomePage() {
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0 }}
                 transition={{ duration: 0.4 }}
-                className="absolute left-5 top-[235px] z-30 hidden w-[210px] md:block lg:left-9"
+                className="absolute left-6 top-[175px] z-30 hidden w-[270px] md:block lg:left-9 lg:top-[185px] xl:left-12"
               >
-                <p className="text-[11px] font-bold uppercase tracking-[0.24em] text-neutral-900">
+                <p className="text-[16px] font-bold uppercase tracking-[0.2em] text-neutral-900 lg:text-[17px]">
                   Move Comfortably
                 </p>
-                <div className="mt-2 h-px w-10 bg-neutral-300" />
-                <p className="mt-3 max-w-[250px] text-[13px] font-light leading-[1.65] text-neutral-500">
+                <div className="mt-3 h-px w-14 bg-neutral-300" />
+                <p className="mt-4 max-w-[290px] text-[17px] font-light leading-[1.6] text-neutral-500 lg:text-[18px]">
                   Designed for everyday comfort, refined details, and modern silhouettes.
                 </p>
               </motion.div>
@@ -727,46 +780,37 @@ export default function HomePage() {
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0 }}
                 transition={{ duration: 0.4 }}
-                className="absolute right-5 top-[235px] z-30 hidden w-[210px] text-right md:block lg:right-9"
+                className="absolute right-6 top-[175px] z-30 hidden w-[270px] text-right md:block lg:right-9 lg:top-[185px] xl:right-12"
               >
-                <p className="text-[11px] font-bold uppercase tracking-[0.24em] text-neutral-900">
+                <p className="text-[14px] font-bold uppercase tracking-[0.22em] text-neutral-900 lg:text-[15px]">
                   Feel Confident
                 </p>
-                <div className="mt-2 ml-auto h-px w-10 bg-neutral-300" />
-                <p className="mt-3 ml-auto max-w-[195px] text-[13px] font-light leading-[1.65] text-neutral-500">
+                <div className="mt-3 ml-auto h-px w-14 bg-neutral-300" />
+                <p className="mt-4 ml-auto max-w-[290px] text-[17px] font-light leading-[1.6] text-neutral-500 lg:text-[18px]">
                   Crafted for a refined everyday look with effortless comfort.
                 </p>
               </motion.div>
             </AnimatePresence>
 
             {/* desktop editorial note */}
-            <div className="absolute bottom-[76px] left-7 z-[55] hidden max-w-[210px] lg:block xl:left-10">
+            <div className="absolute bottom-[72px] left-8 z-[55] hidden max-w-[280px] lg:block xl:left-12">
               <div className="mb-2 flex items-center gap-2">
                 <span className="h-px w-7 bg-neutral-900/35" />
-                <span className="text-[12px] font-semibold uppercase tracking-[0.28em] text-neutral-700/80">
-                  ARDENBY / 01
-                </span>
+                
               </div>
-              <p
-                className="font-serif text-[18px] leading-[0.95] tracking-[-0.025em] text-neutral-900 xl:text-[20px]"
-                style={{ fontFamily: "Bodoni MT, Didot, Times New Roman, serif" }}
-              >
-                Everyday pieces,
-                <br />
-                considered differently.
-              </p>
-              <p className="mt-2 max-w-[190px] text-[12px] leading-[1.6] text-neutral-600/75">
+             
+              <p className="mt-3 max-w-[280px] text-[16px] leading-[1.6] text-neutral-600/75">
                 Refined silhouettes, premium fabric and quiet confidence.
               </p>
             </div>
 
             {/* desktop counter */}
             <div className="absolute bottom-4 left-5 z-[60] flex items-center gap-2 sm:bottom-5 sm:left-7 lg:left-9">
-              <span className="text-[7px] font-bold tracking-[0.2em] text-neutral-900 sm:text-[8px]">
+              <span className="text-[9px] font-bold tracking-[0.18em] text-neutral-900 sm:text-[10px]">
                 {String(slide + 1).padStart(2, "0")}
               </span>
               <span className="h-px w-6 bg-neutral-300 sm:w-8" />
-              <span className="text-[7px] tracking-[0.2em] text-neutral-400 sm:text-[8px]">
+              <span className="text-[9px] tracking-[0.18em] text-neutral-400 sm:text-[10px]">
                 {String(heroSlides.length).padStart(2, "0")}
               </span>
             </div>
@@ -794,636 +838,544 @@ export default function HomePage() {
           </div>
         </div>
       </section>
+}
 
-      /* =========================================================
-          ARDENBY STANDARD — MATCHED EDITORIAL SPLIT
-          Full width / no max-width / no heavy shadow
-      ========================================================= */}
-      <section className="w-full overflow-hidden bg-[#F6F5F0]">
+    {/* =========================================================
+    ARDENBY STANDARD — EDITORIAL SPLIT
+========================================================= */}
 
-        {/* SAME VISUAL LANGUAGE AS HERO */}
-        <div className="grid w-full grid-cols-1 lg:grid-cols-[55%_45%]">
+<section className="w-full overflow-hidden bg-[#F6F5F0] lg:h-[calc(100svh-128px)] lg:min-h-0">
+  <div className="grid h-full w-full grid-cols-1 lg:grid-cols-[55%_45%]">
 
-          {/* IMAGE */}
-          <div className="group relative h-[360px] w-full overflow-hidden sm:h-[440px] lg:h-[500px]">
-            <img
-              src="https://images.unsplash.com/photo-1490481651871-ab68de25d43d?auto=format&fit=crop&w=1800&q=90"
-              alt="ARDENBY craft and collection"
-              className="
-                absolute inset-0 h-full w-full object-cover
-                object-center
-                transition-transform duration-1000
-                group-hover:scale-[1.02]
-              "
-            />
+    {/* =====================================================
+        LEFT IMAGE
+    ===================================================== */}
 
-            <div className="absolute inset-0 bg-gradient-to-t from-black/62 via-black/10 to-transparent" />
+    <div className="group relative h-[600px] w-full overflow-hidden sm:h-[700px] lg:h-full">
 
-            <div className="absolute left-6 top-6 sm:left-8 sm:top-8">
-              <span className="text-[7px] font-semibold uppercase tracking-[0.32em] text-white [text-shadow:0_1px_6px_rgba(0,0,0,0.55)]">
-                ARDENBY / CRAFT
-              </span>
-            </div>
+      <img
+        src="https://images.unsplash.com/photo-1490481651871-ab68de25d43d?auto=format&fit=crop&w=2000&q=92"
+        alt="ARDENBY craft and collection"
+        className="absolute inset-0 h-full w-full object-cover object-center transition-transform duration-[1400ms] group-hover:scale-[1.025]"
+      />
 
-            <div className="absolute bottom-8 left-6 sm:bottom-10 sm:left-8">
-              <p className="mb-2 text-[7px] font-semibold uppercase tracking-[0.3em] text-white [text-shadow:0_2px_10px_rgba(0,0,0,0.65)]">
-                Quality · Craft · Intention
-              </p>
+      {/* Image overlay */}
+      <div className="absolute inset-0 bg-gradient-to-t from-black/65 via-black/10 to-transparent" />
 
-              <h2
-                className="
-                  font-serif text-[42px] leading-[0.88]
-                  tracking-[-0.045em] text-white [text-shadow:0_2px_12px_rgba(0,0,0,0.58)]
-                  sm:text-[52px] lg:text-[60px]
-                "
-                style={{
-                  fontFamily: "Bodoni MT, Didot, Times New Roman, serif",
-                }}
-              >
-                Made for
-                <br />
-                everyday.
-              </h2>
-            </div>
-          </div>
+      {/* ===================================================
+          RED ARDENBY SPRINT EFFECT
+      =================================================== */}
 
-          {/* RIGHT EDITORIAL PANEL */}
-          <div className="flex min-h-[390px] flex-col bg-[#F6F5F0] sm:min-h-[440px] lg:min-h-[500px]">
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 overflow-hidden"
+      >
+        <div className="absolute left-1/2 top-[48%] h-[390px] w-[95%] -translate-x-1/2 -translate-y-1/2 rotate-[-5deg]">
 
-            <div className="flex flex-1 flex-col justify-center px-7 py-12 sm:px-10 lg:px-14">
+          <div className="absolute inset-[10%] rounded-[45%] bg-[#A51F2A]/[0.045] blur-[22px]" />
 
-              <div className="flex items-center justify-between">
-                <span className="text-[8px] font-semibold uppercase tracking-[0.32em] text-neutral-500">
-                  01 — Philosophy
-                </span>
+          <div className="absolute left-[-5%] top-[14%] h-[25px] w-[72%] -skew-x-[20deg] rounded-full bg-[#C52D38]/[0.12] blur-[5px]" />
 
-                <span className="text-[7px] uppercase tracking-[0.2em] text-neutral-400">
-                  AR / 01
-                </span>
-              </div>
+          <div className="absolute right-[-3%] top-[27%] h-[9px] w-[60%] rotate-[2deg] -skew-x-[18deg] rounded-full bg-[#A51F2A]/[0.14] blur-[2px]" />
 
-              <h2
-                className="
-                  mt-8 font-serif text-[48px] leading-[0.86]
-                  tracking-[-0.05em] text-neutral-950 [text-shadow:0_1px_0_rgba(255,255,255,0.7)]
-                  sm:text-[58px] lg:text-[68px]
-                "
-                style={{
-                  fontFamily: "Bodoni MT, Didot, Times New Roman, serif",
-                }}
-              >
-                Made With
-                <br />
-                Intention.
-              </h2>
+          <div className="absolute left-[-7%] top-[40%] h-[6px] w-[94%] -rotate-[2deg] -skew-x-[20deg] rounded-full bg-[#C52D38]/[0.16]" />
 
-              <p className="mt-6 max-w-[520px] text-[10px] leading-[1.8] text-neutral-500 sm:text-[11px] lg:text-[12px]">
-                From the first stitch to the final delivery, every detail is
-                considered. Premium clothing doesn't need to shout — quality
-                speaks through the fabric, construction and fit.
-              </p>
+          <div className="absolute left-[12%] top-[53%] h-[14px] w-[72%] rotate-[1deg] -skew-x-[18deg] rounded-full bg-[#A51F2A]/[0.11] blur-[3px]" />
 
-              <Link
-                href="/shop"
-                className="
-                  group mt-7 flex w-fit items-center gap-4
-                  border-b border-neutral-900 pb-2
-                  text-[8px] font-bold uppercase tracking-[0.22em]
-                  text-neutral-900
-                "
-              >
-                Explore the standard
-                <ArrowRight className="h-3.5 w-3.5 transition-transform duration-300 group-hover:translate-x-1" />
-              </Link>
-            </div>
+          <div className="absolute right-[2%] top-[66%] h-[5px] w-[56%] -rotate-[4deg] -skew-x-[20deg] rounded-full bg-[#C52D38]/[0.14]" />
 
-            {/* DETAIL GRID — SAME CLEAN LANGUAGE */}
-            <div className="grid grid-cols-1 border-t border-neutral-300/70 sm:grid-cols-3">
+          <div className="absolute left-[6%] top-[78%] h-[3px] w-[46%] rotate-[2deg] -skew-x-[18deg] rounded-full bg-[#A51F2A]/[0.16]" />
 
-              <div className="border-b border-neutral-300/70 bg-[#EFEEE9] p-5 sm:border-b-0 sm:p-7">
-                <span className="text-[7px] font-semibold uppercase tracking-[0.28em] text-neutral-500">
-                  Material
-                </span>
+          <span className="absolute left-[12%] top-[25%] h-[2px] w-[82px] rotate-[-8deg] bg-[#C52D38]/[0.20]" />
 
-                <div className="mt-4 flex items-end gap-2">
-                  <span
-                    className="font-serif text-[38px] leading-none tracking-[-0.04em] text-neutral-950"
-                    style={{
-                      fontFamily: "Bodoni MT, Didot, Times New Roman, serif",
-                    }}
-                  >
-                    240
-                  </span>
-                  <span className="mb-1 text-[8px] font-semibold uppercase tracking-[0.18em] text-neutral-500">
-                    GSM
-                  </span>
-                </div>
+          <span className="absolute right-[17%] top-[36%] h-[2px] w-[108px] rotate-[5deg] bg-[#A51F2A]/[0.18]" />
 
-                <p className="mt-3 text-[7px] leading-[1.6] text-neutral-500">
-                  Heavyweight
-                  <br />
-                  combed cotton.
-                </p>
-              </div>
+          <span className="absolute left-[24%] top-[68%] h-[2px] w-[72px] rotate-[-6deg] bg-[#C52D38]/[0.18]" />
 
-              <div className="border-b border-neutral-300/70 bg-[#E9E7E1] p-5 sm:border-b-0 sm:border-l sm:p-7">
-                <span className="text-[7px] font-semibold uppercase tracking-[0.28em] text-neutral-500">
-                  Construction
-                </span>
-
-                <h3
-                  className="mt-4 font-serif text-[25px] leading-[0.9] tracking-[-0.035em] text-neutral-950 sm:text-[30px]"
-                  style={{
-                    fontFamily: "Bodoni MT, Didot, Times New Roman, serif",
-                  }}
-                >
-                  Precision
-                  <br />
-                  in every stitch.
-                </h3>
-              </div>
-
-              <div className="bg-[#E2E0DA] p-5 sm:border-l sm:border-neutral-300/70 sm:p-7">
-                <span className="text-[7px] font-semibold uppercase tracking-[0.28em] text-neutral-500">
-                  Philosophy
-                </span>
-
-                <h3
-                  className="mt-4 font-serif text-[25px] leading-[0.9] tracking-[-0.035em] text-neutral-950 sm:text-[30px]"
-                  style={{
-                    fontFamily: "Bodoni MT, Didot, Times New Roman, serif",
-                  }}
-                >
-                  Built
-                  <br />
-                  beyond seasons.
-                </h3>
-              </div>
-
-            </div>
-          </div>
-        </div>
-
-        {/* FOUR TRUST CARDS */}
-        <div className="grid w-full grid-cols-1 border-t border-neutral-300/70 sm:grid-cols-2 lg:grid-cols-4">
-
-          <div className="border-b border-neutral-300/70 p-5 sm:p-6 sm:border-r">
-            <div className="flex items-center justify-between">
-              <span className="text-[7px] text-neutral-400">01</span>
-              <ShieldCheck className="h-4 w-4 text-neutral-500" />
-            </div>
-            <p className="mt-4 text-[9px] font-semibold text-neutral-900">
-              Encrypted Payments
-            </p>
-            <p className="mt-1 text-[7px] text-neutral-500">
-              UPI, Cards & COD.
-            </p>
-          </div>
-
-          <div className="border-b border-neutral-300/70 p-5 sm:p-6 sm:border-r">
-            <div className="flex items-center justify-between">
-              <span className="text-[7px] text-neutral-400">02</span>
-              <Truck className="h-4 w-4 text-neutral-500" />
-            </div>
-            <p className="mt-4 text-[9px] font-semibold text-neutral-900">
-              Free Express Shipping
-            </p>
-            <p className="mt-1 text-[7px] text-neutral-500">
-              2-4 business days.
-            </p>
-          </div>
-
-          <div className="border-b border-neutral-300/70 p-5 sm:p-6 sm:border-r">
-            <div className="flex items-center justify-between">
-              <span className="text-[7px] text-neutral-400">03</span>
-              <RefreshCw className="h-4 w-4 text-neutral-500" />
-            </div>
-            <p className="mt-4 text-[9px] font-semibold text-neutral-900">
-              7-Day Returns
-            </p>
-            <p className="mt-1 text-[7px] text-neutral-500">
-              Easy exchange.
-            </p>
-          </div>
-
-          <div className="p-5 sm:p-6">
-            <div className="flex items-center justify-between">
-              <span className="text-[7px] text-neutral-400">04</span>
-              <Star className="h-4 w-4 text-neutral-500" />
-            </div>
-            <p className="mt-4 text-[9px] font-semibold text-neutral-900">
-              ARDENBY Standard
-            </p>
-            <p className="mt-1 text-[7px] text-neutral-500">
-              Beyond ordinary.
-            </p>
-          </div>
+          <span className="absolute right-[12%] top-[76%] h-[2px] w-[94px] rotate-[4deg] bg-[#A51F2A]/[0.15]" />
 
         </div>
-      </section>
-<section className="w-full overflow-hidden bg-[#F6F3EC] px-4 py-8 sm:px-6 sm:py-10 lg:px-8 lg:py-12">
+      </div>
 
-  {/* ============================================================
-      SECTION HEADER
-  ============================================================ */}
+      {/* Top label */}
 
-  <div className="mx-auto mb-7 flex w-full max-w-[1380px] items-end justify-between gap-6 sm:mb-9 lg:mb-10">
-
-    <div>
-
-      <div className="mb-2 flex items-center gap-2.5">
-        <span className="h-px w-7 bg-[#181714]" />
-
-        <span className="text-[8px] font-semibold uppercase tracking-[0.28em] text-[#77716A] sm:text-[9px]">
-          ARDENBY COLLECTIONS
+      <div className="absolute left-6 top-6 sm:left-10 sm:top-9 lg:left-12 lg:top-11">
+        <span className="text-[9px] font-bold uppercase tracking-[0.32em] text-white [text-shadow:0_1px_8px_rgba(0,0,0,0.55)] sm:text-[10px]">
+          ARDENBY / CRAFT
         </span>
       </div>
 
-    <h3
-  className="text-[38px] font-normal leading-[1] tracking-[-0.025em] text-[#11100F] sm:text-[48px] lg:text-[58px]"
-  style={{
-    fontFamily: "Bodoni MT, Didot, Times New Roman, serif",
-    fontWeight: 400,
-  }}
->
-  Shop by Category
-</h3>
+      {/* Image text */}
 
-      <p className="mt-2 font-serif text-[13px] italic tracking-[-0.01em] text-[#77716A] sm:text-[14px]">
-        Find your everyday uniform.
-      </p>
+      <div className="absolute bottom-9 left-6 right-6 sm:bottom-12 sm:left-10 sm:right-10 lg:bottom-14 lg:left-12 lg:right-12">
+
+        <p className="mb-3 text-[9px] font-bold uppercase tracking-[0.30em] text-white [text-shadow:0_2px_10px_rgba(0,0,0,0.65)] sm:text-[11px]">
+          Quality · Craft · Intention
+        </p>
+
+        <h2
+          className="max-w-[760px] font-serif text-[64px] font-medium leading-[0.82] tracking-[-0.055em] text-white [text-shadow:0_3px_15px_rgba(0,0,0,0.58)] sm:text-[88px] lg:text-[112px] xl:text-[126px]"
+          style={{
+            fontFamily: "Bodoni MT, Didot, Times New Roman, serif",
+          }}
+        >
+          Made for
+          <br />
+          everyday.
+        </h2>
+
+        <div className="mt-5 h-[5px] w-[150px] -rotate-[3deg] rounded-full bg-[#C52D38] sm:w-[190px]" />
+
+        <p className="mt-5 text-[11px] font-semibold uppercase tracking-[0.27em] text-white [text-shadow:0_2px_8px_rgba(0,0,0,0.6)] sm:text-[13px]">
+          Premium essentials for modern living.
+        </p>
+
+      </div>
+    </div>
+
+
+    {/* =====================================================
+        RIGHT EDITORIAL PANEL
+    ===================================================== */}
+
+    <div className="hidden min-h-[600px] flex-col bg-[#F6F5F0] sm:min-h-[700px] lg:flex lg:min-h-0">
+
+      <div className="flex flex-1 flex-col justify-center px-7 py-14 sm:px-10 sm:py-16 lg:px-14 lg:py-14 xl:px-16">
+
+        <div className="flex items-center justify-between">
+
+          <span className="text-[9px] font-bold uppercase tracking-[0.30em] text-neutral-500 sm:text-[10px]">
+            01 — Philosophy
+          </span>
+
+          <span className="text-[8px] uppercase tracking-[0.22em] text-neutral-400 sm:text-[9px]">
+            AR / 01
+          </span>
+
+        </div>
+
+        <h2
+          className="mt-8 font-serif text-[62px] font-medium leading-[0.84] tracking-[-0.055em] text-neutral-950 sm:text-[76px] lg:text-[86px] xl:text-[98px]"
+          style={{
+            fontFamily: "Bodoni MT, Didot, Times New Roman, serif",
+          }}
+        >
+          Made With
+          <br />
+          Intention.
+        </h2>
+
+        <p className="mt-7 max-w-[650px] text-[14px] leading-[1.75] text-neutral-600 sm:text-[16px] lg:text-[17px]">
+          From the first stitch to the final delivery, every detail
+          is considered. Premium clothing doesn't need to shout —
+          quality speaks through the fabric, construction and fit.
+        </p>
+
+        {/* CTA */}
+
+        <Link
+          href="/shop"
+          className="group mt-9 flex w-fit items-center gap-6 bg-[#0B0B0B] px-7 py-4 text-[10px] font-bold uppercase tracking-[0.24em] text-white transition-colors duration-300 hover:bg-[#A51F2A] sm:px-9 sm:py-5 sm:text-[11px]"
+        >
+          <span>Explore the standard</span>
+
+          <span className="text-[18px] leading-none transition-transform duration-300 group-hover:translate-x-1">
+            →
+          </span>
+        </Link>
+
+      </div>
+
+
+      {/* ===================================================
+          DETAIL CARDS
+
+          MOBILE  : HIDDEN
+          DESKTOP : VISIBLE
+
+          IMPORTANT:
+          Cards are NOT deleted.
+      =================================================== */}
+
+      <div className="grid w-full grid-cols-1 border-t border-neutral-300/70 sm:grid-cols-3">
+
+        {/* MATERIAL */}
+
+        <div className="hidden bg-[#EFEEE9] p-7 sm:block lg:p-8">
+
+          <span className="text-[9px] font-bold uppercase tracking-[0.28em] text-neutral-500">
+            Material
+          </span>
+
+          <div className="mt-4 flex items-end gap-2">
+
+            <span
+              className="font-serif text-[48px] leading-none tracking-[-0.05em] text-neutral-950 sm:text-[54px]"
+              style={{
+                fontFamily: "Bodoni MT, Didot, Times New Roman, serif",
+              }}
+            >
+              240
+            </span>
+
+            <span className="mb-1 text-[9px] font-bold uppercase tracking-[0.18em] text-neutral-500">
+              GSM
+            </span>
+
+          </div>
+
+          <p className="mt-3 text-[10px] leading-[1.6] text-neutral-500 sm:text-[11px]">
+            Heavyweight
+            <br />
+            combed cotton.
+          </p>
+
+        </div>
+
+
+        {/* CONSTRUCTION */}
+
+        <div className="hidden border-l border-neutral-300/70 bg-[#E9E7E1] p-7 sm:block lg:p-8">
+
+          <span className="text-[9px] font-bold uppercase tracking-[0.28em] text-neutral-500">
+            Construction
+          </span>
+
+          <h3
+            className="mt-5 font-serif text-[30px] leading-[0.88] tracking-[-0.04em] text-neutral-950 sm:text-[36px] lg:text-[38px]"
+            style={{
+              fontFamily: "Bodoni MT, Didot, Times New Roman, serif",
+            }}
+          >
+            Precision
+            <br />
+            in every
+            <br />
+            stitch.
+          </h3>
+
+          <div className="mt-5 h-[1px] w-10 bg-neutral-900" />
+
+        </div>
+
+
+        {/* PHILOSOPHY */}
+
+        <div className="hidden border-l border-neutral-300/70 bg-[#E2E0DA] p-7 sm:block lg:p-8">
+
+          <span className="text-[9px] font-bold uppercase tracking-[0.28em] text-neutral-500">
+            Philosophy
+          </span>
+
+          <h3
+            className="mt-5 font-serif text-[30px] leading-[0.88] tracking-[-0.04em] text-neutral-950 sm:text-[36px] lg:text-[38px]"
+            style={{
+              fontFamily: "Bodoni MT, Didot, Times New Roman, serif",
+            }}
+          >
+            Built
+            <br />
+            beyond
+            <br />
+            seasons.
+          </h3>
+
+          <div className="mt-5 h-[1px] w-10 bg-neutral-900" />
+
+        </div>
+
+      </div>
 
     </div>
 
-    {/* DESKTOP EXPLORE LINK */}
-
-    <Link
-      href="/shop"
-      className="group hidden items-center gap-2 border-b border-[#11100F] pb-1.5 text-[8px] font-semibold uppercase tracking-[0.24em] text-[#11100F] sm:flex"
-    >
-      <span>Explore Ardenby</span>
-
-      <ArrowRight className="h-3.5 w-3.5 transition-transform duration-300 group-hover:translate-x-1" />
-    </Link>
-
   </div>
-
-
+</section>
+<section className="w-full overflow-hidden bg-[#F5F2EC] px-4 py-8 sm:px-6 sm:py-9 lg:h-[calc(100svh-128px)] lg:min-h-0 lg:px-8 lg:py-7 xl:py-8 lg:translate-y-[18px]">
   {/* ============================================================
-      DESKTOP — 3 COLUMN / 5 TILE
+      ARDENBY — SHOP BY CATEGORY
+      DESIGN 01 — REFINED ASYMMETRIC EDITORIAL GRID
+      Compact, balanced and designed to stay inside one desktop viewport.
   ============================================================ */}
 
-  <div className="mx-auto hidden w-full max-w-[1380px] gap-3 lg:grid lg:grid-cols-[1fr_1.02fr_1fr]">
+  <div className="mx-auto flex h-full w-full max-w-[1380px] flex-col">
+    {/* SECTION HEADER */}
+    <div className="mb-5 flex shrink-0 items-end justify-between gap-6 lg:mb-4">
+      <div>
+        <div className="mb-2 flex items-center gap-2.5">
+          <span className="h-px w-7 bg-[#8F1D24]" />
+           <span className="text-[9px] font-medium uppercase tracking-[0.28em] text-neutral-500 sm:text-[8.5px]">
+              ARDENBY / COLLECTION
+            </span>
+        </div>
 
-    {categories.slice(0, 4).map((cat, index) => {
-
-      const staticCatProduct = staticHomeProducts.find(
-        (p) => p.category === cat.slug
-      );
-
-      const catProduct = products.find(
-        (p) => p.category === cat.slug
-      );
-
-      const productImage =
-        staticCatProduct?.images?.[0] ||
-        catProduct?.images?.[0] ||
-        "https://images.unsplash.com/photo-1521572267360-ee0c2909d518?q=80&w=1200&auto=format&fit=crop";
-
-      const isCenter = index === 1;
-
-      const cardCopy = [
-        "Heavyweight silhouettes for your everyday rotation.",
-        "Distinct graphics with a premium streetwear finish.",
-        "Elevated essentials built for everyday luxury.",
-        "Statement pieces made to stand apart.",
-      ][index];
-
-      const cardLabel = [
-        "HEAVYWEIGHT ESSENTIALS",
-        "GRAPHIC COLLECTION",
-        "EVERYDAY LUXURY",
-        "STATEMENT EDIT",
-      ][index];
-
-      return (
-        <motion.div
-          key={cat.slug}
-          className={isCenter ? "row-span-2" : ""}
-          initial={{ opacity: 0, y: 14 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{
-            once: true,
-            amount: 0.12,
-          }}
-          transition={{
-            duration: 0.5,
-            delay: index * 0.06,
+        <h6
+          className="text-[34px] font-normal leading-[0.9] tracking-[-0.035em] text-[#11100F] sm:text-[46px] lg:text-[54px] xl:text-[58px]"
+          style={{
+            fontFamily: "Bodoni MT, Didot, Times New Roman, serif",
           }}
         >
+          Category
+        </h6>
 
-          <Link
-            href={`/shop?category=${cat.slug}`}
-            className="group block h-full overflow-hidden rounded-[16px] bg-[#E9E1D5]"
+        <p className="mt-2 text-[11px] uppercase tracking-[0.15em] text-[#77716A] sm:text-[12px] lg:text-[13px]">
+          Build your everyday uniform.
+        </p>
+      </div>
+
+      <Link
+        href="/shop"
+        className="group hidden shrink-0 items-center gap-1.5 border-b border-[#11100F]/50 pb-1.5 text-[7px] font-bold uppercase tracking-[0.22em] text-[#11100F] transition-colors hover:border-[#8F1D24] hover:text-[#8F1D24] sm:flex"
+      >
+        <span>Explore All</span>
+        <ArrowRight className="h-3 w-3 transition-transform duration-300 group-hover:translate-x-1" />
+      </Link>
+    </div>
+
+    {/* ============================================================
+        DESKTOP — REFINED ASYMMETRIC GRID
+        4 / 4 / 4 top balance + 4 / 5 / 3 bottom rhythm.
+    ============================================================ */}
+    <div className="hidden min-h-0 flex-1 grid-cols-12 grid-rows-2 gap-2.5 lg:grid xl:gap-3">
+      {categories.slice(0, 4).map((cat, index) => {
+        const staticCatProduct = staticHomeProducts.find(
+          (p) => p.category === cat.slug,
+        );
+        const catProduct = products.find((p) => p.category === cat.slug);
+
+        const webImages = [
+          // Supreme Edition — editorial menswear portrait
+          "https://images.unsplash.com/photo-1617137968427-85924c800a22?auto=format&fit=crop&w=1400&q=90",
+          // Epic Thread — clothing rack / fashion edit
+          "https://images.unsplash.com/photo-1551488831-00ddcb6c6bd3?auto=format&fit=crop&w=1400&q=90",
+          // Ardenby Premium — fashion portrait
+          "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=1400&q=90",
+          // The Print Club — flat lay fashion
+          "https://images.unsplash.com/photo-1602810318383-e386cc2a3ccf?auto=format&fit=crop&w=1400&q=90",
+        ];
+
+        const productImage =
+          webImages[index] ||
+          staticCatProduct?.images?.[0] ||
+          catProduct?.images?.[0];
+
+        const isFeatured = index === 0;
+
+        const desktopSpan = [
+          "col-span-4 row-span-2",
+          "col-span-4 row-span-1",
+          "col-span-4 row-span-1",
+          "col-span-5 row-span-1 col-start-5 row-start-2",
+        ][index];
+
+        const copy = [
+          "Heavyweight silhouettes engineered for everyday rotation.",
+          "Premium graphics with a clean streetwear finish.",
+          "Elevated essentials built for daily wear.",
+          "Statement layers made to stand apart.",
+        ][index];
+
+        const label = [
+          "01 / CORE EDIT",
+          "02 / GRAPHIC EDIT",
+          "03 / ESSENTIALS",
+          "04 / STATEMENT EDIT",
+        ][index];
+
+        return (
+          <motion.div
+            key={cat.slug}
+            className={`${desktopSpan} min-h-0`}
+            initial={{ opacity: 0, y: 10 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.12 }}
+            transition={{ duration: 0.48, delay: index * 0.055 }}
           >
-
-            <div
-              className={
-                isCenter
-                  ? "relative h-full min-h-[620px]"
-                  : "relative h-[304px]"
-              }
+            <Link
+              href={`/shop?category=${cat.slug}`}
+              className="group relative block h-full min-h-0 overflow-hidden bg-[#DDD5C8]"
             >
+              <div className="relative h-full min-h-0">
+                <img
+                  src={productImage}
+                  alt={cat.name}
+                  className="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.035]"
+                />
 
-              {/* IMAGE */}
+                <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/80 via-black/10 to-transparent" />
 
-              <img
-                src={productImage}
-                alt={cat.name}
-                className={
-                  isCenter
-                    ? "h-full w-full object-cover object-[center_20%] transition-transform duration-700 ease-out group-hover:scale-[1.025]"
-                    : "h-full w-full object-cover object-[center_18%] transition-transform duration-700 ease-out group-hover:scale-[1.025]"
-                }
-              />
+                {isFeatured && (
+                  <div className="absolute left-3 top-3 z-10 flex items-center gap-1.5 sm:left-4 sm:top-4">
+                    <span className="h-[2px] w-5 bg-[#E21B23]" />
+                    <span className="text-[6px] font-bold uppercase tracking-[0.23em] text-white drop-shadow-[0_1px_5px_rgba(0,0,0,0.8)]">
+                      Featured Category
+                    </span>
+                  </div>
+                )}
 
-              {/* SOFT DARK SHADOW FOR TEXT */}
-
-              <div className="pointer-events-none absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-black/55 via-black/20 to-transparent" />
-
-
-              {/* CENTER CARD */}
-
-              {isCenter ? (
-
-                <div className="absolute inset-x-0 bottom-0 z-10 p-5 text-white xl:p-6">
-
-                  <div className="mb-3 flex items-center gap-2">
-
-                    <span className="h-px w-6 bg-white/90" />
-
-                    <span
-                      className="text-[7px] font-semibold uppercase tracking-[0.22em] text-white"
-                      style={{
-                        textShadow: "0 1px 5px rgba(0,0,0,0.8)",
-                      }}
-                    >
-                      Featured Collection
+                <div className="absolute inset-x-0 bottom-0 z-10 p-3 sm:p-3.5 xl:p-4">
+                  <div className="mb-1.5 flex items-center justify-between gap-2">
+                    <span className="text-[6px] font-semibold uppercase tracking-[0.2em] text-white/80">
+                      {label}
                     </span>
 
+                    <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full border border-white/70 bg-black/15 text-white backdrop-blur-sm transition-all duration-300 group-hover:bg-white group-hover:text-[#11100F]">
+                      <ArrowUpRight className="h-3 w-3" />
+                    </span>
                   </div>
 
                   <h3
-                    className="max-w-[360px] text-[38px] font-normal leading-[0.88] tracking-[-0.045em] text-white sm:text-[44px] xl:text-[50px]"
+                    className={
+                      isFeatured
+                        ? "text-[30px] font-normal leading-[0.86] tracking-[-0.045em] text-white sm:text-[36px] xl:text-[42px]"
+                        : "text-[25px] font-normal leading-[0.88] tracking-[-0.04em] text-white sm:text-[28px] xl:text-[32px]"
+                    }
                     style={{
                       fontFamily:
                         "Bodoni MT, Didot, Times New Roman, serif",
                       textShadow:
-                        "0 2px 8px rgba(0,0,0,0.75), 0 1px 2px rgba(0,0,0,0.9)",
+                        "0 2px 9px rgba(0,0,0,0.85), 0 1px 3px rgba(0,0,0,0.9)",
                     }}
                   >
                     {cat.name}
                   </h3>
 
                   <p
-                    className="mt-2 max-w-[330px] text-[9px] leading-relaxed text-white"
-                    style={{
-                      textShadow: "0 1px 6px rgba(0,0,0,0.9)",
-                    }}
+                    className={
+                      isFeatured
+                        ? "mt-2.5 max-w-[440px] text-[12px] leading-[1.55] text-white/95 sm:text-[13px] xl:text-[14px]"
+                        : "mt-2.5 max-w-[360px] text-[11px] leading-[1.55] text-white/95 sm:text-[12px] xl:text-[13px]"
+                    }
                   >
-                    {cardCopy}
+                    {copy}
                   </p>
 
-                  <span className="mt-4 inline-flex items-center gap-2 rounded-full bg-white px-4 py-2 text-[7px] font-bold uppercase tracking-[0.2em] text-[#11100F] shadow-[0_3px_12px_rgba(0,0,0,0.25)] transition-transform duration-300 group-hover:-translate-y-0.5">
-
-                    Shop Collection
-
-                    <ArrowUpRight className="h-3 w-3" />
-
-                  </span>
-
-                </div>
-
-              ) : (
-
-                /* NORMAL CARD */
-
-                <div className="absolute inset-x-0 bottom-0 z-10 p-4 text-white xl:p-5">
-
-                  <p
-                    className="mb-1.5 text-[7px] font-semibold uppercase tracking-[0.2em] text-white"
-                    style={{
-                      textShadow: "0 1px 6px rgba(0,0,0,0.9)",
-                    }}
-                  >
-                    {cardLabel}
-                  </p>
-
-                  <div className="flex items-end justify-between gap-3">
-
-                    <h3
-                      className="text-[25px] font-normal leading-[0.9] tracking-[-0.035em] text-white xl:text-[29px]"
-                      style={{
-                        fontFamily:
-                          "Bodoni MT, Didot, Times New Roman, serif",
-                        textShadow:
-                          "0 2px 8px rgba(0,0,0,0.8), 0 1px 2px rgba(0,0,0,0.9)",
-                      }}
-                    >
-                      {cat.name}
-                    </h3>
-
-                    <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-white/80 bg-black/20 text-white shadow-[0_2px_8px_rgba(0,0,0,0.25)] backdrop-blur-sm transition-all duration-300 group-hover:bg-white group-hover:text-[#11100F]">
-
-                      <ArrowUpRight className="h-3.5 w-3.5" />
-
+                  {isFeatured && (
+                    <span className="mt-2.5 inline-flex items-center gap-1.5 bg-white px-3 py-1.5 text-[6px] font-bold uppercase tracking-[0.19em] text-[#11100F] transition-transform duration-300 group-hover:-translate-y-0.5">
+                      Shop Collection
+                      <ArrowRight className="h-2.5 w-2.5" />
                     </span>
-
-                  </div>
-
+                  )}
                 </div>
+              </div>
+            </Link>
+          </motion.div>
+        );
+      })}
 
-              )}
-
-            </div>
-
-          </Link>
-
-        </motion.div>
-      );
-    })}
-
-
-    {/* ============================================================
-        FIFTH TILE — ALL PRODUCTS
-    ============================================================ */}
-
-    <motion.div
-      className="row-start-2"
-      initial={{
-        opacity: 0,
-        y: 14,
-      }}
-      whileInView={{
-        opacity: 1,
-        y: 0,
-      }}
-      viewport={{
-        once: true,
-        amount: 0.12,
-      }}
-      transition={{
-        duration: 0.5,
-        delay: 0.22,
-      }}
-    >
-
-      <Link
-        href="/shop"
-        className="group block h-[304px] overflow-hidden rounded-[16px] bg-[#DDD4C7]"
+      {/* ALL PRODUCTS — SMALLER COUNTERWEIGHT */}
+      <motion.div
+        className="col-span-3 col-start-10 row-start-2 min-h-0"
+        initial={{ opacity: 0, y: 10 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, amount: 0.12 }}
+        transition={{ duration: 0.48, delay: 0.24 }}
       >
-
-        <div className="relative h-full">
-
-          <img
-            src={
-              staticHomeProducts?.[4]?.images?.[0] ||
-              staticHomeProducts?.[0]?.images?.[0] ||
-              "https://images.unsplash.com/photo-1496747611176-843222e1e57c?q=80&w=1200&auto=format&fit=crop"
-            }
-            alt="All Ardenby Products"
-            className="h-full w-full object-cover object-[center_18%] transition-transform duration-700 ease-out group-hover:scale-[1.025]"
-          />
-
-          <div className="pointer-events-none absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-black/58 via-black/20 to-transparent" />
-
-          <div className="absolute inset-x-0 bottom-0 z-10 p-4 text-white xl:p-5">
-
-            <p
-              className="mb-1.5 text-[7px] font-semibold uppercase tracking-[0.2em] text-white"
-              style={{
-                textShadow: "0 1px 6px rgba(0,0,0,0.9)",
-              }}
-            >
-              Complete Collection
-            </p>
-
-            <div className="flex items-end justify-between gap-3">
-
-              <h3
-                className="text-[25px] font-normal leading-[0.9] tracking-[-0.035em] text-white xl:text-[29px]"
-                style={{
-                  fontFamily:
-                    "Bodoni MT, Didot, Times New Roman, serif",
-                  textShadow:
-                    "0 2px 8px rgba(0,0,0,0.8), 0 1px 2px rgba(0,0,0,0.9)",
-                }}
-              >
-                All Products
-              </h3>
-
-              <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-white/80 bg-black/20 text-white shadow-[0_2px_8px_rgba(0,0,0,0.25)] backdrop-blur-sm transition-all duration-300 group-hover:bg-white group-hover:text-[#11100F]">
-
-                <ArrowUpRight className="h-3.5 w-3.5" />
-
-              </span>
-
-            </div>
-
-          </div>
-
-        </div>
-
-      </Link>
-
-    </motion.div>
-
-  </div>
-
-
-  {/* ============================================================
-      MOBILE — 2 COLUMN
-  ============================================================ */}
-
-  <div className="mx-auto grid w-full max-w-[1380px] grid-cols-2 gap-2.5 lg:hidden">
-
-    {categories.slice(0, 4).map((cat, index) => {
-
-      const staticCatProduct = staticHomeProducts.find(
-        (p) => p.category === cat.slug
-      );
-
-      const catProduct = products.find(
-        (p) => p.category === cat.slug
-      );
-
-      const productImage =
-        staticCatProduct?.images?.[0] ||
-        catProduct?.images?.[0] ||
-        "https://images.unsplash.com/photo-1521572267360-ee0c2909d518?q=80&w=1000&auto=format&fit=crop";
-
-      return (
-        <motion.div
-          key={cat.slug}
-          className={index === 1 ? "row-span-2" : ""}
-          initial={{
-            opacity: 0,
-            y: 10,
-          }}
-          whileInView={{
-            opacity: 1,
-            y: 0,
-          }}
-          viewport={{
-            once: true,
-            amount: 0.08,
-          }}
-          transition={{
-            duration: 0.4,
-            delay: index * 0.04,
-          }}
+        <Link
+          href="/shop"
+          className="group block h-full min-h-0 overflow-hidden bg-[#CFC5B6]"
         >
+          <div className="relative h-full min-h-0">
+            <img
+              src="https://images.unsplash.com/photo-1483985988355-763728e1935b?auto=format&fit=crop&w=1200&q=90"
+              alt="All Ardenby Products"
+              className="h-full w-full object-cover object-[center_28%] transition-transform duration-700 ease-out group-hover:scale-[1.035]"
+            />
 
-          <Link
-            href={`/shop?category=${cat.slug}`}
-            className="group block h-full overflow-hidden rounded-[12px] bg-[#E9E1D5]"
-          >
+            <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/80 via-black/10 to-transparent" />
 
-            <div
-              className={
-                index === 1
-                  ? "relative h-[390px]"
-                  : "relative h-[190px]"
-              }
-            >
+            <div className="absolute inset-x-0 bottom-0 z-10 p-3 sm:p-3.5">
+              <p className="mb-1.5 text-[6px] font-bold uppercase tracking-[0.2em] text-white/80">
+                05 / COMPLETE COLLECTION
+              </p>
 
-              <img
-                src={productImage}
-                alt={cat.name}
-                className="h-full w-full object-cover object-[center_18%] transition-transform duration-700 group-hover:scale-[1.025]"
-              />
-
-              {/* MOBILE SHADOW */}
-
-              <div className="pointer-events-none absolute inset-x-0 bottom-0 h-28 bg-gradient-to-t from-black/55 via-black/15 to-transparent" />
-
-              {/* MOBILE TEXT */}
-
-              <div className="absolute inset-x-0 bottom-0 z-10 p-3 text-white">
-
-                <p
-                  className="mb-1 text-[6px] font-semibold uppercase tracking-[0.18em] text-white"
+              <div className="flex items-end justify-between gap-2">
+                <h3
+                  className="text-[23px] font-normal leading-[0.88] tracking-[-0.04em] text-white sm:text-[26px]"
                   style={{
-                    textShadow: "0 1px 6px rgba(0,0,0,0.9)",
+                    fontFamily:
+                      "Bodoni MT, Didot, Times New Roman, serif",
+                    textShadow: "0 2px 9px rgba(0,0,0,0.85)",
                   }}
                 >
-                  0{index + 1} / COLLECTION
-                </p>
+                  All Products
+                </h3>
 
-                <div className="flex items-end justify-between gap-2">
+                <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full border border-white/70 bg-black/15 text-white backdrop-blur-sm transition-all duration-300 group-hover:bg-white group-hover:text-[#11100F]">
+                  <ArrowUpRight className="h-3 w-3" />
+                </span>
+              </div>
+            </div>
+          </div>
+        </Link>
+      </motion.div>
+    </div>
+
+    {/* ============================================================
+        MOBILE — CLEAN 2 COLUMN EDITORIAL GRID
+    ============================================================ */}
+    <div className="grid grid-cols-2 gap-2 lg:hidden">
+      {categories.slice(0, 4).map((cat, index) => {
+        const staticCatProduct = staticHomeProducts.find(
+          (p) => p.category === cat.slug,
+        );
+        const catProduct = products.find((p) => p.category === cat.slug);
+
+        const webImages = [
+          "https://images.unsplash.com/photo-1617137968427-85924c800a22?auto=format&fit=crop&w=900&q=90",
+          "https://images.unsplash.com/photo-1551488831-00ddcb6c6bd3?auto=format&fit=crop&w=900&q=90",
+          "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=900&q=90",
+          "https://images.unsplash.com/photo-1602810318383-e386cc2a3ccf?auto=format&fit=crop&w=900&q=90",
+        ];
+
+        const productImage =
+          webImages[index] ||
+          staticCatProduct?.images?.[0] ||
+          catProduct?.images?.[0];
+
+        const isFeatured = index === 0;
+
+        return (
+          <motion.div
+            key={cat.slug}
+            className={isFeatured ? "col-span-2" : "col-span-1"}
+            initial={{ opacity: 0, y: 8 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.08 }}
+            transition={{ duration: 0.4, delay: index * 0.04 }}
+          >
+            <Link
+              href={`/shop?category=${cat.slug}`}
+              className="group block overflow-hidden bg-[#DDD5C8]"
+            >
+              <div
+                className={
+                  isFeatured
+                    ? "relative h-[270px] sm:h-[320px]"
+                    : "relative h-[185px] sm:h-[215px]"
+                }
+              >
+                <img
+                  src={productImage}
+                  alt={cat.name}
+                  className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.03]"
+                />
+
+                <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/80 via-black/10 to-transparent" />
+
+                <div className="absolute inset-x-0 bottom-0 z-10 p-3">
+                  <div className="mb-1 flex items-center justify-between gap-2">
+                    <span className="text-[6px] font-bold uppercase tracking-[0.18em] text-white/80">
+                      0{index + 1} / COLLECTION
+                    </span>
+                    <ArrowUpRight className="h-3 w-3 text-white" />
+                  </div>
 
                   <h3
-                    className="text-[19px] font-normal leading-[0.9] tracking-[-0.03em] text-white"
+                    className={
+                      isFeatured
+                        ? "text-[30px] font-normal leading-[0.86] tracking-[-0.04em] text-white sm:text-[36px]"
+                        : "text-[19px] font-normal leading-[0.88] tracking-[-0.035em] text-white"
+                    }
                     style={{
                       fontFamily:
                         "Bodoni MT, Didot, Times New Roman, serif",
@@ -1434,50 +1386,57 @@ export default function HomePage() {
                     {cat.name}
                   </h3>
 
-                  <ArrowUpRight className="h-3.5 w-3.5 shrink-0 text-white drop-shadow-[0_1px_4px_rgba(0,0,0,0.8)]" />
-
+                  <p className="mt-1.5 max-w-[90%] text-[9px] leading-[1.45] text-white/90 sm:text-[10px]">
+                    {index === 0
+                      ? "Heavyweight silhouettes engineered for everyday rotation."
+                      : index === 1
+                        ? "Premium graphics with a clean streetwear finish."
+                        : index === 2
+                          ? "Elevated essentials built for daily wear."
+                          : "Statement layers made to stand apart."}
+                  </p>
                 </div>
-
               </div>
+            </Link>
+          </motion.div>
+        );
+      })}
 
-            </div>
-
-          </Link>
-
-        </motion.div>
-      );
-    })}
-
-
-    {/* ============================================================
-        MOBILE — PREMIUM TEXT LINK
-        NO BLACK BUTTON
-    ============================================================ */}
-
-    <div className="col-span-2 flex justify-center pt-3 pb-1">
-
-      <Link
-        href="/shop"
-        className="group inline-flex items-center gap-2 border-b border-[#11100F]/50 pb-1.5 text-[8px] font-semibold uppercase tracking-[0.24em] text-[#11100F] shadow-[0_3px_8px_rgba(17,16,15,0.08)] transition-all duration-300 hover:border-[#11100F] hover:shadow-[0_4px_10px_rgba(17,16,15,0.14)]"
+      <motion.div
+        className="col-span-2"
+        initial={{ opacity: 0, y: 8 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, amount: 0.08 }}
+        transition={{ duration: 0.4, delay: 0.18 }}
       >
+        <Link
+          href="/shop"
+          className="group flex min-h-[70px] items-center justify-between border border-[#11100F]/15 bg-[#E4DDD2] px-4 py-3 transition-colors duration-300 hover:bg-[#DDD4C7]"
+        >
+          <div>
+            <p className="mb-1 text-[6px] font-bold uppercase tracking-[0.2em] text-[#8F1D24]">
+              05 / COMPLETE COLLECTION
+            </p>
+            <h3
+              className="text-[23px] font-normal leading-none tracking-[-0.035em] text-[#11100F]"
+              style={{
+                fontFamily:
+                  "Bodoni MT, Didot, Times New Roman, serif",
+              }}
+            >
+              All Products
+            </h3>
+          </div>
 
-        <span>
-          Explore All Products
-        </span>
-
-        <ArrowRight className="h-3.5 w-3.5 transition-transform duration-300 group-hover:translate-x-1" />
-
-      </Link>
-
+          <span className="flex h-7 w-7 items-center justify-center rounded-full border border-[#11100F]/30 transition-all duration-300 group-hover:bg-[#11100F] group-hover:text-white">
+            <ArrowUpRight className="h-3 w-3" />
+          </span>
+        </Link>
+      </motion.div>
     </div>
-
   </div>
-
 </section>
-    
-
-     {/* ================= BEST SELLERS ================= */}
-<section className="w-full bg-[#f8f7f3] px-4 pb-12 pt-14 sm:px-6 sm:pb-16 sm:pt-16 lg:px-10 lg:pb-20 lg:pt-20">
+<section className="ardenby-product-section w-full bg-[#f8f7f3] px-4 pb-12 pt-14 sm:px-6 sm:pb-16 sm:pt-16 lg:px-10 lg:pb-20 lg:pt-20">
   <div className="mx-auto w-full max-w-[1440px]">
 
     {/* ================= HEADER ================= */}
@@ -1489,7 +1448,7 @@ export default function HomePage() {
 
           {/* EYEBROW */}
           <div className="mb-2 flex items-center gap-2.5 sm:mb-2.5">
-            <span className="text-[8px] font-medium uppercase tracking-[0.28em] text-neutral-500 sm:text-[8.5px]">
+            <span className="text-[9px] font-medium uppercase tracking-[0.28em] text-neutral-500 sm:text-[8.5px]">
               ARDENBY / COLLECTION
             </span>
 
@@ -1501,25 +1460,25 @@ export default function HomePage() {
           </div>
 
           {/* TITLE */}
-          <h2 className="font-serif text-[34px] font-normal leading-[0.95] tracking-[-0.04em] text-[#111] sm:text-[42px] lg:text-[48px]">
+          <h2 className="font-serif text-[42px] font-normal leading-[0.92] tracking-[-0.045em] text-[#111] sm:text-[42px] lg:text-[48px]">
             Best Sellers
           </h2>
 
           {/* DESCRIPTION */}
-          <p className="mt-3 max-w-[420px] text-[10px] leading-[1.65] text-neutral-500 sm:text-[10.5px]">
+          <p className="mt-3 max-w-[420px] text-[12px] leading-[1.6] text-neutral-500 sm:text-[10.5px]">
             Most loved. Most worn. Timeless pieces that define ARDENBY.
           </p>
 
           {/* LOADING */}
           {productsLoading && (
-            <p className="mt-2 text-[7px] font-medium uppercase tracking-[0.2em] text-neutral-400">
+            <p className="mt-2 text-[8.5px] font-medium uppercase tracking-[0.2em] text-neutral-400">
               Loading live collection...
             </p>
           )}
 
           {/* ERROR */}
           {!productsLoading && productsError && (
-            <p className="mt-2 text-[7px] font-medium uppercase tracking-[0.2em] text-neutral-400">
+            <p className="mt-2 text-[8.5px] font-medium uppercase tracking-[0.2em] text-neutral-400">
               Showing the latest available collection.
             </p>
           )}
@@ -1551,10 +1510,10 @@ export default function HomePage() {
     </div>
 
     {/* ================= MOBILE VIEW ALL ================= */}
-    <div className="mt-10 flex justify-center sm:hidden">
+    <div className="mt-10 flex w-full justify-center sm:hidden">
       <Link
         href="/shop"
-        className="group flex items-center gap-2 border-b border-black pb-1.5 text-[8.5px] font-semibold uppercase tracking-[0.18em] text-neutral-900"
+        className="group mx-auto flex items-center justify-center gap-2 border-b border-black pb-1.5 text-[10.5px] font-semibold uppercase tracking-[0.18em] text-neutral-900"
       >
         View All Best Sellers
 
@@ -1567,7 +1526,7 @@ export default function HomePage() {
   </div>
 </section>
       {/* ================= NEW ARRIVALS ================= */}
-      <section className="w-full px-3 py-6 sm:px-6 lg:px-10 lg:py-10">
+      <section className="ardenby-product-section w-full px-3 py-6 sm:px-6 lg:px-10 lg:py-10">
   <div className="relative w-full overflow-hidden rounded-[28px] border border-black/10 bg-[#EFECE4] p-4 shadow-[0_12px_40px_rgba(0,0,0,0.06)] sm:p-7 lg:p-10">
 
     {/* Subtle background detail */}
@@ -1585,13 +1544,13 @@ export default function HomePage() {
               <SlidersHorizontal className="h-2.5 w-2.5 text-neutral-700" />
             </span>
 
-            <span className="text-[8px] font-semibold uppercase tracking-[0.3em] text-neutral-500 sm:text-[9px]">
+            <span className="text-[9px] font-semibold uppercase tracking-[0.3em] text-neutral-500 sm:text-[9px]">
               Fresh Drops • SS26
             </span>
           </div>
 
           <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
-            <h2 className="font-serif text-[30px] font-normal leading-none tracking-[-0.025em] text-neutral-950 sm:text-[40px] lg:text-[46px]">
+            <h2 className="font-serif text-[38px] font-normal leading-none tracking-[-0.03em] text-neutral-950 sm:text-[40px] lg:text-[46px]">
               New Arrivals
             </h2>
 
@@ -1717,7 +1676,7 @@ export default function HomePage() {
     TRENDING NOW
 ================================================================ */}
 
-<section className="relative w-full overflow-hidden bg-[#F6F5F0] px-3 py-14 sm:px-6 sm:py-18 lg:px-10 lg:py-24">
+<section className="ardenby-product-section relative w-full overflow-hidden bg-[#F6F5F0] px-3 py-14 sm:px-6 sm:py-18 lg:px-10 lg:py-24">
   <div className="mx-auto w-full max-w-[1440px]">
 
     {/* ================= HEADER ================= */}
@@ -1732,16 +1691,16 @@ export default function HomePage() {
         <div className="flex items-center gap-3">
           <span className="h-px w-7 bg-neutral-400" />
 
-          <span className="text-[8px] font-semibold uppercase tracking-[0.28em] text-neutral-500 sm:text-[9px]">
+          <span className="text-[9px] font-semibold uppercase tracking-[0.28em] text-neutral-500 sm:text-[9px]">
             Community Top Picks
           </span>
         </div>
 
-        <h2 className="mt-2 font-serif text-[32px] font-normal leading-[0.95] tracking-[-0.04em] text-neutral-950 sm:text-[42px] lg:text-[52px]">
+        <h2 className="mt-2 font-serif text-[42px] font-normal leading-[0.92] tracking-[-0.045em] text-neutral-950 sm:text-[42px] lg:text-[52px]">
           Trending Now
         </h2>
 
-        <p className="mt-3 max-w-[420px] text-[10px] leading-5 text-neutral-500 sm:text-[11px]">
+        <p className="mt-3 max-w-[420px] text-[12px] leading-[1.6] text-neutral-500 sm:text-[11px]">
           Discover the pieces everyone is talking about this season.
         </p>
       </div>
@@ -1797,7 +1756,7 @@ export default function HomePage() {
     <div className="mt-9 flex justify-center sm:hidden">
       <Link
         href="/shop"
-        className="group flex items-center gap-2 border-b border-neutral-900 pb-1.5 text-[8.5px] font-bold uppercase tracking-[0.2em] text-neutral-900"
+        className="group flex items-center gap-2 border-b border-neutral-900 pb-1.5 text-[10.5px] font-bold uppercase tracking-[0.2em] text-neutral-900"
       >
         Discover Trending
 
@@ -1812,213 +1771,7 @@ export default function HomePage() {
 
 
 
-{/* ================================================================
-    REVIEWS
-================================================================ */}
 
-<section className="w-full bg-[#F8F7F3] px-3 py-14 sm:px-6 sm:py-18 lg:px-10 lg:py-24">
-  <div className="mx-auto w-full max-w-[1440px]">
-
-    {/* ================= HEADER ================= */}
-    <motion.div
-      initial={{ opacity: 0, y: 18 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, amount: 0.2 }}
-      transition={{ duration: 0.6, ease }}
-      className="text-center"
-    >
-
-      <div className="flex items-center justify-center gap-3">
-        <span className="h-px w-7 bg-neutral-300" />
-
-        <span className="text-[8px] font-semibold uppercase tracking-[0.28em] text-neutral-400 sm:text-[9px]">
-          Real Customer Reviews
-        </span>
-
-        <span className="h-px w-7 bg-neutral-300" />
-      </div>
-
-      <h2 className="mt-3 font-serif text-[32px] font-normal leading-none tracking-[-0.04em] text-neutral-950 sm:text-[42px] lg:text-[50px]">
-        What The Fam Says
-      </h2>
-
-      {/* RATING */}
-      <div className="mt-4 flex items-center justify-center gap-3">
-
-        <div className="flex gap-0.5 text-amber-500">
-          {[1, 2, 3, 4, 5].map((star) => (
-            <Star
-              key={star}
-              className="h-3 w-3 fill-current sm:h-3.5 sm:w-3.5"
-            />
-          ))}
-        </div>
-
-        <span className="h-3 w-px bg-neutral-300" />
-
-        <span className="text-[8px] font-semibold uppercase tracking-[0.15em] text-neutral-500 sm:text-[9px]">
-          4.9 / 5 Rating
-        </span>
-
-      </div>
-
-    </motion.div>
-
-
-    {/* ================= REVIEW GRID ================= */}
-    <div className="mt-9 grid gap-3 sm:mt-12 sm:gap-5 md:grid-cols-3">
-
-      {reviews.map((review, index) => (
-        <motion.article
-          key={review.name}
-          initial={{
-            opacity: 0,
-            y: 25,
-          }}
-          whileInView={{
-            opacity: 1,
-            y: 0,
-          }}
-          viewport={{
-            once: true,
-            amount: 0.15,
-          }}
-          transition={{
-            duration: 0.55,
-            delay: index * 0.08,
-            ease,
-          }}
-          className="
-            group
-            relative
-            flex
-            min-h-[270px]
-            flex-col
-            justify-between
-            overflow-hidden
-            border
-            border-black/10
-            bg-white
-            p-5
-            transition-all
-            duration-500
-            hover:-translate-y-1
-            hover:border-black/20
-            hover:shadow-[0_18px_50px_rgba(0,0,0,0.07)]
-            sm:min-h-[320px]
-            sm:p-7
-            lg:p-8
-          "
-        >
-
-          {/* QUOTE MARK */}
-          <span
-            aria-hidden="true"
-            className="
-              pointer-events-none
-              absolute
-              right-5
-              top-1
-              font-serif
-              text-[75px]
-              leading-none
-              text-black/[0.045]
-              transition-transform
-              duration-500
-              group-hover:translate-y-1
-              sm:right-7
-              sm:text-[90px]
-            "
-          >
-            “
-          </span>
-
-
-          {/* REVIEW CONTENT */}
-          <div className="relative z-10">
-
-            {/* STARS */}
-            <div className="flex gap-0.5 text-amber-500">
-              {[...Array(review.rating)].map((_, i) => (
-                <Star
-                  key={i}
-                  className="h-3 w-3 fill-current"
-                />
-              ))}
-            </div>
-
-            {/* REVIEW TEXT */}
-            <p className="mt-5 max-w-[360px] font-serif text-[15px] leading-[1.65] tracking-[-0.01em] text-neutral-800 sm:mt-6 sm:text-[17px] sm:leading-[1.7]">
-              “{review.text}”
-            </p>
-
-          </div>
-
-
-          {/* REVIEWER */}
-          <div className="relative z-10 mt-8 border-t border-black/8 pt-4">
-
-            <div className="flex items-center justify-between gap-3">
-
-              <div className="flex items-center gap-3">
-
-                {/* INITIAL */}
-                <div className="flex h-9 w-9 shrink-0 items-center justify-center bg-neutral-950 font-serif text-sm text-white sm:h-10 sm:w-10">
-                  {review.name.charAt(0)}
-                </div>
-
-                <div>
-
-                  <p className="text-[9px] font-bold uppercase tracking-[0.15em] text-neutral-900 sm:text-[10px]">
-                    {review.name}
-                  </p>
-
-                  <div className="mt-1 flex items-center gap-1.5">
-                    <Check className="h-2.5 w-2.5 text-emerald-600" />
-
-                    <span className="text-[7px] font-semibold uppercase tracking-[0.14em] text-emerald-600 sm:text-[8px]">
-                      {review.tag}
-                    </span>
-                  </div>
-
-                </div>
-
-              </div>
-
-              {/* REVIEW NUMBER */}
-              <span className="font-mono text-[8px] tracking-[0.18em] text-neutral-300">
-                0{index + 1}
-              </span>
-
-            </div>
-
-          </div>
-
-        </motion.article>
-      ))}
-
-    </div>
-
-
-    {/* ================= BOTTOM EDITORIAL LINE ================= */}
-    <motion.div
-      initial={{ opacity: 0 }}
-      whileInView={{ opacity: 1 }}
-      viewport={{ once: true }}
-      transition={{ duration: 0.8, delay: 0.2 }}
-      className="mt-10 flex items-center justify-center gap-3 sm:mt-12"
-    >
-      <span className="h-px w-10 bg-neutral-200" />
-
-      <span className="text-[7px] font-semibold uppercase tracking-[0.25em] text-neutral-400">
-        Worn by the community
-      </span>
-
-      <span className="h-px w-10 bg-neutral-200" />
-    </motion.div>
-
-  </div>
-</section>
       {/* ================= NEWSLETTER ================= */}
      
     </main>

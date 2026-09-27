@@ -48,6 +48,55 @@ const RED = '#8D713E';
 const RED_BRIGHT = '#C6A15B';
 const GREY = '#8C877F';
 const BORDER = '#2A2927';
+const ARDENBY_LOGO_STYLE = {
+    color: WHITE,
+    fontFamily:
+      'Bodoni MT, Didot, Cormorant Garamond, Times New Roman, serif',
+
+    backgroundImage: `
+      radial-gradient(circle at 3% 45%, #C6A15B 0 2px, transparent 2.5px),
+      radial-gradient(circle at 7% 20%, #E33A3A 0 1.5px, transparent 2px),
+      radial-gradient(circle at 12% 75%, #B82020 0 3px, transparent 3.5px),
+      radial-gradient(circle at 18% 8%, #D52A2A 0 2px, transparent 2.5px),
+      radial-gradient(circle at 25% 92%, #E33A3A 0 1.5px, transparent 2px),
+      radial-gradient(circle at 34% 3%, #C6A15B 0 3px, transparent 3.5px),
+      radial-gradient(circle at 43% 95%, #D52A2A 0 2px, transparent 2.5px),
+      radial-gradient(circle at 52% 4%, #E33A3A 0 1.5px, transparent 2px),
+      radial-gradient(circle at 62% 94%, #B82020 0 3px, transparent 3.5px),
+      radial-gradient(circle at 71% 7%, #D52A2A 0 2px, transparent 2.5px),
+      radial-gradient(circle at 79% 91%, #E33A3A 0 2px, transparent 2.5px),
+      radial-gradient(circle at 88% 15%, #C6A15B 0 3px, transparent 3.5px),
+      radial-gradient(circle at 94% 48%, #E33A3A 0 2px, transparent 2.5px),
+      radial-gradient(circle at 98% 78%, #B82020 0 3px, transparent 3.5px),
+
+      radial-gradient(circle at 8% 50%, #D71920 0 5px, transparent 6px),
+      radial-gradient(circle at 17% 35%, #E21B23 0 2px, transparent 3px),
+      radial-gradient(circle at 29% 18%, #C9151D 0 4px, transparent 5px),
+      radial-gradient(circle at 40% 12%, #E21B23 0 2px, transparent 3px),
+      radial-gradient(circle at 57% 14%, #D71920 0 4px, transparent 5px),
+      radial-gradient(circle at 68% 22%, #E21B23 0 2px, transparent 3px),
+      radial-gradient(circle at 82% 32%, #C9151D 0 4px, transparent 5px),
+      radial-gradient(circle at 92% 60%, #E21B23 0 2px, transparent 3px),
+
+      radial-gradient(circle at 15% 68%, #D71920 0 3px, transparent 4px),
+      radial-gradient(circle at 27% 82%, #E21B23 0 5px, transparent 6px),
+      radial-gradient(circle at 39% 72%, #C9151D 0 2px, transparent 3px),
+      radial-gradient(circle at 51% 88%, #E21B23 0 3px, transparent 4px),
+      radial-gradient(circle at 64% 78%, #D71920 0 4px, transparent 5px),
+      radial-gradient(circle at 76% 86%, #E21B23 0 2px, transparent 3px),
+      radial-gradient(circle at 87% 72%, #C9151D 0 4px, transparent 5px)
+    `,
+
+    backgroundRepeat: 'no-repeat',
+
+    textShadow: `
+      2px 0 0 rgba(200,50,50,0.85),
+      -2px 0 0 rgba(110,15,15,0.65),
+      0 4px 0 rgba(165,35,35,0.5),
+      0 8px 18px rgba(0,0,0,0.6)
+    `,
+};
+
 
 export function NavbarHeader({
   setMobileOpen,
@@ -106,37 +155,45 @@ export function NavbarHeader({
 
   return (
     <>
-      <header className="sticky top-0 z-[100] w-full max-w-[100vw] overflow-x-clip"
+      <header
+        className="sticky top-0 z-[100] w-full max-w-[100vw] overflow-x-clip"
         style={{
           backgroundColor: BLACK,
           color: WHITE,
         }}
       >
         {/* ================================================================
-            MAIN HEADER — NO SECOND ANNOUNCEMENT BAR
+            PREMIUM DESKTOP MAIN HEADER
         ================================================================= */}
-
         <div
-          className="hidden w-full max-w-full overflow-hidden border-b lg:block"
-          style={{ borderColor: BORDER }}
+          className="hidden w-full border-b lg:block"
+          style={{
+            borderColor: 'rgba(216,189,130,0.16)',
+            backgroundColor: '#0A0A0A',
+          }}
         >
-          <div className="mx-auto w-full max-w-[1600px] px-4 sm:px-6 lg:px-7 xl:px-10">
-            <div className="relative flex h-[78px] items-center">
+          <div className="mx-auto w-full max-w-[1700px] px-6 xl:px-10">
+            <div className="relative flex h-[76px] items-center">
               {/* MENU */}
-              <div className="flex w-[220px] shrink-0 items-center">
+              <div className="flex w-[240px] shrink-0 items-center">
                 <button
                   type="button"
                   onClick={openNavigation}
                   aria-label="Open menu"
                   className="group flex items-center gap-3"
-                  style={{ color: WHITE }}
+                  style={{ color: WHITE_SOFT }}
                 >
-                  <Menu
-                    className="h-[21px] w-[21px] transition-colors group-hover:text-[#D8BD82]"
-                    strokeWidth={1.2}
-                  />
-                  <span className="text-[13px] font-semibold uppercase tracking-[0.2em] transition-colors group-hover:text-[#D8BD82]">
-                    
+                  <span
+                    className="flex h-[38px] w-[38px] items-center justify-center rounded-full border transition-all duration-300 group-hover:bg-[#D8BD82]/[0.08]"
+                    style={{ borderColor: 'rgba(216,189,130,0.28)' }}
+                  >
+                    <Menu
+                      className="h-[18px] w-[18px] transition-all duration-300 group-hover:scale-105 group-hover:text-[#D8BD82]"
+                      strokeWidth={1.15}
+                    />
+                  </span>
+                  <span className="text-[10px] font-medium uppercase tracking-[0.28em] transition-colors duration-300 group-hover:text-[#D8BD82]">
+                    Menu
                   </span>
                 </button>
               </div>
@@ -144,139 +201,115 @@ export function NavbarHeader({
               {/* LOGO */}
               <Link
                 href="/"
-                className="group absolute left-1/2 top-1/2 z-10 flex -translate-x-1/2 -translate-y-1/2 flex-col items-center whitespace-nowrap"
+                className="group absolute left-1/2 top-1/2 z-10 flex -translate-x-1/2 -translate-y-1/2 items-center justify-center"
               >
-               <span
-  className="
-    relative
-    inline-block
-    text-[50px]
-    font-bold
-    uppercase
-    leading-[0.8]
-    tracking-[-0.075em]
-    transition-all
-    duration-300
-    group-hover:text-[#FFF5F0]
-  "
-  style={{
-    color: WHITE,
-    fontFamily:
-      'Bodoni MT, Didot, Cormorant Garamond, Times New Roman, serif',
-
-    backgroundImage: `
-      radial-gradient(circle at 3% 45%, #C6A15B 0 2px, transparent 2.5px),
-      radial-gradient(circle at 7% 20%, #E33A3A 0 1.5px, transparent 2px),
-      radial-gradient(circle at 12% 75%, #B82020 0 3px, transparent 3.5px),
-      radial-gradient(circle at 18% 8%, #D52A2A 0 2px, transparent 2.5px),
-      radial-gradient(circle at 25% 92%, #E33A3A 0 1.5px, transparent 2px),
-      radial-gradient(circle at 34% 3%, #C6A15B 0 3px, transparent 3.5px),
-      radial-gradient(circle at 43% 95%, #D52A2A 0 2px, transparent 2.5px),
-      radial-gradient(circle at 52% 4%, #E33A3A 0 1.5px, transparent 2px),
-      radial-gradient(circle at 62% 94%, #B82020 0 3px, transparent 3.5px),
-      radial-gradient(circle at 71% 7%, #D52A2A 0 2px, transparent 2.5px),
-      radial-gradient(circle at 79% 91%, #E33A3A 0 2px, transparent 2.5px),
-      radial-gradient(circle at 88% 15%, #C6A15B 0 3px, transparent 3.5px),
-      radial-gradient(circle at 94% 48%, #E33A3A 0 2px, transparent 2.5px),
-      radial-gradient(circle at 98% 78%, #B82020 0 3px, transparent 3.5px),
-
-      radial-gradient(circle at 8% 50%, #D71920 0 5px, transparent 6px),
-      radial-gradient(circle at 17% 35%, #E21B23 0 2px, transparent 3px),
-      radial-gradient(circle at 29% 18%, #C9151D 0 4px, transparent 5px),
-      radial-gradient(circle at 40% 12%, #E21B23 0 2px, transparent 3px),
-      radial-gradient(circle at 57% 14%, #D71920 0 4px, transparent 5px),
-      radial-gradient(circle at 68% 22%, #E21B23 0 2px, transparent 3px),
-      radial-gradient(circle at 82% 32%, #C9151D 0 4px, transparent 5px),
-      radial-gradient(circle at 92% 60%, #E21B23 0 2px, transparent 3px),
-
-      radial-gradient(circle at 15% 68%, #D71920 0 3px, transparent 4px),
-      radial-gradient(circle at 27% 82%, #E21B23 0 5px, transparent 6px),
-      radial-gradient(circle at 39% 72%, #C9151D 0 2px, transparent 3px),
-      radial-gradient(circle at 51% 88%, #E21B23 0 3px, transparent 4px),
-      radial-gradient(circle at 64% 78%, #D71920 0 4px, transparent 5px),
-      radial-gradient(circle at 76% 86%, #E21B23 0 2px, transparent 3px),
-      radial-gradient(circle at 87% 72%, #C9151D 0 4px, transparent 5px)
-    `,
-
-    backgroundRepeat: 'no-repeat',
-
-    textShadow: `
-      2px 0 0 rgba(200,50,50,0.85),
-      -2px 0 0 rgba(110,15,15,0.65),
-      0 4px 0 rgba(165,35,35,0.5),
-      0 8px 18px rgba(0,0,0,0.6)
-    `,
-  }}
->
-  ARDENBY
-</span>
-               
+                <span
+                  className="relative inline-block text-[48px] font-bold uppercase leading-none tracking-[-0.075em] transition-all duration-300 group-hover:scale-[1.015]"
+                  style={ARDENBY_LOGO_STYLE}
+                >
+                  ARDENBY
+                </span>
+                <span
+                  className="absolute -bottom-[8px] left-1/2 h-[1px] w-0 -translate-x-1/2 transition-all duration-500 group-hover:w-[72%]"
+                  style={{ backgroundColor: '#D8BD82' }}
+                />
               </Link>
 
               {/* ACTIONS */}
-              <div className="ml-auto flex shrink-0 items-center gap-5 xl:gap-6">
+              <div className="ml-auto flex shrink-0 items-center gap-2.5">
+                {/* SEARCH */}
                 <button
                   type="button"
                   onClick={() => setSearchOpen(true)}
-                  className="group flex items-center gap-2.5"
-                  style={{ color: WHITE_SOFT }}
+                  className="group flex h-[40px] items-center gap-2.5 rounded-full border px-4 transition-all duration-300 hover:bg-[#D8BD82]/[0.08] hover:shadow-[0_0_18px_rgba(216,189,130,0.14)]"
+                  style={{
+                    color: '#D8BD82',
+                    borderColor: 'rgba(216,189,130,0.42)',
+                    backgroundColor: 'rgba(216,189,130,0.045)',
+                  }}
                 >
                   <Search
-                    className="h-[19px] w-[19px] transition-colors group-hover:text-[#D8BD82]"
+                    className="h-[17px] w-[17px] transition-transform duration-300 group-hover:scale-110 group-hover:rotate-[-6deg]"
                     strokeWidth={1.25}
                   />
-                  <span className="text-[12px] font-semibold uppercase tracking-[0.2em] transition-colors group-hover:text-[#D8BD82]">
+                  <span className="text-[10px] font-semibold uppercase tracking-[0.23em] transition-colors group-hover:text-[#F1D99B]">
                     Search
                   </span>
                 </button>
 
+                {/* PROFILE */}
                 <button
                   type="button"
                   onClick={handleOpenProfile}
                   aria-label={user ? 'My profile' : 'Login'}
-                  className="group"
+                  className="group flex h-[40px] w-[40px] items-center justify-center rounded-full border transition-all duration-300 hover:bg-[#D8BD82]/[0.08] hover:shadow-[0_0_16px_rgba(216,189,130,0.16)]"
+                  style={{
+                    color: '#D8BD82',
+                    borderColor: 'rgba(216,189,130,0.28)',
+                    backgroundColor: 'rgba(216,189,130,0.035)',
+                  }}
                 >
                   <User
-                    className="h-[21px] w-[21px] transition-colors group-hover:text-[#D8BD82]"
+                    className="h-[18px] w-[18px] transition-all duration-300 group-hover:scale-110 group-hover:text-[#F1D99B]"
                     strokeWidth={1.2}
                   />
                 </button>
 
+                {/* WISHLIST */}
                 <Link
                   href="/wishlist"
                   aria-label="Wishlist"
-                  className="group relative"
+                  className="group relative flex h-[40px] w-[40px] items-center justify-center rounded-full border transition-all duration-300 hover:bg-[#D8BD82]/[0.08] hover:shadow-[0_0_16px_rgba(216,189,130,0.16)]"
+                  style={{
+                    color: '#D8BD82',
+                    borderColor: 'rgba(216,189,130,0.28)',
+                    backgroundColor: 'rgba(216,189,130,0.035)',
+                  }}
                 >
                   <Heart
-                    className="h-[21px] w-[21px] transition-colors group-hover:text-[#D8BD82]"
+                    className="h-[18px] w-[18px] transition-all duration-300 group-hover:scale-110 group-hover:fill-[#D8BD82]/10 group-hover:text-[#F1D99B]"
                     strokeWidth={1.2}
                   />
                   {wishlistCount > 0 && (
                     <span
-                      className="absolute -right-2.5 -top-2 flex h-[16px] min-w-[16px] items-center justify-center rounded-full px-1 text-[7px] font-bold"
-                      style={{ backgroundColor: RED_BRIGHT, color: WHITE }}
+                      className="absolute -right-1 -top-1 flex h-[16px] min-w-[16px] items-center justify-center rounded-full border px-1 text-[7px] font-bold"
+                      style={{
+                        backgroundColor: '#C6A15B',
+                        color: '#0D0D0D',
+                        borderColor: '#0D0D0D',
+                      }}
                     >
                       {wishlistCount}
                     </span>
                   )}
                 </Link>
 
+                {/* CART */}
                 <motion.button
                   type="button"
                   onClick={openCart}
                   aria-label="Shopping cart"
-                  whileHover={{ y: -2, rotate: -3 }}
-                  whileTap={{ scale: 0.9 }}
-                  className="group relative"
+                  whileHover={{ y: -1 }}
+                  whileTap={{ scale: 0.94 }}
+                  className="group relative flex h-[40px] w-[40px] items-center justify-center rounded-full border transition-all duration-300 hover:bg-[#D8BD82]/[0.08] hover:shadow-[0_0_16px_rgba(216,189,130,0.16)]"
+                  style={{
+                    color: '#D8BD82',
+                    borderColor: 'rgba(216,189,130,0.28)',
+                    backgroundColor: 'rgba(216,189,130,0.035)',
+                  }}
                 >
                   <ShoppingCart
-                    className="h-[22px] w-[22px] transition-colors group-hover:text-[#D8BD82]"
-                    strokeWidth={1.25}
+                    className="h-[19px] w-[19px] transition-transform duration-300 group-hover:scale-105"
+                    strokeWidth={1.2}
                   />
                   {cartCount > 0 && (
                     <span
-                      className="absolute -right-2.5 -top-2 flex h-[16px] min-w-[16px] items-center justify-center rounded-full px-1 text-[7px] font-bold"
-                      style={{ backgroundColor: RED_BRIGHT, color: WHITE }}
+                      className="absolute -right-1 -top-1 flex h-[16px] min-w-[16px] items-center justify-center rounded-full border px-1 text-[7px] font-bold"
+                      style={{
+                        backgroundColor: '#C6A15B',
+                        color: '#0D0D0D',
+                        borderColor: '#0D0D0D',
+                      }}
                     >
                       {cartCount}
                     </span>
@@ -288,17 +321,16 @@ export function NavbarHeader({
         </div>
 
         {/* ================================================================
-            DESKTOP CATEGORY BAR
+            PREMIUM DESKTOP CATEGORY BAR
         ================================================================= */}
-
         <nav
-          className="hidden w-full max-w-full overflow-hidden border-b lg:block"
+          className="hidden w-full border-b lg:block"
           style={{
-            borderColor: BORDER,
-            backgroundColor: BLACK,
+            backgroundColor: '#0D0D0D',
+            borderColor: 'rgba(216,189,130,0.12)',
           }}
         >
-          <div className="mx-auto flex h-[52px] w-full max-w-[1600px] items-center justify-center overflow-hidden px-2 lg:px-3 xl:px-5">
+          <div className="mx-auto flex h-[50px] w-full max-w-[1700px] items-center justify-center overflow-hidden px-4">
             {topNavItems.map((item) => {
               const active = megaOpen && activeMegaCategory === item.slug;
 
@@ -310,18 +342,22 @@ export function NavbarHeader({
                 >
                   <Link
                     href={`/shop?category=${item.slug}`}
-                    className="group relative flex h-full items-center px-3.5 lg:px-4.5 xl:px-5"
-                    style={{ color: active ? RED_BRIGHT : WHITE }}
+                    className="group relative flex h-full items-center px-5 xl:px-6"
+                    style={{ color: active ? '#D8BD82' : WHITE }}
                   >
-                    <span className="whitespace-nowrap text-[12px] font-semibold uppercase tracking-[0.11em] transition-colors group-hover:text-[#D8BD82]">
+                    <span className="whitespace-nowrap text-[12px] font-semibold uppercase tracking-[0.13em] transition-all duration-300 group-hover:text-[#D8BD82]">
                       {item.label}
                     </span>
                     <span
-                      className="absolute bottom-0 left-3.5 right-3.5 h-[2px] origin-center transition-transform duration-300 lg:left-4.5 lg:right-4.5 xl:left-5 xl:right-5"
+                      className="absolute bottom-0 left-5 right-5 h-[1px] origin-center transition-transform duration-300 xl:left-6 xl:right-6"
                       style={{
-                        backgroundColor: RED_BRIGHT,
+                        backgroundColor: '#D8BD82',
                         transform: active ? 'scaleX(1)' : 'scaleX(0)',
                       }}
+                    />
+                    <span
+                      className="absolute bottom-0 left-1/2 h-[3px] w-[18px] -translate-x-1/2 rounded-full opacity-0 blur-[3px] transition-opacity duration-300 group-hover:opacity-70"
+                      style={{ backgroundColor: '#D8BD82' }}
                     />
                   </Link>
                 </div>
@@ -351,15 +387,15 @@ export function NavbarHeader({
               onMouseEnter={() => setMegaOpen(true)}
               onMouseLeave={closeMega}
             >
-              <div className="mx-auto w-full max-w-[1500px] px-10 py-8 xl:px-14">
+              <div className="mx-auto w-full max-w-[1500px] px-7 py-3.5 xl:px-10">
                 <div
-                  className="mb-7 flex items-end justify-between border-b pb-6"
+                  className="mb-3 flex items-end justify-between border-b pb-3"
                   style={{ borderColor: BORDER }}
                 >
                   <div>
                     <Link href={`/shop?category=${activeMegaMenu.slug}`}>
                       <h3
-                        className="text-[24px] font-medium uppercase tracking-[0.02em]"
+                        className="text-[21px] font-medium uppercase tracking-[0.02em]"
                         style={{
                           color: WHITE,
                           fontFamily:
@@ -370,12 +406,12 @@ export function NavbarHeader({
                       </h3>
 
                       <div
-                        className="mt-3 h-[2px] w-12"
+                        className="mt-2 h-[2px] w-10"
                         style={{ backgroundColor: RED_BRIGHT }}
                       />
 
                       <p
-                        className="mt-3 text-[13px] leading-5"
+                        className="mt-2 max-w-[620px] text-[11px] leading-[1.125rem]"
                         style={{ color: GREY }}
                       >
                         {activeMegaMenu.desc}
@@ -385,19 +421,19 @@ export function NavbarHeader({
 
                   <Link
                     href={`/shop?category=${activeMegaMenu.slug}`}
-                    className="group flex items-center gap-2 text-[12px] font-semibold uppercase tracking-[0.2em]"
+                    className="group flex items-center gap-2 text-[10px] font-semibold uppercase tracking-[0.18em]"
                     style={{ color: WHITE }}
                   >
                     View Collection
                     <ArrowRight
-                      className="h-5 w-5 transition-transform group-hover:translate-x-1"
+                      className="h-4 w-4 transition-transform group-hover:translate-x-1"
                       strokeWidth={1.2}
                     />
                   </Link>
                 </div>
 
                 {activeMegaMenu.featured.length > 0 ? (
-                  <div className={`grid gap-7 ${activeMegaMenu.featured.length <= 3 ? "grid-cols-3" : "grid-cols-4"}`}>
+                  <div className={`grid gap-4 ${activeMegaMenu.featured.length <= 3 ? "grid-cols-3" : "grid-cols-4"}`}>
                     {activeMegaMenu.featured.slice(0, 4).map((p, index) => (
                       <Link
                         key={p.id}
@@ -436,16 +472,16 @@ export function NavbarHeader({
                           </span>
                         </div>
 
-                        <div className="pt-4">
+                        <div className="pt-2.5">
                           <p
-                            className="line-clamp-2 text-[13px] font-medium leading-5 transition-colors group-hover:text-[#D8BD82]"
+                            className="line-clamp-2 text-[12px] font-medium leading-4 transition-colors group-hover:text-[#D8BD82]"
                             style={{ color: WHITE }}
                           >
                             {p.name}
                           </p>
 
                           <p
-                            className="mt-2 text-[8px] uppercase tracking-[0.24em]"
+                            className="mt-1.5 text-[7px] uppercase tracking-[0.24em]"
                             style={{ color: RED_BRIGHT }}
                           >
                             ARDENBY
@@ -455,10 +491,10 @@ export function NavbarHeader({
                     ))}
                   </div>
                 ) : (
-                  <div className="flex min-h-[160px] items-center justify-center text-center">
+                  <div className="flex min-h-[120px] items-center justify-center text-center">
                     <div>
                       <p
-                        className="text-[30px]"
+                        className="text-[24px]"
                         style={{
                           color: WHITE,
                           fontFamily:
@@ -467,7 +503,7 @@ export function NavbarHeader({
                       >
                         Collection coming soon
                       </p>
-                      <p className="mt-3 text-[13px]" style={{ color: GREY }}>
+                      <p className="mt-2 text-[11px]" style={{ color: GREY }}>
                         New pieces are being prepared.
                       </p>
                     </div>
@@ -481,39 +517,45 @@ export function NavbarHeader({
         {/* ================================================================
             MOBILE HEADER
         ================================================================= */}
-
         <div
-          className="relative flex h-[74px] w-full max-w-full items-center justify-between overflow-hidden border-b px-5 lg:hidden"
-          style={{ backgroundColor: BLACK, borderColor: BORDER }}
+          className="relative flex h-[68px] w-full items-center justify-between border-b px-4 lg:hidden"
+          style={{
+            backgroundColor: '#0A0A0A',
+            borderColor: 'rgba(216,189,130,0.16)',
+          }}
         >
           <button
             type="button"
             onClick={openNavigation}
             aria-label="Open menu"
-            className="flex h-10 w-10 items-center justify-start"
-            style={{ color: WHITE }}
+            className="group flex h-[40px] w-[40px] items-center justify-center rounded-full border"
+            style={{
+              color: '#D8BD82',
+              borderColor: 'rgba(216,189,130,0.28)',
+            }}
           >
-            <Menu className="h-6 w-6" strokeWidth={1.2} />
+            <Menu
+              className="h-[19px] w-[19px] transition-transform duration-300 group-hover:scale-105"
+              strokeWidth={1.15}
+            />
           </button>
 
           <Link
             href="/"
-            className="absolute left-1/2 top-1/2 z-10 flex -translate-x-1/2 -translate-y-1/2 flex-col items-center whitespace-nowrap"
+            className="absolute left-1/2 top-1/2 flex -translate-x-1/2 -translate-y-1/2 flex-col items-center"
           >
             <span
-              className="text-[32px] font-bold uppercase leading-[0.8] tracking-[-0.075em]"
+              className="text-[31px] font-bold uppercase leading-none tracking-[-0.075em]"
               style={{
+                ...ARDENBY_LOGO_STYLE,
                 color: WHITE,
-                fontFamily:
-                  'Bodoni MT, Didot, Cormorant Garamond, Times New Roman, serif',
-                textShadow: '2px 0 0 rgba(198,161,91,0.78), -2px 0 0 rgba(111,89,50,0.58), 0 4px 0 rgba(141,113,62,0.45), 0 7px 15px rgba(0,0,0,0.5)',
               }}
             >
               ARDENBY
             </span>
             <span
-              className="mt-2 text-[5px] uppercase tracking-[0.4em]"
-              style={{ color: RED_BRIGHT }}
+              className="mt-1 text-[5px] uppercase tracking-[0.38em]"
+              style={{ color: '#D8BD82' }}
             >
               Wear Your Essence
             </span>
@@ -523,23 +565,31 @@ export function NavbarHeader({
             type="button"
             onClick={openCart}
             aria-label="Shopping cart"
-            whileHover={{ y: -2, rotate: -3 }}
-            whileTap={{ scale: 0.9 }}
-            className="relative flex h-10 w-10 items-center justify-end"
-            style={{ color: WHITE }}
+            whileTap={{ scale: 0.92 }}
+            className="relative flex h-[40px] w-[40px] items-center justify-center rounded-full border"
+            style={{
+              color: '#D8BD82',
+              borderColor: 'rgba(216,189,130,0.28)',
+            }}
           >
-            <ShoppingCart className="h-[22px] w-[22px]" strokeWidth={1.2} />
+            <ShoppingCart
+              className="h-[19px] w-[19px]"
+              strokeWidth={1.2}
+            />
             {cartCount > 0 && (
               <span
-                className="absolute right-[-2px] top-[2px] flex h-[15px] min-w-[15px] items-center justify-center rounded-full px-1 text-[7px] font-bold"
-                style={{ backgroundColor: RED_BRIGHT, color: WHITE }}
+                className="absolute -right-1 -top-1 flex h-[15px] min-w-[15px] items-center justify-center rounded-full border px-1 text-[7px] font-bold"
+                style={{
+                  backgroundColor: '#C6A15B',
+                  color: '#0D0D0D',
+                  borderColor: '#0D0D0D',
+                }}
               >
                 {cartCount}
               </span>
             )}
           </motion.button>
         </div>
-
       </header>
 
       {/* ====================================================================
@@ -564,49 +614,60 @@ export function NavbarHeader({
               animate={{ x: 0 }}
               exit={{ x: '-100%' }}
               transition={{ duration: 0.36, ease: [0.22, 1, 0.36, 1] }}
-              className="fixed left-0 top-0 z-[9910] flex h-[100dvh] w-[92vw] max-w-[560px] flex-col overflow-hidden border-r shadow-[14px_0_45px_rgba(0,0,0,0.18)] lg:w-[40vw] lg:min-w-[520px] lg:max-w-[580px]"
+              className="fixed left-0 top-0 z-[9910] flex h-[100dvh] w-[92vw] max-w-[560px] flex-col overflow-hidden border-r shadow-[18px_0_60px_rgba(0,0,0,0.55)] lg:w-[40vw] lg:min-w-[520px] lg:max-w-[580px]"
               style={{
-                backgroundColor: '#FAF8F3',
-                color: '#1B1B1B',
-                borderColor: '#E4DFD4',
+                backgroundColor: BLACK,
+                color: WHITE,
+                borderColor: BORDER,
               }}
             >
-              {/* COMPACT BRAND HEADER */}
+              {/* ============================================================
+                  SOUL-STORE STYLE SHOPPING MENU
+                  Same ARDENBY content, redesigned as a clean commerce drawer
+              ============================================================ */}
+
+              {/* BRAND HEADER */}
               <div
-                className="flex h-[70px] shrink-0 items-center justify-between border-b px-5 lg:h-[76px] lg:px-6"
+                className="flex h-[76px] shrink-0 items-center justify-between border-b px-5 lg:h-[82px] lg:px-7"
                 style={{
-                  backgroundColor: '#FFFFFF',
-                  borderColor: '#E4DFD4',
+                  backgroundColor: '#111111',
+                  borderColor: BORDER,
                 }}
               >
-                <Link href="/" onClick={closeNavigation} className="group flex flex-col">
+                <Link
+                  href="/"
+                  onClick={closeNavigation}
+                  className="group flex flex-col"
+                >
                   <span
-                    className="text-[29px] font-bold uppercase leading-[0.8] tracking-[-0.065em] transition-colors duration-300 group-hover:text-[#D8BD82] lg:text-[32px]"
+                    className="text-[31px] font-bold uppercase leading-[0.82] tracking-[-0.075em] transition-transform duration-300 group-hover:scale-[1.02] lg:text-[35px]"
                     style={{
-                      color: '#1B1B1B',
-                      fontFamily:
-                        'Bodoni MT, Didot, Cormorant Garamond, Times New Roman, serif',
+                      ...ARDENBY_LOGO_STYLE,
+                      color: WHITE,
                     }}
                   >
                     ARDENBY
                   </span>
                   <span
-                    className="mt-1.5 text-[5px] uppercase tracking-[0.32em] lg:text-[6px]"
-                    style={{ color: '#C6A15B' }}
+                    className="mt-1.5 text-[6px] uppercase tracking-[0.36em] lg:text-[7px]"
+                    style={{ color: RED_BRIGHT }}
                   >
                     Wear Your Essence
                   </span>
                 </Link>
 
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-3">
                   <button
                     type="button"
                     onClick={() => {
                       closeNavigation();
                       handleOpenProfile();
                     }}
-                    className="hidden h-10 items-center justify-center border px-5 text-[9px] font-semibold uppercase tracking-[0.12em] transition-colors hover:bg-[#1B1B1B] hover:text-white sm:flex"
-                    style={{ borderColor: '#C6A15B', color: '#1B1B1B' }}
+                    className="hidden h-[40px] min-w-[138px] items-center justify-center border px-5 text-[9px] font-semibold uppercase tracking-[0.12em] transition-all duration-300 hover:bg-[#8F1D24] sm:flex"
+                    style={{
+                      borderColor: '#8F1D24',
+                      color: WHITE,
+                    }}
                   >
                     {user ? 'My Account' : 'Login / Register'}
                   </button>
@@ -615,57 +676,63 @@ export function NavbarHeader({
                     type="button"
                     onClick={closeNavigation}
                     aria-label="Close menu"
-                    className="flex h-10 w-10 items-center justify-center"
-                    style={{ color: '#1B1B1B' }}
+                    className="flex h-[40px] w-[40px] items-center justify-center transition-colors hover:text-[#E21B23]"
+                    style={{ color: WHITE }}
                   >
                     <X className="h-5 w-5" strokeWidth={1.3} />
                   </button>
                 </div>
               </div>
 
-              {/* DARK GOLD PROMO STRIP */}
+              {/* PROMO STRIP */}
               <div
-                className="flex h-[38px] shrink-0 items-center justify-center"
-                style={{ backgroundColor: '#80652F', color: '#FFFFFF' }}
+                className="flex h-[40px] shrink-0 items-center justify-center border-b px-4"
+                style={{
+                  backgroundColor: '#9A1D25',
+                  borderColor: '#9A1D25',
+                  color: '#FFFFFF',
+                }}
               >
-                <span className="text-[8px] font-semibold uppercase tracking-[0.16em]">
+                <span className="text-[9px] font-semibold uppercase tracking-[0.18em] text-center">
                   Premium Streetwear — New Collection
                 </span>
               </div>
 
-              <div className="flex-1 overflow-y-auto">
-                {/* CATEGORY TABS */}
-                <div
-                  className="overflow-x-auto border-b bg-white"
-                  style={{ borderColor: '#E4DFD4' }}
-                >
-                  <div className="flex min-w-max">
-                    {topNavItems.slice(0, 6).map((item, index) => {
+              <div className="flex-1 overflow-y-auto bg-[#F7F5F0] text-[#111111]">
+
+                {/* PRIMARY COLLECTION TABS */}
+                <div className="sticky top-0 z-20 border-b bg-[#F7F5F0]">
+                  <div className="flex min-w-max items-stretch overflow-x-auto scrollbar-none">
+                    {topNavItems.slice(0, 4).map((item, index) => {
                       const active =
-                        (mobileExpandedCategory ?? topNavItems[0]?.slug) === item.slug;
+                        (mobileExpandedCategory ?? topNavItems[0]?.slug) ===
+                        item.slug;
 
                       return (
                         <button
                           key={item.slug}
                           type="button"
                           onClick={() => toggleMobileCategory(item.slug)}
-                          className="relative flex h-[52px] items-center px-4 text-[9px] font-semibold uppercase tracking-[0.08em] transition-colors lg:px-5"
-                          style={{ color: active ? '#1B1B1B' : '#8A8175' }}
+                          className="relative flex h-[58px] shrink-0 items-center justify-center px-5 text-[9px] font-bold uppercase tracking-[0.08em] transition-colors duration-200 lg:px-7"
+                          style={{
+                            color: active ? '#9A1D25' : '#77736D',
+                          }}
                         >
                           {item.label}
-                          {active && (
-                            <span
-                              className="absolute bottom-0 left-3 right-3 h-[2px]"
-                              style={{ backgroundColor: '#C6A15B' }}
-                            />
-                          )}
+                          <span
+                            className="absolute bottom-0 left-4 right-4 h-[3px] transition-transform duration-200"
+                            style={{
+                              backgroundColor: '#9A1D25',
+                              transform: active ? 'scaleX(1)' : 'scaleX(0)',
+                            }}
+                          />
                         </button>
                       );
                     })}
                   </div>
                 </div>
 
-                {/* FEATURED COLLECTION */}
+                {/* FEATURED COLLECTION — SOUL STORE STYLE */}
                 {(() => {
                   const selectedSlug =
                     mobileExpandedCategory ?? topNavItems[0]?.slug ?? '';
@@ -675,22 +742,16 @@ export function NavbarHeader({
                   const featured = selectedMenu?.featured ?? [];
 
                   return (
-                    <div
-                      className="border-b bg-white px-5 py-5 lg:px-6 lg:py-6"
-                      style={{ borderColor: '#E4DFD4' }}
-                    >
-                      <div className="mb-5 flex items-end justify-between gap-4">
+                    <section className="border-b border-black/10 bg-[#F7F5F0] px-5 pb-5 pt-5 lg:px-7">
+                      <div className="mb-4 flex items-end justify-between gap-4">
                         <div>
-                          <p
-                            className="mb-1.5 text-[8px] font-semibold uppercase tracking-[0.25em]"
-                            style={{ color: '#C6A15B' }}
-                          >
+                          <p className="mb-1 text-[8px] font-bold uppercase tracking-[0.25em] text-[#9A1D25]">
                             Featured Collection
                           </p>
                           <h2
-                            className="text-[21px] font-semibold uppercase leading-none tracking-[-0.02em] lg:text-[24px]"
+                            className="text-[22px] font-semibold uppercase leading-none tracking-[-0.025em] lg:text-[26px]"
                             style={{
-                              color: '#1B1B1B',
+                              color: '#111111',
                               fontFamily:
                                 'Bodoni MT, Didot, Cormorant Garamond, Times New Roman, serif',
                             }}
@@ -702,54 +763,40 @@ export function NavbarHeader({
                         <Link
                           href={`/shop?category=${selectedMenu?.slug ?? ''}`}
                           onClick={closeNavigation}
-                          className="flex shrink-0 items-center gap-1.5 text-[8px] font-semibold uppercase tracking-[0.14em]"
-                          style={{ color: '#1B1B1B' }}
+                          className="flex shrink-0 items-center gap-1.5 text-[8px] font-bold uppercase tracking-[0.12em]"
+                          style={{ color: '#111111' }}
                         >
                           View Collection
-                          <ArrowRight className="h-3.5 w-3.5" strokeWidth={1.2} />
+                          <ArrowRight className="h-3.5 w-3.5" strokeWidth={1.4} />
                         </Link>
                       </div>
 
                       {featured.length > 0 ? (
-                        <div className="grid grid-cols-2 gap-4 lg:gap-5">
+                        <div className="grid grid-cols-2 gap-3 lg:grid-cols-3">
                           {featured.slice(0, 6).map((product, index) => (
                             <Link
                               key={product.id}
                               href={`/product/${product.slug}`}
                               onClick={closeNavigation}
-                              className="group block min-w-0"
+                              className="group min-w-0"
                             >
-                              <div
-                                className="relative aspect-[0.80] w-full overflow-hidden"
-                                style={{ backgroundColor: '#ECE8E0' }}
-                              >
+                              <div className="relative aspect-[0.82] w-full overflow-hidden rounded-[2px] bg-[#E9E5DE]">
                                 <img
                                   src={product.images[0]}
                                   alt={product.name}
-                                  className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.04]"
+                                  className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.045]"
                                 />
-                                <span
-                                  className="absolute left-2.5 top-2.5 flex h-6 min-w-6 items-center justify-center px-1 text-[7px] font-semibold"
-                                  style={{
-                                    backgroundColor: 'rgba(250,248,243,0.9)',
-                                    color: '#C6A15B',
-                                  }}
-                                >
+
+                                <span className="absolute left-2 top-2 flex h-6 min-w-6 items-center justify-center rounded-sm bg-[#111111]/90 px-1 text-[7px] font-bold text-[#F7F5F0]">
                                   {String(index + 1).padStart(2, '0')}
                                 </span>
                               </div>
 
-                              <div className="mt-2.5">
-                                <p
-                                  className="line-clamp-2 text-[13px] font-medium leading-[1.45] lg:text-[12px]"
-                                  style={{ color: '#1B1B1B' }}
-                                >
+                              <div className="mt-2">
+                                <p className="line-clamp-2 text-[11px] font-semibold leading-[1.35] text-[#171717] lg:text-[12px]">
                                   {product.name}
                                 </p>
-                                <p
-                                  className="mt-1 text-[7px] uppercase tracking-[0.2em]"
-                                  style={{ color: '#C6A15B' }}
-                                >
+                                <p className="mt-1 text-[7px] font-bold uppercase tracking-[0.18em] text-[#9A1D25]">
                                   ARDENBY
                                 </p>
                               </div>
@@ -758,169 +805,143 @@ export function NavbarHeader({
                         </div>
                       ) : (
                         <div className="py-10 text-center">
-                          <p className="text-[20px]" style={{ color: '#1B1B1B' }}>
+                          <p
+                            className="text-[20px]"
+                            style={{
+                              color: '#111111',
+                              fontFamily:
+                                'Bodoni MT, Didot, Cormorant Garamond, Times New Roman, serif',
+                            }}
+                          >
                             Collection coming soon
                           </p>
                         </div>
                       )}
-                    </div>
+                    </section>
                   );
                 })()}
 
                 {/* SHOP ALL */}
-                <div
-                  className="border-b bg-white"
-                  style={{ borderColor: '#E4DFD4' }}
-                >
+                <div className="border-b border-black/10 bg-white">
                   <Link
                     href="/shop"
                     onClick={closeNavigation}
-                    className="flex min-h-[64px] items-center justify-between px-5 lg:px-6"
+                    className="flex min-h-[62px] items-center justify-between px-5 lg:px-7"
                   >
-                    <span
-                      className="text-[15px] font-semibold uppercase tracking-[0.04em]"
-                      style={{ color: '#1B1B1B' }}
-                    >
+                    <span className="text-[15px] font-bold uppercase tracking-[0.025em] text-[#111111]">
                       Shop All
                     </span>
-                    <ArrowRight className="h-5 w-5" strokeWidth={1.2} style={{ color: '#C9C0B2' }} />
+                    <ChevronDown
+                      className="h-5 w-5"
+                      strokeWidth={1.25}
+                      style={{ color: '#55514B' }}
+                    />
                   </Link>
                 </div>
 
-                {/* ALL CATEGORIES */}
-                <div
-                  className="bg-[#FAF8F3] px-5 pb-6 pt-5 lg:px-6"
-                  style={{ borderColor: '#E4DFD4' }}
-                >
-                  <div className="mb-3 flex items-center justify-between">
-                    <h3
-                      className="text-[19px] font-semibold uppercase tracking-[0.01em]"
-                      style={{ color: '#1B1B1B' }}
-                    >
+                {/* CATEGORIES — IMAGE GRID LIKE SOUL STORE */}
+                <section className="bg-white px-5 pb-6 pt-5 lg:px-7">
+                  <div className="mb-4 flex items-center justify-between">
+                    <h3 className="text-[15px] font-semibold text-[#222222]">
                       Categories
                     </h3>
-                    <span
-                      className="text-[8px] font-semibold uppercase tracking-[0.2em]"
-                      style={{ color: '#C6A15B' }}
-                    >
+                    <span className="text-[8px] font-bold uppercase tracking-[0.2em] text-[#9A1D25]">
                       Explore
                     </span>
                   </div>
 
-                  <div className="divide-y" style={{ borderColor: '#E4DFD4' }}>
+                  <div className="grid grid-cols-3 gap-3 sm:grid-cols-4 lg:grid-cols-5">
                     {topNavItems.map((item, index) => {
                       const categoryData = megaMenu.find(
                         (menu) => menu.slug === item.slug,
                       );
-                      const expanded = mobileExpandedCategory === item.slug;
+                      const categoryImage =
+                        categoryData?.featured?.[0]?.images?.[0];
 
                       return (
-                        <div key={item.slug} style={{ borderColor: '#E4DFD4' }}>
-                          <div className="flex min-h-[68px] items-center gap-3">
-                            <span
-                              className="w-6 shrink-0 text-[8px] font-semibold"
-                              style={{ color: '#C6A15B' }}
-                            >
+                        <Link
+                          key={item.slug}
+                          href={`/shop?category=${item.slug}`}
+                          onClick={closeNavigation}
+                          className="group min-w-0"
+                        >
+                          <div className="relative aspect-[0.78] overflow-hidden rounded-[6px] bg-[#ECE8E1]">
+                            {categoryImage ? (
+                              <img
+                                src={categoryImage}
+                                alt={item.label}
+                                className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.05]"
+                              />
+                            ) : (
+                              <div className="flex h-full items-center justify-center px-2 text-center">
+                                <span className="text-[9px] font-bold uppercase tracking-[0.08em] text-[#77736D]">
+                                  {item.label}
+                                </span>
+                              </div>
+                            )}
+
+                            <span className="absolute bottom-2 left-2 flex h-5 min-w-5 items-center justify-center rounded-sm bg-white/90 px-1 text-[7px] font-bold text-[#9A1D25]">
                               {String(index + 1).padStart(2, '0')}
                             </span>
-
-                            <button
-                              type="button"
-                              onClick={() => toggleMobileCategory(item.slug)}
-                              className="flex flex-1 items-center justify-between text-left"
-                            >
-                              <span
-                                className="text-[14px] font-semibold uppercase tracking-[0.045em] lg:text-[15px]"
-                                style={{ color: '#1B1B1B' }}
-                              >
-                                {item.label}
-                              </span>
-
-                              <ChevronDown
-                                className="mr-1 h-5 w-5 transition-transform duration-300"
-                                style={{
-                                  color: '#C9C0B2',
-                                  transform: expanded
-                                    ? 'rotate(180deg)'
-                                    : 'rotate(0deg)',
-                                }}
-                                strokeWidth={1.2}
-                              />
-                            </button>
                           </div>
 
-                          <AnimatePresence initial={false}>
-                            {expanded && categoryData && (
-                              <motion.div
-                                initial={{ height: 0, opacity: 0 }}
-                                animate={{ height: 'auto', opacity: 1 }}
-                                exit={{ height: 0, opacity: 0 }}
-                                transition={{ duration: 0.25 }}
-                                className="overflow-hidden"
-                              >
-                                <div className="pb-6 pl-9">
-                                  <p
-                                    className="mb-4 max-w-[410px] text-[12px] leading-5"
-                                    style={{ color: '#C9C0B2' }}
-                                  >
-                                    {categoryData.desc}
-                                  </p>
-
-                                  <div className="grid grid-cols-2 gap-4">
-                                    {categoryData.featured
-                                      .slice(0, 6)
-                                      .map((product) => (
-                                        <Link
-                                          key={product.id}
-                                          href={`/product/${product.slug}`}
-                                          onClick={closeNavigation}
-                                          className="group"
-                                        >
-                                          <div
-                                            className="aspect-[0.82] overflow-hidden"
-                                            style={{ backgroundColor: '#ECE8E0' }}
-                                          >
-                                            <img
-                                              src={product.images[0]}
-                                              alt={product.name}
-                                              className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.04]"
-                                            />
-                                          </div>
-                                          <p
-                                            className="mt-2 line-clamp-2 text-[12px] leading-4"
-                                            style={{ color: '#1B1B1B' }}
-                                          >
-                                            {product.name}
-                                          </p>
-                                        </Link>
-                                      ))}
-                                  </div>
-                                </div>
-                              </motion.div>
-                            )}
-                          </AnimatePresence>
-                        </div>
+                          <p className="mt-2 line-clamp-2 text-center text-[9px] font-semibold leading-[1.25] text-[#33312E]">
+                            {item.label}
+                          </p>
+                        </Link>
                       );
                     })}
                   </div>
-                </div>
+                </section>
+
+                {/* ALL CATEGORIES — SAME ARDENBY CONTENT */}
+                <section className="border-t border-black/10 bg-[#F7F5F0] px-5 pb-6 pt-5 lg:px-7">
+                  <div className="mb-3 flex items-center justify-between">
+                    <h3 className="text-[15px] font-semibold text-[#222222]">
+                      All Categories
+                    </h3>
+                    <span className="text-[8px] font-bold uppercase tracking-[0.2em] text-[#9A1D25]">
+                      {topNavItems.length} Collections
+                    </span>
+                  </div>
+
+                  <div className="divide-y divide-black/10 border-y border-black/10">
+                    {topNavItems.map((item, index) => (
+                      <Link
+                        key={`all-${item.slug}`}
+                        href={`/shop?category=${item.slug}`}
+                        onClick={closeNavigation}
+                        className="group flex min-h-[58px] items-center gap-3"
+                      >
+                        <span className="w-7 shrink-0 text-[8px] font-bold text-[#9A1D25]">
+                          {String(index + 1).padStart(2, '0')}
+                        </span>
+
+                        <span className="flex-1 text-[12px] font-bold uppercase tracking-[0.055em] text-[#222222] transition-colors group-hover:text-[#9A1D25]">
+                          {item.label}
+                        </span>
+
+                        <ChevronRight
+                          className="h-4 w-4 text-[#77736D] transition-transform duration-300 group-hover:translate-x-1 group-hover:text-[#9A1D25]"
+                          strokeWidth={1.2}
+                        />
+                      </Link>
+                    ))}
+                  </div>
+                </section>
 
                 {/* ACCOUNT / WISHLIST / CART */}
-                <div
-                  className="border-t bg-white px-5 py-2 lg:px-6"
-                  style={{ borderColor: '#E4DFD4' }}
-                >
+                <div className="border-t border-black/10 bg-white px-5 py-1 lg:px-7">
                   <button
                     type="button"
                     onClick={() => {
                       closeNavigation();
                       handleOpenProfile();
                     }}
-                    className="flex min-h-[58px] w-full items-center gap-3 border-b text-left"
-                    style={{ borderColor: '#E4DFD4' }}
+                    className="group flex min-h-[58px] w-full items-center gap-3 border-b border-black/10 text-left transition-colors hover:text-[#9A1D25]"
                   >
                     <User className="h-[18px] w-[18px]" strokeWidth={1.25} />
-                    <span className="text-[12px] font-semibold uppercase tracking-[0.15em]">
+                    <span className="text-[12px] font-bold uppercase tracking-[0.13em]">
                       {user ? 'My Profile' : 'Login / Register'}
                     </span>
                   </button>
@@ -928,15 +949,14 @@ export function NavbarHeader({
                   <Link
                     href="/wishlist"
                     onClick={closeNavigation}
-                    className="flex min-h-[58px] items-center gap-3 border-b"
-                    style={{ borderColor: '#E4DFD4' }}
+                    className="group flex min-h-[58px] items-center gap-3 border-b border-black/10 transition-colors hover:text-[#9A1D25]"
                   >
                     <Heart className="h-[18px] w-[18px]" strokeWidth={1.25} />
-                    <span className="text-[12px] font-semibold uppercase tracking-[0.15em]">
+                    <span className="text-[12px] font-bold uppercase tracking-[0.13em]">
                       Wishlist
                     </span>
                     {wishlistCount > 0 && (
-                      <span className="ml-auto text-[9px]" style={{ color: '#C6A15B' }}>
+                      <span className="ml-auto text-[9px] font-bold text-[#9A1D25]">
                         {wishlistCount}
                       </span>
                     )}
@@ -948,14 +968,14 @@ export function NavbarHeader({
                       closeNavigation();
                       openCart();
                     }}
-                    className="flex min-h-[58px] w-full items-center gap-3 text-left"
+                    className="group flex min-h-[58px] w-full items-center gap-3 text-left transition-colors hover:text-[#9A1D25]"
                   >
                     <ShoppingCart className="h-[18px] w-[18px]" strokeWidth={1.25} />
-                    <span className="text-[12px] font-semibold uppercase tracking-[0.15em]">
+                    <span className="text-[12px] font-bold uppercase tracking-[0.13em]">
                       Shopping Cart
                     </span>
                     {cartCount > 0 && (
-                      <span className="ml-auto text-[9px]" style={{ color: '#C6A15B' }}>
+                      <span className="ml-auto text-[9px] font-bold text-[#9A1D25]">
                         {cartCount}
                       </span>
                     )}
@@ -965,21 +985,21 @@ export function NavbarHeader({
 
               {/* COMPACT FOOTER */}
               <div
-                className="flex h-[42px] shrink-0 items-center justify-between border-t px-5"
+                className="flex h-[42px] shrink-0 items-center justify-between border-t px-5 lg:px-7"
                 style={{
-                  borderColor: '#E4DFD4',
-                  backgroundColor: '#FFFFFF',
+                  borderColor: BORDER,
+                  backgroundColor: BLACK_SOFT,
                 }}
               >
                 <span
                   className="text-[6px] uppercase tracking-[0.28em]"
-                  style={{ color: '#A29A8E' }}
+                  style={{ color: GREY }}
                 >
                   ARDENBY
                 </span>
                 <span
                   className="text-[6px] uppercase tracking-[0.28em]"
-                  style={{ color: '#C6A15B' }}
+                  style={{ color: RED_BRIGHT }}
                 >
                   Wear Your Essence
                 </span>
