@@ -207,7 +207,7 @@ export function NavbarHeader({
                   className="relative inline-block text-[48px] font-bold uppercase leading-none tracking-[-0.075em] transition-all duration-300 group-hover:scale-[1.015]"
                   style={ARDENBY_LOGO_STYLE}
                 >
-                  ARDENBY
+                  Kovenik
                 </span>
                 <span
                   className="absolute -bottom-[8px] left-1/2 h-[1px] w-0 -translate-x-1/2 transition-all duration-500 group-hover:w-[72%]"

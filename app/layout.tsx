@@ -16,13 +16,13 @@ const inter = Inter({
 
 export const metadata: Metadata = {
   metadataBase: new URL(
-    process.env.NEXT_PUBLIC_SITE_URL || 'https://ardenby.com'
+    process.env.NEXT_PUBLIC_SITE_URL || 'https://kovenik.in'
   ),
 
-  title: 'ARDENBY — Wear Beyond Ordinary | Premium Men\'s Clothing',
+  title: 'Kevonik — Wear Beyond Ordinary | Premium Men\'s Clothing',
 
   description:
-    "Shop premium oversized tees, graphic prints, hoodies, cargos and joggers. Find your style with ARDENBY — luxury men's fashion crafted for the bold.",
+    "Shop premium oversized tees, graphic prints, hoodies, cargos and joggers. Discover Kevonik — premium men's fashion crafted for the bold.",
 
   keywords: [
     'men clothing',
@@ -32,19 +32,32 @@ export const metadata: Metadata = {
     'cargo pants',
     'joggers',
     'premium fashion',
-    'ARDENBY',
+    'Kevonik',
   ],
 
-  // ⭐ ARDENBY Favicon
- icons: {
-  icon: '/icon.png',
-},
+  icons: {
+    icon: [
+      {
+        url: '/image.png',
+        type: 'image/png',
+        sizes: '512x512',
+      },
+    ],
+    apple: [
+      {
+        url: '/image.png',
+        type: 'image/png',
+        sizes: '512x512',
+      },
+    ],
+  },
 
   openGraph: {
-    title: 'ARDENBY — Wear Beyond Ordinary',
+    title: 'Kevonik — Wear Beyond Ordinary',
     description:
       "Premium men's clothing. Oversized tees, graphic prints, hoodies, cargos & more.",
     type: 'website',
+    siteName: 'Kevonik',
   },
 };
 

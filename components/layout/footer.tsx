@@ -9,7 +9,7 @@ import {
   ArrowUpRight,
   ChevronDown,
   ArrowRight,
-  Check,
+  Mail,
 } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
@@ -86,7 +86,10 @@ export function Footer() {
   const handleSubscribe = (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!email.trim()) return;
+    if (!email.trim()) {
+      toast.error("Please enter your email address.");
+      return;
+    }
 
     setSubscribed(true);
 
@@ -109,225 +112,167 @@ export function Footer() {
   };
 
   return (
-    <footer className="relative overflow-hidden border-t border-neutral-800 bg-[#090909] text-stone-200">
+    <footer className="relative overflow-hidden border-t border-white/10 bg-[#080808] text-stone-200">
 
       {/* ============================================================
-          NEWSLETTER / EXCLUSIVE ACCESS
+          NEWSLETTER
       ============================================================ */}
 
-      <section className="border-b border-white/[0.08]">
+      <section className="border-b border-white/10 bg-[#0b0b0b]">
+        <div className="mx-auto max-w-[1440px] px-5 py-14 sm:px-8 sm:py-16 lg:px-12 lg:py-20">
 
-        <div className="mx-auto max-w-[1440px] px-5 py-16 sm:px-8 sm:py-20 lg:px-12 lg:py-24">
+          <div className="grid items-end gap-10 lg:grid-cols-[1fr_0.9fr] lg:gap-20">
 
-          <div className="relative overflow-hidden border border-white/[0.08] bg-[#0D0D0D] px-5 py-12 text-center sm:px-10 sm:py-16 lg:px-16 lg:py-20">
+            {/* LEFT CONTENT */}
 
-            {/* Background rings */}
-            <div
-              aria-hidden="true"
-              className="
-                pointer-events-none
-                absolute
-                -right-40
-                -top-40
-                h-[420px]
-                w-[420px]
-                rounded-full
-                border
-                border-white/[0.035]
-              "
-            />
+            <div>
+              <div className="mb-5 flex items-center gap-3">
+                <span className="h-px w-10 bg-white/30" />
 
-            <div
-              aria-hidden="true"
-              className="
-                pointer-events-none
-                absolute
-                -bottom-48
-                -left-48
-                h-[500px]
-                w-[500px]
-                rounded-full
-                border
-                border-white/[0.03]
-              "
-            />
-
-            <div className="relative z-10 mx-auto max-w-[650px]">
-
-              {/* Eyebrow */}
-              <div className="flex items-center justify-center gap-3">
-
-                <span className="h-px w-7 bg-amber-300/50" />
-
-                <span className="text-[8px] font-semibold uppercase tracking-[0.3em] text-amber-200/80 sm:text-[9px]">
-                  Exclusive Privilege
+                <span className="text-[10px] font-semibold uppercase tracking-[0.28em] text-white/55 sm:text-[11px]">
+                  ARDENBY NEWSLETTER
                 </span>
-
-                <span className="h-px w-7 bg-amber-300/50" />
-
               </div>
 
-              {/* Heading */}
               <h2
                 className="
-                  mt-4
+                  max-w-[720px]
                   font-serif
-                  text-[34px]
+                  text-[42px]
                   font-normal
-                  leading-none
-                  tracking-[-0.04em]
+                  leading-[0.95]
+                  tracking-[-0.035em]
                   text-white
-                  sm:text-[48px]
-                  lg:text-[58px]
+                  sm:text-[52px]
+                  md:text-[62px]
+                  lg:text-[70px]
                 "
               >
-                Join the ARDENBY Fam
+                Stay in the
+                <span className="block italic text-white/55">
+                  inner circle.
+                </span>
               </h2>
 
-              {/* Description */}
-              <p className="mx-auto mt-4 max-w-[480px] text-[10px] font-light leading-5 text-neutral-400 sm:text-[12px] sm:leading-6">
-                Get early access to limited drops, runway insights,
-                and 10% off your inaugural order.
+              <p className="mt-6 max-w-[560px] text-[14px] font-light leading-[1.8] text-neutral-400 sm:text-[15px] lg:text-[16px]">
+                Get first access to new drops, exclusive collections,
+                private releases and 10% off your first order.
+              </p>
+            </div>
+
+            {/* RIGHT EMAIL FORM */}
+
+            <div className="w-full">
+
+              <p className="mb-4 text-[11px] font-semibold uppercase tracking-[0.2em] text-white/65 sm:text-[12px]">
+                Join ARDENBY
               </p>
 
-              {/* ======================================================
-                  SUCCESS
-              ====================================================== */}
-
-              {subscribed ? (
-
-                <div className="mx-auto mt-8 flex w-fit items-center gap-3 border border-white/10 bg-white/[0.04] px-5 py-3.5">
-
-                  <div className="flex h-7 w-7 items-center justify-center rounded-full bg-emerald-400/10">
-                    <Check className="h-3.5 w-3.5 text-emerald-400" />
-                  </div>
-
-                  <div className="text-left">
-                    <p className="text-[9px] font-semibold uppercase tracking-[0.15em] text-white">
-                      You're In
-                    </p>
-
-                    <p className="mt-0.5 text-[9px] text-neutral-500">
-                      Welcome to the ARDENBY family.
-                    </p>
-                  </div>
-
-                </div>
-
-              ) : (
-
-                /* ====================================================
-                   FORM
-                ==================================================== */
-
-                <form
-                  onSubmit={handleSubscribe}
+              <form
+                onSubmit={handleSubscribe}
+                className="group relative"
+              >
+                <div
                   className="
-                    mx-auto
-                    mt-8
                     flex
-                    w-full
-                    max-w-[520px]
-                    flex-col
-                    gap-2
-                    sm:flex-row
-                    sm:gap-2.5
+                    min-h-[64px]
+                    items-center
+                    border
+                    border-white/15
+                    bg-white/[0.035]
+                    transition-all
+                    duration-300
+                    focus-within:border-white/40
+                    focus-within:bg-white/[0.055]
+                    sm:min-h-[70px]
                   "
                 >
+                  {/* EMAIL ICON */}
+
+                  <div className="flex shrink-0 items-center pl-5 text-white/40 sm:pl-6">
+                    <Mail className="h-5 w-5" strokeWidth={1.4} />
+                  </div>
+
+                  {/* INPUT */}
 
                   <input
                     type="email"
-                    required
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     placeholder="Enter your email address"
                     aria-label="Email address"
                     className="
-                      h-12
-                      w-full
                       min-w-0
                       flex-1
-                      border
-                      border-white/10
-                      bg-white/[0.045]
+                      bg-transparent
                       px-4
-                      text-[10px]
+                      text-[14px]
+                      font-light
+                      tracking-wide
                       text-white
                       outline-none
                       placeholder:text-neutral-600
-                      transition-all
-                      duration-300
-                      focus:border-white/30
-                      focus:bg-white/[0.07]
-                      sm:h-[50px]
                       sm:px-5
-                      sm:text-[11px]
+                      sm:text-[15px]
                     "
                   />
 
+                  {/* BUTTON */}
+
                   <button
                     type="submit"
+                    disabled={subscribed}
                     className="
-                      group
-                      inline-flex
-                      h-12
+                      mr-1.5
+                      flex
+                      h-[52px]
                       shrink-0
                       items-center
-                      justify-center
-                      gap-2
+                      gap-3
                       bg-white
-                      px-7
-                      text-[8px]
+                      px-5
+                      text-[10px]
                       font-bold
                       uppercase
-                      tracking-[0.2em]
+                      tracking-[0.18em]
                       text-black
                       transition-all
                       duration-300
                       hover:bg-neutral-200
-                      active:scale-[0.98]
-                      sm:h-[50px]
-                      sm:px-8
-                      sm:text-[9px]
+                      sm:mr-2
+                      sm:h-[56px]
+                      sm:px-7
                     "
                   >
-                    Subscribe
+                    <span>
+                      {subscribed ? "Joined" : "Join"}
+                    </span>
 
                     <ArrowRight
-                      className="
-                        h-3.5
-                        w-3.5
-                        transition-transform
-                        duration-300
-                        group-hover:translate-x-1
-                      "
+                      className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1"
+                      strokeWidth={1.8}
                     />
                   </button>
+                </div>
 
-                </form>
-
-              )}
-
-              {!subscribed && (
-                <p className="mt-4 text-[7px] uppercase tracking-[0.2em] text-neutral-600">
-                  No spam. Just ARDENBY.
+                <p className="mt-4 text-[10px] leading-relaxed text-neutral-600 sm:text-[11px]">
+                  By subscribing, you agree to receive ARDENBY updates,
+                  product launches and offers.
                 </p>
-              )}
-
+              </form>
             </div>
-          </div>
 
+          </div>
         </div>
       </section>
-
 
       {/* ============================================================
           MAIN FOOTER CONTENT
       ============================================================ */}
 
-      <section className="mx-auto max-w-[1440px] px-5 py-14 sm:px-8 sm:py-16 lg:px-12 lg:py-20">
+      <section className="mx-auto max-w-[1440px] px-5 py-16 sm:px-8 sm:py-20 lg:px-12 lg:py-24">
 
-        <div className="grid gap-12 md:grid-cols-5 lg:gap-16">
+        <div className="grid gap-14 md:grid-cols-5 lg:gap-16">
 
           {/* ========================================================
               BRAND
@@ -339,12 +284,11 @@ export function Footer() {
               href="/"
               className="group inline-block"
             >
-
               <div className="flex flex-col leading-none">
 
                 <span
                   className="
-                    text-[30px]
+                    text-[38px]
                     font-bold
                     uppercase
                     tracking-[-0.08em]
@@ -352,7 +296,7 @@ export function Footer() {
                     transition-opacity
                     duration-300
                     group-hover:opacity-80
-                    sm:text-[34px]
+                    sm:text-[44px]
                   "
                   style={{
                     fontFamily: "Didot, Bodoni MT, serif",
@@ -361,55 +305,49 @@ export function Footer() {
                   ARDENBY
                 </span>
 
-                <div className="mt-2 flex items-center gap-2">
+                <div className="mt-3 flex items-center gap-3">
 
-                  <span className="h-px w-7 bg-white/35" />
+                  <span className="h-px w-9 bg-white/35" />
 
-                  <span className="text-[7px] uppercase tracking-[0.34em] text-white/60">
+                  <span className="text-[9px] uppercase tracking-[0.34em] text-white/60">
                     WEAR YOUR ESSENCE
                   </span>
 
-                  <span className="h-px w-7 bg-white/35" />
+                  <span className="h-px w-9 bg-white/35" />
 
                 </div>
-
               </div>
-
             </Link>
-
 
             {/* BRAND DESCRIPTION */}
 
-            <p className="mt-6 max-w-[390px] text-[11px] font-light leading-[1.8] text-neutral-500 sm:text-[12px]">
+            <p className="mt-7 max-w-[430px] text-[14px] font-light leading-[1.85] text-neutral-400 sm:text-[15px]">
               Premium men's clothing crafted for the bold.
               High-density fabrics, relaxed cuts, and minimalist
               luxury aesthetics.
             </p>
 
-
             {/* BRAND DETAIL */}
 
-            <div className="mt-7 flex items-center gap-3">
+            <div className="mt-8 flex items-center gap-4">
 
-              <span className="font-mono text-[8px] tracking-[0.2em] text-neutral-600">
+              <span className="font-mono text-[10px] tracking-[0.2em] text-neutral-500">
                 EST. 2026
               </span>
 
-              <span className="h-px w-6 bg-neutral-800" />
+              <span className="h-px w-8 bg-neutral-700" />
 
-              <span className="text-[7px] font-semibold uppercase tracking-[0.2em] text-neutral-600">
+              <span className="text-[10px] font-semibold uppercase tracking-[0.2em] text-neutral-500">
                 INDIA
               </span>
 
             </div>
 
-
             {/* SOCIALS */}
 
-            <div className="mt-7 flex gap-2.5">
+            <div className="mt-9 flex gap-3">
 
               {socialLinks.map(({ Icon, href, label }) => (
-
                 <a
                   key={label}
                   href={href}
@@ -417,44 +355,49 @@ export function Footer() {
                   className="
                     group
                     flex
-                    h-9
-                    w-9
+                    h-11
+                    w-11
                     items-center
                     justify-center
                     border
-                    border-white/[0.08]
+                    border-white/[0.10]
                     bg-white/[0.025]
-                    text-neutral-500
+                    text-neutral-400
                     transition-all
                     duration-300
-                    hover:border-white/20
+                    hover:border-white/30
                     hover:bg-white
                     hover:text-black
                   "
                 >
                   <Icon
-                    className="h-3.5 w-3.5"
+                    className="h-[17px] w-[17px]"
                     strokeWidth={1.5}
                   />
                 </a>
-
               ))}
 
             </div>
 
           </div>
 
-
           {/* ========================================================
               DYNAMIC LINK COLUMNS
           ======================================================== */}
 
           {Object.entries(footerLinks).map(
-            ([title, links], columnIndex) => (
+            ([title, links]) => (
 
               <div
                 key={title}
-                className="border-b border-white/[0.07] pb-5 last:border-b-0 md:border-none md:pb-0"
+                className="
+                  border-b
+                  border-white/[0.09]
+                  pb-6
+                  last:border-b-0
+                  md:border-none
+                  md:pb-0
+                "
               >
 
                 {/* COLUMN HEADER */}
@@ -472,15 +415,15 @@ export function Footer() {
                   "
                 >
 
-                  <span className="text-[9px] font-semibold uppercase tracking-[0.22em] text-white">
+                  <span className="text-[12px] font-bold uppercase tracking-[0.2em] text-white">
                     {title}
                   </span>
 
                   <ChevronDown
                     className={`
-                      h-3.5
-                      w-3.5
-                      text-neutral-500
+                      h-4
+                      w-4
+                      text-neutral-400
                       transition-transform
                       duration-300
                       md:hidden
@@ -494,13 +437,12 @@ export function Footer() {
 
                 </button>
 
-
                 {/* LINKS */}
 
                 <ul
                   className={`
-                    mt-4
-                    space-y-3
+                    mt-6
+                    space-y-4
                     overflow-hidden
                     transition-all
                     duration-300
@@ -514,7 +456,7 @@ export function Footer() {
                   `}
                 >
 
-                  {links.map((link, linkIndex) => (
+                  {links.map((link) => (
 
                     <li key={link.label}>
 
@@ -524,14 +466,15 @@ export function Footer() {
                           group
                           inline-flex
                           items-center
-                          gap-1.5
-                          text-[10px]
+                          gap-2
+                          text-[13px]
                           font-light
-                          text-neutral-500
+                          leading-relaxed
+                          text-neutral-400
                           transition-colors
                           duration-200
                           hover:text-white
-                          sm:text-[11px]
+                          sm:text-[14px]
                         "
                       >
 
@@ -541,8 +484,8 @@ export function Footer() {
 
                         <ArrowUpRight
                           className="
-                            h-2.5
-                            w-2.5
+                            h-3.5
+                            w-3.5
                             opacity-0
                             transition-all
                             duration-200
@@ -569,27 +512,35 @@ export function Footer() {
 
       </section>
 
-
       {/* ============================================================
           MARQUEE
       ============================================================ */}
 
-      <div className="overflow-hidden border-y border-white/[0.07] bg-black/30 py-4">
+      <div className="overflow-hidden border-y border-white/[0.08] bg-black/30 py-5">
 
-        <div className="flex w-max animate-[marquee_40s_linear_infinite] gap-8">
+        <div className="flex w-max animate-[marquee_40s_linear_infinite] gap-10">
 
           {Array.from({ length: 18 }).map((_, index) => (
 
             <div
               key={index}
-              className="flex items-center gap-8 whitespace-nowrap"
+              className="flex items-center gap-10 whitespace-nowrap"
             >
 
-              <span className="font-serif text-[20px] tracking-[0.12em] text-neutral-600 sm:text-[26px]">
+              <span
+                className="
+                  font-serif
+                  text-[27px]
+                  tracking-[0.12em]
+                  text-neutral-500
+                  sm:text-[34px]
+                  lg:text-[40px]
+                "
+              >
                 {marqueeText}
               </span>
 
-              <span className="h-1 w-1 rounded-full bg-amber-200/40" />
+              <span className="h-1.5 w-1.5 rounded-full bg-white/30" />
 
             </div>
 
@@ -599,43 +550,65 @@ export function Footer() {
 
       </div>
 
-
       {/* ============================================================
           BOTTOM BAR
       ============================================================ */}
 
       <div className="mx-auto max-w-[1440px] px-5 sm:px-8 lg:px-12">
 
-        <div className="flex flex-col gap-5 py-6 sm:flex-row sm:items-center sm:justify-between">
+        <div className="flex flex-col gap-6 py-8 sm:flex-row sm:items-center sm:justify-between">
 
           {/* COPYRIGHT */}
 
-          <p className="text-[8px] font-mono uppercase tracking-[0.08em] text-neutral-600 sm:text-[9px]">
+          <p className="text-[10px] font-mono uppercase tracking-[0.08em] text-neutral-500 sm:text-[11px]">
             © 2026 ARDENBY. All rights reserved.
           </p>
 
-
           {/* LEGAL LINKS */}
 
-          <div className="flex flex-wrap gap-x-5 gap-y-2">
+          <div className="flex flex-wrap gap-x-7 gap-y-3">
 
             <Link
               href="/privacy"
-              className="text-[8px] uppercase tracking-[0.12em] text-neutral-600 transition-colors hover:text-neutral-300 sm:text-[9px]"
+              className="
+                text-[10px]
+                uppercase
+                tracking-[0.12em]
+                text-neutral-500
+                transition-colors
+                hover:text-white
+                sm:text-[11px]
+              "
             >
               Privacy Policy
             </Link>
 
             <Link
               href="/terms"
-              className="text-[8px] uppercase tracking-[0.12em] text-neutral-600 transition-colors hover:text-neutral-300 sm:text-[9px]"
+              className="
+                text-[10px]
+                uppercase
+                tracking-[0.12em]
+                text-neutral-500
+                transition-colors
+                hover:text-white
+                sm:text-[11px]
+              "
             >
               Terms of Service
             </Link>
 
             <Link
               href="/admin"
-              className="text-[8px] uppercase tracking-[0.12em] text-neutral-600 transition-colors hover:text-neutral-300 sm:text-[9px]"
+              className="
+                text-[10px]
+                uppercase
+                tracking-[0.12em]
+                text-neutral-500
+                transition-colors
+                hover:text-white
+                sm:text-[11px]
+              "
             >
               Admin Portal
             </Link>
@@ -646,12 +619,11 @@ export function Footer() {
 
       </div>
 
-
       {/* ============================================================
           FOOTER WORDMARK
       ============================================================ */}
 
-      <div className="pointer-events-none select-none overflow-hidden px-2 pb-[-1px]">
+      <div className="pointer-events-none select-none overflow-hidden px-2">
 
         <p
           className="
@@ -662,7 +634,7 @@ export function Footer() {
             font-normal
             leading-[0.65]
             tracking-[-0.08em]
-            text-white/[0.025]
+            text-white/[0.035]
           "
         >
           ARDENBY
