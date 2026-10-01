@@ -22,7 +22,7 @@ const footerLinks = {
   Categories: [
     { label: "Supreme Edition", href: "/shop?category=supreme-edition" },
     { label: "Epic Thread", href: "/shop?category=epic-thread" },
-    { label: "Ardenby Premium", href: "/shop?category=ardenby-premium" },
+    { label: "Kovenik Premium", href: "/shop?category=ardenby-premium" },
     { label: "The Print Club", href: "/shop?category=the-print-club" },
     { label: "Bottom Wear", href: "/shop?category=bottom-wear" },
   ],
@@ -94,7 +94,7 @@ export function Footer() {
     setSubscribed(true);
 
     toast.success(
-      "Welcome to the ARDENBY Fam! Check your inbox for 10% off."
+      "Welcome to the Kovenik Fam! Check your inbox for 10% off."
     );
 
     setEmail("");
@@ -130,7 +130,7 @@ export function Footer() {
                 <span className="h-px w-10 bg-white/30" />
 
                 <span className="text-[10px] font-semibold uppercase tracking-[0.28em] text-white/55 sm:text-[11px]">
-                  ARDENBY NEWSLETTER
+                  KOVENIK NEWSLETTER
                 </span>
               </div>
 
@@ -165,7 +165,7 @@ export function Footer() {
             <div className="w-full">
 
               <p className="mb-4 text-[11px] font-semibold uppercase tracking-[0.2em] text-white/65 sm:text-[12px]">
-                Join ARDENBY
+                Join KOVENIK
               </p>
 
               <form
@@ -256,7 +256,7 @@ export function Footer() {
                 </div>
 
                 <p className="mt-4 text-[10px] leading-relaxed text-neutral-600 sm:text-[11px]">
-                  By subscribing, you agree to receive ARDENBY updates,
+                  By subscribing, you agree to receive KOVENIK updates,
                   product launches and offers.
                 </p>
               </form>
@@ -302,7 +302,7 @@ export function Footer() {
                     fontFamily: "Didot, Bodoni MT, serif",
                   }}
                 >
-                  ARDENBY
+                  KOVENIK
                 </span>
 
                 <div className="mt-3 flex items-center gap-3">
@@ -561,7 +561,7 @@ export function Footer() {
           {/* COPYRIGHT */}
 
           <p className="text-[10px] font-mono uppercase tracking-[0.08em] text-neutral-500 sm:text-[11px]">
-            © 2026 ARDENBY. All rights reserved.
+            © 2026 KOVENIK. All rights reserved.
           </p>
 
           {/* LEGAL LINKS */}
@@ -637,7 +637,7 @@ export function Footer() {
             text-white/[0.035]
           "
         >
-          ARDENBY
+          KOVENIK
         </p>
 
       </div>

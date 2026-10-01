@@ -36,63 +36,46 @@ type NavbarHeaderProps = {
 };
 
 /* ---------------------------------------------------------------------------
-   ARDENBY — dark editorial / red accent
+   KOVENIK — dark editorial / red accent
 --------------------------------------------------------------------------- */
 
-const BLACK = '#0D0D0D';
-const BLACK_SOFT = '#151515';
-const BLACK_LIGHT = '#1D1D1B';
+const BLACK = '#080808';
+const BLACK_SOFT = '#0D0D0D';
+const BLACK_LIGHT = '#161616';
 const WHITE = '#F5F3EE';
 const WHITE_SOFT = '#C8C3BA';
-const RED = '#8D713E';
-const RED_BRIGHT = '#C6A15B';
-const GREY = '#8C877F';
-const BORDER = '#2A2927';
+const RED = '#8B1E1E';
+const RED_BRIGHT = '#D4AF37';
+const GREY = '#9A968F';
+const BORDER = '#3A2A16';
 const ARDENBY_LOGO_STYLE = {
     color: WHITE,
     fontFamily:
       'Bodoni MT, Didot, Cormorant Garamond, Times New Roman, serif',
 
     backgroundImage: `
-      radial-gradient(circle at 3% 45%, #C6A15B 0 2px, transparent 2.5px),
-      radial-gradient(circle at 7% 20%, #E33A3A 0 1.5px, transparent 2px),
-      radial-gradient(circle at 12% 75%, #B82020 0 3px, transparent 3.5px),
-      radial-gradient(circle at 18% 8%, #D52A2A 0 2px, transparent 2.5px),
-      radial-gradient(circle at 25% 92%, #E33A3A 0 1.5px, transparent 2px),
-      radial-gradient(circle at 34% 3%, #C6A15B 0 3px, transparent 3.5px),
-      radial-gradient(circle at 43% 95%, #D52A2A 0 2px, transparent 2.5px),
-      radial-gradient(circle at 52% 4%, #E33A3A 0 1.5px, transparent 2px),
-      radial-gradient(circle at 62% 94%, #B82020 0 3px, transparent 3.5px),
-      radial-gradient(circle at 71% 7%, #D52A2A 0 2px, transparent 2.5px),
-      radial-gradient(circle at 79% 91%, #E33A3A 0 2px, transparent 2.5px),
-      radial-gradient(circle at 88% 15%, #C6A15B 0 3px, transparent 3.5px),
-      radial-gradient(circle at 94% 48%, #E33A3A 0 2px, transparent 2.5px),
-      radial-gradient(circle at 98% 78%, #B82020 0 3px, transparent 3.5px),
-
-      radial-gradient(circle at 8% 50%, #D71920 0 5px, transparent 6px),
-      radial-gradient(circle at 17% 35%, #E21B23 0 2px, transparent 3px),
-      radial-gradient(circle at 29% 18%, #C9151D 0 4px, transparent 5px),
-      radial-gradient(circle at 40% 12%, #E21B23 0 2px, transparent 3px),
-      radial-gradient(circle at 57% 14%, #D71920 0 4px, transparent 5px),
-      radial-gradient(circle at 68% 22%, #E21B23 0 2px, transparent 3px),
-      radial-gradient(circle at 82% 32%, #C9151D 0 4px, transparent 5px),
-      radial-gradient(circle at 92% 60%, #E21B23 0 2px, transparent 3px),
-
-      radial-gradient(circle at 15% 68%, #D71920 0 3px, transparent 4px),
-      radial-gradient(circle at 27% 82%, #E21B23 0 5px, transparent 6px),
-      radial-gradient(circle at 39% 72%, #C9151D 0 2px, transparent 3px),
-      radial-gradient(circle at 51% 88%, #E21B23 0 3px, transparent 4px),
-      radial-gradient(circle at 64% 78%, #D71920 0 4px, transparent 5px),
-      radial-gradient(circle at 76% 86%, #E21B23 0 2px, transparent 3px),
-      radial-gradient(circle at 87% 72%, #C9151D 0 4px, transparent 5px)
+      radial-gradient(circle at 3% 45%, #D4AF37 0 2px, transparent 2.5px),
+      radial-gradient(circle at 7% 20%, #8B1E1E 0 1.5px, transparent 2px),
+      radial-gradient(circle at 12% 75%, #A52A2A 0 3px, transparent 3.5px),
+      radial-gradient(circle at 18% 8%, #D4AF37 0 2px, transparent 2.5px),
+      radial-gradient(circle at 25% 92%, #8B1E1E 0 1.5px, transparent 2px),
+      radial-gradient(circle at 34% 3%, #E6CA65 0 3px, transparent 3.5px),
+      radial-gradient(circle at 43% 95%, #A52A2A 0 2px, transparent 2.5px),
+      radial-gradient(circle at 52% 4%, #D4AF37 0 1.5px, transparent 2px),
+      radial-gradient(circle at 62% 94%, #8B1E1E 0 3px, transparent 3.5px),
+      radial-gradient(circle at 71% 7%, #D4AF37 0 2px, transparent 2.5px),
+      radial-gradient(circle at 79% 91%, #A52A2A 0 2px, transparent 2.5px),
+      radial-gradient(circle at 88% 15%, #E6CA65 0 3px, transparent 3.5px),
+      radial-gradient(circle at 94% 48%, #D4AF37 0 2px, transparent 2.5px),
+      radial-gradient(circle at 98% 78%, #8B1E1E 0 3px, transparent 3.5px)
     `,
 
     backgroundRepeat: 'no-repeat',
 
     textShadow: `
-      2px 0 0 rgba(200,50,50,0.85),
-      -2px 0 0 rgba(110,15,15,0.65),
-      0 4px 0 rgba(165,35,35,0.5),
+      2px 0 0 rgba(139,30,30,0.85),
+      -2px 0 0 rgba(80,15,15,0.65),
+      0 4px 0 rgba(212,175,55,0.45),
       0 8px 18px rgba(0,0,0,0.6)
     `,
 };
@@ -169,7 +152,7 @@ export function NavbarHeader({
           className="hidden w-full border-b lg:block"
           style={{
             borderColor: 'rgba(216,189,130,0.16)',
-            backgroundColor: '#0A0A0A',
+            backgroundColor: '#080808',
           }}
         >
           <div className="mx-auto w-full max-w-[1700px] px-6 xl:px-10">
@@ -184,17 +167,15 @@ export function NavbarHeader({
                   style={{ color: WHITE_SOFT }}
                 >
                   <span
-                    className="flex h-[38px] w-[38px] items-center justify-center rounded-full border transition-all duration-300 group-hover:bg-[#D8BD82]/[0.08]"
+                    className="flex h-[40px] w-[40px] items-center justify-center rounded-full border transition-all duration-300 group-hover:bg-[#D4AF37]/[0.08]"
                     style={{ borderColor: 'rgba(216,189,130,0.28)' }}
                   >
                     <Menu
-                      className="h-[18px] w-[18px] transition-all duration-300 group-hover:scale-105 group-hover:text-[#D8BD82]"
+                      className="h-[19px] w-[19px] transition-all duration-300 group-hover:scale-105 group-hover:text-[#D4AF37]"
                       strokeWidth={1.15}
                     />
                   </span>
-                  <span className="text-[10px] font-medium uppercase tracking-[0.28em] transition-colors duration-300 group-hover:text-[#D8BD82]">
-                    Menu
-                  </span>
+                  
                 </button>
               </div>
 
@@ -211,7 +192,7 @@ export function NavbarHeader({
                 </span>
                 <span
                   className="absolute -bottom-[8px] left-1/2 h-[1px] w-0 -translate-x-1/2 transition-all duration-500 group-hover:w-[72%]"
-                  style={{ backgroundColor: '#D8BD82' }}
+                  style={{ backgroundColor: '#D4AF37' }}
                 />
               </Link>
 
@@ -221,9 +202,9 @@ export function NavbarHeader({
                 <button
                   type="button"
                   onClick={() => setSearchOpen(true)}
-                  className="group flex h-[40px] items-center gap-2.5 rounded-full border px-4 transition-all duration-300 hover:bg-[#D8BD82]/[0.08] hover:shadow-[0_0_18px_rgba(216,189,130,0.14)]"
+                  className="group flex h-[40px] items-center gap-2.5 rounded-full border px-4 transition-all duration-300 hover:bg-[#D4AF37]/[0.08] hover:shadow-[0_0_18px_rgba(216,189,130,0.14)]"
                   style={{
-                    color: '#D8BD82',
+                    color: '#D4AF37',
                     borderColor: 'rgba(216,189,130,0.42)',
                     backgroundColor: 'rgba(216,189,130,0.045)',
                   }}
@@ -232,7 +213,7 @@ export function NavbarHeader({
                     className="h-[17px] w-[17px] transition-transform duration-300 group-hover:scale-110 group-hover:rotate-[-6deg]"
                     strokeWidth={1.25}
                   />
-                  <span className="text-[10px] font-semibold uppercase tracking-[0.23em] transition-colors group-hover:text-[#F1D99B]">
+                  <span className="text-[12px] font-semibold uppercase tracking-[0.20em] transition-colors group-hover:text-[#F5D76E]">
                     Search
                   </span>
                 </button>
@@ -242,15 +223,15 @@ export function NavbarHeader({
                   type="button"
                   onClick={handleOpenProfile}
                   aria-label={user ? 'My profile' : 'Login'}
-                  className="group flex h-[40px] w-[40px] items-center justify-center rounded-full border transition-all duration-300 hover:bg-[#D8BD82]/[0.08] hover:shadow-[0_0_16px_rgba(216,189,130,0.16)]"
+                  className="group flex h-[40px] w-[40px] items-center justify-center rounded-full border transition-all duration-300 hover:bg-[#D4AF37]/[0.08] hover:shadow-[0_0_16px_rgba(216,189,130,0.16)]"
                   style={{
-                    color: '#D8BD82',
+                    color: '#D4AF37',
                     borderColor: 'rgba(216,189,130,0.28)',
                     backgroundColor: 'rgba(216,189,130,0.035)',
                   }}
                 >
                   <User
-                    className="h-[18px] w-[18px] transition-all duration-300 group-hover:scale-110 group-hover:text-[#F1D99B]"
+                    className="h-[18px] w-[18px] transition-all duration-300 group-hover:scale-110 group-hover:text-[#F5D76E]"
                     strokeWidth={1.2}
                   />
                 </button>
@@ -259,20 +240,20 @@ export function NavbarHeader({
                 <Link
                   href="/wishlist"
                   aria-label="Wishlist"
-                  className="group relative flex h-[40px] w-[40px] items-center justify-center rounded-full border transition-all duration-300 hover:bg-[#D8BD82]/[0.08] hover:shadow-[0_0_16px_rgba(216,189,130,0.16)]"
+                  className="group relative flex h-[40px] w-[40px] items-center justify-center rounded-full border transition-all duration-300 hover:bg-[#D4AF37]/[0.08] hover:shadow-[0_0_16px_rgba(216,189,130,0.16)]"
                   style={{
-                    color: '#D8BD82',
+                    color: '#D4AF37',
                     borderColor: 'rgba(216,189,130,0.28)',
                     backgroundColor: 'rgba(216,189,130,0.035)',
                   }}
                 >
                   <Heart
-                    className="h-[18px] w-[18px] transition-all duration-300 group-hover:scale-110 group-hover:fill-[#D8BD82]/10 group-hover:text-[#F1D99B]"
+                    className="h-[18px] w-[18px] transition-all duration-300 group-hover:scale-110 group-hover:fill-[#D4AF37]/10 group-hover:text-[#F5D76E]"
                     strokeWidth={1.2}
                   />
                   {wishlistCount > 0 && (
                     <span
-                      className="absolute -right-1 -top-1 flex h-[16px] min-w-[16px] items-center justify-center rounded-full border px-1 text-[7px] font-bold"
+                      className="absolute -right-2 -top-2 z-20 flex h-[22px] min-w-[22px] items-center justify-center rounded-full border-2 px-1 text-[10px] font-extrabold leading-none shadow-[0_4px_12px_rgba(154,29,37,0.45)]"
                       style={{
                         backgroundColor: '#C6A15B',
                         color: '#0D0D0D',
@@ -291,9 +272,9 @@ export function NavbarHeader({
                   aria-label="Shopping cart"
                   whileHover={{ y: -1 }}
                   whileTap={{ scale: 0.94 }}
-                  className="group relative flex h-[40px] w-[40px] items-center justify-center rounded-full border transition-all duration-300 hover:bg-[#D8BD82]/[0.08] hover:shadow-[0_0_16px_rgba(216,189,130,0.16)]"
+                  className="group relative flex h-[40px] w-[40px] items-center justify-center rounded-full border transition-all duration-300 hover:bg-[#D4AF37]/[0.08] hover:shadow-[0_0_16px_rgba(216,189,130,0.16)]"
                   style={{
-                    color: '#D8BD82',
+                    color: '#D4AF37',
                     borderColor: 'rgba(216,189,130,0.28)',
                     backgroundColor: 'rgba(216,189,130,0.035)',
                   }}
@@ -304,7 +285,7 @@ export function NavbarHeader({
                   />
                   {cartCount > 0 && (
                     <span
-                      className="absolute -right-1 -top-1 flex h-[16px] min-w-[16px] items-center justify-center rounded-full border px-1 text-[7px] font-bold"
+                      className="absolute -right-2 -top-2 z-20 flex h-[22px] min-w-[22px] items-center justify-center rounded-full border-2 px-1 text-[10px] font-extrabold leading-none shadow-[0_4px_12px_rgba(154,29,37,0.45)]"
                       style={{
                         backgroundColor: '#C6A15B',
                         color: '#0D0D0D',
@@ -343,21 +324,21 @@ export function NavbarHeader({
                   <Link
                     href={`/shop?category=${item.slug}`}
                     className="group relative flex h-full items-center px-5 xl:px-6"
-                    style={{ color: active ? '#D8BD82' : WHITE }}
+                    style={{ color: active ? '#D4AF37' : WHITE }}
                   >
-                    <span className="whitespace-nowrap text-[12px] font-semibold uppercase tracking-[0.13em] transition-all duration-300 group-hover:text-[#D8BD82]">
+                    <span className="whitespace-nowrap text-[13px] font-bold uppercase tracking-[0.12em] transition-all duration-300 group-hover:text-[#D4AF37]">
                       {item.label}
                     </span>
                     <span
                       className="absolute bottom-0 left-5 right-5 h-[1px] origin-center transition-transform duration-300 xl:left-6 xl:right-6"
                       style={{
-                        backgroundColor: '#D8BD82',
+                        backgroundColor: '#D4AF37',
                         transform: active ? 'scaleX(1)' : 'scaleX(0)',
                       }}
                     />
                     <span
                       className="absolute bottom-0 left-1/2 h-[3px] w-[18px] -translate-x-1/2 rounded-full opacity-0 blur-[3px] transition-opacity duration-300 group-hover:opacity-70"
-                      style={{ backgroundColor: '#D8BD82' }}
+                      style={{ backgroundColor: '#D4AF37' }}
                     />
                   </Link>
                 </div>
@@ -382,12 +363,13 @@ export function NavbarHeader({
               style={{
                 backgroundColor: BLACK_SOFT,
                 borderColor: BORDER,
-                boxShadow: '0 28px 65px rgba(0,0,0,0.5)',
+                boxShadow: '0 22px 55px rgba(0,0,0,0.48)',
+                 borderTop: '1px solid rgba(212,175,55,0.30)',
               }}
               onMouseEnter={() => setMegaOpen(true)}
               onMouseLeave={closeMega}
             >
-              <div className="mx-auto w-full max-w-[1500px] px-7 py-3.5 xl:px-10">
+              <div className="mx-auto w-full max-w-[1500px] px-7 py-2.5 xl:px-10">
                 <div
                   className="mb-3 flex items-end justify-between border-b pb-3"
                   style={{ borderColor: BORDER }}
@@ -395,7 +377,7 @@ export function NavbarHeader({
                   <div>
                     <Link href={`/shop?category=${activeMegaMenu.slug}`}>
                       <h3
-                        className="text-[21px] font-medium uppercase tracking-[0.02em]"
+                        className="text-[25px] font-medium uppercase tracking-[0.02em]"
                         style={{
                           color: WHITE,
                           fontFamily:
@@ -411,7 +393,7 @@ export function NavbarHeader({
                       />
 
                       <p
-                        className="mt-2 max-w-[620px] text-[11px] leading-[1.125rem]"
+                        className="mt-2 max-w-[680px] text-[13px] leading-[1.35rem]"
                         style={{ color: GREY }}
                       >
                         {activeMegaMenu.desc}
@@ -421,7 +403,7 @@ export function NavbarHeader({
 
                   <Link
                     href={`/shop?category=${activeMegaMenu.slug}`}
-                    className="group flex items-center gap-2 text-[10px] font-semibold uppercase tracking-[0.18em]"
+                    className="group flex items-center gap-2 text-[12px] font-semibold uppercase tracking-[0.15em]"
                     style={{ color: WHITE }}
                   >
                     View Collection
@@ -441,17 +423,17 @@ export function NavbarHeader({
                         className="group min-w-0"
                       >
                         <div
-                          className="relative aspect-[4/5] w-full min-w-0 overflow-hidden"
+                          className="relative aspect-[4/3] w-full min-w-0 overflow-hidden rounded-[2px] bg-transparent"
                           style={{ backgroundColor: BLACK_LIGHT }}
                         >
                           <img
                             src={p.images[0]}
                             alt={p.name}
-                            className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.04]"
+                            className="h-full w-full object-cover object-center transition-transform duration-500 group-hover:scale-[1.015]"
                           />
 
                           <span
-                            className="absolute left-3 top-3 flex h-7 min-w-7 items-center justify-center px-2 text-[8px] font-semibold"
+                            className="absolute left-2 top-2 flex h-6 min-w-6 items-center justify-center px-1.5 text-[7px] font-semibold"
                             style={{
                               backgroundColor: 'rgba(13,13,13,0.78)',
                               color: RED_BRIGHT,
@@ -461,7 +443,7 @@ export function NavbarHeader({
                           </span>
 
                           <span
-                            className="absolute bottom-3 right-3 flex h-8 w-8 items-center justify-center rounded-full border opacity-0 transition-all duration-300 group-hover:opacity-100"
+                            className="absolute bottom-2 right-2 flex h-7 w-7 items-center justify-center rounded-full border opacity-0 transition-all duration-300 group-hover:opacity-100"
                             style={{
                               borderColor: 'rgba(245,243,238,0.6)',
                               backgroundColor: 'rgba(13,13,13,0.35)',
@@ -472,26 +454,26 @@ export function NavbarHeader({
                           </span>
                         </div>
 
-                        <div className="pt-2.5">
+                        <div className="pt-2">
                           <p
-                            className="line-clamp-2 text-[12px] font-medium leading-4 transition-colors group-hover:text-[#D8BD82]"
+                            className="line-clamp-2 text-[15px] font-semibold leading-[1.25rem] transition-colors group-hover:text-[#D4AF37]"
                             style={{ color: WHITE }}
                           >
                             {p.name}
                           </p>
 
                           <p
-                            className="mt-1.5 text-[7px] uppercase tracking-[0.24em]"
+                            className="mt-1.5 text-[9px] uppercase tracking-[0.20em]"
                             style={{ color: RED_BRIGHT }}
                           >
-                            ARDENBY
+                            KOVENIK
                           </p>
                         </div>
                       </Link>
                     ))}
                   </div>
                 ) : (
-                  <div className="flex min-h-[120px] items-center justify-center text-center">
+                  <div className="flex min-h-[90px] items-center justify-center text-center">
                     <div>
                       <p
                         className="text-[24px]"
@@ -503,7 +485,7 @@ export function NavbarHeader({
                       >
                         Collection coming soon
                       </p>
-                      <p className="mt-2 text-[11px]" style={{ color: GREY }}>
+                      <p className="mt-1.5 text-[11px]" style={{ color: GREY }}>
                         New pieces are being prepared.
                       </p>
                     </div>
@@ -530,7 +512,7 @@ export function NavbarHeader({
             aria-label="Open menu"
             className="group flex h-[40px] w-[40px] items-center justify-center rounded-full border"
             style={{
-              color: '#D8BD82',
+              color: '#D4AF37',
               borderColor: 'rgba(216,189,130,0.28)',
             }}
           >
@@ -551,11 +533,11 @@ export function NavbarHeader({
                 color: WHITE,
               }}
             >
-              ARDENBY
+              KOVENIK
             </span>
             <span
-              className="mt-1 text-[5px] uppercase tracking-[0.38em]"
-              style={{ color: '#D8BD82' }}
+              className="mt-1 text-[7px] uppercase tracking-[0.34em]"
+              style={{ color: '#D4AF37' }}
             >
               Wear Your Essence
             </span>
@@ -568,7 +550,7 @@ export function NavbarHeader({
             whileTap={{ scale: 0.92 }}
             className="relative flex h-[40px] w-[40px] items-center justify-center rounded-full border"
             style={{
-              color: '#D8BD82',
+              color: '#D4AF37',
               borderColor: 'rgba(216,189,130,0.28)',
             }}
           >
@@ -578,7 +560,7 @@ export function NavbarHeader({
             />
             {cartCount > 0 && (
               <span
-                className="absolute -right-1 -top-1 flex h-[15px] min-w-[15px] items-center justify-center rounded-full border px-1 text-[7px] font-bold"
+                className="absolute -right-2 -top-2 z-20 flex h-[21px] min-w-[21px] items-center justify-center rounded-full border-2 px-1 text-[9px] font-extrabold leading-none shadow-[0_4px_12px_rgba(154,29,37,0.45)]"
                 style={{
                   backgroundColor: '#C6A15B',
                   color: '#0D0D0D',
@@ -593,7 +575,7 @@ export function NavbarHeader({
       </header>
 
       {/* ====================================================================
-          ARDENBY SHOPPING MENU — SOUL-STORE-STYLE COMPOSITION
+          KOVENIK SHOPPING MENU — SOUL-STORE-STYLE COMPOSITION
       ===================================================================== */}
 
       <AnimatePresence>
@@ -614,7 +596,7 @@ export function NavbarHeader({
               animate={{ x: 0 }}
               exit={{ x: '-100%' }}
               transition={{ duration: 0.36, ease: [0.22, 1, 0.36, 1] }}
-              className="fixed left-0 top-0 z-[9910] flex h-[100dvh] w-[92vw] max-w-[560px] flex-col overflow-hidden border-r shadow-[18px_0_60px_rgba(0,0,0,0.55)] lg:w-[40vw] lg:min-w-[520px] lg:max-w-[580px]"
+              className="fixed left-0 top-0 z-[9910] flex h-[100dvh] w-[92vw] max-w-[560px] flex-col overflow-hidden border-r shadow-[18px_0_60px_rgba(0,0,0,0.65)] lg:w-[40vw] lg:min-w-[520px] lg:max-w-[580px]"
               style={{
                 backgroundColor: BLACK,
                 color: WHITE,
@@ -623,7 +605,7 @@ export function NavbarHeader({
             >
               {/* ============================================================
                   SOUL-STORE STYLE SHOPPING MENU
-                  Same ARDENBY content, redesigned as a clean commerce drawer
+                  Same KOVENIK content, redesigned as a clean commerce drawer
               ============================================================ */}
 
               {/* BRAND HEADER */}
@@ -646,10 +628,10 @@ export function NavbarHeader({
                       color: WHITE,
                     }}
                   >
-                    ARDENBY
+                    KOVENIK
                   </span>
                   <span
-                    className="mt-1.5 text-[6px] uppercase tracking-[0.36em] lg:text-[7px]"
+                    className="mt-1.5 text-[8px] uppercase tracking-[0.32em] lg:text-[9px]"
                     style={{ color: RED_BRIGHT }}
                   >
                     Wear Your Essence
@@ -663,9 +645,9 @@ export function NavbarHeader({
                       closeNavigation();
                       handleOpenProfile();
                     }}
-                    className="hidden h-[40px] min-w-[138px] items-center justify-center border px-5 text-[9px] font-semibold uppercase tracking-[0.12em] transition-all duration-300 hover:bg-[#8F1D24] sm:flex"
+                    className="hidden h-[40px] min-w-[138px] items-center justify-center border px-5 text-[9px] font-semibold uppercase tracking-[0.12em] transition-all duration-300 hover:bg-[#8B1E1E]/20 hover:border-[#D4AF37] sm:flex"
                     style={{
-                      borderColor: '#8F1D24',
+                      borderColor: 'rgba(212,175,55,0.55)',
                       color: WHITE,
                     }}
                   >
@@ -688,21 +670,21 @@ export function NavbarHeader({
               <div
                 className="flex h-[40px] shrink-0 items-center justify-center border-b px-4"
                 style={{
-                  backgroundColor: '#9A1D25',
+                  backgroundColor: '#D4AF37',
                   borderColor: '#9A1D25',
                   color: '#FFFFFF',
                 }}
               >
-                <span className="text-[9px] font-semibold uppercase tracking-[0.18em] text-center">
+                <span className="text-[11px] font-semibold uppercase tracking-[0.16em] text-center">
                   Premium Streetwear — New Collection
                 </span>
               </div>
 
-              <div className="flex-1 overflow-y-auto bg-[#F7F5F0] text-[#111111]">
+              <div className="flex-1 overflow-y-auto bg-[#0A0A0A] text-[#F5F3EE]">
 
                 {/* PRIMARY COLLECTION TABS */}
-                <div className="sticky top-0 z-20 border-b bg-[#F7F5F0]">
-                  <div className="flex min-w-max items-stretch overflow-x-auto scrollbar-none">
+                <div className="sticky top-0 z-20 border-b border-[#3A2A16] bg-[#0D0D0D]">
+                  <div className="flex min-w-max items-stretch overflow-x-auto scrollbar-none bg-[#0D0D0D]">
                     {topNavItems.slice(0, 4).map((item, index) => {
                       const active =
                         (mobileExpandedCategory ?? topNavItems[0]?.slug) ===
@@ -713,16 +695,16 @@ export function NavbarHeader({
                           key={item.slug}
                           type="button"
                           onClick={() => toggleMobileCategory(item.slug)}
-                          className="relative flex h-[58px] shrink-0 items-center justify-center px-5 text-[9px] font-bold uppercase tracking-[0.08em] transition-colors duration-200 lg:px-7"
+                          className="relative flex h-[62px] shrink-0 items-center justify-center px-5 text-[11px] font-bold uppercase tracking-[0.08em] transition-colors duration-200 lg:px-7"
                           style={{
-                            color: active ? '#9A1D25' : '#77736D',
+                            color: active ? '#D4AF37' : '#F5F3EE',
                           }}
                         >
                           {item.label}
                           <span
                             className="absolute bottom-0 left-4 right-4 h-[3px] transition-transform duration-200"
                             style={{
-                              backgroundColor: '#9A1D25',
+                              backgroundColor: '#D4AF37',
                               transform: active ? 'scaleX(1)' : 'scaleX(0)',
                             }}
                           />
@@ -742,16 +724,16 @@ export function NavbarHeader({
                   const featured = selectedMenu?.featured ?? [];
 
                   return (
-                    <section className="border-b border-black/10 bg-[#F7F5F0] px-5 pb-5 pt-5 lg:px-7">
+                    <section className="border-b border-[#3A2A16] bg-[#0A0A0A] px-5 pb-5 pt-5 lg:px-7">
                       <div className="mb-4 flex items-end justify-between gap-4">
                         <div>
-                          <p className="mb-1 text-[8px] font-bold uppercase tracking-[0.25em] text-[#9A1D25]">
+                          <p className="mb-1.5 text-[10px] font-bold uppercase tracking-[0.22em] text-[#D4AF37]">
                             Featured Collection
                           </p>
                           <h2
-                            className="text-[22px] font-semibold uppercase leading-none tracking-[-0.025em] lg:text-[26px]"
+                            className="text-[30px] font-semibold uppercase leading-none tracking-[-0.025em] lg:text-[34px]"
                             style={{
-                              color: '#111111',
+                              color: '#F5F3EE',
                               fontFamily:
                                 'Bodoni MT, Didot, Cormorant Garamond, Times New Roman, serif',
                             }}
@@ -763,7 +745,7 @@ export function NavbarHeader({
                         <Link
                           href={`/shop?category=${selectedMenu?.slug ?? ''}`}
                           onClick={closeNavigation}
-                          className="flex shrink-0 items-center gap-1.5 text-[8px] font-bold uppercase tracking-[0.12em]"
+                          className="flex shrink-0 items-center gap-1.5 text-[10px] font-bold uppercase tracking-[0.12em] hover:text-[#D4AF37] transition-colors"
                           style={{ color: '#111111' }}
                         >
                           View Collection
@@ -780,24 +762,24 @@ export function NavbarHeader({
                               onClick={closeNavigation}
                               className="group min-w-0"
                             >
-                              <div className="relative aspect-[0.82] w-full overflow-hidden rounded-[2px] bg-[#E9E5DE]">
+                              <div className="relative aspect-[0.82] w-full overflow-hidden rounded-[2px] bg-[#161616] border border-[#3A2A16]">
                                 <img
                                   src={product.images[0]}
                                   alt={product.name}
                                   className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.045]"
                                 />
 
-                                <span className="absolute left-2 top-2 flex h-6 min-w-6 items-center justify-center rounded-sm bg-[#111111]/90 px-1 text-[7px] font-bold text-[#F7F5F0]">
+                                <span className="absolute left-2 top-2 flex h-6 min-w-6 items-center justify-center rounded-sm bg-[#080808]/90 px-1 text-[7px] font-bold text-[#D4AF37]">
                                   {String(index + 1).padStart(2, '0')}
                                 </span>
                               </div>
 
                               <div className="mt-2">
-                                <p className="line-clamp-2 text-[11px] font-semibold leading-[1.35] text-[#171717] lg:text-[12px]">
+                                <p className="line-clamp-2 text-[11px] font-bold leading-[1.35] text-[#F5F3EE] lg:text-[12px]">
                                   {product.name}
                                 </p>
-                                <p className="mt-1 text-[7px] font-bold uppercase tracking-[0.18em] text-[#9A1D25]">
-                                  ARDENBY
+                                <p className="mt-1.5 text-[9px] font-bold uppercase tracking-[0.16em] text-[#D4AF37]">
+                                  KOVENIK
                                 </p>
                               </div>
                             </Link>
@@ -808,7 +790,7 @@ export function NavbarHeader({
                           <p
                             className="text-[20px]"
                             style={{
-                              color: '#111111',
+                              color: '#F5F3EE',
                               fontFamily:
                                 'Bodoni MT, Didot, Cormorant Garamond, Times New Roman, serif',
                             }}
@@ -822,30 +804,30 @@ export function NavbarHeader({
                 })()}
 
                 {/* SHOP ALL */}
-                <div className="border-b border-black/10 bg-white">
+                <div className="border-b border-[#3A2A16] bg-[#0D0D0D]">
                   <Link
                     href="/shop"
                     onClick={closeNavigation}
                     className="flex min-h-[62px] items-center justify-between px-5 lg:px-7"
                   >
-                    <span className="text-[15px] font-bold uppercase tracking-[0.025em] text-[#111111]">
+                    <span className="text-[17px] font-bold uppercase tracking-[0.025em] text-[#F5F3EE]">
                       Shop All
                     </span>
                     <ChevronDown
                       className="h-5 w-5"
                       strokeWidth={1.25}
-                      style={{ color: '#55514B' }}
+                      style={{ color: '#D4AF37' }}
                     />
                   </Link>
                 </div>
 
                 {/* CATEGORIES — IMAGE GRID LIKE SOUL STORE */}
-                <section className="bg-white px-5 pb-6 pt-5 lg:px-7">
+                <section className="border-b border-[#3A2A16] bg-[#0A0A0A] px-5 pb-6 pt-5 lg:px-7">
                   <div className="mb-4 flex items-center justify-between">
-                    <h3 className="text-[15px] font-semibold text-[#222222]">
+                    <h3 className="text-[17px] font-bold text-[#F5F3EE]">
                       Categories
                     </h3>
-                    <span className="text-[8px] font-bold uppercase tracking-[0.2em] text-[#9A1D25]">
+                    <span className="text-[10px] font-bold uppercase tracking-[0.18em] text-[#D4AF37]">
                       Explore
                     </span>
                   </div>
@@ -865,7 +847,7 @@ export function NavbarHeader({
                           onClick={closeNavigation}
                           className="group min-w-0"
                         >
-                          <div className="relative aspect-[0.78] overflow-hidden rounded-[6px] bg-[#ECE8E1]">
+                          <div className="relative aspect-[0.78] overflow-hidden rounded-[6px] bg-[#161616] border border-[#3A2A16]">
                             {categoryImage ? (
                               <img
                                 src={categoryImage}
@@ -880,12 +862,12 @@ export function NavbarHeader({
                               </div>
                             )}
 
-                            <span className="absolute bottom-2 left-2 flex h-5 min-w-5 items-center justify-center rounded-sm bg-white/90 px-1 text-[7px] font-bold text-[#9A1D25]">
+                            <span className="absolute bottom-2 left-2 flex h-6 min-w-6 items-center justify-center rounded-sm bg-white/90 px-1 text-[8px] font-bold text-[#D4AF37]">
                               {String(index + 1).padStart(2, '0')}
                             </span>
                           </div>
 
-                          <p className="mt-2 line-clamp-2 text-center text-[9px] font-semibold leading-[1.25] text-[#33312E]">
+                          <p className="mt-2.5 line-clamp-2 text-center text-[11px] font-bold leading-[1.3] text-[#F5F3EE]">
                             {item.label}
                           </p>
                         </Link>
@@ -894,18 +876,18 @@ export function NavbarHeader({
                   </div>
                 </section>
 
-                {/* ALL CATEGORIES — SAME ARDENBY CONTENT */}
-                <section className="border-t border-black/10 bg-[#F7F5F0] px-5 pb-6 pt-5 lg:px-7">
+                {/* ALL CATEGORIES — SAME KOVENIK CONTENT */}
+                <section className="border-t border-[#3A2A16] bg-[#0D0D0D] px-5 pb-6 pt-5 lg:px-7">
                   <div className="mb-3 flex items-center justify-between">
-                    <h3 className="text-[15px] font-semibold text-[#222222]">
+                    <h3 className="text-[17px] font-bold text-[#F5F3EE]">
                       All Categories
                     </h3>
-                    <span className="text-[8px] font-bold uppercase tracking-[0.2em] text-[#9A1D25]">
+                    <span className="text-[10px] font-bold uppercase tracking-[0.18em] text-[#D4AF37]">
                       {topNavItems.length} Collections
                     </span>
                   </div>
 
-                  <div className="divide-y divide-black/10 border-y border-black/10">
+                  <div className="divide-y divide-[#3A2A16] border-y border-[#3A2A16]">
                     {topNavItems.map((item, index) => (
                       <Link
                         key={`all-${item.slug}`}
@@ -913,16 +895,16 @@ export function NavbarHeader({
                         onClick={closeNavigation}
                         className="group flex min-h-[58px] items-center gap-3"
                       >
-                        <span className="w-7 shrink-0 text-[8px] font-bold text-[#9A1D25]">
+                        <span className="w-7 shrink-0 text-[10px] font-bold text-[#D4AF37]">
                           {String(index + 1).padStart(2, '0')}
                         </span>
 
-                        <span className="flex-1 text-[12px] font-bold uppercase tracking-[0.055em] text-[#222222] transition-colors group-hover:text-[#9A1D25]">
+                        <span className="flex-1 text-[14px] font-bold uppercase tracking-[0.055em] text-[#F5F3EE] transition-colors group-hover:text-[#D4AF37]">
                           {item.label}
                         </span>
 
                         <ChevronRight
-                          className="h-4 w-4 text-[#77736D] transition-transform duration-300 group-hover:translate-x-1 group-hover:text-[#9A1D25]"
+                          className="h-4 w-4 text-[#9A968F] transition-transform duration-300 group-hover:translate-x-1 group-hover:text-[#D4AF37]"
                           strokeWidth={1.2}
                         />
                       </Link>
@@ -931,17 +913,17 @@ export function NavbarHeader({
                 </section>
 
                 {/* ACCOUNT / WISHLIST / CART */}
-                <div className="border-t border-black/10 bg-white px-5 py-1 lg:px-7">
+                <div className="border-t border-[#3A2A16] bg-[#0D0D0D] px-5 py-1 lg:px-7">
                   <button
                     type="button"
                     onClick={() => {
                       closeNavigation();
                       handleOpenProfile();
                     }}
-                    className="group flex min-h-[58px] w-full items-center gap-3 border-b border-black/10 text-left transition-colors hover:text-[#9A1D25]"
+                    className="group flex min-h-[58px] w-full items-center gap-3 border-b border-[#3A2A16] text-left transition-colors hover:text-[#D4AF37]"
                   >
                     <User className="h-[18px] w-[18px]" strokeWidth={1.25} />
-                    <span className="text-[12px] font-bold uppercase tracking-[0.13em]">
+                    <span className="text-[14px] font-bold uppercase tracking-[0.11em] text-[#F5F3EE]">
                       {user ? 'My Profile' : 'Login / Register'}
                     </span>
                   </button>
@@ -949,14 +931,14 @@ export function NavbarHeader({
                   <Link
                     href="/wishlist"
                     onClick={closeNavigation}
-                    className="group flex min-h-[58px] items-center gap-3 border-b border-black/10 transition-colors hover:text-[#9A1D25]"
+                    className="group flex min-h-[58px] items-center gap-3 border-b border-[#3A2A16] transition-colors hover:text-[#D4AF37]"
                   >
                     <Heart className="h-[18px] w-[18px]" strokeWidth={1.25} />
-                    <span className="text-[12px] font-bold uppercase tracking-[0.13em]">
+                    <span className="text-[14px] font-bold uppercase tracking-[0.11em] text-[#F5F3EE]">
                       Wishlist
                     </span>
                     {wishlistCount > 0 && (
-                      <span className="ml-auto text-[9px] font-bold text-[#9A1D25]">
+                      <span className="ml-auto text-[11px] font-bold text-[#D4AF37]">
                         {wishlistCount}
                       </span>
                     )}
@@ -968,14 +950,14 @@ export function NavbarHeader({
                       closeNavigation();
                       openCart();
                     }}
-                    className="group flex min-h-[58px] w-full items-center gap-3 text-left transition-colors hover:text-[#9A1D25]"
+                    className="group flex min-h-[58px] w-full items-center gap-3 text-left transition-colors hover:text-[#D4AF37]"
                   >
                     <ShoppingCart className="h-[18px] w-[18px]" strokeWidth={1.25} />
-                    <span className="text-[12px] font-bold uppercase tracking-[0.13em]">
+                    <span className="text-[14px] font-bold uppercase tracking-[0.11em] text-[#F5F3EE]">
                       Shopping Cart
                     </span>
                     {cartCount > 0 && (
-                      <span className="ml-auto text-[9px] font-bold text-[#9A1D25]">
+                      <span className="ml-auto text-[11px] font-bold text-[#D4AF37]">
                         {cartCount}
                       </span>
                     )}
@@ -992,13 +974,13 @@ export function NavbarHeader({
                 }}
               >
                 <span
-                  className="text-[6px] uppercase tracking-[0.28em]"
+                  className="text-[8px] uppercase tracking-[0.24em]"
                   style={{ color: GREY }}
                 >
-                  ARDENBY
+                  KOVENIK
                 </span>
                 <span
-                  className="text-[6px] uppercase tracking-[0.28em]"
+                  className="text-[8px] uppercase tracking-[0.24em]"
                   style={{ color: RED_BRIGHT }}
                 >
                   Wear Your Essence
@@ -1028,8 +1010,8 @@ export function NavbarHeader({
               className="w-full max-w-[1000px]"
             >
               <div className="mb-8 flex items-center justify-between">
-                <span className="text-[9px] font-semibold uppercase tracking-[0.3em]" style={{ color: RED_BRIGHT }}>
-                  ARDENBY SEARCH
+                <span className="text-[11px] font-semibold uppercase tracking-[0.28em]" style={{ color: RED_BRIGHT }}>
+                  KOVENIK SEARCH
                 </span>
                 <button type="button" onClick={() => setSearchOpen(false)} aria-label="Close search">
                   <X className="h-7 w-7" strokeWidth={1.1} style={{ color: WHITE }} />
@@ -1042,7 +1024,7 @@ export function NavbarHeader({
                   setSearchOpen(false);
                 }}
                 className="border-b pb-5"
-                style={{ borderColor: RED_BRIGHT }}
+                style={{ borderColor: '#D4AF37' }}
               >
                 <div className="flex items-center gap-5">
                   <Search className="h-7 w-7" strokeWidth={1.1} style={{ color: RED_BRIGHT }} />
@@ -1051,14 +1033,14 @@ export function NavbarHeader({
                     type="text"
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
-                    placeholder="Search ARDENBY"
+                    placeholder="Search KOVENIK"
                     className="w-full bg-transparent text-[32px] font-light outline-none placeholder:text-white/25 sm:text-[42px]"
                     style={{ color: WHITE }}
                   />
                 </div>
               </form>
 
-              <p className="mt-5 text-[9px] uppercase tracking-[0.2em]" style={{ color: GREY }}>
+              <p className="mt-5 text-[11px] uppercase tracking-[0.18em]" style={{ color: GREY }}>
                 Search products, collections and essentials
               </p>
             </motion.div>

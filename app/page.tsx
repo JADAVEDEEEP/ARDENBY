@@ -31,7 +31,7 @@ const transparentHeroImages = [
 ];
 const newsletterContent = {
   eyebrow: "Exclusive Access",
-  title: "Join the ARDENBY Fam",
+  title: "Join the KOVENIK Fam",
   description:
     "Get early drop links, VIP discounts, and 10% off your inaugural order.",
   inputPlaceholder: "Enter your email",
@@ -519,402 +519,279 @@ export default function HomePage() {
           display: none !important;
         }
       `}</style>
-      {/* ================= HERO SECTION ================= */
-     <section
-        className="relative z-0 w-full max-w-none overflow-hidden bg-[#F6F5F0] min-h-[560px] h-[calc(100svh-76px)] sm:h-[calc(100svh-84px)] md:h-[calc(100svh-76px)] lg:h-[calc(100svh-128px)] lg:min-h-0"
-        onMouseEnter={() => setIsPaused(true)}
-        onMouseLeave={() => setIsPaused(false)}
-      >
-        <div className="relative h-full w-full">
+      {/* ================= PREMIUM DARK LUXURY HERO SECTION ================= */}
+<section
+  className="relative left-1/2 z-0 w-screen max-w-none -translate-x-1/2 overflow-hidden bg-[#0A0A0A] min-h-[560px] h-[calc(100svh-76px)] sm:h-[calc(100svh-84px)] md:h-[calc(100svh-76px)] lg:h-[calc(100svh-128px)] lg:min-h-0"
+  onMouseLeave={() => setIsPaused(false)}
+>
+  <div className="relative h-full w-full">
 
-          {/* =====================================================
-              MOBILE HERO — purpose-built composition
-          ====================================================== */}
-          <div className="absolute inset-0 block md:hidden">
-
-            {/* subtle background */}
-            <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(255,255,255,0)_35%,rgba(246,245,240,0.28)_100%)]" />
-
-            {/* premium badge */}
-            <motion.div
-              initial={{ opacity: 0, y: -5 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.4 }}
-              className="absolute left-4 top-4 z-[70]"
-            >
-              <div className="rounded-md border border-neutral-300/70 bg-white/75 px-3 py-1.5 backdrop-blur-sm">
-                <p className="text-[8px] font-bold uppercase tracking-[0.16em] text-neutral-900">
-                  Premium Drop • SS26
-                </p>
-                <p className="mt-1 text-[8px] text-neutral-500">
-                  Heavyweight • Drop Shoulder
-                </p>
-              </div>
-            </motion.div>
-
-            {/* MOBILE EDITORIAL HEADLINE — intentionally BEHIND the model */}
-            <AnimatePresence mode="wait">
-              <motion.div
-                key={`mobile-headline-${slide}`}
-                initial={{ opacity: 0, y: 8 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -6 }}
-                transition={{ duration: 0.45, ease }}
-                className="absolute inset-x-0 top-[72px] z-10 flex w-full justify-center overflow-visible px-0 text-center"
-              >
-                <h1
-                  className="
-                    w-full max-w-none px-0
-                    font-serif font-black uppercase
-                    text-[72px] leading-[0.74] tracking-[-0.065em]
-                    text-neutral-950
-                    sm:text-[82px]
-                  "
-                  style={{
-                    fontFamily: "Bodoni MT, Didot, Times New Roman, serif",
-                    textShadow: "0 1px 0 rgba(0,0,0,0.03)",
-                  }}
-                >
-                  {activeHero.headline}
-                </h1>
-              </motion.div>
-            </AnimatePresence>
-
-            {/* transparent red sprint / screen-print shadow behind model */}
-            <div
-              aria-hidden="true"
-              className="pointer-events-none absolute inset-0 z-[15] overflow-hidden"
-            >
-              <div className="absolute left-1/2 top-[56%] h-[230px] w-[520px] -translate-x-1/2 -translate-y-1/2 rotate-[-8deg] opacity-90">
-                <div className="absolute inset-[10%] rounded-[45%] bg-[#A51F2A]/[0.035] blur-[10px]" />
-                <div className="absolute left-[3%] top-[27%] h-[16px] w-[70%] -rotate-[3deg] -skew-x-[18deg] rounded-full bg-[#A51F2A]/[0.045] blur-[3px]" />
-                <div className="absolute right-[6%] top-[39%] h-[6px] w-[62%] rotate-[2deg] -skew-x-[18deg] rounded-full bg-[#C42B35]/[0.06] blur-[1px]" />
-                <div className="absolute left-[8%] top-[51%] h-[3px] w-[82%] -rotate-[4deg] -skew-x-[18deg] rounded-full bg-[#A51F2A]/[0.075]" />
-                <div className="absolute left-[22%] top-[64%] h-[4px] w-[55%] rotate-[1deg] -skew-x-[18deg] rounded-full bg-[#C42B35]/[0.055] blur-[1px]" />
-              </div>
-            </div>
-
-            {/* MOBILE MODEL — sits IN FRONT of the headline */}
-            <div className="pointer-events-none absolute inset-x-0 bottom-0 z-20 flex h-[78%] w-full items-end justify-center sm:h-[82%]">
-              <AnimatePresence mode="wait">
-                <motion.div
-                  key={`mobile-model-${slide}`}
-                  initial={{ opacity: 0, y: 18, scale: 1.02 }}
-                  animate={{ opacity: 1, y: 0, scale: 1 }}
-                  exit={{ opacity: 0, y: 10 }}
-                  transition={{ duration: 0.55, ease }}
-                  className="relative flex h-full w-full items-end justify-center"
-                >
-                  {/* very subtle grounding shadow */}
-                  <div className="absolute bottom-5 left-1/2 h-[190px] w-[175px] -translate-x-1/2 rounded-full bg-neutral-400/[0.018] blur-[38px]" />
-
-                  <img
-                    src={transparentHeroImages[slide % transparentHeroImages.length]}
-                    alt={activeHero.headline}
-                    className="
-                      relative z-20
-                      h-full w-auto max-w-none
-                      scale-[1.18]
-                      object-contain object-bottom
-                      drop-shadow-[0_4px_8px_rgba(0,0,0,0.035)]
-                      sm:scale-[1.12]
-                    "
-                  />
-                </motion.div>
-              </AnimatePresence>
-            </div>
-
-            {/* mobile slide counter */}
-            <div className="absolute bottom-4 left-4 z-[80] flex items-center gap-2">
-              <span className="text-[9px] font-bold tracking-[0.18em] text-neutral-900">
-                {String(slide + 1).padStart(2, "0")}
-              </span>
-              <span className="h-px w-7 bg-neutral-300" />
-              <span className="text-[9px] tracking-[0.18em] text-neutral-400">
-                {String(heroSlides.length).padStart(2, "0")}
-              </span>
-            </div>
-
-            {/* mobile indicators */}
-            <div className="absolute bottom-4 right-4 z-[80] flex items-center gap-1.5">
-              {heroSlides.map((_, index) => (
-                <button
-                  key={index}
-                  type="button"
-                  onClick={() => setSlide(index)}
-                  aria-label={`Go to slide ${index + 1}`}
-                  className="p-1"
-                >
-                  <span
-                    className={`block h-[2px] transition-all duration-300 ${
-                      index === slide ? "w-7 bg-neutral-950" : "w-2.5 bg-neutral-300"
-                    }`}
-                  />
-                </button>
-              ))}
-            </div>
-          </div>
-
-          {/* =====================================================
-              DESKTOP / TABLET HERO
-          ====================================================== */}
-          <div className="absolute inset-0 hidden md:block">
-
-            <div
-              aria-hidden="true"
-              className="pointer-events-none absolute inset-0 z-0 bg-[radial-gradient(ellipse_at_center,rgba(246,245,240,0)_0%,rgba(246,245,240,0.06)_48%,rgba(246,245,240,0.30)_100%)]"
-            />
-
-            {/* PREMIUM DROP LABEL */}
-            <motion.div
-              initial={{ opacity: 0, y: -6 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.45 }}
-              className="absolute left-7 top-7 z-30 lg:left-9 lg:top-8"
-            >
-              <div className="rounded-md border border-neutral-300/70 bg-white/65 px-3.5 py-2 backdrop-blur-sm">
-                <p className="text-[9px] font-bold uppercase tracking-[0.18em] text-neutral-900">
-                  Premium Drop • SS26
-                </p>
-                <p className="mt-1 text-[10px] font-light text-neutral-500">
-                  Heavyweight • Drop Shoulder
-                </p>
-              </div>
-            </motion.div>
-
-            {/* desktop headline */}
-            <AnimatePresence mode="wait">
-              <motion.div
-                key={`desktop-headline-${slide}`}
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -8 }}
-                transition={{ duration: 0.5, ease }}
-                className="absolute left-0 right-0 top-[70px] z-10 flex justify-center px-4 lg:top-[58px] lg:px-8"
-              >
-                <h1
-                  className="w-full max-w-[1450px] text-center font-serif text-[64px] font-black uppercase leading-[0.78] tracking-[-0.05em] text-neutral-950 md:text-[78px] lg:text-[clamp(84px,8.5vw,132px)]"
-                  style={{
-                    fontFamily: "Bodoni MT, Didot, Times New Roman, serif",
-                    textShadow: "0 1px 0 rgba(0,0,0,0.05)",
-                  }}
-                >
-                  {activeHero.headline}
-                </h1>
-              </motion.div>
-            </AnimatePresence>
-
-            {/* transparent red sprint / screen-print shadow behind model */}
-            <div
-              aria-hidden="true"
-              className="pointer-events-none absolute inset-0 z-30 overflow-hidden"
-            >
-              <div className="absolute left-1/2 top-[54%] h-[360px] w-[720px] -translate-x-1/2 -translate-y-1/2 rotate-[-7deg] opacity-95 lg:h-[430px] lg:w-[900px]">
-                {/* broad transparent red ghost */}
-                <div className="absolute inset-[8%] rounded-[45%] bg-[#A51F2A]/[0.035] blur-[14px]" />
-
-                {/* organic screen-print / sprint streaks */}
-                <div className="absolute left-[1%] top-[19%] h-[28px] w-[72%] -rotate-[2deg] -skew-x-[17deg] rounded-full bg-[#A51F2A]/[0.045] blur-[4px]" />
-                <div className="absolute right-[2%] top-[28%] h-[13px] w-[48%] rotate-[1deg] -skew-x-[19deg] rounded-full bg-[#C42B35]/[0.065] blur-[2px]" />
-                <div className="absolute left-[4%] top-[38%] h-[7px] w-[91%] -rotate-[4deg] -skew-x-[18deg] rounded-full bg-[#A51F2A]/[0.075] blur-[1px]" />
-                <div className="absolute left-[17%] top-[48%] h-[4px] w-[68%] rotate-[-2deg] -skew-x-[20deg] rounded-full bg-[#C42B35]/[0.065]" />
-                <div className="absolute right-[7%] top-[56%] h-[10px] w-[61%] rotate-[2deg] -skew-x-[18deg] rounded-full bg-[#A51F2A]/[0.055] blur-[2px]" />
-                <div className="absolute left-[8%] top-[66%] h-[5px] w-[52%] rotate-[-3deg] -skew-x-[19deg] rounded-full bg-[#C42B35]/[0.06] blur-[1px]" />
-                <div className="absolute left-[27%] top-[75%] h-[3px] w-[63%] rotate-[1deg] -skew-x-[18deg] rounded-full bg-[#A51F2A]/[0.05]" />
-
-                {/* broken ink fragments */}
-                <div className="absolute left-[11%] top-[25%] h-[2px] w-[76px] rotate-[-9deg] bg-[#A51F2A]/[0.075]" />
-                <div className="absolute right-[17%] top-[35%] h-[2px] w-[105px] rotate-[5deg] bg-[#C42B35]/[0.065]" />
-                <div className="absolute left-[19%] top-[61%] h-[2px] w-[64px] rotate-[-6deg] bg-[#A51F2A]/[0.07]" />
-                <div className="absolute right-[22%] top-[72%] h-[2px] w-[88px] rotate-[4deg] bg-[#C42B35]/[0.06]" />
-              </div>
-            </div>
-
-            {/* desktop model */}
-            <div className="pointer-events-none absolute inset-0 z-50 flex items-end justify-center">
-              <AnimatePresence mode="wait">
-                <motion.div
-                  key={`desktop-model-${slide}`}
-                  initial={{ opacity: 0, y: 18, scale: 1.01 }}
-                  animate={{ opacity: 1, y: 0, scale: 1 }}
-                  exit={{ opacity: 0, y: 16 }}
-                  transition={{ duration: 0.6, ease }}
-                  className="relative z-50 flex h-full w-full items-end justify-center md:translate-y-0"
-                >
-                  <div className="absolute bottom-[28px] left-1/2 h-[390px] w-[340px] -translate-x-1/2 rounded-full bg-neutral-400/[0.035] blur-[42px] lg:h-[420px] lg:w-[380px]" />
-
-                  <img
-                    src={transparentHeroImages[slide % transparentHeroImages.length]}
-                    alt={activeHero.headline}
-                    className="relative z-50 h-[79%] w-auto max-w-[96%] object-contain object-bottom drop-shadow-[0_7px_12px_rgba(0,0,0,0.06)] lg:h-[82%] lg:max-w-[60%]"
-                  />
-                </motion.div>
-              </AnimatePresence>
-            </div>
-
-            {/* desktop left copy */}
-            <AnimatePresence mode="wait">
-              <motion.div
-                key={`left-${slide}`}
-                initial={{ opacity: 0, x: -10 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 0.4 }}
-                className="absolute left-6 top-[175px] z-30 hidden w-[270px] md:block lg:left-9 lg:top-[185px] xl:left-12"
-              >
-                <p className="text-[16px] font-bold uppercase tracking-[0.2em] text-neutral-900 lg:text-[17px]">
-                  Move Comfortably
-                </p>
-                <div className="mt-3 h-px w-14 bg-neutral-300" />
-                <p className="mt-4 max-w-[290px] text-[17px] font-light leading-[1.6] text-neutral-500 lg:text-[18px]">
-                  Designed for everyday comfort, refined details, and modern silhouettes.
-                </p>
-              </motion.div>
-            </AnimatePresence>
-
-            {/* desktop right copy */}
-            <AnimatePresence mode="wait">
-              <motion.div
-                key={`right-${slide}`}
-                initial={{ opacity: 0, x: 10 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 0.4 }}
-                className="absolute right-6 top-[175px] z-30 hidden w-[270px] text-right md:block lg:right-9 lg:top-[185px] xl:right-12"
-              >
-                <p className="text-[14px] font-bold uppercase tracking-[0.22em] text-neutral-900 lg:text-[15px]">
-                  Feel Confident
-                </p>
-                <div className="mt-3 ml-auto h-px w-14 bg-neutral-300" />
-                <p className="mt-4 ml-auto max-w-[290px] text-[17px] font-light leading-[1.6] text-neutral-500 lg:text-[18px]">
-                  Crafted for a refined everyday look with effortless comfort.
-                </p>
-              </motion.div>
-            </AnimatePresence>
-
-            {/* desktop editorial note */}
-            <div className="absolute bottom-[72px] left-8 z-[55] hidden max-w-[280px] lg:block xl:left-12">
-              <div className="mb-2 flex items-center gap-2">
-                <span className="h-px w-7 bg-neutral-900/35" />
-                
-              </div>
-             
-              <p className="mt-3 max-w-[280px] text-[16px] leading-[1.6] text-neutral-600/75">
-                Refined silhouettes, premium fabric and quiet confidence.
-              </p>
-            </div>
-
-            {/* desktop counter */}
-            <div className="absolute bottom-4 left-5 z-[60] flex items-center gap-2 sm:bottom-5 sm:left-7 lg:left-9">
-              <span className="text-[9px] font-bold tracking-[0.18em] text-neutral-900 sm:text-[10px]">
-                {String(slide + 1).padStart(2, "0")}
-              </span>
-              <span className="h-px w-6 bg-neutral-300 sm:w-8" />
-              <span className="text-[9px] tracking-[0.18em] text-neutral-400 sm:text-[10px]">
-                {String(heroSlides.length).padStart(2, "0")}
-              </span>
-            </div>
-
-            {/* desktop indicators */}
-            <div className="absolute bottom-5 right-5 z-[60] hidden items-center gap-2 lg:right-9 lg:flex">
-              {heroSlides.map((_, index) => (
-                <button
-                  key={index}
-                  type="button"
-                  onClick={() => setSlide(index)}
-                  aria-label={`Go to slide ${index + 1}`}
-                  className="group p-1"
-                >
-                  <span
-                    className={`block h-[2px] transition-all duration-500 ${
-                      index === slide
-                        ? "w-8 bg-neutral-950"
-                        : "w-3.5 bg-neutral-300 group-hover:bg-neutral-500"
-                    }`}
-                  />
-                </button>
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
-}
-
-    {/* =========================================================
-    ARDENBY STANDARD — EDITORIAL SPLIT
-========================================================= */}
-
-<section className="w-full overflow-hidden bg-[#F6F5F0] lg:h-[calc(100svh-128px)] lg:min-h-0">
-  <div className="grid h-full w-full grid-cols-1 lg:grid-cols-[55%_45%]">
+    {/* Luxury Marble & Gold Glow Background */}
+    <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(212,175,55,0.08)_0%,rgba(10,10,10,0.95)_70%,#050505_100%)]" />
+    <div className="absolute inset-0 opacity-20 bg-[radial-gradient(#d4af37_1px,transparent_1px)] [background-size:24px_24px] pointer-events-none" />
 
     {/* =====================================================
-        LEFT IMAGE
+        MOBILE HERO — Purpose-built Luxury Composition
+    ====================================================== */}
+    <div className="absolute inset-0 block md:hidden">
+
+      {/* Premium Badge */}
+      <motion.div
+        initial={{ opacity: 0, y: -5 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.4 }}
+        className="absolute left-4 top-4 z-[70]"
+      >
+        <div className="rounded-md border border-amber-500/30 bg-neutral-900/80 px-3 py-1.5 backdrop-blur-md">
+          <p className="text-[8px] font-bold uppercase tracking-[0.16em] text-amber-400">
+            The New Standard • SS26
+          </p>
+          <p className="mt-1 text-[8px] text-neutral-400">
+            West Delhi Precision
+          </p>
+        </div>
+      </motion.div>
+
+      {/* Mobile Luxury Headline */}
+      <AnimatePresence mode="wait">
+        <motion.div
+          key={`mobile-headline-${slide}`}
+          initial={{ opacity: 0, y: 8 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -6 }}
+          transition={{ duration: 0.45, ease }}
+          className="absolute inset-x-0 top-[68px] z-10 flex w-full justify-center px-2 text-center"
+        >
+          <h1
+            className="w-full font-serif font-black uppercase text-[56px] leading-[0.85] tracking-[-0.04em]"
+            style={{
+              fontFamily: "Bodoni MT, Didot, Times New Roman, serif",
+              background: "linear-gradient(180deg, #FFFFFF 30%, #D4AF37 100%)",
+              WebkitBackgroundClip: "text",
+              WebkitTextFillColor: "transparent",
+            }}
+          >
+            {activeHero.headline}
+          </h1>
+        </motion.div>
+      </AnimatePresence>
+
+      {/* Mobile Model / Product Showcase */}
+      <div className="pointer-events-none absolute inset-x-0 bottom-0 z-20 flex h-[76%] w-full items-end justify-center">
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={`mobile-model-${slide}`}
+            initial={{ opacity: 0, y: 18, scale: 1.02 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: 10 }}
+            transition={{ duration: 0.55, ease }}
+            className="relative flex h-full w-full items-end justify-center"
+          >
+            <div className="absolute bottom-5 left-1/2 h-[180px] w-[160px] -translate-x-1/2 rounded-full bg-amber-500/10 blur-[40px]" />
+            <img
+              src={transparentHeroImages[slide % transparentHeroImages.length]}
+              alt={activeHero.headline}
+              className="relative z-20 h-full w-auto max-w-none scale-[1.15] object-contain object-bottom drop-shadow-[0_10px_20px_rgba(0,0,0,0.8)]"
+            />
+          </motion.div>
+        </AnimatePresence>
+      </div>
+
+      {/* Mobile Explore / CTA Button */}
+      <div className="absolute bottom-6 inset-x-0 z-[80] flex justify-center px-6">
+        <motion.button
+          whileTap={{ scale: 0.95 }}
+          className="w-full rounded-full bg-gradient-to-r from-[#C5A059] via-[#E6CA65] to-[#AA823E] py-3 text-[11px] font-bold uppercase tracking-[0.2em] text-neutral-950 shadow-[0_4px_20px_rgba(212,175,55,0.3)]"
+        >
+          Explore Drop
+        </motion.button>
+      </div>
+    </div>
+
+    {/* =====================================================
+        DESKTOP / TABLET LUXURY HERO
+    ===================================================== */}
+    <div className="absolute inset-0 hidden md:block">
+
+      {/* Premium Badge Desktop */}
+      <motion.div
+        initial={{ opacity: 0, y: -6 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.45 }}
+        className="absolute left-7 top-7 z-30 lg:left-9 lg:top-8"
+      >
+        <div className="rounded-md border border-amber-500/30 bg-neutral-900/70 px-4 py-2 backdrop-blur-md">
+          <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-amber-400">
+            The New Standard • SS26
+          </p>
+          <p className="mt-0.5 text-[10px] text-neutral-400">
+            Crafted with Unrivaled West Delhi Precision
+          </p>
+        </div>
+      </motion.div>
+
+      {/* Desktop Luxury Headline with Gold Gradient */}
+      <AnimatePresence mode="wait">
+        <motion.div
+          key={`desktop-headline-${slide}`}
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -8 }}
+          transition={{ duration: 0.5, ease }}
+          className="absolute left-0 right-0 top-[65px] z-10 flex justify-center px-4 lg:top-[50px]"
+        >
+          <h1
+            className="w-full max-w-[1450px] text-center font-serif text-[72px] font-black uppercase leading-[0.8] tracking-[-0.04em] md:text-[88px] lg:text-[clamp(90px,9vw,140px)]"
+            style={{
+              fontFamily: "Bodoni MT, Didot, Times New Roman, serif",
+              background: "linear-gradient(180deg, #FFFFFF 20%, #E6CA65 70%, #997A30 100%)",
+              WebkitBackgroundClip: "text",
+              WebkitTextFillColor: "transparent",
+              filter: "drop-shadow(0 4px 25px rgba(212,175,55,0.2))",
+            }}
+          >
+            {activeHero.headline}
+          </h1>
+        </motion.div>
+      </AnimatePresence>
+
+      {/* Central 3D Podium & Floating Apparel Glow Effect */}
+      <div className="pointer-events-none absolute inset-0 z-30 overflow-hidden flex items-center justify-center">
+        <div className="absolute left-1/2 top-[56%] h-[380px] w-[750px] -translate-x-1/2 -translate-y-1/2 bg-gradient-to-r from-amber-500/10 via-amber-300/5 to-transparent blur-[60px] rounded-full" />
+      </div>
+
+      {/* Desktop Model / Product Display */}
+      <div className="pointer-events-none absolute inset-0 z-40 flex items-end justify-center">
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={`desktop-model-${slide}`}
+            initial={{ opacity: 0, y: 20, scale: 1.01 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: 16 }}
+            transition={{ duration: 0.6, ease }}
+            className="relative z-40 flex h-full w-full items-end justify-center"
+          >
+            <div className="absolute bottom-[20px] left-1/2 h-[320px] w-[450px] -translate-x-1/2 rounded-full bg-black/80 blur-[50px]" />
+            <img
+              src={transparentHeroImages[slide % transparentHeroImages.length]}
+              alt={activeHero.headline}
+              className="relative z-40 h-[82%] w-auto max-w-[90%] object-contain object-bottom drop-shadow-[0_20px_40px_rgba(0,0,0,0.9)]"
+            />
+          </motion.div>
+        </AnimatePresence>
+      </div>
+
+      {/* Desktop Left Copy - West Delhi Vibe */}
+      <AnimatePresence mode="wait">
+        <motion.div
+          key={`left-${slide}`}
+          initial={{ opacity: 0, x: -10 }}
+          animate={{ opacity: 1, x: 0 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.4 }}
+          className="absolute left-8 top-[200px] z-30 hidden w-[280px] md:block lg:left-12 lg:top-[220px]"
+        >
+          <p className="text-[15px] font-bold uppercase tracking-[0.2em] text-amber-400">
+            Unrivaled Finish
+          </p>
+          <div className="mt-3 h-px w-14 bg-amber-500/40" />
+          <p className="mt-4 text-[16px] font-light leading-[1.6] text-neutral-400">
+            Heavyweight custom milled fabrics engineered for elite street presence.
+          </p>
+        </motion.div>
+      </AnimatePresence>
+
+      {/* Desktop Right Copy */}
+      <AnimatePresence mode="wait">
+        <motion.div
+          key={`right-${slide}`}
+          initial={{ opacity: 0, x: 10 }}
+          animate={{ opacity: 1, x: 0 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.4 }}
+          className="absolute right-8 top-[200px] z-30 hidden w-[280px] text-right md:block lg:right-12 lg:top-[220px]"
+        >
+          <p className="text-[15px] font-bold uppercase tracking-[0.22em] text-amber-400">
+            Elite Status
+          </p>
+          <div className="mt-3 ml-auto h-px w-14 bg-amber-500/40" />
+          <p className="mt-4 ml-auto text-[16px] font-light leading-[1.6] text-neutral-400">
+            Designed in West Delhi, crafted with global luxury precision.
+          </p>
+        </motion.div>
+      </AnimatePresence>
+
+      {/* Central Shop Button (Desktop) */}
+      <div className="absolute bottom-10 left-1/2 z-50 -translate-x-1/2 hidden md:block">
+  <Link href="/shop">
+    <motion.button
+      whileHover={{
+        scale: 1.06,
+        y: -2,
+      }}
+      whileTap={{ scale: 0.96 }}
+      className="group relative overflow-hidden rounded-full border border-[#E6CA65]/40 bg-gradient-to-r from-[#8B1E1E] via-[#D4AF37] to-[#E6CA65] px-9 py-3.5 text-[12px] font-bold uppercase tracking-[0.25em] text-[#090909] shadow-[0_8px_30px_rgba(139,30,30,0.28),0_0_35px_rgba(212,175,55,0.22)] transition-all duration-300"
+    >
+      <span className="absolute inset-y-0 -left-[100%] w-[60%] skew-x-[-20deg] bg-white/25 transition-all duration-700 group-hover:left-[120%]" />
+
+      <span className="relative z-10">
+        Shop The Drop
+      </span>
+    </motion.button>
+  </Link>
+</div>
+
+      {/* Desktop Slide Indicators */}
+      <div className="absolute bottom-8 right-9 z-[60] hidden items-center gap-2 lg:flex">
+        {heroSlides.map((_, index) => (
+          <button
+            key={index}
+            type="button"
+            onClick={() => setSlide(index)}
+            aria-label={`Go to slide ${index + 1}`}
+            className="group p-1"
+          >
+            <span
+              className={`block h-[2px] transition-all duration-500 ${
+                index === slide
+                  ? "w-8 bg-amber-400"
+                  : "w-3.5 bg-neutral-700 group-hover:bg-neutral-500"
+              }`}
+            />
+          </button>
+        ))}
+      </div>
+    </div>
+  </div>
+</section>
+
+  {/* =========================================================
+    KOVENIK PREMIUM EDITORIAL SPLIT (DARK THEME - DESKTOP ONLY)
+========================================================= */}
+
+<section className="hidden lg:block w-full overflow-hidden bg-[#0A0A0A] min-h-[calc(100svh-128px)] text-white">
+  <div className="grid w-full grid-cols-1 lg:grid-cols-[55%_45%]">
+
+    {/* =====================================================
+        LEFT IMAGE (Dark Marble Product Flat-Lay)
     ===================================================== */}
 
-    <div className="group relative h-[600px] w-full overflow-hidden sm:h-[700px] lg:h-full">
+    <div className="group relative min-h-[650px] lg:min-h-[calc(100svh-128px)] w-full overflow-hidden flex flex-col justify-end p-12">
 
       <img
-        src="https://images.unsplash.com/photo-1490481651871-ab68de25d43d?auto=format&fit=crop&w=2000&q=92"
-        alt="ARDENBY craft and collection"
+        src="https://images.unsplash.com/photo-1521572267360-ee0c2909d518?auto=format&fit=crop&w=2000&q=92"
+        alt="Kovenik luxury product flatlay"
         className="absolute inset-0 h-full w-full object-cover object-center transition-transform duration-[1400ms] group-hover:scale-[1.025]"
       />
 
       {/* Image overlay */}
-      <div className="absolute inset-0 bg-gradient-to-t from-black/65 via-black/10 to-transparent" />
-
-      {/* ===================================================
-          RED ARDENBY SPRINT EFFECT
-      =================================================== */}
-
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute inset-0 overflow-hidden"
-      >
-        <div className="absolute left-1/2 top-[48%] h-[390px] w-[95%] -translate-x-1/2 -translate-y-1/2 rotate-[-5deg]">
-
-          <div className="absolute inset-[10%] rounded-[45%] bg-[#A51F2A]/[0.045] blur-[22px]" />
-
-          <div className="absolute left-[-5%] top-[14%] h-[25px] w-[72%] -skew-x-[20deg] rounded-full bg-[#C52D38]/[0.12] blur-[5px]" />
-
-          <div className="absolute right-[-3%] top-[27%] h-[9px] w-[60%] rotate-[2deg] -skew-x-[18deg] rounded-full bg-[#A51F2A]/[0.14] blur-[2px]" />
-
-          <div className="absolute left-[-7%] top-[40%] h-[6px] w-[94%] -rotate-[2deg] -skew-x-[20deg] rounded-full bg-[#C52D38]/[0.16]" />
-
-          <div className="absolute left-[12%] top-[53%] h-[14px] w-[72%] rotate-[1deg] -skew-x-[18deg] rounded-full bg-[#A51F2A]/[0.11] blur-[3px]" />
-
-          <div className="absolute right-[2%] top-[66%] h-[5px] w-[56%] -rotate-[4deg] -skew-x-[20deg] rounded-full bg-[#C52D38]/[0.14]" />
-
-          <div className="absolute left-[6%] top-[78%] h-[3px] w-[46%] rotate-[2deg] -skew-x-[18deg] rounded-full bg-[#A51F2A]/[0.16]" />
-
-          <span className="absolute left-[12%] top-[25%] h-[2px] w-[82px] rotate-[-8deg] bg-[#C52D38]/[0.20]" />
-
-          <span className="absolute right-[17%] top-[36%] h-[2px] w-[108px] rotate-[5deg] bg-[#A51F2A]/[0.18]" />
-
-          <span className="absolute left-[24%] top-[68%] h-[2px] w-[72px] rotate-[-6deg] bg-[#C52D38]/[0.18]" />
-
-          <span className="absolute right-[12%] top-[76%] h-[2px] w-[94px] rotate-[4deg] bg-[#A51F2A]/[0.15]" />
-
-        </div>
-      </div>
-
-      {/* Top label */}
-
-      <div className="absolute left-6 top-6 sm:left-10 sm:top-9 lg:left-12 lg:top-11">
-        <span className="text-[9px] font-bold uppercase tracking-[0.32em] text-white [text-shadow:0_1px_8px_rgba(0,0,0,0.55)] sm:text-[10px]">
-          ARDENBY / CRAFT
-        </span>
-      </div>
+      <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/30 to-transparent pointer-events-none" />
 
       {/* Image text */}
-
-      <div className="absolute bottom-9 left-6 right-6 sm:bottom-12 sm:left-10 sm:right-10 lg:bottom-14 lg:left-12 lg:right-12">
-
-        <p className="mb-3 text-[9px] font-bold uppercase tracking-[0.30em] text-white [text-shadow:0_2px_10px_rgba(0,0,0,0.65)] sm:text-[11px]">
-          Quality · Craft · Intention
-        </p>
+      <div className="relative z-10">
 
         <h2
-          className="max-w-[760px] font-serif text-[64px] font-medium leading-[0.82] tracking-[-0.055em] text-white [text-shadow:0_3px_15px_rgba(0,0,0,0.58)] sm:text-[88px] lg:text-[112px] xl:text-[126px]"
+          className="max-w-[760px] font-serif font-medium leading-[0.82] tracking-[-0.055em] text-white [text-shadow:0_3px_15px_rgba(0,0,0,0.8)] lg:text-[100px] xl:text-[116px]"
           style={{
             fontFamily: "Bodoni MT, Didot, Times New Roman, serif",
           }}
@@ -924,9 +801,9 @@ export default function HomePage() {
           everyday.
         </h2>
 
-        <div className="mt-5 h-[5px] w-[150px] -rotate-[3deg] rounded-full bg-[#C52D38] sm:w-[190px]" />
+        <div className="mt-5 h-[5px] w-[190px] -rotate-[3deg] rounded-full bg-[#C52D38]" />
 
-        <p className="mt-5 text-[11px] font-semibold uppercase tracking-[0.27em] text-white [text-shadow:0_2px_8px_rgba(0,0,0,0.6)] sm:text-[13px]">
+        <p className="mt-5 text-[13px] font-semibold uppercase tracking-[0.27em] text-neutral-300 [text-shadow:0_2px_8px_rgba(0,0,0,0.8)]">
           Premium essentials for modern living.
         </p>
 
@@ -935,207 +812,104 @@ export default function HomePage() {
 
 
     {/* =====================================================
-        RIGHT EDITORIAL PANEL
+        RIGHT EDITORIAL PANEL (Dark Theme)
     ===================================================== */}
 
-    <div className="hidden min-h-[600px] flex-col bg-[#F6F5F0] sm:min-h-[700px] lg:flex lg:min-h-0">
+    <div className="flex min-h-[650px] lg:min-h-[calc(100svh-128px)] flex-col bg-[#0A0A0A] justify-between">
 
-      <div className="flex flex-1 flex-col justify-center px-7 py-14 sm:px-10 sm:py-16 lg:px-14 lg:py-14 xl:px-16">
-
-        <div className="flex items-center justify-between">
-
-          <span className="text-[9px] font-bold uppercase tracking-[0.30em] text-neutral-500 sm:text-[10px]">
-            01 — Philosophy
-          </span>
-
-          <span className="text-[8px] uppercase tracking-[0.22em] text-neutral-400 sm:text-[9px]">
-            AR / 01
-          </span>
-
-        </div>
+      <div className="flex flex-1 flex-col justify-center px-12 py-12 xl:px-16">
 
         <h2
-          className="mt-8 font-serif text-[62px] font-medium leading-[0.84] tracking-[-0.055em] text-neutral-950 sm:text-[76px] lg:text-[86px] xl:text-[98px]"
+          className="font-serif font-medium leading-[0.84] tracking-[-0.055em] text-white lg:text-[76px] xl:text-[88px]"
           style={{
             fontFamily: "Bodoni MT, Didot, Times New Roman, serif",
           }}
         >
-          Made With
+          Crafted With
           <br />
           Intention.
         </h2>
 
-        <p className="mt-7 max-w-[650px] text-[14px] leading-[1.75] text-neutral-600 sm:text-[16px] lg:text-[17px]">
-          From the first stitch to the final delivery, every detail
-          is considered. Premium clothing doesn't need to shout —
-          quality speaks through the fabric, construction and fit.
+        <p className="mt-6 max-w-[620px] text-[16px] leading-[1.75] text-neutral-400">
+          Every piece in the KOVENIK collection is the result of a rigorous design process where form meets function. We believe that true luxury lies in the details—from the selection of the finest raw materials to the precision of our construction.
         </p>
 
-        {/* CTA */}
-
-        <Link
-          href="/shop"
-          className="group mt-9 flex w-fit items-center gap-6 bg-[#0B0B0B] px-7 py-4 text-[10px] font-bold uppercase tracking-[0.24em] text-white transition-colors duration-300 hover:bg-[#A51F2A] sm:px-9 sm:py-5 sm:text-[11px]"
-        >
-          <span>Explore the standard</span>
-
-          <span className="text-[18px] leading-none transition-transform duration-300 group-hover:translate-x-1">
-            →
-          </span>
-        </Link>
+        {/* CTA Button */}
+        <div className="mt-8">
+          <Link
+            href="/shop"
+            className="group inline-flex items-center gap-6 border border-neutral-700 bg-transparent px-9 py-5 text-[11px] font-bold uppercase tracking-[0.24em] text-white transition-colors duration-300 hover:border-amber-400 hover:text-amber-400"
+          >
+            <span>Explore the standard</span>
+            <span className="text-[18px] leading-none transition-transform duration-300 group-hover:translate-x-1">
+              →
+            </span>
+          </Link>
+        </div>
 
       </div>
 
 
       {/* ===================================================
-          DETAIL CARDS
-
-          MOBILE  : HIDDEN
-          DESKTOP : VISIBLE
-
-          IMPORTANT:
-          Cards are NOT deleted.
+          BOTTOM FOOTER ICONS / INFO
       =================================================== */}
 
-      <div className="grid w-full grid-cols-1 border-t border-neutral-300/70 sm:grid-cols-3">
-
-        {/* MATERIAL */}
-
-        <div className="hidden bg-[#EFEEE9] p-7 sm:block lg:p-8">
-
-          <span className="text-[9px] font-bold uppercase tracking-[0.28em] text-neutral-500">
-            Material
-          </span>
-
-          <div className="mt-4 flex items-end gap-2">
-
-            <span
-              className="font-serif text-[48px] leading-none tracking-[-0.05em] text-neutral-950 sm:text-[54px]"
-              style={{
-                fontFamily: "Bodoni MT, Didot, Times New Roman, serif",
-              }}
-            >
-              240
-            </span>
-
-            <span className="mb-1 text-[9px] font-bold uppercase tracking-[0.18em] text-neutral-500">
-              GSM
-            </span>
-
-          </div>
-
-          <p className="mt-3 text-[10px] leading-[1.6] text-neutral-500 sm:text-[11px]">
-            Heavyweight
-            <br />
-            combed cotton.
-          </p>
-
+      <div className="grid w-full grid-cols-2 border-t border-neutral-800/80 px-12 py-5 text-xs text-neutral-400">
+        <div className="flex items-center gap-3">
+          <span>🌐 Global Shipping</span>
         </div>
-
-
-        {/* CONSTRUCTION */}
-
-        <div className="hidden border-l border-neutral-300/70 bg-[#E9E7E1] p-7 sm:block lg:p-8">
-
-          <span className="text-[9px] font-bold uppercase tracking-[0.28em] text-neutral-500">
-            Construction
-          </span>
-
-          <h3
-            className="mt-5 font-serif text-[30px] leading-[0.88] tracking-[-0.04em] text-neutral-950 sm:text-[36px] lg:text-[38px]"
-            style={{
-              fontFamily: "Bodoni MT, Didot, Times New Roman, serif",
-            }}
-          >
-            Precision
-            <br />
-            in every
-            <br />
-            stitch.
-          </h3>
-
-          <div className="mt-5 h-[1px] w-10 bg-neutral-900" />
-
+        <div className="flex items-center gap-3 justify-end">
+          <span>🌿 Sustainable Practices</span>
         </div>
-
-
-        {/* PHILOSOPHY */}
-
-        <div className="hidden border-l border-neutral-300/70 bg-[#E2E0DA] p-7 sm:block lg:p-8">
-
-          <span className="text-[9px] font-bold uppercase tracking-[0.28em] text-neutral-500">
-            Philosophy
-          </span>
-
-          <h3
-            className="mt-5 font-serif text-[30px] leading-[0.88] tracking-[-0.04em] text-neutral-950 sm:text-[36px] lg:text-[38px]"
-            style={{
-              fontFamily: "Bodoni MT, Didot, Times New Roman, serif",
-            }}
-          >
-            Built
-            <br />
-            beyond
-            <br />
-            seasons.
-          </h3>
-
-          <div className="mt-5 h-[1px] w-10 bg-neutral-900" />
-
-        </div>
-
       </div>
 
     </div>
 
   </div>
 </section>
-<section className="w-full overflow-hidden bg-[#F5F2EC] px-4 py-8 sm:px-6 sm:py-9 lg:h-[calc(100svh-128px)] lg:min-h-0 lg:px-8 lg:py-7 xl:py-8 lg:translate-y-[18px]">
+<section className="w-full bg-neutral-950 px-4 pt-10 pb-12 sm:px-6 sm:pt-14 sm:pb-16 lg:px-8 lg:pt-16 lg:pb-20">
   {/* ============================================================
-      ARDENBY — SHOP BY CATEGORY
-      DESIGN 01 — REFINED ASYMMETRIC EDITORIAL GRID
-      Compact, balanced and designed to stay inside one desktop viewport.
+      ARDENBY / KOVENIK — CLEAN LUXURY EDITORIAL GRID (DARK THEME)
   ============================================================ */}
 
-  <div className="mx-auto flex h-full w-full max-w-[1380px] flex-col">
+  <div className="mx-auto flex w-full max-w-[1380px] flex-col text-white">
     {/* SECTION HEADER */}
-    <div className="mb-5 flex shrink-0 items-end justify-between gap-6 lg:mb-4">
+    <div className="mb-6 flex shrink-0 items-end justify-between gap-6 border-b border-amber-500/30 pb-3.5">
       <div>
         <div className="mb-2 flex items-center gap-2.5">
-          <span className="h-px w-7 bg-[#8F1D24]" />
-           <span className="text-[9px] font-medium uppercase tracking-[0.28em] text-neutral-500 sm:text-[8.5px]">
-              ARDENBY / COLLECTION
-            </span>
+          <span className="h-px w-7 bg-gradient-to-r from-amber-400 to-yellow-500" />
+          <span className="text-[9px] font-semibold uppercase tracking-[0.28em] text-amber-300">
+            KOVENIK / COLLECTION
+          </span>
         </div>
 
-        <h6
-          className="text-[34px] font-normal leading-[0.9] tracking-[-0.035em] text-[#11100F] sm:text-[46px] lg:text-[54px] xl:text-[58px]"
+        <h2
+          className="pb-1 pr-2 text-[36px] font-normal leading-[1.1] tracking-[-0.035em] bg-gradient-to-r from-amber-200 via-yellow-300 to-amber-500 bg-clip-text text-transparent drop-shadow-[0_2px_12px_rgba(245,158,11,0.3)] sm:text-[48px] lg:text-[58px]"
           style={{
             fontFamily: "Bodoni MT, Didot, Times New Roman, serif",
           }}
         >
           Category
-        </h6>
+        </h2>
 
-        <p className="mt-2 text-[11px] uppercase tracking-[0.15em] text-[#77716A] sm:text-[12px] lg:text-[13px]">
+        <p className="mt-2 text-[11px] uppercase tracking-[0.16em] text-neutral-300 sm:text-[12px]">
           Build your everyday uniform.
         </p>
       </div>
 
       <Link
         href="/shop"
-        className="group hidden shrink-0 items-center gap-1.5 border-b border-[#11100F]/50 pb-1.5 text-[7px] font-bold uppercase tracking-[0.22em] text-[#11100F] transition-colors hover:border-[#8F1D24] hover:text-[#8F1D24] sm:flex"
+        className="group hidden shrink-0 items-center gap-1.5 border-b border-amber-400 pb-1.5 text-[8px] font-bold uppercase tracking-[0.22em] text-amber-300 transition-colors hover:border-amber-200 hover:text-amber-100 sm:flex"
       >
         <span>Explore All</span>
-        <ArrowRight className="h-3 w-3 transition-transform duration-300 group-hover:translate-x-1" />
+        <ArrowRight className="h-3.5 w-3.5 transition-transform duration-300 group-hover:translate-x-1" />
       </Link>
     </div>
 
     {/* ============================================================
-        DESKTOP — REFINED ASYMMETRIC GRID
-        4 / 4 / 4 top balance + 4 / 5 / 3 bottom rhythm.
+        DESKTOP — FIXED GRID LAYOUT WITH PERFECT PROPORTIONS
     ============================================================ */}
-    <div className="hidden min-h-0 flex-1 grid-cols-12 grid-rows-2 gap-2.5 lg:grid xl:gap-3">
+    <div className="hidden grid-cols-12 gap-4 lg:grid xl:gap-5">
       {categories.slice(0, 4).map((cat, index) => {
         const staticCatProduct = staticHomeProducts.find(
           (p) => p.category === cat.slug,
@@ -1143,13 +917,9 @@ export default function HomePage() {
         const catProduct = products.find((p) => p.category === cat.slug);
 
         const webImages = [
-          // Supreme Edition — editorial menswear portrait
           "https://images.unsplash.com/photo-1617137968427-85924c800a22?auto=format&fit=crop&w=1400&q=90",
-          // Epic Thread — clothing rack / fashion edit
           "https://images.unsplash.com/photo-1551488831-00ddcb6c6bd3?auto=format&fit=crop&w=1400&q=90",
-          // Ardenby Premium — fashion portrait
           "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=1400&q=90",
-          // The Print Club — flat lay fashion
           "https://images.unsplash.com/photo-1602810318383-e386cc2a3ccf?auto=format&fit=crop&w=1400&q=90",
         ];
 
@@ -1161,10 +931,10 @@ export default function HomePage() {
         const isFeatured = index === 0;
 
         const desktopSpan = [
-          "col-span-4 row-span-2",
-          "col-span-4 row-span-1",
-          "col-span-4 row-span-1",
-          "col-span-5 row-span-1 col-start-5 row-start-2",
+          "col-span-4 row-span-2 h-[520px] xl:h-[560px]",
+          "col-span-4 h-[250px] xl:h-[270px]",
+          "col-span-4 h-[250px] xl:h-[270px]",
+          "col-span-5 col-start-5 h-[250px] xl:h-[270px]",
         ][index];
 
         const copy = [
@@ -1184,7 +954,7 @@ export default function HomePage() {
         return (
           <motion.div
             key={cat.slug}
-            className={`${desktopSpan} min-h-0`}
+            className={`${desktopSpan}`}
             initial={{ opacity: 0, y: 10 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, amount: 0.12 }}
@@ -1192,48 +962,46 @@ export default function HomePage() {
           >
             <Link
               href={`/shop?category=${cat.slug}`}
-              className="group relative block h-full min-h-0 overflow-hidden bg-[#DDD5C8]"
+              className="group relative block h-full overflow-hidden rounded-xl border border-neutral-800 bg-neutral-900 shadow-none transition-all duration-500 hover:border-amber-400"
             >
-              <div className="relative h-full min-h-0">
+              <div className="relative h-full">
                 <img
                   src={productImage}
                   alt={cat.name}
-                  className="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.035]"
+                  className="h-full w-full object-cover opacity-85 transition-transform duration-700 ease-out group-hover:scale-[1.035] group-hover:opacity-95"
                 />
 
-                <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/80 via-black/10 to-transparent" />
+                <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-neutral-950 via-neutral-950/60 to-transparent" />
 
                 {isFeatured && (
-                  <div className="absolute left-3 top-3 z-10 flex items-center gap-1.5 sm:left-4 sm:top-4">
-                    <span className="h-[2px] w-5 bg-[#E21B23]" />
-                    <span className="text-[6px] font-bold uppercase tracking-[0.23em] text-white drop-shadow-[0_1px_5px_rgba(0,0,0,0.8)]">
+                  <div className="absolute left-4 top-4 z-10 flex items-center gap-1.5">
+                    <span className="h-[2px] w-5 bg-amber-400" />
+                    <span className="text-[7px] font-bold uppercase tracking-[0.23em] text-amber-300 drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)]">
                       Featured Category
                     </span>
                   </div>
                 )}
 
-                <div className="absolute inset-x-0 bottom-0 z-10 p-3 sm:p-3.5 xl:p-4">
-                  <div className="mb-1.5 flex items-center justify-between gap-2">
-                    <span className="text-[6px] font-semibold uppercase tracking-[0.2em] text-white/80">
+                <div className="absolute inset-x-0 bottom-0 z-10 p-5 sm:p-6">
+                  <div className="mb-2 flex items-center justify-between gap-2">
+                    <span className="text-[7.5px] font-bold uppercase tracking-[0.22em] text-amber-300">
                       {label}
                     </span>
 
-                    <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full border border-white/70 bg-black/15 text-white backdrop-blur-sm transition-all duration-300 group-hover:bg-white group-hover:text-[#11100F]">
-                      <ArrowUpRight className="h-3 w-3" />
+                    <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-amber-400/60 bg-neutral-900 text-amber-200 shadow-none transition-all duration-300 group-hover:bg-amber-400 group-hover:text-neutral-950">
+                      <ArrowUpRight className="h-3.5 w-3.5" />
                     </span>
                   </div>
 
                   <h3
                     className={
                       isFeatured
-                        ? "text-[30px] font-normal leading-[0.86] tracking-[-0.045em] text-white sm:text-[36px] xl:text-[42px]"
-                        : "text-[25px] font-normal leading-[0.88] tracking-[-0.04em] text-white sm:text-[28px] xl:text-[32px]"
+                        ? "pb-1 pr-1 text-[32px] font-medium leading-[1.1] tracking-[-0.04em] bg-gradient-to-r from-amber-200 via-yellow-300 to-amber-500 bg-clip-text text-transparent drop-shadow-[0_2px_10px_rgba(245,158,11,0.25)] sm:text-[38px] xl:text-[44px]"
+                        : "pb-1 pr-1 text-[26px] font-medium leading-[1.1] tracking-[-0.035em] bg-gradient-to-r from-amber-200 via-yellow-300 to-amber-500 bg-clip-text text-transparent drop-shadow-[0_2px_10px_rgba(245,158,11,0.25)] sm:text-[30px] xl:text-[34px]"
                     }
                     style={{
                       fontFamily:
                         "Bodoni MT, Didot, Times New Roman, serif",
-                      textShadow:
-                        "0 2px 9px rgba(0,0,0,0.85), 0 1px 3px rgba(0,0,0,0.9)",
                     }}
                   >
                     {cat.name}
@@ -1242,17 +1010,17 @@ export default function HomePage() {
                   <p
                     className={
                       isFeatured
-                        ? "mt-2.5 max-w-[440px] text-[12px] leading-[1.55] text-white/95 sm:text-[13px] xl:text-[14px]"
-                        : "mt-2.5 max-w-[360px] text-[11px] leading-[1.55] text-white/95 sm:text-[12px] xl:text-[13px]"
+                        ? "mt-2.5 max-w-[460px] text-[13px] font-medium leading-[1.5] text-neutral-200 sm:text-[14px]"
+                        : "mt-2 max-w-[380px] text-[12px] font-medium leading-[1.5] text-neutral-200 sm:text-[13px]"
                     }
                   >
                     {copy}
                   </p>
 
                   {isFeatured && (
-                    <span className="mt-2.5 inline-flex items-center gap-1.5 bg-white px-3 py-1.5 text-[6px] font-bold uppercase tracking-[0.19em] text-[#11100F] transition-transform duration-300 group-hover:-translate-y-0.5">
+                    <span className="mt-3 inline-flex items-center gap-1.5 bg-amber-400 px-3.5 py-2 text-[7px] font-bold uppercase tracking-[0.2em] text-neutral-950 transition-transform duration-300 group-hover:-translate-y-0.5">
                       Shop Collection
-                      <ArrowRight className="h-2.5 w-2.5" />
+                      <ArrowRight className="h-3 w-3" />
                     </span>
                   )}
                 </div>
@@ -1262,9 +1030,9 @@ export default function HomePage() {
         );
       })}
 
-      {/* ALL PRODUCTS — SMALLER COUNTERWEIGHT */}
+      {/* ALL PRODUCTS — COUNTERWEIGHT CARD */}
       <motion.div
-        className="col-span-3 col-start-10 row-start-2 min-h-0"
+        className="col-span-3 col-start-10 h-[250px] xl:h-[270px]"
         initial={{ opacity: 0, y: 10 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, amount: 0.12 }}
@@ -1272,36 +1040,35 @@ export default function HomePage() {
       >
         <Link
           href="/shop"
-          className="group block h-full min-h-0 overflow-hidden bg-[#CFC5B6]"
+          className="group block h-full overflow-hidden rounded-xl border border-neutral-800 bg-neutral-900 shadow-none transition-all duration-500 hover:border-amber-400"
         >
-          <div className="relative h-full min-h-0">
+          <div className="relative h-full">
             <img
               src="https://images.unsplash.com/photo-1483985988355-763728e1935b?auto=format&fit=crop&w=1200&q=90"
               alt="All Ardenby Products"
-              className="h-full w-full object-cover object-[center_28%] transition-transform duration-700 ease-out group-hover:scale-[1.035]"
+              className="h-full w-full object-cover object-[center_28%] opacity-85 transition-transform duration-700 ease-out group-hover:scale-[1.035] group-hover:opacity-95"
             />
 
-            <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/80 via-black/10 to-transparent" />
+            <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-neutral-950 via-neutral-950/60 to-transparent" />
 
-            <div className="absolute inset-x-0 bottom-0 z-10 p-3 sm:p-3.5">
-              <p className="mb-1.5 text-[6px] font-bold uppercase tracking-[0.2em] text-white/80">
+            <div className="absolute inset-x-0 bottom-0 z-10 p-5 sm:p-6">
+              <p className="mb-2 text-[7.5px] font-bold uppercase tracking-[0.22em] text-amber-300">
                 05 / COMPLETE COLLECTION
               </p>
 
               <div className="flex items-end justify-between gap-2">
                 <h3
-                  className="text-[23px] font-normal leading-[0.88] tracking-[-0.04em] text-white sm:text-[26px]"
+                  className="pb-1 pr-1 text-[26px] font-medium leading-[1.1] tracking-[-0.035em] bg-gradient-to-r from-amber-200 via-yellow-300 to-amber-500 bg-clip-text text-transparent drop-shadow-[0_2px_10px_rgba(245,158,11,0.25)] sm:text-[30px]"
                   style={{
                     fontFamily:
                       "Bodoni MT, Didot, Times New Roman, serif",
-                    textShadow: "0 2px 9px rgba(0,0,0,0.85)",
                   }}
                 >
                   All Products
                 </h3>
 
-                <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full border border-white/70 bg-black/15 text-white backdrop-blur-sm transition-all duration-300 group-hover:bg-white group-hover:text-[#11100F]">
-                  <ArrowUpRight className="h-3 w-3" />
+                <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-amber-400/60 bg-neutral-900 text-amber-200 shadow-none transition-all duration-300 group-hover:bg-amber-400 group-hover:text-neutral-950">
+                  <ArrowUpRight className="h-3.5 w-3.5" />
                 </span>
               </div>
             </div>
@@ -1311,9 +1078,9 @@ export default function HomePage() {
     </div>
 
     {/* ============================================================
-        MOBILE — CLEAN 2 COLUMN EDITORIAL GRID
+        MOBILE — RESPONSIVE GRID
     ============================================================ */}
-    <div className="grid grid-cols-2 gap-2 lg:hidden">
+    <div className="grid grid-cols-2 gap-3.5 lg:hidden">
       {categories.slice(0, 4).map((cat, index) => {
         const staticCatProduct = staticHomeProducts.find(
           (p) => p.category === cat.slug,
@@ -1345,48 +1112,46 @@ export default function HomePage() {
           >
             <Link
               href={`/shop?category=${cat.slug}`}
-              className="group block overflow-hidden bg-[#DDD5C8]"
+              className="group block overflow-hidden rounded-lg border border-neutral-800 bg-neutral-900 shadow-none transition-all duration-300 hover:border-amber-400"
             >
               <div
                 className={
                   isFeatured
-                    ? "relative h-[270px] sm:h-[320px]"
-                    : "relative h-[185px] sm:h-[215px]"
+                    ? "relative h-[310px] sm:h-[350px]"
+                    : "relative h-[210px] sm:h-[240px]"
                 }
               >
                 <img
                   src={productImage}
                   alt={cat.name}
-                  className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.03]"
+                  className="h-full w-full object-cover opacity-85 transition-transform duration-700 group-hover:scale-[1.03] group-hover:opacity-95"
                 />
 
-                <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/80 via-black/10 to-transparent" />
+                <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-neutral-950 via-neutral-950/60 to-transparent" />
 
-                <div className="absolute inset-x-0 bottom-0 z-10 p-3">
-                  <div className="mb-1 flex items-center justify-between gap-2">
-                    <span className="text-[6px] font-bold uppercase tracking-[0.18em] text-white/80">
+                <div className="absolute inset-x-0 bottom-0 z-10 p-4">
+                  <div className="mb-1.5 flex items-center justify-between gap-2">
+                    <span className="text-[7px] font-bold uppercase tracking-[0.2em] text-amber-300">
                       0{index + 1} / COLLECTION
                     </span>
-                    <ArrowUpRight className="h-3 w-3 text-white" />
+                    <ArrowUpRight className="h-3.5 w-3.5 text-amber-200" />
                   </div>
 
                   <h3
                     className={
                       isFeatured
-                        ? "text-[30px] font-normal leading-[0.86] tracking-[-0.04em] text-white sm:text-[36px]"
-                        : "text-[19px] font-normal leading-[0.88] tracking-[-0.035em] text-white"
+                        ? "pb-1 pr-1 text-[32px] font-medium leading-[1.1] tracking-[-0.04em] bg-gradient-to-r from-amber-200 via-yellow-300 to-amber-500 bg-clip-text text-transparent drop-shadow-[0_2px_10px_rgba(245,158,11,0.25)] sm:text-[38px]"
+                        : "pb-1 pr-1 text-[22px] font-medium leading-[1.1] tracking-[-0.035em] bg-gradient-to-r from-amber-200 via-yellow-300 to-amber-500 bg-clip-text text-transparent drop-shadow-[0_2px_10px_rgba(245,158,11,0.25)]"
                     }
                     style={{
                       fontFamily:
                         "Bodoni MT, Didot, Times New Roman, serif",
-                      textShadow:
-                        "0 2px 8px rgba(0,0,0,0.85), 0 1px 2px rgba(0,0,0,0.9)",
                     }}
                   >
                     {cat.name}
                   </h3>
 
-                  <p className="mt-1.5 max-w-[90%] text-[9px] leading-[1.45] text-white/90 sm:text-[10px]">
+                  <p className="mt-1.5 max-w-[92%] text-[10.5px] font-medium leading-[1.45] text-neutral-200 sm:text-[11.5px]">
                     {index === 0
                       ? "Heavyweight silhouettes engineered for everyday rotation."
                       : index === 1
@@ -1411,14 +1176,14 @@ export default function HomePage() {
       >
         <Link
           href="/shop"
-          className="group flex min-h-[70px] items-center justify-between border border-[#11100F]/15 bg-[#E4DDD2] px-4 py-3 transition-colors duration-300 hover:bg-[#DDD4C7]"
+          className="group flex min-h-[80px] items-center justify-between rounded-lg border border-neutral-800 bg-neutral-900 px-4 py-4 shadow-none transition-colors duration-300 hover:border-amber-400 hover:bg-neutral-800"
         >
           <div>
-            <p className="mb-1 text-[6px] font-bold uppercase tracking-[0.2em] text-[#8F1D24]">
+            <p className="mb-1 text-[7px] font-bold uppercase tracking-[0.2em] text-amber-300">
               05 / COMPLETE COLLECTION
             </p>
             <h3
-              className="text-[23px] font-normal leading-none tracking-[-0.035em] text-[#11100F]"
+              className="pb-0.5 pr-1 text-[25px] font-medium leading-[1.1] tracking-[-0.035em] bg-gradient-to-r from-amber-200 via-yellow-300 to-amber-500 bg-clip-text text-transparent drop-shadow-[0_2px_10px_rgba(245,158,11,0.25)]"
               style={{
                 fontFamily:
                   "Bodoni MT, Didot, Times New Roman, serif",
@@ -1428,19 +1193,19 @@ export default function HomePage() {
             </h3>
           </div>
 
-          <span className="flex h-7 w-7 items-center justify-center rounded-full border border-[#11100F]/30 transition-all duration-300 group-hover:bg-[#11100F] group-hover:text-white">
-            <ArrowUpRight className="h-3 w-3" />
+          <span className="flex h-8 w-8 items-center justify-center rounded-full border border-amber-400/60 bg-neutral-900 text-amber-200 shadow-none transition-all duration-300 group-hover:bg-amber-400 group-hover:text-neutral-950">
+            <ArrowUpRight className="h-3.5 w-3.5" />
           </span>
         </Link>
       </motion.div>
     </div>
   </div>
 </section>
-<section className="ardenby-product-section w-full bg-[#f8f7f3] px-4 pb-12 pt-14 sm:px-6 sm:pb-16 sm:pt-16 lg:px-10 lg:pb-20 lg:pt-20">
+<section className="ardenby-product-section w-full bg-[#0b0b0b] px-4 pb-12 pt-14 text-white sm:px-6 sm:pb-16 sm:pt-16 lg:px-10 lg:pb-20 lg:pt-20">
   <div className="mx-auto w-full max-w-[1440px]">
 
     {/* ================= HEADER ================= */}
-    <div className="mb-6 border-b border-black/10 pb-6 sm:mb-8 sm:pb-7 lg:mb-9 lg:pb-8">
+    <div className="mb-6 border-b border-white/10 pb-6 sm:mb-8 sm:pb-7 lg:mb-9 lg:pb-8">
       <div className="flex items-end justify-between">
 
         {/* LEFT CONTENT */}
@@ -1448,30 +1213,30 @@ export default function HomePage() {
 
           {/* EYEBROW */}
           <div className="mb-2 flex items-center gap-2.5 sm:mb-2.5">
-            <span className="text-[9px] font-medium uppercase tracking-[0.28em] text-neutral-500 sm:text-[8.5px]">
-              ARDENBY / COLLECTION
+            <span className="text-[9px] font-medium uppercase tracking-[0.28em] text-[#D4AF37] sm:text-[8.5px]">
+              KOVENIK / COLLECTION
             </span>
 
-            <span className="hidden h-px w-7 bg-neutral-300 sm:block" />
+            <span className="hidden h-px w-7 bg-white/20 sm:block" />
 
             <span className="hidden text-[7.5px] font-medium uppercase tracking-[0.22em] text-neutral-400 sm:block">
               04 ITEMS
             </span>
           </div>
 
-          {/* TITLE */}
-          <h2 className="font-serif text-[42px] font-normal leading-[0.92] tracking-[-0.045em] text-[#111] sm:text-[42px] lg:text-[48px]">
+          {/* TITLE - METALLIC GOLD STYLE */}
+          <h2 className="font-serif text-[42px] font-normal leading-[0.92] tracking-[-0.045em] bg-gradient-to-r from-[#F3E5AB] via-[#D4AF37] to-[#AA771C] bg-clip-text text-transparent sm:text-[42px] lg:text-[48px]">
             Best Sellers
           </h2>
 
           {/* DESCRIPTION */}
-          <p className="mt-3 max-w-[420px] text-[12px] leading-[1.6] text-neutral-500 sm:text-[10.5px]">
-            Most loved. Most worn. Timeless pieces that define ARDENBY.
+          <p className="mt-3 max-w-[420px] text-[12px] leading-[1.6] text-neutral-300 sm:text-[10.5px]">
+            Most loved. Most worn. Timeless pieces that define KOVENIK.
           </p>
 
           {/* LOADING */}
           {productsLoading && (
-            <p className="mt-2 text-[8.5px] font-medium uppercase tracking-[0.2em] text-neutral-400">
+            <p className="mt-2 text-[8.5px] font-medium uppercase tracking-[0.2em] text-[#D4AF37]">
               Loading live collection...
             </p>
           )}
@@ -1487,7 +1252,7 @@ export default function HomePage() {
         {/* ================= DESKTOP VIEW ALL ================= */}
         <Link
           href="/shop"
-          className="group hidden shrink-0 items-center gap-2 border-b border-black pb-1.5 text-[8.5px] font-semibold uppercase tracking-[0.2em] text-neutral-900 transition-colors duration-300 hover:text-neutral-500 sm:flex"
+          className="group hidden shrink-0 items-center gap-2 border-b border-[#D4AF37] pb-1.5 text-[8.5px] font-semibold uppercase tracking-[0.2em] text-[#D4AF37] transition-colors duration-300 hover:text-white sm:flex"
         >
           Explore All Fits
 
@@ -1498,14 +1263,18 @@ export default function HomePage() {
       </div>
     </div>
 
-    {/* ================= PRODUCTS ================= */}
-    <div className="grid w-full grid-cols-2 gap-x-2.5 gap-y-9 sm:gap-x-4 sm:gap-y-11 lg:grid-cols-4 lg:gap-x-5 lg:gap-y-12">
+    {/* ================= PRODUCTS GRID WITH PREMIUM SHADOW & RADIUS ================= */}
+    <div className="grid w-full grid-cols-2 gap-x-3 gap-y-9 sm:gap-x-5 sm:gap-y-11 lg:grid-cols-4 lg:gap-x-6 lg:gap-y-12">
       {bestSellers.map((product, index) => (
-        <ProductCard
-          key={product.id}
-          product={product as Product}
-          index={index}
-        />
+        <div
+          key={product.id || index}
+          className="group relative min-w-0 rounded-2xl bg-[#111111] p-3.5 border border-[#D4AF37]/50 shadow-[0_8px_30px_rgb(0,0,0,0.8),0_0_15px_rgba(212,175,55,0.1)] transition-all duration-300 hover:border-[#D4AF37] hover:shadow-[0_12px_40px_rgb(0,0,0,0.9),0_0_25px_rgba(212,175,55,0.25)] hover:-translate-y-1.5 [&_h3]:font-bold [&_h3]:text-white [&_p]:text-neutral-200 [&_span]:text-[#F3E5AB] [&_span]:font-bold"
+        >
+          <ProductCard
+            product={product as Product}
+            index={index}
+          />
+        </div>
       ))}
     </div>
 
@@ -1513,7 +1282,7 @@ export default function HomePage() {
     <div className="mt-10 flex w-full justify-center sm:hidden">
       <Link
         href="/shop"
-        className="group mx-auto flex items-center justify-center gap-2 border-b border-black pb-1.5 text-[10.5px] font-semibold uppercase tracking-[0.18em] text-neutral-900"
+        className="group mx-auto flex items-center justify-center gap-2 border-b border-[#D4AF37] pb-1.5 text-[10.5px] font-semibold uppercase tracking-[0.18em] text-[#D4AF37]"
       >
         View All Best Sellers
 
@@ -1525,158 +1294,13 @@ export default function HomePage() {
 
   </div>
 </section>
-      {/* ================= NEW ARRIVALS ================= */}
-      <section className="ardenby-product-section w-full px-3 py-6 sm:px-6 lg:px-10 lg:py-10">
-  <div className="relative w-full overflow-hidden rounded-[28px] border border-black/10 bg-[#EFECE4] p-4 shadow-[0_12px_40px_rgba(0,0,0,0.06)] sm:p-7 lg:p-10">
 
-    {/* Subtle background detail */}
-    <div className="pointer-events-none absolute -right-24 -top-24 h-72 w-72 rounded-full bg-white/30 blur-3xl" />
-    <div className="pointer-events-none absolute -bottom-24 -left-24 h-72 w-72 rounded-full bg-black/[0.025] blur-3xl" />
-
-    {/* ================= HEADER ================= */}
-    <div className="relative z-10 mb-7 border-b border-black/10 pb-6 sm:mb-8">
-      <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
-
-        {/* Heading */}
-        <div className="min-w-0">
-          <div className="mb-2 flex items-center gap-2">
-            <span className="flex h-5 w-5 items-center justify-center rounded-full border border-black/10 bg-white/60">
-              <SlidersHorizontal className="h-2.5 w-2.5 text-neutral-700" />
-            </span>
-
-            <span className="text-[9px] font-semibold uppercase tracking-[0.3em] text-neutral-500 sm:text-[9px]">
-              Fresh Drops • SS26
-            </span>
-          </div>
-
-          <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
-            <h2 className="font-serif text-[38px] font-normal leading-none tracking-[-0.03em] text-neutral-950 sm:text-[40px] lg:text-[46px]">
-              New Arrivals
-            </h2>
-
-            {/* Dynamic count */}
-            <span className="text-[9px] font-medium uppercase tracking-[0.2em] text-neutral-400">
-              {filteredNewArrivals.length} Pieces
-            </span>
-          </div>
-
-          <p className="mt-3 max-w-md text-[10px] leading-5 text-neutral-500 sm:text-[11px]">
-            Discover the latest pieces added to the ARDENBY collection.
-          </p>
-        </div>
-
-        {/* ================= FILTERS ================= */}
-        <div className="w-full lg:w-auto lg:max-w-[620px]">
-          <div className="scrollbar-none flex gap-1.5 overflow-x-auto pb-1">
-
-            {[
-              { id: "all", label: "All Fits" },
-              { id: "supreme-edition", label: "Supreme Edition" },
-              { id: "epic-thread", label: "Epic Thread" },
-              { id: "ardenby-premium", label: "Ardenby Premium" },
-              { id: "the-print-club", label: "Print Club" },
-            ].map((tab) => {
-              const isActive = selectedSubCat === tab.id;
-
-              return (
-                <button
-                  key={tab.id}
-                  type="button"
-                  onClick={() => setSelectedSubCat(tab.id)}
-                  className={`
-                    group relative shrink-0 overflow-hidden
-                    rounded-full border px-4 py-2
-                    text-[8px] font-semibold uppercase
-                    tracking-[0.17em]
-                    transition-all duration-300
-                    sm:px-5 sm:py-2.5
-                    sm:text-[8.5px]
-                    ${
-                      isActive
-                        ? "border-neutral-950 bg-neutral-950 text-white shadow-[0_5px_18px_rgba(0,0,0,0.18)]"
-                        : "border-black/10 bg-white/70 text-neutral-600 hover:border-black/20 hover:bg-white hover:text-neutral-950 hover:shadow-sm"
-                    }
-                  `}
-                >
-                  {tab.label}
-
-                  {/* Active indicator */}
-                  {isActive && (
-                    <span className="absolute bottom-0 left-1/2 h-[2px] w-5 -translate-x-1/2 rounded-full bg-white/70" />
-                  )}
-                </button>
-              );
-            })}
-          </div>
-        </div>
-      </div>
-    </div>
-
-    {/* ================= PRODUCTS ================= */}
-    {filteredNewArrivals.length > 0 ? (
-      <div className="relative z-10 grid w-full grid-cols-2 gap-x-2.5 gap-y-7 sm:gap-x-4 sm:gap-y-9 lg:grid-cols-4 lg:gap-x-5 lg:gap-y-10">
-        {filteredNewArrivals.map((product, index) => (
-          <div
-            key={product.id}
-            className="group min-w-0"
-          >
-            <ProductCard
-              product={product as Product}
-              index={index}
-            />
-          </div>
-        ))}
-      </div>
-    ) : (
-      /* ================= EMPTY STATE ================= */
-      <div className="relative z-10 flex min-h-[280px] flex-col items-center justify-center px-5 text-center">
-        <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-full border border-black/10 bg-white/60 shadow-sm">
-          <SlidersHorizontal className="h-4 w-4 text-neutral-500" />
-        </div>
-
-        <h3 className="font-serif text-xl text-neutral-950">
-          No pieces found
-        </h3>
-
-        <p className="mt-2 max-w-xs text-[10px] leading-5 text-neutral-500">
-          We couldn't find any new arrivals in this collection.
-        </p>
-
-        <button
-          type="button"
-          onClick={() => setSelectedSubCat("all")}
-          className="mt-5 rounded-full bg-neutral-950 px-5 py-2.5 text-[8px] font-semibold uppercase tracking-[0.2em] text-white transition-all duration-300 hover:-translate-y-0.5 hover:bg-neutral-800 hover:shadow-lg"
-        >
-          View All Pieces
-        </button>
-      </div>
-    )}
-
-    {/* ================= BOTTOM DETAIL ================= */}
-    {filteredNewArrivals.length > 0 && (
-      <div className="relative z-10 mt-8 flex items-center gap-3 border-t border-black/10 pt-5 sm:mt-10">
-        <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-neutral-950" />
-
-        <p className="text-[8px] font-medium uppercase tracking-[0.25em] text-neutral-400">
-          Curated for the new season
-        </p>
-
-        <span className="h-px flex-1 bg-black/10" />
-
-        <span className="text-[8px] font-medium uppercase tracking-[0.2em] text-neutral-400">
-          ARDENBY
-        </span>
-      </div>
-    )}
-  </div>
-</section>
-
-      {/* ================= TRENDING NOW ================= */}
-      {/* ================================================================
+     {/* ================= TRENDING NOW ================= */}
+{/* ================================================================
     TRENDING NOW
 ================================================================ */}
 
-<section className="ardenby-product-section relative w-full overflow-hidden bg-[#F6F5F0] px-3 py-14 sm:px-6 sm:py-18 lg:px-10 lg:py-24">
+<section className="ardenby-product-section relative w-full overflow-hidden bg-[#0b0b0b] px-3 py-14 sm:px-6 sm:py-18 lg:px-10 lg:py-24 text-white">
   <div className="mx-auto w-full max-w-[1440px]">
 
     {/* ================= HEADER ================= */}
@@ -1685,22 +1309,23 @@ export default function HomePage() {
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, amount: 0.2 }}
       transition={{ duration: 0.6, ease }}
-      className="mb-8 flex items-end justify-between border-b border-black/10 pb-5 sm:mb-10 sm:pb-6"
+      className="mb-8 flex items-end justify-between border-b border-white/10 pb-5 sm:mb-10 sm:pb-6"
     >
       <div>
         <div className="flex items-center gap-3">
-          <span className="h-px w-7 bg-neutral-400" />
+          <span className="h-px w-7 bg-[#D4AF37]/50" />
 
-          <span className="text-[9px] font-semibold uppercase tracking-[0.28em] text-neutral-500 sm:text-[9px]">
+          <span className="text-[9px] font-semibold uppercase tracking-[0.28em] text-[#D4AF37] sm:text-[9px]">
             Community Top Picks
           </span>
         </div>
 
-        <h2 className="mt-2 font-serif text-[42px] font-normal leading-[0.92] tracking-[-0.045em] text-neutral-950 sm:text-[42px] lg:text-[52px]">
+        {/* TITLE - METALLIC GOLD STYLE */}
+        <h2 className="mt-2 font-serif text-[42px] font-normal leading-[0.92] tracking-[-0.045em] bg-gradient-to-r from-[#F3E5AB] via-[#D4AF37] to-[#AA771C] bg-clip-text text-transparent sm:text-[42px] lg:text-[52px]">
           Trending Now
         </h2>
 
-        <p className="mt-3 max-w-[420px] text-[12px] leading-[1.6] text-neutral-500 sm:text-[11px]">
+        <p className="mt-3 max-w-[420px] text-[12px] leading-[1.6] text-neutral-300 sm:text-[11px]">
           Discover the pieces everyone is talking about this season.
         </p>
       </div>
@@ -1708,7 +1333,7 @@ export default function HomePage() {
       {/* DESKTOP CTA */}
       <Link
         href="/shop"
-        className="group hidden items-center gap-2 border-b border-neutral-900 pb-1 text-[9px] font-bold uppercase tracking-[0.2em] text-neutral-900 sm:flex"
+        className="group hidden items-center gap-2 border-b border-[#D4AF37] pb-1 text-[9px] font-bold uppercase tracking-[0.2em] text-[#D4AF37] transition-colors duration-300 hover:text-white sm:flex"
       >
         Discover Trending
 
@@ -1718,8 +1343,8 @@ export default function HomePage() {
       </Link>
     </motion.div>
 
-    {/* ================= PRODUCT GRID ================= */}
-    <div className="grid w-full grid-cols-2 gap-x-2.5 gap-y-9 sm:gap-x-4 sm:gap-y-12 lg:grid-cols-4 lg:gap-x-5">
+    {/* ================= PRODUCT GRID WITH PREMIUM SHADOW, RADIUS & GOLD STYLE ================= */}
+    <div className="grid w-full grid-cols-2 gap-x-3 gap-y-9 sm:gap-x-5 sm:gap-y-12 lg:grid-cols-4 lg:gap-x-6">
 
       {trending.map((product, index) => (
         <motion.div
@@ -1741,7 +1366,7 @@ export default function HomePage() {
             delay: index * 0.07,
             ease,
           }}
-          className="group min-w-0"
+          className="group relative min-w-0 rounded-2xl bg-[#111111] p-3.5 border border-[#D4AF37]/50 shadow-[0_8px_30px_rgb(0,0,0,0.8),0_0_15px_rgba(212,175,55,0.1)] transition-all duration-300 hover:border-[#D4AF37] hover:shadow-[0_12px_40px_rgb(0,0,0,0.9),0_0_25px_rgba(212,175,55,0.25)] hover:-translate-y-1.5 [&_h3]:font-bold [&_h3]:text-white [&_p]:text-neutral-200 [&_span]:text-[#F3E5AB] [&_span]:font-bold"
         >
           <ProductCard
             product={product as Product}
@@ -1756,7 +1381,7 @@ export default function HomePage() {
     <div className="mt-9 flex justify-center sm:hidden">
       <Link
         href="/shop"
-        className="group flex items-center gap-2 border-b border-neutral-900 pb-1.5 text-[10.5px] font-bold uppercase tracking-[0.2em] text-neutral-900"
+        className="group flex items-center gap-2 border-b border-[#D4AF37] pb-1.5 text-[10.5px] font-bold uppercase tracking-[0.2em] text-[#D4AF37]"
       >
         Discover Trending
 
@@ -1768,7 +1393,6 @@ export default function HomePage() {
 
   </div>
 </section>
-
 
 
 
