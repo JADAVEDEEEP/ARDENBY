@@ -518,6 +518,104 @@ export default function HomePage() {
         .ardenby-product-section button:has([data-lucide="plus"]) {
           display: none !important;
         }
+
+        /* =========================================================
+           MOBILE PRODUCT CARD — ORIGINAL LOOK
+           Only fix BESTSELLER badge text visibility.
+        ========================================================= */
+        .kovenik-mobile-product-card {
+          border-radius: 0 !important;
+          background: #0b0b0b !important;
+          color: #f5f5f5 !important;
+        }
+
+        /* KEEP PRODUCT IMAGE EXACTLY AS THE ORIGINAL IMAGE */
+        .kovenik-mobile-product-card img {
+          border-radius: 0 !important;
+          filter: none !important;
+          opacity: 1 !important;
+        }
+
+        /* Product information stays visible */
+        .kovenik-mobile-product-card h3,
+        .kovenik-mobile-product-card h4 {
+          color: #f5f5f5 !important;
+          opacity: 1 !important;
+          text-shadow: none !important;
+        }
+
+        .kovenik-mobile-product-card p {
+          color: #d4d4d4 !important;
+          opacity: 1 !important;
+          text-shadow: none !important;
+        }
+
+        /* Rating / gold accents */
+        .kovenik-mobile-product-card [class*="text-yellow"],
+        .kovenik-mobile-product-card [class*="text-amber"] {
+          color: #D4AF37 !important;
+          opacity: 1 !important;
+        }
+
+        /* Best Price stays green */
+        .kovenik-mobile-product-card [class*="text-emerald"] {
+          color: #10b981 !important;
+          opacity: 1 !important;
+        }
+
+        /* PRODUCT PRICE + MRP — WHITE ON MOBILE */
+        .kovenik-mobile-product-card [class*="text-neutral-900"],
+        .kovenik-mobile-product-card [class*="text-neutral-950"] {
+          color: #ffffff !important;
+          opacity: 1 !important;
+        }
+
+        /* Main price (e.g. ₹23) */
+        .kovenik-mobile-product-card [class*="font-semibold"] {
+          color: #ffffff !important;
+          opacity: 1 !important;
+        }
+
+        /* MRP / struck price also stays clearly visible */
+        .kovenik-mobile-product-card [class*="line-through"] {
+          color: #d4d4d4 !important;
+          opacity: 1 !important;
+        }
+
+        /* =========================================================
+           BESTSELLER BADGE — BLACK BLOCK + WHITE TEXT
+           Only the badge is changed. Product image/card stays original.
+        ========================================================= */
+        .kovenik-mobile-product-card [class*="bg-white"] {
+          background-color: #111111 !important;
+          color: #ffffff !important;
+          border-color: rgba(212,175,55,0.35) !important;
+          opacity: 1 !important;
+        }
+
+        .kovenik-mobile-product-card [class*="bg-white"] span,
+        .kovenik-mobile-product-card [class*="bg-white"] p,
+        .kovenik-mobile-product-card [class*="bg-white"] div {
+          color: #ffffff !important;
+          opacity: 1 !important;
+          text-shadow: none !important;
+        }
+
+        .kovenik-mobile-product-card [class*="bg-white"][class*="text-white"] {
+          background-color: #111111 !important;
+          color: #ffffff !important;
+        }
+
+        /* Keep all card buttons/controls visible and unchanged */
+        .kovenik-mobile-product-card button {
+          opacity: 1 !important;
+        }
+
+        /* Quick-add / plus button remains dark with its existing icon */
+        .kovenik-mobile-product-card button[class*="bg-black"],
+        .kovenik-mobile-product-card button[class*="bg-neutral-900"] {
+          color: #ffffff !important;
+        }
       `}</style>
       {/* ================= PREMIUM DARK LUXURY HERO SECTION ================= */}
 <section
@@ -597,15 +695,6 @@ export default function HomePage() {
         </AnimatePresence>
       </div>
 
-      {/* Mobile Explore / CTA Button */}
-      <div className="absolute bottom-6 inset-x-0 z-[80] flex justify-center px-6">
-        <motion.button
-          whileTap={{ scale: 0.95 }}
-          className="w-full rounded-full bg-gradient-to-r from-[#C5A059] via-[#E6CA65] to-[#AA823E] py-3 text-[11px] font-bold uppercase tracking-[0.2em] text-neutral-950 shadow-[0_4px_20px_rgba(212,175,55,0.3)]"
-        >
-          Explore Drop
-        </motion.button>
-      </div>
     </div>
 
     {/* =====================================================
@@ -867,7 +956,470 @@ export default function HomePage() {
 
   </div>
 </section>
-<section className="w-full bg-neutral-950 px-4 pt-10 pb-12 sm:px-6 sm:pt-14 sm:pb-16 lg:px-8 lg:pt-16 lg:pb-20">
+
+{/* MOBILE EDITORIAL STORY — HIDDEN ON MOBILE */}
+<section className="hidden lg:hidden" aria-hidden="true" />
+
+{/* =========================================================
+    MOBILE-ONLY — TRUST / FEATURE STRIP
+========================================================= */}
+<section className="hidden lg:hidden" aria-hidden="true">
+  <div className="mb-4 flex items-center justify-between">
+    <p className="text-[8px] font-semibold uppercase tracking-[0.28em] text-[#D4AF37]">
+      The KOVENIK Standard
+    </p>
+    <span className="text-[8px] uppercase tracking-[0.18em] text-neutral-500">
+      04 / 04
+    </span>
+  </div>
+
+  <div className="grid grid-cols-2 gap-px overflow-hidden border border-white/10 bg-white/10">
+    {trustItems.map(({ Icon, title }, index) => (
+      <div
+        key={title}
+        className="min-h-[116px] bg-[#111111] p-4"
+      >
+        <div className="mb-5 flex items-center justify-between">
+          <Icon className="h-4 w-4 text-[#D4AF37]" strokeWidth={1.5} />
+          <span className="text-[7px] tracking-[0.2em] text-neutral-600">
+            0{index + 1}
+          </span>
+        </div>
+        <p className="max-w-[125px] text-[9px] font-semibold uppercase leading-[1.45] tracking-[0.06em] text-white">
+          {title}
+        </p>
+      </div>
+    ))}
+  </div>
+</section>
+
+
+{/* =========================================================
+    MOBILE-ONLY — SHOP BY CATEGORY
+    Completely separate from desktop category markup.
+========================================================= */}
+<section className="lg:hidden w-full bg-[#0b0b0b] px-4 pb-12 pt-8 text-white">
+  <div className="mb-6 flex items-end justify-between border-b border-white/10 pb-4">
+    <div>
+      <p className="mb-2 text-[8px] font-semibold uppercase tracking-[0.3em] text-[#D4AF37]">
+        KOVENIK / COLLECTION
+      </p>
+      <h2
+        className="font-serif text-[42px] font-normal leading-none tracking-[-0.045em] text-[#F3E5AB]"
+        style={{ fontFamily: "Bodoni MT, Didot, Times New Roman, serif" }}
+      >
+        Category
+      </h2>
+    </div>
+    <Link
+      href="/shop"
+      className="mb-1 flex items-center gap-1.5 text-[8px] font-bold uppercase tracking-[0.18em] text-[#D4AF37]"
+    >
+      All <ArrowUpRight className="h-3.5 w-3.5" />
+    </Link>
+  </div>
+
+  <div className="grid grid-cols-2 gap-2.5">
+    {[
+      ...categories.slice(0, 4),
+      {
+        slug: "bottom-wear",
+        name: "Bottom Wear",
+      },
+    ].map((cat, index) => {
+      const staticCatProduct = staticHomeProducts.find(
+        (p) => p.category === cat.slug
+      );
+      const catProduct = products.find((p) => p.category === cat.slug);
+
+      const mobileCategoryImages = [
+        "https://images.unsplash.com/photo-1617137968427-85924c800a22?auto=format&fit=crop&w=1000&q=90",
+        "https://images.unsplash.com/photo-1551488831-00ddcb6c6bd3?auto=format&fit=crop&w=900&q=90",
+        "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=900&q=90",
+        "https://images.unsplash.com/photo-1602810318383-e386cc2a3ccf?auto=format&fit=crop&w=900&q=90",
+        "https://images.unsplash.com/photo-1552902865-b72c031ac5ea?auto=format&fit=crop&w=900&q=90",
+      ];
+
+      const image =
+        mobileCategoryImages[index] ||
+        staticCatProduct?.images?.[0] ||
+        catProduct?.images?.[0];
+
+      const featured = index === 0;
+
+      return (
+        <motion.div
+          key={cat.slug}
+          className={featured ? "col-span-2" : "col-span-1"}
+          initial={{ opacity: 0, y: 12 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.15 }}
+          transition={{ duration: 0.45, delay: index * 0.05 }}
+        >
+          <Link
+            href={`/shop?category=${cat.slug}`}
+            className={`group relative block h-full overflow-hidden border border-white/10 bg-[#121212] ${
+              index === 4 ? "" : ""
+            }`}
+          >
+            <div className={
+              featured
+                ? "relative h-[360px]"
+                : "relative h-[235px]"
+            }>
+              <img
+                src={image}
+                alt={cat.name}
+                className="h-full w-full rounded-none object-cover opacity-85 transition-transform duration-700 group-active:scale-[1.03]"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black via-black/45 to-transparent" />
+
+              <div className="absolute left-4 top-4 flex items-center gap-2">
+                <span className="h-px w-5 bg-[#D4AF37]" />
+                <span className="text-[7px] font-bold uppercase tracking-[0.2em] text-[#F3E5AB]">
+                  0{index + 1} / EDIT
+                </span>
+              </div>
+
+              <div className="absolute inset-x-4 bottom-4">
+                <div className="flex items-end justify-between gap-2">
+                  <div>
+                    <h3
+                      className={
+                        featured
+                          ? "text-[38px] font-medium leading-[0.9] tracking-[-0.04em] text-white"
+                          : "text-[24px] font-medium leading-[0.95] tracking-[-0.035em] text-white"
+                      }
+                      style={{
+                        fontFamily: "Bodoni MT, Didot, Times New Roman, serif",
+                      }}
+                    >
+                      {cat.name}
+                    </h3>
+                    <p className="mt-2 max-w-[230px] text-[9px] leading-[1.5] text-neutral-300">
+                      {[
+                        "Heavyweight silhouettes engineered for everyday rotation.",
+                        "Premium graphics with a clean streetwear finish.",
+                        "Elevated essentials built for daily wear.",
+                        "Statement layers made to stand apart.",
+                        "Relaxed trousers and everyday bottoms built for the full look.",
+                      ][index]}
+                    </p>
+                  </div>
+
+                  <span className="mb-0.5 flex h-9 w-9 shrink-0 items-center justify-center border border-[#D4AF37]/60 bg-black/50 text-[#F3E5AB]">
+                    <ArrowUpRight className="h-4 w-4" />
+                  </span>
+                </div>
+              </div>
+            </div>
+          </Link>
+        </motion.div>
+      );
+    })}
+
+    <Link
+      href="/shop"
+      className="col-span-2 flex min-h-[82px] items-center justify-between border border-[#D4AF37]/40 bg-gradient-to-r from-[#151515] to-[#0d0d0d] px-4"
+    >
+      <div>
+        <p className="mb-1 text-[7px] font-bold uppercase tracking-[0.24em] text-[#D4AF37]">
+          05 / COMPLETE COLLECTION
+        </p>
+        <h3
+          className="font-serif text-[27px] leading-none text-white"
+          style={{ fontFamily: "Bodoni MT, Didot, Times New Roman, serif" }}
+        >
+          All Products
+        </h3>
+      </div>
+      <span className="flex h-9 w-9 items-center justify-center rounded-full border border-[#D4AF37]/60 text-[#F3E5AB]">
+        <ArrowRight className="h-4 w-4" />
+      </span>
+    </Link>
+  </div>
+</section>
+
+{/* =========================================================
+    MOBILE-ONLY — BEST SELLERS / HORIZONTAL RAIL
+========================================================= */}
+<section className="lg:hidden w-full bg-[#050505] px-4 py-12 text-white">
+  <div className="mb-6 flex items-end justify-between border-b border-white/10 pb-4">
+    <div>
+      <p className="mb-2 text-[8px] font-semibold uppercase tracking-[0.28em] text-[#D4AF37]">
+        Most Loved
+      </p>
+      <h2
+        className="font-serif text-[39px] leading-none tracking-[-0.04em] text-[#F3E5AB]"
+        style={{ fontFamily: "Bodoni MT, Didot, Times New Roman, serif" }}
+      >
+        Best Sellers
+      </h2>
+    </div>
+    <Link
+      href="/shop"
+      className="flex items-center gap-1 text-[8px] font-bold uppercase tracking-[0.18em] text-[#D4AF37]"
+    >
+      View All <ArrowUpRight className="h-3.5 w-3.5" />
+    </Link>
+  </div>
+
+  <div className="flex snap-x snap-mandatory gap-3 overflow-x-auto pb-3 scrollbar-none">
+    {bestSellers.map((product, index) => (
+      <motion.div
+        key={product.id}
+        className="kovenik-mobile-product-card w-[72vw] max-w-[285px] shrink-0 snap-start border border-[#D4AF37]/35 bg-[#111111] p-2.5"
+        initial={{ opacity: 0, x: 20 }}
+        whileInView={{ opacity: 1, x: 0 }}
+        viewport={{ once: true, amount: 0.2 }}
+        transition={{ duration: 0.4, delay: index * 0.04 }}
+      >
+        <ProductCard product={product as Product} index={index} />
+      </motion.div>
+    ))}
+  </div>
+
+  <div className="mt-3 flex items-center justify-between">
+    <span className="text-[7px] uppercase tracking-[0.2em] text-neutral-500">
+      Swipe to explore
+    </span>
+    <span className="h-px w-20 bg-[#D4AF37]/40" />
+  </div>
+</section>
+
+{/* =========================================================
+    MOBILE-ONLY — NEW ARRIVALS / DROP RAIL
+========================================================= */}
+<section className="lg:hidden w-full bg-[#0b0b0b] px-4 py-12 text-white">
+  <div className="mb-5">
+    <p className="mb-2 text-[8px] font-semibold uppercase tracking-[0.3em] text-[#D4AF37]">
+      Fresh Drops • SS26
+    </p>
+    <div className="flex items-end justify-between gap-4">
+      <h2
+        className="font-serif text-[40px] leading-[0.9] tracking-[-0.04em] text-[#F3E5AB]"
+        style={{ fontFamily: "Bodoni MT, Didot, Times New Roman, serif" }}
+      >
+        New Arrivals
+      </h2>
+      <span className="pb-1 text-[8px] uppercase tracking-[0.18em] text-neutral-500">
+        {filteredNewArrivals.length} Pieces
+      </span>
+    </div>
+  </div>
+
+  <div className="scrollbar-none mb-5 flex gap-1.5 overflow-x-auto pb-1">
+    {[
+      { id: "all", label: "All Fits" },
+      { id: "supreme-edition", label: "Supreme Edition" },
+      { id: "epic-thread", label: "Epic Thread" },
+      { id: "Kovenik-premium", label: "Kovenik Premium" },
+      { id: "the-print-club", label: "Print Club" },
+    ].map((tab) => {
+      const active = selectedSubCat === tab.id;
+      return (
+        <button
+          key={tab.id}
+          type="button"
+          onClick={() => setSelectedSubCat(tab.id)}
+          className={`shrink-0 rounded-full border px-3.5 py-2 text-[7.5px] font-bold uppercase tracking-[0.16em] ${
+            active
+              ? "border-[#D4AF37] bg-[#D4AF37] text-black"
+              : "border-white/10 bg-[#151515] text-neutral-400"
+          }`}
+        >
+          {tab.label}
+        </button>
+      );
+    })}
+  </div>
+
+  {filteredNewArrivals.length > 0 ? (
+    <div className="flex snap-x snap-mandatory gap-3 overflow-x-auto pb-2 scrollbar-none">
+      {filteredNewArrivals.map((product, index) => (
+        <div
+          key={product.id}
+          className="kovenik-mobile-product-card w-[72vw] max-w-[285px] shrink-0 snap-start border border-white/10 bg-[#121212] p-2.5"
+        >
+          <ProductCard product={product as Product} index={index} />
+        </div>
+      ))}
+    </div>
+  ) : (
+    <div className="border border-white/10 bg-[#121212] px-5 py-12 text-center">
+      <SlidersHorizontal className="mx-auto h-5 w-5 text-[#D4AF37]" />
+      <p className="mt-3 font-serif text-lg text-white">No pieces found</p>
+      <button
+        type="button"
+        onClick={() => setSelectedSubCat("all")}
+        className="mt-4 rounded-full bg-[#D4AF37] px-5 py-2.5 text-[8px] font-bold uppercase tracking-[0.18em] text-black"
+      >
+        View All Pieces
+      </button>
+    </div>
+  )}
+</section>
+
+{/* =========================================================
+    MOBILE-ONLY — TRENDING NOW / 2-COLUMN EDITORIAL GRID
+========================================================= */}
+<section className="lg:hidden w-full bg-[#050505] px-4 py-12 text-white">
+  <div className="mb-6 flex items-end justify-between border-b border-white/10 pb-4">
+    <div>
+      <p className="mb-2 text-[8px] font-semibold uppercase tracking-[0.3em] text-[#D4AF37]">
+        Community Top Picks
+      </p>
+      <h2
+        className="font-serif text-[40px] leading-none tracking-[-0.04em] text-[#F3E5AB]"
+        style={{ fontFamily: "Bodoni MT, Didot, Times New Roman, serif" }}
+      >
+        Trending Now
+      </h2>
+    </div>
+    <Link
+      href="/shop"
+      className="mb-1 text-[8px] font-bold uppercase tracking-[0.18em] text-[#D4AF37]"
+    >
+      Discover
+    </Link>
+  </div>
+
+  <div className="grid grid-cols-2 gap-2.5">
+    {trending.map((product, index) => (
+      <motion.div
+        key={product.id}
+        className="kovenik-mobile-product-card min-w-0 border border-white/10 bg-[#111111] p-2"
+        initial={{ opacity: 0, y: 14 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, amount: 0.15 }}
+        transition={{ duration: 0.4, delay: index * 0.05 }}
+      >
+        <ProductCard product={product as Product} index={index} />
+      </motion.div>
+    ))}
+  </div>
+</section>
+
+{/* MOBILE PHILOSOPHY — HIDDEN ON MOBILE */}
+<section className="hidden lg:hidden" aria-hidden="true" />
+
+{/* =========================================================
+    MOBILE-ONLY — REVIEWS
+========================================================= */}
+<section className="lg:hidden w-full bg-[#050505] px-4 py-12 text-white">
+  <div className="mb-6 flex items-end justify-between">
+    <div>
+      <p className="mb-2 text-[8px] font-semibold uppercase tracking-[0.3em] text-[#D4AF37]">
+        Community
+      </p>
+      <h2
+        className="font-serif text-[40px] leading-none text-[#F3E5AB]"
+        style={{ fontFamily: "Bodoni MT, Didot, Times New Roman, serif" }}
+      >
+        What They Say
+      </h2>
+    </div>
+    <Star className="h-5 w-5 fill-[#D4AF37] text-[#D4AF37]" />
+  </div>
+
+  <div className="flex snap-x snap-mandatory gap-3 overflow-x-auto scrollbar-none">
+    {reviews.map((review) => (
+      <article
+        key={review.name}
+        className="w-[86vw] max-w-[360px] shrink-0 snap-start border border-[#D4AF37]/30 bg-[#111111] p-5"
+      >
+        <div className="mb-5 flex gap-1">
+          {Array.from({ length: review.rating }).map((_, i) => (
+            <Star key={i} className="h-3.5 w-3.5 fill-[#D4AF37] text-[#D4AF37]" />
+          ))}
+        </div>
+        <p className="text-[15px] leading-[1.65] text-neutral-200">
+          “{review.text}”
+        </p>
+        <div className="mt-7 flex items-end justify-between border-t border-white/10 pt-4">
+          <div>
+            <p className="text-[10px] font-bold uppercase tracking-[0.14em] text-white">
+              {review.name}
+            </p>
+            <p className="mt-1 text-[8px] uppercase tracking-[0.18em] text-[#D4AF37]">
+              {review.tag}
+            </p>
+          </div>
+          <span className="text-[24px] text-[#D4AF37]/40">”</span>
+        </div>
+      </article>
+    ))}
+  </div>
+</section>
+
+{/* =========================================================
+    MOBILE-ONLY — NEWSLETTER + FOOTER
+========================================================= */}
+<section className="lg:hidden w-full bg-[#0b0b0b] px-4 pb-8 pt-12 text-white">
+  <div className="border border-[#D4AF37]/35 bg-gradient-to-br from-[#171717] to-[#0b0b0b] p-5">
+    <p className="text-[8px] font-semibold uppercase tracking-[0.3em] text-[#D4AF37]">
+      {newsletterContent.eyebrow}
+    </p>
+    <h2
+      className="mt-3 font-serif text-[37px] leading-[0.92] tracking-[-0.04em] text-white"
+      style={{ fontFamily: "Bodoni MT, Didot, Times New Roman, serif" }}
+    >
+      {newsletterContent.title}
+    </h2>
+    <p className="mt-3 text-[10px] leading-[1.6] text-neutral-400">
+      {newsletterContent.description}
+    </p>
+
+    <form onSubmit={handleSubscribe} className="mt-5">
+      <div className="flex overflow-hidden border border-white/15 bg-black/40">
+        <input
+          type="email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          placeholder={newsletterContent.inputPlaceholder}
+          className="min-w-0 flex-1 bg-transparent px-3 py-3 text-[10px] text-white outline-none placeholder:text-neutral-600"
+          required
+        />
+        <button
+          type="submit"
+          className="shrink-0 bg-[#D4AF37] px-4 text-[8px] font-bold uppercase tracking-[0.14em] text-black"
+        >
+          {newsletterContent.buttonLabel}
+        </button>
+      </div>
+    </form>
+
+    {subscribed && (
+      <p className="mt-3 flex items-center gap-2 text-[9px] text-[#F3E5AB]">
+        <Check className="h-3.5 w-3.5" />
+        {newsletterContent.successMessage}
+      </p>
+    )}
+  </div>
+
+  <div className="mt-8 grid grid-cols-2 gap-6 border-t border-white/10 pt-6">
+    <div>
+      <p className="text-[18px] font-semibold tracking-[-0.04em] text-white">
+        KOVENIK
+      </p>
+      <p className="mt-2 text-[8px] uppercase tracking-[0.18em] text-neutral-500">
+        Streetwear / SS26
+      </p>
+    </div>
+    <div className="space-y-2 text-right text-[8px] font-semibold uppercase tracking-[0.18em] text-neutral-400">
+      <Link href="/shop" className="block">Shop</Link>
+      <Link href="/shop" className="block">Collection</Link>
+      <Link href="/shop" className="block">Contact</Link>
+    </div>
+  </div>
+
+  <div className="mt-7 flex items-center justify-between text-[7px] uppercase tracking-[0.2em] text-neutral-600">
+    <span>© KOVENIK</span>
+    <span>Global Shipping • Secure Payments</span>
+  </div>
+</section>
+
+<section className="hidden lg:block w-full bg-neutral-950 px-4 pt-10 pb-12 sm:px-6 sm:pt-14 sm:pb-16 lg:px-8 lg:pt-16 lg:pb-20">
   {/* ============================================================
       ARDENBY / KOVENIK — CLEAN LUXURY EDITORIAL GRID (DARK THEME)
   ============================================================ */}
@@ -1201,7 +1753,7 @@ export default function HomePage() {
     </div>
   </div>
 </section>
-<section className="ardenby-product-section w-full bg-[#0b0b0b] px-4 pb-12 pt-14 text-white sm:px-6 sm:pb-16 sm:pt-16 lg:px-10 lg:pb-20 lg:pt-20">
+<section className="hidden lg:block ardenby-product-section w-full bg-[#0b0b0b] px-4 pb-12 pt-14 text-white sm:px-6 sm:pb-16 sm:pt-16 lg:px-10 lg:pb-20 lg:pt-20">
   <div className="mx-auto w-full max-w-[1440px]">
 
     {/* ================= HEADER ================= */}
@@ -1294,13 +1846,159 @@ export default function HomePage() {
 
   </div>
 </section>
+      {/* ================= NEW ARRIVALS ================= */}
+      <section className="hidden lg:block ardenby-product-section w-full bg-[#0b0b0b] px-3 py-6 sm:px-6 lg:px-10 lg:py-10 text-white">
+  <div className="relative w-full overflow-hidden rounded-[28px] border border-[#D4AF37]/50 bg-[#111111] p-4 shadow-[0_12px_40px_rgba(0,0,0,0.8),0_0_20px_rgba(212,175,55,0.12)] sm:p-7 lg:p-10">
 
-     {/* ================= TRENDING NOW ================= */}
+    {/* Subtle background detail */}
+    <div className="pointer-events-none absolute -right-24 -top-24 h-72 w-72 rounded-full bg-[#D4AF37]/10 blur-3xl" />
+    <div className="pointer-events-none absolute -bottom-24 -left-24 h-72 w-72 rounded-full bg-black/40 blur-3xl" />
+
+    {/* ================= HEADER ================= */}
+    <div className="relative z-10 mb-7 border-b border-white/10 pb-6 sm:mb-8">
+      <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
+
+        {/* Heading */}
+        <div className="min-w-0">
+          <div className="mb-2 flex items-center gap-2">
+            <span className="flex h-5 w-5 items-center justify-center rounded-full border border-[#D4AF37]/40 bg-[#1a1a1a]">
+              <SlidersHorizontal className="h-2.5 w-2.5 text-[#D4AF37]" />
+            </span>
+
+            <span className="text-[9px] font-semibold uppercase tracking-[0.3em] text-[#D4AF37] sm:text-[9px]">
+              Fresh Drops • SS26
+            </span>
+          </div>
+
+          <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
+            {/* TITLE - METALLIC GOLD STYLE */}
+            <h2 className="font-serif text-[38px] font-normal leading-none tracking-[-0.03em] bg-gradient-to-r from-[#F3E5AB] via-[#D4AF37] to-[#AA771C] bg-clip-text text-transparent sm:text-[40px] lg:text-[46px]">
+              New Arrivals
+            </h2>
+
+            {/* Dynamic count */}
+            <span className="text-[9px] font-medium uppercase tracking-[0.2em] text-[#F3E5AB]">
+              {filteredNewArrivals.length} Pieces
+            </span>
+          </div>
+
+          <p className="mt-3 max-w-md text-[10px] leading-5 text-neutral-300 sm:text-[11px]">
+            Discover the latest pieces added to the KOVENIK collection.
+          </p>
+        </div>
+
+        {/* ================= FILTERS ================= */}
+        <div className="w-full lg:w-auto lg:max-w-[620px]">
+          <div className="scrollbar-none flex gap-1.5 overflow-x-auto pb-1">
+
+            {[
+              { id: "all", label: "All Fits" },
+              { id: "supreme-edition", label: "Supreme Edition" },
+              { id: "epic-thread", label: "Epic Thread" },
+              { id: "Kovenik-premium", label: "Kovenik Premium" },
+              { id: "the-print-club", label: "Print Club" },
+            ].map((tab) => {
+              const isActive = selectedSubCat === tab.id;
+
+              return (
+                <button
+                  key={tab.id}
+                  type="button"
+                  onClick={() => setSelectedSubCat(tab.id)}
+                  className={`
+                    group relative shrink-0 overflow-hidden
+                    rounded-full border px-4 py-2
+                    text-[8px] font-semibold uppercase
+                    tracking-[0.17em]
+                    transition-all duration-300
+                    sm:px-5 sm:py-2.5
+                    sm:text-[8.5px]
+                    ${
+                      isActive
+                        ? "border-[#D4AF37] bg-gradient-to-r from-[#F3E5AB] via-[#D4AF37] to-[#AA771C] text-neutral-950 font-bold shadow-[0_5px_18px_rgba(212,175,55,0.3)]"
+                        : "border-[#D4AF37]/30 bg-[#161616] text-neutral-300 hover:border-[#D4AF37] hover:bg-[#1a1a1a] hover:text-white hover:shadow-sm"
+                    }
+                  `}
+                >
+                  {tab.label}
+
+                  {/* Active indicator */}
+                  {isActive && (
+                    <span className="absolute bottom-0 left-1/2 h-[2px] w-5 -translate-x-1/2 rounded-full bg-neutral-950" />
+                  )}
+                </button>
+              );
+            })}
+          </div>
+        </div>
+      </div>
+    </div>
+
+    {/* ================= PRODUCTS WITH PREMIUM SHADOW, RADIUS & GOLD STYLE ================= */}
+    {filteredNewArrivals.length > 0 ? (
+      <div className="relative z-10 grid w-full grid-cols-2 gap-x-2.5 gap-y-7 sm:gap-x-4 sm:gap-y-9 lg:grid-cols-4 lg:gap-x-5 lg:gap-y-10">
+        {filteredNewArrivals.map((product, index) => (
+          <div
+            key={product.id}
+            className="group relative min-w-0 rounded-2xl bg-[#161616] p-3.5 border border-[#D4AF37]/40 shadow-[0_8px_30px_rgb(0,0,0,0.8),0_0_15px_rgba(212,175,55,0.08)] transition-all duration-300 hover:border-[#D4AF37] hover:shadow-[0_12px_40px_rgb(0,0,0,0.9),0_0_25px_rgba(212,175,55,0.2)] hover:-translate-y-1.5 [&_h3]:font-bold [&_h3]:text-white [&_p]:text-neutral-200 [&_span]:text-[#F3E5AB] [&_span]:font-bold"
+          >
+            <ProductCard
+              product={product as Product}
+              index={index}
+            />
+          </div>
+        ))}
+      </div>
+    ) : (
+      /* ================= EMPTY STATE ================= */
+      <div className="relative z-10 flex min-h-[280px] flex-col items-center justify-center px-5 text-center">
+        <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-full border border-[#D4AF37]/30 bg-[#161616] shadow-sm">
+          <SlidersHorizontal className="h-4 w-4 text-[#D4AF37]" />
+        </div>
+
+        <h3 className="font-serif text-xl text-white">
+          No pieces found
+        </h3>
+
+        <p className="mt-2 max-w-xs text-[10px] leading-5 text-neutral-400">
+          We couldn't find any new arrivals in this collection.
+        </p>
+
+        <button
+          type="button"
+          onClick={() => setSelectedSubCat("all")}
+          className="mt-5 rounded-full bg-gradient-to-r from-[#F3E5AB] via-[#D4AF37] to-[#AA771C] px-5 py-2.5 text-[8px] font-bold uppercase tracking-[0.2em] text-neutral-950 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg"
+        >
+          View All Pieces
+        </button>
+      </div>
+    )}
+
+    {/* ================= BOTTOM DETAIL ================= */}
+    {filteredNewArrivals.length > 0 && (
+      <div className="relative z-10 mt-8 flex items-center gap-3 border-t border-white/10 pt-5 sm:mt-10">
+        <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-[#D4AF37]" />
+
+        <p className="text-[8px] font-medium uppercase tracking-[0.25em] text-neutral-400">
+          Curated for the new season
+        </p>
+
+        <span className="h-px flex-1 bg-white/10" />
+
+        <span className="text-[8px] font-medium uppercase tracking-[0.2em] text-[#D4AF37]">
+          KOVENIK
+        </span>
+      </div>
+    )}
+  </div>
+</section>
+
+      {/* ================= TRENDING NOW ================= */}
 {/* ================================================================
     TRENDING NOW
 ================================================================ */}
 
-<section className="ardenby-product-section relative w-full overflow-hidden bg-[#0b0b0b] px-3 py-14 sm:px-6 sm:py-18 lg:px-10 lg:py-24 text-white">
+<section className="hidden lg:block ardenby-product-section relative w-full overflow-hidden bg-[#0b0b0b] px-3 py-14 sm:px-6 sm:py-18 lg:px-10 lg:py-24 text-white">
   <div className="mx-auto w-full max-w-[1440px]">
 
     {/* ================= HEADER ================= */}
@@ -1321,7 +2019,27 @@ export default function HomePage() {
         </div>
 
         {/* TITLE - METALLIC GOLD STYLE */}
-        <h2 className="mt-2 font-serif text-[42px] font-normal leading-[0.92] tracking-[-0.045em] bg-gradient-to-r from-[#F3E5AB] via-[#D4AF37] to-[#AA771C] bg-clip-text text-transparent sm:text-[42px] lg:text-[52px]">
+       <h2
+          className="
+            overflow-visible
+            bg-gradient-to-r
+            from-[#FFF4C7]
+            via-[#D4AF37]
+            to-[#A87518]
+            bg-clip-text
+            pb-1
+            font-serif
+            text-[38px]
+            font-normal
+            leading-[1.05]
+            tracking-[-0.035em]
+            text-transparent
+
+            sm:text-[44px]
+
+            lg:text-[48px]
+          "
+        >
           Trending Now
         </h2>
 

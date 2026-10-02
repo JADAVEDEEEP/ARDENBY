@@ -15,7 +15,7 @@ import { useState } from "react";
 import { toast } from "sonner";
 
 /* ================================================================
-   FOOTER CONTENT
+    FOOTER CONTENT
 ================================================================ */
 
 const footerLinks = {
@@ -69,7 +69,7 @@ const socialLinks = [
 const marqueeText = "WEAR BEYOND ORDINARY";
 
 /* ================================================================
-   FOOTER
+    FOOTER
 ================================================================ */
 
 export function Footer() {
@@ -81,7 +81,7 @@ export function Footer() {
 
   /* ================================================================
      NEWSLETTER
-  ================================================================= */
+  ================================================================ */
 
   const handleSubscribe = (e: React.FormEvent) => {
     e.preventDefault();
@@ -102,7 +102,7 @@ export function Footer() {
 
   /* ================================================================
      ACCORDION
-  ================================================================= */
+  ================================================================ */
 
   const toggleAccordion = (title: string) => {
     setOpenSections((prev) => ({
@@ -112,49 +112,50 @@ export function Footer() {
   };
 
   return (
-    <footer className="relative overflow-hidden border-t border-white/10 bg-[#080808] text-stone-200">
+    <footer className="relative isolate w-full overflow-x-hidden overflow-y-visible border-t border-[#D4AF37]/30 bg-[#080808] text-stone-200">
 
       {/* ============================================================
           NEWSLETTER
       ============================================================ */}
 
-      <section className="border-b border-white/10 bg-[#0b0b0b]">
-        <div className="mx-auto max-w-[1440px] px-5 py-14 sm:px-8 sm:py-16 lg:px-12 lg:py-20">
+      <section className="border-b border-[#D4AF37]/30 bg-[#0b0b0b]">
+        <div className="mx-auto w-full max-w-[1440px] px-4 py-10 sm:px-8 sm:py-20 lg:px-12 lg:py-24">
 
-          <div className="grid items-end gap-10 lg:grid-cols-[1fr_0.9fr] lg:gap-20">
+          <div className="grid items-end gap-12 lg:grid-cols-[1fr_0.9fr] lg:gap-20">
 
             {/* LEFT CONTENT */}
 
             <div>
               <div className="mb-5 flex items-center gap-3">
-                <span className="h-px w-10 bg-white/30" />
+                <span className="h-px w-12 bg-[#D4AF37]/50" />
 
-                <span className="text-[10px] font-semibold uppercase tracking-[0.28em] text-white/55 sm:text-[11px]">
+                <span className="text-[11px] font-semibold uppercase tracking-[0.28em] text-[#D4AF37] sm:text-[12px]">
                   KOVENIK NEWSLETTER
                 </span>
               </div>
 
               <h2
                 className="
-                  max-w-[720px]
+                  max-w-[760px]
                   font-serif
-                  text-[42px]
+                  text-[38px]
+                  sm:text-[46px]
                   font-normal
                   leading-[0.95]
                   tracking-[-0.035em]
-                  text-white
-                  sm:text-[52px]
-                  md:text-[62px]
-                  lg:text-[70px]
+                  bg-gradient-to-r from-[#F3E5AB] via-[#D4AF37] to-[#AA771C]
+                  bg-clip-text text-transparent
+                  md:text-[66px]
+                  lg:text-[76px]
                 "
               >
                 Stay in the
-                <span className="block italic text-white/55">
+                <span className="block italic text-[#F3E5AB]/70">
                   inner circle.
                 </span>
               </h2>
 
-              <p className="mt-6 max-w-[560px] text-[14px] font-light leading-[1.8] text-neutral-400 sm:text-[15px] lg:text-[16px]">
+              <p className="mt-4 max-w-[580px] text-[13px] font-light leading-[1.7] text-neutral-300 sm:mt-6 sm:text-[16px] lg:text-[17px]">
                 Get first access to new drops, exclusive collections,
                 private releases and 10% off your first order.
               </p>
@@ -164,33 +165,38 @@ export function Footer() {
 
             <div className="w-full">
 
-              <p className="mb-4 text-[11px] font-semibold uppercase tracking-[0.2em] text-white/65 sm:text-[12px]">
+              <p className="mb-4 text-[12px] font-semibold uppercase tracking-[0.2em] text-[#F3E5AB] sm:text-[13px]">
                 Join KOVENIK
               </p>
 
               <form
                 onSubmit={handleSubscribe}
-                className="group relative"
+                className="group relative w-full min-w-0"
               >
                 <div
                   className="
                     flex
-                    min-h-[64px]
+                    min-h-[60px]
+                    w-full
+                    overflow-hidden
                     items-center
+                    rounded-2xl
                     border
-                    border-white/15
-                    bg-white/[0.035]
+                    border-[#D4AF37]/40
+                    bg-[#141414]
+                    shadow-[0_8px_30px_rgba(0,0,0,0.8),0_0_15px_rgba(212,175,55,0.1)]
                     transition-all
                     duration-300
-                    focus-within:border-white/40
-                    focus-within:bg-white/[0.055]
-                    sm:min-h-[70px]
+                    focus-within:border-[#D4AF37]
+                    focus-within:bg-[#1a1a1a]
+                    focus-within:shadow-[0_10px_35px_rgba(0,0,0,0.9),0_0_20px_rgba(212,175,55,0.2)]
+                    sm:min-h-[76px]
                   "
                 >
                   {/* EMAIL ICON */}
 
-                  <div className="flex shrink-0 items-center pl-5 text-white/40 sm:pl-6">
-                    <Mail className="h-5 w-5" strokeWidth={1.4} />
+                  <div className="flex shrink-0 items-center pl-4 text-[#D4AF37] sm:pl-6">
+                    <Mail className="h-5 w-5 sm:h-6 sm:w-6" strokeWidth={1.5} />
                   </div>
 
                   {/* INPUT */}
@@ -205,15 +211,15 @@ export function Footer() {
                       min-w-0
                       flex-1
                       bg-transparent
-                      px-4
-                      text-[14px]
+                      px-3
+                      text-[12px]
                       font-light
                       tracking-wide
                       text-white
                       outline-none
-                      placeholder:text-neutral-600
+                      placeholder:text-neutral-500
                       sm:px-5
-                      sm:text-[15px]
+                      sm:text-[16px]
                     "
                   />
 
@@ -223,25 +229,28 @@ export function Footer() {
                     type="submit"
                     disabled={subscribed}
                     className="
-                      mr-1.5
+                      mr-2
                       flex
-                      h-[52px]
+                      h-[48px]
                       shrink-0
                       items-center
-                      gap-3
-                      bg-white
-                      px-5
+                      gap-2
+                      rounded-lg
+                      bg-gradient-to-r from-[#F3E5AB] via-[#D4AF37] to-[#AA771C]
+                      px-4
                       text-[10px]
                       font-bold
                       uppercase
                       tracking-[0.18em]
-                      text-black
+                      text-neutral-950
                       transition-all
                       duration-300
-                      hover:bg-neutral-200
-                      sm:mr-2
-                      sm:h-[56px]
-                      sm:px-7
+                      hover:brightness-110
+                      hover:shadow-lg
+                      sm:mr-2.5
+                      sm:h-[60px]
+                      sm:px-8
+                      sm:text-[12px]
                     "
                   >
                     <span>
@@ -250,12 +259,12 @@ export function Footer() {
 
                     <ArrowRight
                       className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1"
-                      strokeWidth={1.8}
+                      strokeWidth={2}
                     />
                   </button>
                 </div>
 
-                <p className="mt-4 text-[10px] leading-relaxed text-neutral-600 sm:text-[11px]">
+                <p className="mt-3 text-[10px] leading-relaxed text-neutral-400 sm:mt-4 sm:text-[12px]">
                   By subscribing, you agree to receive KOVENIK updates,
                   product launches and offers.
                 </p>
@@ -270,9 +279,9 @@ export function Footer() {
           MAIN FOOTER CONTENT
       ============================================================ */}
 
-      <section className="mx-auto max-w-[1440px] px-5 py-16 sm:px-8 sm:py-20 lg:px-12 lg:py-24">
+      <section className="mx-auto w-full max-w-[1440px] px-4 py-10 sm:px-8 sm:py-22 lg:px-12 lg:py-28">
 
-        <div className="grid gap-14 md:grid-cols-5 lg:gap-16">
+        <div className="grid gap-9 md:grid-cols-5 md:gap-14 lg:gap-16">
 
           {/* ========================================================
               BRAND
@@ -288,15 +297,17 @@ export function Footer() {
 
                 <span
                   className="
-                    text-[38px]
+                    text-[34px]
                     font-bold
+                    sm:text-[42px]
                     uppercase
                     tracking-[-0.08em]
-                    text-white
+                    bg-gradient-to-r from-[#F3E5AB] via-[#D4AF37] to-[#AA771C]
+                    bg-clip-text text-transparent
                     transition-opacity
                     duration-300
-                    group-hover:opacity-80
-                    sm:text-[44px]
+                    group-hover:opacity-90
+                    sm:text-[50px]
                   "
                   style={{
                     fontFamily: "Didot, Bodoni MT, serif",
@@ -307,13 +318,13 @@ export function Footer() {
 
                 <div className="mt-3 flex items-center gap-3">
 
-                  <span className="h-px w-9 bg-white/35" />
+                  <span className="h-px w-10 bg-[#D4AF37]/50" />
 
-                  <span className="text-[9px] uppercase tracking-[0.34em] text-white/60">
+                  <span className="text-[10px] uppercase tracking-[0.34em] text-[#F3E5AB]">
                     WEAR YOUR ESSENCE
                   </span>
 
-                  <span className="h-px w-9 bg-white/35" />
+                  <span className="h-px w-10 bg-[#D4AF37]/50" />
 
                 </div>
               </div>
@@ -321,7 +332,7 @@ export function Footer() {
 
             {/* BRAND DESCRIPTION */}
 
-            <p className="mt-7 max-w-[430px] text-[14px] font-light leading-[1.85] text-neutral-400 sm:text-[15px]">
+            <p className="mt-5 max-w-[450px] text-[13px] font-light leading-[1.75] text-neutral-300 sm:mt-7 sm:text-[16px]">
               Premium men's clothing crafted for the bold.
               High-density fabrics, relaxed cuts, and minimalist
               luxury aesthetics.
@@ -329,15 +340,15 @@ export function Footer() {
 
             {/* BRAND DETAIL */}
 
-            <div className="mt-8 flex items-center gap-4">
+            <div className="mt-6 flex items-center gap-3 sm:mt-8 sm:gap-4">
 
-              <span className="font-mono text-[10px] tracking-[0.2em] text-neutral-500">
+              <span className="font-mono text-[11px] tracking-[0.2em] text-[#D4AF37]">
                 EST. 2026
               </span>
 
-              <span className="h-px w-8 bg-neutral-700" />
+              <span className="h-px w-8 bg-[#D4AF37]/40" />
 
-              <span className="text-[10px] font-semibold uppercase tracking-[0.2em] text-neutral-500">
+              <span className="text-[11px] font-semibold uppercase tracking-[0.2em] text-[#D4AF37]">
                 INDIA
               </span>
 
@@ -345,7 +356,7 @@ export function Footer() {
 
             {/* SOCIALS */}
 
-            <div className="mt-9 flex gap-3">
+            <div className="mt-6 flex gap-2.5 sm:mt-9 sm:gap-3.5">
 
               {socialLinks.map(({ Icon, href, label }) => (
                 <a
@@ -355,24 +366,28 @@ export function Footer() {
                   className="
                     group
                     flex
-                    h-11
-                    w-11
+                    h-10
+                    w-10
+                    sm:h-12
+                    sm:w-12
                     items-center
                     justify-center
+                    rounded-xl
                     border
-                    border-white/[0.10]
-                    bg-white/[0.025]
-                    text-neutral-400
+                    border-[#D4AF37]/30
+                    bg-[#141414]
+                    text-neutral-300
                     transition-all
                     duration-300
-                    hover:border-white/30
-                    hover:bg-white
-                    hover:text-black
+                    hover:border-[#D4AF37]
+                    hover:bg-gradient-to-r hover:from-[#F3E5AB] hover:via-[#D4AF37] hover:to-[#AA771C]
+                    hover:text-neutral-950
+                    hover:shadow-[0_0_20px_rgba(212,175,55,0.4)]
                   "
                 >
                   <Icon
-                    className="h-[17px] w-[17px]"
-                    strokeWidth={1.5}
+                    className="h-[18px] w-[18px]"
+                    strokeWidth={1.6}
                   />
                 </a>
               ))}
@@ -392,7 +407,7 @@ export function Footer() {
                 key={title}
                 className="
                   border-b
-                  border-white/[0.09]
+                  border-[#D4AF37]/20
                   pb-6
                   last:border-b-0
                   md:border-none
@@ -415,7 +430,7 @@ export function Footer() {
                   "
                 >
 
-                  <span className="text-[12px] font-bold uppercase tracking-[0.2em] text-white">
+                  <span className="text-[13px] font-bold uppercase tracking-[0.2em] text-white sm:text-[14px]">
                     {title}
                   </span>
 
@@ -423,7 +438,7 @@ export function Footer() {
                     className={`
                       h-4
                       w-4
-                      text-neutral-400
+                      text-[#D4AF37]
                       transition-transform
                       duration-300
                       md:hidden
@@ -467,14 +482,14 @@ export function Footer() {
                           inline-flex
                           items-center
                           gap-2
-                          text-[13px]
+                          text-[14px]
                           font-light
                           leading-relaxed
-                          text-neutral-400
+                          text-neutral-300
                           transition-colors
                           duration-200
-                          hover:text-white
-                          sm:text-[14px]
+                          hover:text-[#F3E5AB]
+                          sm:text-[15px]
                         "
                       >
 
@@ -513,10 +528,10 @@ export function Footer() {
       </section>
 
       {/* ============================================================
-          MARQUEE
+          MARQUEE (METALLIC GOLD GRADIENT TEXT)
       ============================================================ */}
 
-      <div className="overflow-hidden border-y border-white/[0.08] bg-black/30 py-5">
+      <div className="w-full overflow-hidden border-y border-[#D4AF37]/30 bg-[#060606] py-4 sm:py-6">
 
         <div className="flex w-max animate-[marquee_40s_linear_infinite] gap-10">
 
@@ -530,17 +545,19 @@ export function Footer() {
               <span
                 className="
                   font-serif
-                  text-[27px]
+                  text-[30px]
+                  font-normal
                   tracking-[0.12em]
-                  text-neutral-500
-                  sm:text-[34px]
-                  lg:text-[40px]
+                  bg-gradient-to-r from-[#F3E5AB] via-[#D4AF37] to-[#AA771C]
+                  bg-clip-text text-transparent
+                  sm:text-[38px]
+                  lg:text-[44px]
                 "
               >
                 {marqueeText}
               </span>
 
-              <span className="h-1.5 w-1.5 rounded-full bg-white/30" />
+              <span className="h-2 w-2 rounded-full bg-[#D4AF37]" />
 
             </div>
 
@@ -554,30 +571,30 @@ export function Footer() {
           BOTTOM BAR
       ============================================================ */}
 
-      <div className="mx-auto max-w-[1440px] px-5 sm:px-8 lg:px-12">
+      <div className="mx-auto w-full max-w-[1440px] px-4 sm:px-8 lg:px-12">
 
-        <div className="flex flex-col gap-6 py-8 sm:flex-row sm:items-center sm:justify-between">
+        <div className="flex flex-col gap-4 py-6 sm:gap-6 sm:py-9 sm:flex-row sm:items-center sm:justify-between">
 
           {/* COPYRIGHT */}
 
-          <p className="text-[10px] font-mono uppercase tracking-[0.08em] text-neutral-500 sm:text-[11px]">
+          <p className="text-[11px] font-mono uppercase tracking-[0.08em] text-neutral-400 sm:text-[12px]">
             © 2026 KOVENIK. All rights reserved.
           </p>
 
           {/* LEGAL LINKS */}
 
-          <div className="flex flex-wrap gap-x-7 gap-y-3">
+          <div className="flex flex-wrap gap-x-8 gap-y-3">
 
             <Link
               href="/privacy"
               className="
-                text-[10px]
+                text-[11px]
                 uppercase
                 tracking-[0.12em]
-                text-neutral-500
+                text-neutral-400
                 transition-colors
-                hover:text-white
-                sm:text-[11px]
+                hover:text-[#F3E5AB]
+                sm:text-[12px]
               "
             >
               Privacy Policy
@@ -586,13 +603,13 @@ export function Footer() {
             <Link
               href="/terms"
               className="
-                text-[10px]
+                text-[11px]
                 uppercase
                 tracking-[0.12em]
-                text-neutral-500
+                text-neutral-400
                 transition-colors
-                hover:text-white
-                sm:text-[11px]
+                hover:text-[#F3E5AB]
+                sm:text-[12px]
               "
             >
               Terms of Service
@@ -601,13 +618,13 @@ export function Footer() {
             <Link
               href="/admin"
               className="
-                text-[10px]
+                text-[11px]
                 uppercase
                 tracking-[0.12em]
-                text-neutral-500
+                text-neutral-400
                 transition-colors
-                hover:text-white
-                sm:text-[11px]
+                hover:text-[#F3E5AB]
+                sm:text-[12px]
               "
             >
               Admin Portal
@@ -623,7 +640,7 @@ export function Footer() {
           FOOTER WORDMARK
       ============================================================ */}
 
-      <div className="pointer-events-none select-none overflow-hidden px-2">
+      <div className="pointer-events-none hidden select-none overflow-hidden px-2 pb-4 sm:block">
 
         <p
           className="
@@ -634,7 +651,8 @@ export function Footer() {
             font-normal
             leading-[0.65]
             tracking-[-0.08em]
-            text-white/[0.035]
+            bg-gradient-to-r from-white/[0.05] via-[#D4AF37]/[0.05] to-white/[0.05]
+            bg-clip-text text-transparent
           "
         >
           KOVENIK
