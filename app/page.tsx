@@ -635,6 +635,10 @@ export default function HomePage() {
         .kovenik-mobile-product-card button[class*="bg-neutral-900"] {
           color: #ffffff !important;
         }
+      @keyframes marquee {
+        from { transform: translateX(0); }
+        to { transform: translateX(-35%); }
+      }
       `}</style>
       {/* ================= PREMIUM DARK LUXURY HERO SECTION ================= */}
 <section
@@ -648,72 +652,99 @@ export default function HomePage() {
     <div className="absolute inset-0 opacity-20 bg-[radial-gradient(#d4af37_1px,transparent_1px)] [background-size:24px_24px] pointer-events-none" />
 
     {/* =====================================================
-        MOBILE HERO — Purpose-built Luxury Composition
+        MOBILE HERO — KOVENIK PRODUCTION MOBILE COMPOSITION
+        Desktop hero below is intentionally untouched.
     ====================================================== */}
-    <div className="absolute inset-0 block md:hidden">
+    <div className="absolute inset-0 block md:hidden bg-[#070707]">
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_72%_42%,rgba(212,175,55,0.10),transparent_42%),linear-gradient(180deg,#080808_0%,#050505_100%)]" />
+      <div className="pointer-events-none absolute inset-0 opacity-[0.14] [background-image:radial-gradient(#d4af37_0.7px,transparent_0.7px)] [background-size:18px_18px]" />
 
-      {/* Premium Badge */}
-      <motion.div
-        initial={{ opacity: 0, y: -5 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.4 }}
-        className="absolute left-4 top-4 z-[70]"
-      >
-        <div className="rounded-md border border-amber-500/30 bg-neutral-900/80 px-3 py-1.5 backdrop-blur-md">
-          <p className="text-[8px] font-bold uppercase tracking-[0.16em] text-amber-400">
-            The New Standard • SS26
-          </p>
-          <p className="mt-1 text-[8px] text-neutral-400">
-            West Delhi Precision
-          </p>
-        </div>
-      </motion.div>
-
-      {/* Mobile Luxury Headline */}
+      {/* Hero copy */}
       <AnimatePresence mode="wait">
+        <div className="pointer-events-none absolute left-1/2 top-[42%] z-[90] h-[250px] -translate-y-1/2 w-[94%] -translate-x-1/2 rounded-[50%] bg-black/35 blur-[28px]" />
+        <div
+          aria-hidden="true"
+          className="mobile-hero-copy-vignette pointer-events-none absolute left-1/2 top-[43%] z-[95] h-[250px] w-[88%] -translate-x-1/2 -translate-y-1/2 rounded-full"
+        />
         <motion.div
           key={`mobile-headline-${slide}`}
-          initial={{ opacity: 0, y: 8 }}
+          initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: -6 }}
-          transition={{ duration: 0.45, ease }}
-          className="absolute inset-x-0 top-[68px] z-10 flex w-full justify-center px-2 text-center"
+          exit={{ opacity: 0, y: -8 }}
+          transition={{ duration: 0.5, ease }}
+          className="absolute inset-x-0 top-[45%] z-[110] -translate-y-1/2 mx-auto w-[94%] text-center drop-shadow-[0_4px_18px_rgba(0,0,0,1)]"
         >
+          <p className="mb-2 text-[8px] font-semibold uppercase tracking-[0.28em] text-neutral-400">
+            Premium streetwear
+          </p>
           <h1
-            className="w-full font-serif font-black uppercase text-[56px] leading-[0.85] tracking-[-0.04em]"
-            style={{
-              fontFamily: "Bodoni MT, Didot, Times New Roman, serif",
-              background: "linear-gradient(180deg, #FFFFFF 30%, #D4AF37 100%)",
-              WebkitBackgroundClip: "text",
-              WebkitTextFillColor: "transparent",
-            }}
+            className="mx-auto max-w-[310px] text-center font-serif text-[54px] font-medium uppercase leading-[0.84] tracking-[-0.055em] text-[#F5E7B0]"
+            style={{ fontFamily: "Bodoni MT, Didot, Times New Roman, serif" }}
           >
-            {activeHero.headline}
+            Art
+            <br />
+            You Can
+            <br />
+            <span className="text-white">Wear.</span>
           </h1>
+          <p className="mx-auto mt-4 max-w-[220px] text-center text-[11px] leading-[1.55] text-neutral-300">
+            Premium streetwear for those who stand out.
+          </p>
+
+          <Link
+            href="/shop"
+            className="mx-auto mt-5 flex w-fit items-center gap-3 rounded-full bg-gradient-to-r from-[#F3E5AB] via-[#D4AF37] to-[#AA771C] px-5 py-3 text-[9px] font-bold uppercase tracking-[0.2em] text-neutral-950 shadow-[0_8px_30px_rgba(212,175,55,0.16)]"
+          >
+            Shop Now
+            <ArrowRight className="h-3.5 w-3.5" />
+          </Link>
         </motion.div>
       </AnimatePresence>
 
-      {/* Mobile Model / Product Showcase */}
-      <div className="pointer-events-none absolute inset-x-0 bottom-0 z-20 flex h-[76%] w-full items-end justify-center">
+      {/* Model / product visual */}
+      <div className="pointer-events-none absolute inset-0 z-20 overflow-hidden">
         <AnimatePresence mode="wait">
           <motion.div
             key={`mobile-model-${slide}`}
-            initial={{ opacity: 0, y: 18, scale: 1.02 }}
+            initial={{ opacity: 0, y: 22, scale: 1.03 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: 10 }}
-            transition={{ duration: 0.55, ease }}
+            exit={{ opacity: 0, y: 12 }}
+            transition={{ duration: 0.6, ease }}
             className="relative flex h-full w-full items-end justify-center"
           >
-            <div className="absolute bottom-5 left-1/2 h-[180px] w-[160px] -translate-x-1/2 rounded-full bg-amber-500/10 blur-[40px]" />
+            <div className="absolute bottom-[-20px] left-1/2 h-[360px] w-[320px] -translate-x-1/2 rounded-full bg-[#D4AF37]/10 blur-[75px]" />
             <img
-              src={transparentHeroImages[slide % transparentHeroImages.length]}
-              alt={activeHero.headline}
-              className="relative z-20 h-full w-auto max-w-none scale-[1.15] object-contain object-bottom drop-shadow-[0_10px_20px_rgba(0,0,0,0.8)]"
+              src="/images/hero-linen.png"
+              alt="Art You Can Wear"
+              className="absolute bottom-[0%] left-1/2 z-30 h-[92%] w-auto max-w-none -translate-x-1/2 object-contain object-bottom drop-shadow-[0_24px_45px_rgba(0,0,0,0.95)]"
             />
           </motion.div>
         </AnimatePresence>
       </div>
 
+      {/* Bottom slide control */}
+      <div className="absolute bottom-5 left-5 right-5 z-[60] flex items-center justify-between">
+        <div className="flex items-center gap-2">
+          {heroSlides.map((_, index) => (
+            <button
+              key={index}
+              type="button"
+              onClick={() => setSlide(index)}
+              aria-label={`Go to slide ${index + 1}`}
+              className="p-1"
+            >
+              <span
+                className={`block h-[2px] transition-all duration-500 ${
+                  index === slide ? "w-8 bg-[#D4AF37]" : "w-3 bg-white/25"
+                }`}
+              />
+            </button>
+          ))}
+        </div>
+        <span className="text-[8px] font-medium uppercase tracking-[0.22em] text-neutral-500">
+          0{slide + 1} / 0{heroSlides.length}
+        </span>
+      </div>
     </div>
 
     {/* =====================================================
@@ -976,55 +1007,20 @@ export default function HomePage() {
   </div>
 </section>
 
-{/* MOBILE EDITORIAL STORY — HIDDEN ON MOBILE */}
-<section className="hidden lg:hidden" aria-hidden="true" />
-
 {/* =========================================================
-    MOBILE-ONLY — TRUST / FEATURE STRIP
+   KOVENIK — PRODUCTION MOBILE HOME
+   This entire block is mobile-only. Desktop sections below are untouched.
 ========================================================= */}
-<section className="hidden lg:hidden" aria-hidden="true">
-  <div className="mb-4 flex items-center justify-between">
-    <p className="text-[8px] font-semibold uppercase tracking-[0.28em] text-[#D4AF37]">
-      The KOVENIK Standard
-    </p>
-    <span className="text-[8px] uppercase tracking-[0.18em] text-neutral-500">
-      04 / 04
-    </span>
-  </div>
 
-  <div className="grid grid-cols-2 gap-px overflow-hidden border border-white/10 bg-white/10">
-    {trustItems.map(({ Icon, title }, index) => (
-      <div
-        key={title}
-        className="min-h-[116px] bg-[#111111] p-4"
-      >
-        <div className="mb-5 flex items-center justify-between">
-          <Icon className="h-4 w-4 text-[#D4AF37]" strokeWidth={1.5} />
-          <span className="text-[7px] tracking-[0.2em] text-neutral-600">
-            0{index + 1}
-          </span>
-        </div>
-        <p className="max-w-[125px] text-[9px] font-semibold uppercase leading-[1.45] tracking-[0.06em] text-white">
-          {title}
-        </p>
-      </div>
-    ))}
-  </div>
-</section>
-
-
-{/* =========================================================
-    MOBILE-ONLY — SHOP BY CATEGORY
-    Completely separate from desktop category markup.
-========================================================= */}
-<section className="lg:hidden w-full bg-[#0b0b0b] px-4 pb-12 pt-8 text-white">
-  <div className="mb-6 flex items-end justify-between border-b border-white/10 pb-4">
+{/* MOBILE CATEGORY — REFERENCE-MATCHED 3-COLUMN EDITORIAL GRID */}
+<section className="lg:hidden w-full bg-[#070707] px-4 pb-9 pt-7 text-white">
+  <div className="mb-5 flex items-end justify-between border-b border-white/10 pb-3.5">
     <div>
-      <p className="mb-2 text-[8px] font-semibold uppercase tracking-[0.3em] text-[#D4AF37]">
-        KOVENIK / COLLECTION
+      <p className="mb-1.5 text-[7px] font-bold uppercase tracking-[0.28em] text-[#D4AF37]">
+        Explore by category
       </p>
       <h2
-        className="font-serif text-[42px] font-normal leading-none tracking-[-0.045em] text-[#F3E5AB]"
+        className="font-serif text-[31px] leading-none tracking-[-0.04em] text-[#F3E5AB]"
         style={{ fontFamily: "Bodoni MT, Didot, Times New Roman, serif" }}
       >
         Category
@@ -1032,207 +1028,127 @@ export default function HomePage() {
     </div>
     <Link
       href="/shop"
-      className="mb-1 flex items-center gap-1.5 text-[8px] font-bold uppercase tracking-[0.18em] text-[#D4AF37]"
+      className="mb-0.5 flex items-center gap-1 text-[7px] font-bold uppercase tracking-[0.14em] text-[#D4AF37]"
     >
-      All <ArrowUpRight className="h-3.5 w-3.5" />
+      View All <ArrowUpRight className="h-3 w-3" />
     </Link>
   </div>
 
-  <div className="grid grid-cols-2 gap-2.5">
+  <div className="grid grid-cols-3 gap-2.5">
     {[
       ...categories.slice(0, 4),
-      {
-        slug: "bottom-wear",
-        name: "Bottom Wear",
-      },
+      { slug: "bottom-wear", name: "Bottom Wear" },
+      { slug: "all-products", name: "All Products" },
     ].map((cat, index) => {
-      const staticCatProduct = staticHomeProducts.find(
-        (p) => p.category === cat.slug
-      );
+      const staticCatProduct = staticHomeProducts.find((p) => p.category === cat.slug);
       const catProduct = products.find((p) => p.category === cat.slug);
-
-      const mobileCategoryImages = [
-        "https://images.unsplash.com/photo-1617137968427-85924c800a22?auto=format&fit=crop&w=1000&q=90",
-        "https://images.unsplash.com/photo-1551488831-00ddcb6c6bd3?auto=format&fit=crop&w=900&q=90",
-        "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=900&q=90",
-        "https://images.unsplash.com/photo-1602810318383-e386cc2a3ccf?auto=format&fit=crop&w=900&q=90",
-        "https://images.unsplash.com/photo-1552902865-b72c031ac5ea?auto=format&fit=crop&w=900&q=90",
-      ];
-
       const image =
-        mobileCategoryImages[index] ||
         staticCatProduct?.images?.[0] ||
-        catProduct?.images?.[0];
-
-      const featured = index === 0;
+        catProduct?.images?.[0] ||
+        [
+          "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=800&q=85",
+          "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?auto=format&fit=crop&w=800&q=85",
+          "https://images.unsplash.com/photo-1551488831-00ddcb6c6bd3?auto=format&fit=crop&w=800&q=85",
+          "https://images.unsplash.com/photo-1602810318383-e386cc2a3ccf?auto=format&fit=crop&w=800&q=85",
+          "https://images.unsplash.com/photo-1552902865-b72c031ac5ea?auto=format&fit=crop&w=800&q=85",
+          "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=800&q=85",
+        ][index];
 
       return (
         <motion.div
           key={cat.slug}
-          className={featured ? "col-span-2" : "col-span-1"}
-          initial={{ opacity: 0, y: 12 }}
+          initial={{ opacity: 0, y: 10 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0.15 }}
-          transition={{ duration: 0.45, delay: index * 0.05 }}
+          viewport={{ once: true, amount: 0.12 }}
+          transition={{ duration: 0.35, delay: index * 0.035 }}
         >
           <Link
-            href={`/shop?category=${cat.slug}`}
-            className={`group relative block h-full overflow-hidden border border-white/10 bg-[#121212] ${
-              index === 4 ? "" : ""
-            }`}
+            href={cat.slug === "all-products" ? "/shop" : `/shop?category=${cat.slug}`}
+            className="group relative block overflow-hidden rounded-[10px] border border-[#D4AF37]/20 bg-[#111111] shadow-[0_8px_24px_rgba(0,0,0,0.55)] transition-all duration-300 active:border-[#D4AF37]/60"
           >
-            <div className={
-              featured
-                ? "relative h-[360px]"
-                : "relative h-[235px]"
-            }>
+            <div className="relative aspect-[0.74] overflow-hidden">
               <img
                 src={image}
                 alt={cat.name}
-                className="h-full w-full rounded-none object-cover opacity-85 transition-transform duration-700 group-active:scale-[1.03]"
+                className="h-full w-full object-cover object-center transition-transform duration-500 group-active:scale-[1.04]"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-black via-black/45 to-transparent" />
-
-              <div className="absolute left-4 top-4 flex items-center gap-2">
-                <span className="h-px w-5 bg-[#D4AF37]" />
-                <span className="text-[7px] font-bold uppercase tracking-[0.2em] text-[#F3E5AB]">
-                  0{index + 1} / EDIT
-                </span>
-              </div>
-
-              <div className="absolute inset-x-4 bottom-4">
-                <div className="flex items-end justify-between gap-2">
-                  <div>
-                    <h3
-                      className={
-                        featured
-                          ? "text-[38px] font-medium leading-[0.9] tracking-[-0.04em] text-white"
-                          : "text-[24px] font-medium leading-[0.95] tracking-[-0.035em] text-white"
-                      }
-                      style={{
-                        fontFamily: "Bodoni MT, Didot, Times New Roman, serif",
-                      }}
-                    >
-                      {cat.name}
-                    </h3>
-                    <p className="mt-2 max-w-[230px] text-[9px] leading-[1.5] text-neutral-300">
-                      {[
-                        "Heavyweight silhouettes engineered for everyday rotation.",
-                        "Premium graphics with a clean streetwear finish.",
-                        "Elevated essentials built for daily wear.",
-                        "Statement layers made to stand apart.",
-                        "Relaxed trousers and everyday bottoms built for the full look.",
-                      ][index]}
-                    </p>
-                  </div>
-
-                  <span className="mb-0.5 flex h-9 w-9 shrink-0 items-center justify-center border border-[#D4AF37]/60 bg-black/50 text-[#F3E5AB]">
-                    <ArrowUpRight className="h-4 w-4" />
-                  </span>
-                </div>
+              <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/25 to-transparent" />
+              <span className="absolute left-1.5 top-1.5 flex h-4 min-w-4 items-center justify-center rounded-full border border-white/20 bg-black/55 px-1 text-[5px] font-bold uppercase tracking-[0.08em] text-[#F3E5AB] backdrop-blur-sm">
+                0{index + 1}
+              </span>
+              <div className="absolute inset-x-1.5 bottom-1.5 flex min-h-[30px] items-end justify-center text-center">
+                <p className="max-w-full text-[8px] font-bold uppercase leading-[1.05] tracking-[0.01em] text-white drop-shadow-[0_2px_6px_rgba(0,0,0,0.9)]">
+                  {cat.name}
+                </p>
               </div>
             </div>
           </Link>
         </motion.div>
       );
     })}
-
-    <Link
-      href="/shop"
-      className="col-span-2 flex min-h-[82px] items-center justify-between border border-[#D4AF37]/40 bg-gradient-to-r from-[#151515] to-[#0d0d0d] px-4"
-    >
-      <div>
-        <p className="mb-1 text-[7px] font-bold uppercase tracking-[0.24em] text-[#D4AF37]">
-          05 / COMPLETE COLLECTION
-        </p>
-        <h3
-          className="font-serif text-[27px] leading-none text-white"
-          style={{ fontFamily: "Bodoni MT, Didot, Times New Roman, serif" }}
-        >
-          All Products
-        </h3>
-      </div>
-      <span className="flex h-9 w-9 items-center justify-center rounded-full border border-[#D4AF37]/60 text-[#F3E5AB]">
-        <ArrowRight className="h-4 w-4" />
-      </span>
-    </Link>
   </div>
 </section>
 
-{/* =========================================================
-    MOBILE-ONLY — BEST SELLERS / HORIZONTAL RAIL
-========================================================= */}
-<section className="lg:hidden w-full bg-[#050505] px-4 py-12 text-white">
-  <div className="mb-6 flex items-end justify-between border-b border-white/10 pb-4">
+{/* MOBILE BEST SELLERS — 2-COLUMN PRODUCT SHOWCASE */}
+<section className="lg:hidden w-full bg-[#060606] px-4 py-9 text-white">
+  <div className="mb-5 flex items-end justify-between border-b border-white/10 pb-3.5">
     <div>
-      <p className="mb-2 text-[8px] font-semibold uppercase tracking-[0.28em] text-[#D4AF37]">
+      <p className="mb-1.5 text-[7px] font-bold uppercase tracking-[0.28em] text-[#D4AF37]">
         Most Loved
       </p>
       <h2
-        className="font-serif text-[39px] leading-none tracking-[-0.04em] text-[#F3E5AB]"
+        className="font-serif text-[30px] leading-none tracking-[-0.035em] text-[#F3E5AB]"
         style={{ fontFamily: "Bodoni MT, Didot, Times New Roman, serif" }}
       >
         Best Sellers
       </h2>
     </div>
-    <Link
-      href="/shop"
-      className="flex items-center gap-1 text-[8px] font-bold uppercase tracking-[0.18em] text-[#D4AF37]"
-    >
-      View All <ArrowUpRight className="h-3.5 w-3.5" />
+    <Link href="/shop" className="mb-0.5 flex items-center gap-1 text-[7px] font-bold uppercase tracking-[0.14em] text-[#D4AF37]">
+      View All <ArrowUpRight className="h-3 w-3" />
     </Link>
   </div>
 
-  <div className="flex snap-x snap-mandatory gap-3 overflow-x-auto pb-3 scrollbar-none">
-    {bestSellers.map((product, index) => (
+  <div className="grid grid-cols-2 gap-2.5">
+    {bestSellers.slice(0, 4).map((product, index) => (
       <motion.div
         key={product.id}
-        className="kovenik-mobile-product-card w-[72vw] max-w-[285px] shrink-0 snap-start border border-[#D4AF37]/35 bg-[#111111] p-2.5"
-        initial={{ opacity: 0, x: 20 }}
-        whileInView={{ opacity: 1, x: 0 }}
-        viewport={{ once: true, amount: 0.2 }}
-        transition={{ duration: 0.4, delay: index * 0.04 }}
+        className="kovenik-mobile-product-card min-w-0 border border-white/10 bg-[#111111] p-1.5"
+        initial={{ opacity: 0, y: 10 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, amount: 0.1 }}
+        transition={{ duration: 0.35, delay: index * 0.035 }}
       >
         <ProductCard product={product as Product} index={index} />
       </motion.div>
     ))}
   </div>
-
-  <div className="mt-3 flex items-center justify-between">
-    <span className="text-[7px] uppercase tracking-[0.2em] text-neutral-500">
-      Swipe to explore
-    </span>
-    <span className="h-px w-20 bg-[#D4AF37]/40" />
-  </div>
 </section>
 
-{/* =========================================================
-    MOBILE-ONLY — NEW ARRIVALS / DROP RAIL
-========================================================= */}
-<section className="lg:hidden w-full bg-[#0b0b0b] px-4 py-12 text-white">
-  <div className="mb-5">
-    <p className="mb-2 text-[8px] font-semibold uppercase tracking-[0.3em] text-[#D4AF37]">
-      Fresh Drops • SS26
-    </p>
-    <div className="flex items-end justify-between gap-4">
+{/* MOBILE NEW ARRIVALS */}
+<section className="lg:hidden w-full bg-[#090909] px-4 py-9 text-white">
+  <div className="mb-5 flex items-end justify-between border-b border-white/10 pb-3.5">
+    <div>
+      <p className="mb-1.5 text-[7px] font-bold uppercase tracking-[0.28em] text-[#D4AF37]">
+        Fresh Drops • SS26
+      </p>
       <h2
-        className="font-serif text-[40px] leading-[0.9] tracking-[-0.04em] text-[#F3E5AB]"
+        className="font-serif text-[30px] leading-none tracking-[-0.035em] text-[#F3E5AB]"
         style={{ fontFamily: "Bodoni MT, Didot, Times New Roman, serif" }}
       >
         New Arrivals
       </h2>
-      <span className="pb-1 text-[8px] uppercase tracking-[0.18em] text-neutral-500">
-        {filteredNewArrivals.length} Pieces
-      </span>
     </div>
+    <span className="pb-0.5 text-[7px] uppercase tracking-[0.16em] text-neutral-500">
+      {filteredNewArrivals.length} Pieces
+    </span>
   </div>
 
-  <div className="scrollbar-none mb-5 flex gap-1.5 overflow-x-auto pb-1">
+  <div className="scrollbar-none mb-4 flex gap-1.5 overflow-x-auto pb-1">
     {[
-      { id: "all", label: "All Fits" },
-      { id: "supreme-edition", label: "Supreme Edition" },
+      { id: "all", label: "All" },
+      { id: "supreme-edition", label: "Supreme" },
       { id: "epic-thread", label: "Epic Thread" },
-      { id: "Kovenik-premium", label: "Kovenik Premium" },
+      { id: "Kovenik-premium", label: "Premium" },
       { id: "the-print-club", label: "Print Club" },
     ].map((tab) => {
       const active = selectedSubCat === tab.id;
@@ -1241,10 +1157,10 @@ export default function HomePage() {
           key={tab.id}
           type="button"
           onClick={() => setSelectedSubCat(tab.id)}
-          className={`shrink-0 rounded-full border px-3.5 py-2 text-[7.5px] font-bold uppercase tracking-[0.16em] ${
+          className={`shrink-0 rounded-full border px-3 py-1.5 text-[6.5px] font-bold uppercase tracking-[0.14em] ${
             active
               ? "border-[#D4AF37] bg-[#D4AF37] text-black"
-              : "border-white/10 bg-[#151515] text-neutral-400"
+              : "border-white/10 bg-[#141414] text-neutral-400"
           }`}
         >
           {tab.label}
@@ -1253,65 +1169,46 @@ export default function HomePage() {
     })}
   </div>
 
-  {filteredNewArrivals.length > 0 ? (
-    <div className="flex snap-x snap-mandatory gap-3 overflow-x-auto pb-2 scrollbar-none">
-      {filteredNewArrivals.map((product, index) => (
-        <div
-          key={product.id}
-          className="kovenik-mobile-product-card w-[72vw] max-w-[285px] shrink-0 snap-start border border-white/10 bg-[#121212] p-2.5"
-        >
-          <ProductCard product={product as Product} index={index} />
-        </div>
-      ))}
-    </div>
-  ) : (
-    <div className="border border-white/10 bg-[#121212] px-5 py-12 text-center">
-      <SlidersHorizontal className="mx-auto h-5 w-5 text-[#D4AF37]" />
-      <p className="mt-3 font-serif text-lg text-white">No pieces found</p>
-      <button
-        type="button"
-        onClick={() => setSelectedSubCat("all")}
-        className="mt-4 rounded-full bg-[#D4AF37] px-5 py-2.5 text-[8px] font-bold uppercase tracking-[0.18em] text-black"
+  <div className="grid grid-cols-2 gap-2.5">
+    {filteredNewArrivals.map((product, index) => (
+      <div
+        key={product.id}
+        className="kovenik-mobile-product-card min-w-0 border border-white/10 bg-[#111111] p-1.5"
       >
-        View All Pieces
-      </button>
-    </div>
-  )}
+        <ProductCard product={product as Product} index={index} />
+      </div>
+    ))}
+  </div>
 </section>
 
-{/* =========================================================
-    MOBILE-ONLY — TRENDING NOW / 2-COLUMN EDITORIAL GRID
-========================================================= */}
-<section className="lg:hidden w-full bg-[#050505] px-4 py-12 text-white">
-  <div className="mb-6 flex items-end justify-between border-b border-white/10 pb-4">
+{/* MOBILE TRENDING */}
+<section className="lg:hidden w-full bg-[#050505] px-4 py-9 text-white">
+  <div className="mb-5 flex items-end justify-between border-b border-white/10 pb-4">
     <div>
-      <p className="mb-2 text-[8px] font-semibold uppercase tracking-[0.3em] text-[#D4AF37]">
+      <p className="mb-1.5 text-[7.5px] font-bold uppercase tracking-[0.28em] text-[#D4AF37]">
         Community Top Picks
       </p>
       <h2
-        className="font-serif text-[40px] leading-none tracking-[-0.04em] text-[#F3E5AB]"
+        className="font-serif text-[30px] leading-none tracking-[-0.035em] text-[#F3E5AB]"
         style={{ fontFamily: "Bodoni MT, Didot, Times New Roman, serif" }}
       >
         Trending Now
       </h2>
     </div>
-    <Link
-      href="/shop"
-      className="mb-1 text-[8px] font-bold uppercase tracking-[0.18em] text-[#D4AF37]"
-    >
+    <Link href="/shop" className="mb-1 text-[7.5px] font-bold uppercase tracking-[0.15em] text-[#D4AF37]">
       Discover
     </Link>
   </div>
 
   <div className="grid grid-cols-2 gap-2.5">
-    {trending.map((product, index) => (
+    {trending.slice(0, 4).map((product, index) => (
       <motion.div
         key={product.id}
         className="kovenik-mobile-product-card min-w-0 border border-white/10 bg-[#111111] p-2"
-        initial={{ opacity: 0, y: 14 }}
+        initial={{ opacity: 0, y: 12 }}
         whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, amount: 0.15 }}
-        transition={{ duration: 0.4, delay: index * 0.05 }}
+        viewport={{ once: true, amount: 0.12 }}
+        transition={{ duration: 0.4, delay: index * 0.04 }}
       >
         <ProductCard product={product as Product} index={index} />
       </motion.div>
@@ -1319,57 +1216,52 @@ export default function HomePage() {
   </div>
 </section>
 
-{/* MOBILE PHILOSOPHY — HIDDEN ON MOBILE */}
-<section className="hidden lg:hidden" aria-hidden="true" />
-
-{/* =========================================================
-    MOBILE-ONLY — REVIEWS
-========================================================= */}
-<section className="lg:hidden w-full bg-[#050505] px-4 py-12 text-white">
-  <div className="mb-6 flex items-end justify-between">
+{/* MOBILE REVIEWS */}
+<section className="lg:hidden w-full bg-[#080808] px-4 py-10 text-white">
+  <div className="mb-5 flex items-end justify-between">
     <div>
-      <p className="mb-2 text-[8px] font-semibold uppercase tracking-[0.3em] text-[#D4AF37]">
+      <p className="mb-1.5 text-[7.5px] font-bold uppercase tracking-[0.28em] text-[#D4AF37]">
         Community
       </p>
       <h2
-        className="font-serif text-[40px] leading-none text-[#F3E5AB]"
+        className="font-serif text-[38px] leading-none text-[#F3E5AB]"
         style={{ fontFamily: "Bodoni MT, Didot, Times New Roman, serif" }}
       >
         What They Say
       </h2>
     </div>
-    <Star className="h-5 w-5 fill-[#D4AF37] text-[#D4AF37]" />
+    <Star className="h-4 w-4 fill-[#D4AF37] text-[#D4AF37]" />
   </div>
 
-  <div className="flex snap-x snap-mandatory gap-3 overflow-x-auto scrollbar-none">
+  <div className="scrollbar-none flex snap-x snap-mandatory gap-2.5 overflow-x-auto">
     {reviews.map((review) => (
       <article
         key={review.name}
-        className="w-[86vw] max-w-[360px] shrink-0 snap-start border border-[#D4AF37]/30 bg-[#111111] p-5"
+        className="w-[84vw] max-w-[350px] shrink-0 snap-start border border-[#D4AF37]/25 bg-[#111111] p-5"
       >
-        <div className="mb-5 flex gap-1">
+        <div className="mb-4 flex gap-1">
           {Array.from({ length: review.rating }).map((_, i) => (
-            <Star key={i} className="h-3.5 w-3.5 fill-[#D4AF37] text-[#D4AF37]" />
+            <Star key={i} className="h-3 w-3 fill-[#D4AF37] text-[#D4AF37]" />
           ))}
         </div>
-        <p className="text-[15px] leading-[1.65] text-neutral-200">
+        <p className="text-[13px] leading-[1.65] text-neutral-200">
           “{review.text}”
         </p>
-        <div className="mt-7 flex items-end justify-between border-t border-white/10 pt-4">
-          <div>
-            <p className="text-[10px] font-bold uppercase tracking-[0.14em] text-white">
-              {review.name}
-            </p>
-            <p className="mt-1 text-[8px] uppercase tracking-[0.18em] text-[#D4AF37]">
-              {review.tag}
-            </p>
-          </div>
-          <span className="text-[24px] text-[#D4AF37]/40">”</span>
+        <div className="mt-6 border-t border-white/10 pt-4">
+          <p className="text-[9px] font-bold uppercase tracking-[0.14em] text-white">
+            {review.name}
+          </p>
+          <p className="mt-1 text-[7px] uppercase tracking-[0.18em] text-[#D4AF37]">
+            {review.tag}
+          </p>
         </div>
       </article>
     ))}
   </div>
 </section>
+
+{/* MOBILE NEWSLETTER */}
+
 
 <section className="hidden lg:block w-full bg-neutral-950 px-4 pt-10 pb-12 sm:px-6 sm:pt-14 sm:pb-16 lg:px-8 lg:pt-16 lg:pb-20">
   {/* ============================================================
