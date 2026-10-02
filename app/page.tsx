@@ -611,6 +611,25 @@ export default function HomePage() {
           opacity: 1 !important;
         }
 
+        /* =========================================================
+           MOBILE WISHLIST / HEART BUTTON
+           Keep the wishlist circle WHITE — only the icon is dark.
+           Do not affect the black quick-add (+) button.
+        ========================================================= */
+        .kovenik-mobile-product-card button:has(.lucide-heart) {
+          background: #ffffff !important;
+          background-color: #ffffff !important;
+          color: #111111 !important;
+          border-color: rgba(17, 17, 17, 0.12) !important;
+          box-shadow: 0 2px 10px rgba(0, 0, 0, 0.10) !important;
+        }
+
+        .kovenik-mobile-product-card button:has(.lucide-heart) .lucide-heart {
+          color: #111111 !important;
+          stroke: #111111 !important;
+          fill: none !important;
+        }
+
         /* Quick-add / plus button remains dark with its existing icon */
         .kovenik-mobile-product-card button[class*="bg-black"],
         .kovenik-mobile-product-card button[class*="bg-neutral-900"] {
@@ -1349,73 +1368,6 @@ export default function HomePage() {
         </div>
       </article>
     ))}
-  </div>
-</section>
-
-{/* =========================================================
-    MOBILE-ONLY — NEWSLETTER + FOOTER
-========================================================= */}
-<section className="lg:hidden w-full bg-[#0b0b0b] px-4 pb-8 pt-12 text-white">
-  <div className="border border-[#D4AF37]/35 bg-gradient-to-br from-[#171717] to-[#0b0b0b] p-5">
-    <p className="text-[8px] font-semibold uppercase tracking-[0.3em] text-[#D4AF37]">
-      {newsletterContent.eyebrow}
-    </p>
-    <h2
-      className="mt-3 font-serif text-[37px] leading-[0.92] tracking-[-0.04em] text-white"
-      style={{ fontFamily: "Bodoni MT, Didot, Times New Roman, serif" }}
-    >
-      {newsletterContent.title}
-    </h2>
-    <p className="mt-3 text-[10px] leading-[1.6] text-neutral-400">
-      {newsletterContent.description}
-    </p>
-
-    <form onSubmit={handleSubscribe} className="mt-5">
-      <div className="flex overflow-hidden border border-white/15 bg-black/40">
-        <input
-          type="email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          placeholder={newsletterContent.inputPlaceholder}
-          className="min-w-0 flex-1 bg-transparent px-3 py-3 text-[10px] text-white outline-none placeholder:text-neutral-600"
-          required
-        />
-        <button
-          type="submit"
-          className="shrink-0 bg-[#D4AF37] px-4 text-[8px] font-bold uppercase tracking-[0.14em] text-black"
-        >
-          {newsletterContent.buttonLabel}
-        </button>
-      </div>
-    </form>
-
-    {subscribed && (
-      <p className="mt-3 flex items-center gap-2 text-[9px] text-[#F3E5AB]">
-        <Check className="h-3.5 w-3.5" />
-        {newsletterContent.successMessage}
-      </p>
-    )}
-  </div>
-
-  <div className="mt-8 grid grid-cols-2 gap-6 border-t border-white/10 pt-6">
-    <div>
-      <p className="text-[18px] font-semibold tracking-[-0.04em] text-white">
-        KOVENIK
-      </p>
-      <p className="mt-2 text-[8px] uppercase tracking-[0.18em] text-neutral-500">
-        Streetwear / SS26
-      </p>
-    </div>
-    <div className="space-y-2 text-right text-[8px] font-semibold uppercase tracking-[0.18em] text-neutral-400">
-      <Link href="/shop" className="block">Shop</Link>
-      <Link href="/shop" className="block">Collection</Link>
-      <Link href="/shop" className="block">Contact</Link>
-    </div>
-  </div>
-
-  <div className="mt-7 flex items-center justify-between text-[7px] uppercase tracking-[0.2em] text-neutral-600">
-    <span>© KOVENIK</span>
-    <span>Global Shipping • Secure Payments</span>
   </div>
 </section>
 
