@@ -1,5 +1,6 @@
 'use client';
 
+import Link from 'next/link';
 import type {
   ClipboardEvent,
   Dispatch,
@@ -23,6 +24,35 @@ import {
   Truck,
   X,
 } from 'lucide-react';
+
+const ARDENBY_LOGO_STYLE = {
+  color: '#F5F3EE',
+  fontFamily:
+    'Bodoni MT, Didot, Cormorant Garamond, Times New Roman, serif',
+  backgroundImage: `
+    radial-gradient(circle at 3% 45%, #D4AF37 0 2px, transparent 2.5px),
+    radial-gradient(circle at 7% 20%, #8B1E1E 0 1.5px, transparent 2px),
+    radial-gradient(circle at 12% 75%, #A52A2A 0 3px, transparent 3.5px),
+    radial-gradient(circle at 18% 8%, #D4AF37 0 2px, transparent 2.5px),
+    radial-gradient(circle at 25% 92%, #8B1E1E 0 1.5px, transparent 2px),
+    radial-gradient(circle at 34% 3%, #E6CA65 0 3px, transparent 3.5px),
+    radial-gradient(circle at 43% 95%, #A52A2A 0 2px, transparent 2.5px),
+    radial-gradient(circle at 52% 4%, #D4AF37 0 1.5px, transparent 2px),
+    radial-gradient(circle at 62% 94%, #8B1E1E 0 3px, transparent 3.5px),
+    radial-gradient(circle at 71% 7%, #D4AF37 0 2px, transparent 2.5px),
+    radial-gradient(circle at 79% 91%, #A52A2A 0 2px, transparent 2.5px),
+    radial-gradient(circle at 88% 15%, #E6CA65 0 3px, transparent 3.5px),
+    radial-gradient(circle at 94% 48%, #D4AF37 0 2px, transparent 2.5px),
+    radial-gradient(circle at 98% 78%, #8B1E1E 0 3px, transparent 3.5px)
+  `,
+  backgroundRepeat: 'no-repeat',
+  textShadow: `
+    2px 0 0 rgba(139,30,30,0.85),
+    -2px 0 0 rgba(80,15,15,0.65),
+    0 4px 0 rgba(212,175,55,0.45),
+    0 8px 18px rgba(0,0,0,0.6)
+  `,
+};
 
 type AuthStep = 'LOGIN' | 'OTP' | 'RESET_PASSWORD';
 type OtpPurpose = 'login' | 'email_verification' | 'password_reset';
@@ -97,144 +127,97 @@ export function NavbarAuthModal({
   setStep,
 }: NavbarAuthModalProps) {
   return (
-    <>
-      {/* ========================================================
-          AUTHENTICATION MODAL
-          ARDENBY — premium editorial / street-luxury redesign.
-          Existing authentication, OTP and Google logic is preserved.
-      ========================================================= */}
-      <AnimatePresence>
-        {isOpen && (
-          <div
-            onClick={() => setIsOpen(false)}
-            className="fixed inset-0 z-[9999] flex min-h-screen w-screen items-center justify-center bg-black/[0.82] p-3 backdrop-blur-[9px] sm:p-5"
+    <AnimatePresence>
+      {isOpen && (
+        <div className="fixed inset-0 z-[9999] h-screen overflow-hidden bg-[#050505] text-[#F5F3EE]">
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="relative h-screen overflow-hidden bg-[#050505]"
           >
-            <motion.div
-              initial={{ opacity: 0, y: 18, scale: 0.985 }}
-              animate={{ opacity: 1, y: 0, scale: 1 }}
-              exit={{ opacity: 0, y: 18, scale: 0.985 }}
-              transition={{ duration: 0.28, ease: [0.16, 1, 0.3, 1] }}
-              onClick={(e) => e.stopPropagation()}
-              className="relative z-10 flex max-h-[calc(100vh-24px)] w-[900px] max-w-full overflow-hidden rounded-[8px] bg-[#FCFBF8] shadow-[0_32px_100px_rgba(0,0,0,0.45)] sm:max-h-[calc(100vh-40px)]"
-            >
-              {/* Close */}
+            <div className="pointer-events-none absolute inset-0 opacity-90" style={{ backgroundImage: `radial-gradient(circle at 50% -10%, rgba(212,175,55,.18), transparent 34%), radial-gradient(circle at 8% 55%, rgba(139,30,30,.10), transparent 28%), radial-gradient(circle at 92% 70%, rgba(212,175,55,.08), transparent 30%), linear-gradient(115deg, #050505 0%, #11100d 46%, #050505 100%)` }} />
+            <div className="pointer-events-none absolute inset-0 opacity-[0.12]" style={{ backgroundImage: `repeating-linear-gradient(105deg, transparent 0, transparent 5px, rgba(255,255,255,.08) 6px, transparent 7px), repeating-linear-gradient(15deg, transparent 0, transparent 9px, rgba(212,175,55,.04) 10px, transparent 11px)` }} />
+
+            {/* Top brand bar */}
+            <header className="relative z-20 flex h-[58px] items-center justify-between border-b border-[#3b3020] bg-black/30 px-5 backdrop-blur-xl sm:px-8 lg:px-12">
+              <Link
+                href="/"
+                className="group relative inline-flex flex-col items-center justify-center"
+                aria-label="Kovenik home"
+              >
+                <span
+                  className="relative inline-block text-[31px] font-bold uppercase leading-none tracking-[-0.075em] transition-all duration-300 group-hover:scale-[1.015] sm:text-[35px]"
+                  style={ARDENBY_LOGO_STYLE}
+                >
+                  KOVENIK
+                </span>
+                <span
+                  className="absolute -bottom-[6px] left-1/2 h-[1px] w-0 -translate-x-1/2 transition-all duration-500 group-hover:w-[72%]"
+                  style={{ backgroundColor: '#D4AF37' }}
+                />
+                <span
+                  className="mt-1.5 text-[6.5px] uppercase tracking-[0.32em]"
+                  style={{ color: '#D4AF37' }}
+                >
+                  Wear Your Essence
+                </span>
+              </Link>
+
               <button
                 type="button"
                 onClick={() => setIsOpen(false)}
-                className="absolute right-5 top-5 z-50 flex h-8 w-8 items-center justify-center rounded-full bg-white/90 text-[#17130F] transition-all duration-200 hover:bg-white hover:text-[#A27A43] hover:scale-105"
+                className="flex h-11 w-11 items-center justify-center rounded-full border border-[#51452f] bg-black/30 text-[#c8bda8] backdrop-blur-md transition hover:border-[#D4AF37] hover:bg-[#D4AF37]/10 hover:text-[#F5F3EE]"
                 aria-label="Close"
               >
-                <X className="h-[15px] w-[15px]" strokeWidth={1.6} />
+                <X className="h-4 w-4" strokeWidth={1.5} />
               </button>
+            </header>
 
-              {/* =====================================================
-                  BRAND / EDITORIAL IMAGE PANEL
-              ====================================================== */}
-              <div
-                className="relative hidden w-[48%] shrink-0 overflow-hidden bg-[#17130F] text-white lg:flex lg:flex-col lg:justify-between"
-                style={{
-                  backgroundImage: "url('https://images.unsplash.com/photo-1603822241945-5bd84c6d81eb?fm=jpg&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&ixlib=rb-4.1.0&q=60&w=3000')",
-                  backgroundSize: 'cover',
-                  backgroundPosition: '72% center',
-                }}
-              >
-                {/* Cinematic overlays — keeps the typography on clean negative space */}
-                <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/15 to-black/85" />
-                <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/35 to-black/5" />
-                <div className="absolute inset-y-0 left-0 w-[68%] bg-gradient-to-r from-black/45 via-black/20 to-transparent" />
-                <div className="absolute inset-0 bg-[#2B1D13]/10 mix-blend-multiply" />
+            {/* Premium wide authentication shell */}
+            <main className="relative z-10 flex h-[calc(100vh-58px)] items-center justify-center overflow-hidden px-4 py-3 sm:px-8">
+              <div className="w-full max-w-[1040px]">
+                <div className="relative grid rounded-[4px] border border-[#4a3b25] bg-[#090908]/95 shadow-[0_30px_90px_rgba(0,0,0,.72),0_0_55px_rgba(212,175,55,.06)] backdrop-blur-2xl lg:grid-cols-[0.8fr_1.2fr]">
+                  <div className="relative hidden min-h-[500px] overflow-hidden border-r border-[#3d3222] bg-[#0d0c0a] lg:flex lg:flex-col lg:justify-between lg:p-10">
+                    <div className="pointer-events-none absolute inset-0 opacity-80" style={{ backgroundImage: `radial-gradient(circle at 20% 15%, rgba(212,175,55,.16), transparent 30%), radial-gradient(circle at 85% 80%, rgba(139,30,30,.12), transparent 32%), linear-gradient(145deg, rgba(255,255,255,.025), transparent 45%)` }} />
+                    <div className="pointer-events-none absolute -right-24 top-1/2 h-72 w-72 -translate-y-1/2 rounded-full border border-[#D4AF37]/10" />
+                    <div className="pointer-events-none absolute -right-16 top-1/2 h-56 w-56 -translate-y-1/2 rounded-full border border-[#D4AF37]/10" />
 
-                {/* Brand */}
-                <div className="relative z-10 px-8 pt-8">
-                  <div className="flex items-center gap-3">
-                    <span
-                      className="text-[31px] font-semibold uppercase leading-none tracking-[-0.055em] text-[#E7C98E]"
-                      style={{ fontFamily: 'Georgia, Times New Roman, serif' }}
-                    >
-                      ARDENBY
-                    </span>
-                  </div>
-
-                  <div className="mt-3 flex items-center gap-2">
-                    <span className="h-px w-7 bg-[#D3B276]" />
-                    <span className="text-[7px] font-medium uppercase tracking-[0.42em] text-white/75">
-                      WEAR YOUR ESSENCE
-                    </span>
-                  </div>
-                </div>
-
-                {/* Editorial copy */}
-                <div className="relative z-10 flex flex-1 flex-col justify-center px-8 py-8">
-                  <p className="mb-3 text-[8px] font-bold uppercase tracking-[0.34em] text-[#D8B978]">
-                    Private Access
-                  </p>
-
-                  <h3
-                    className="max-w-[255px] text-[38px] font-normal italic leading-[0.94] tracking-[-0.04em] text-white"
-                    style={{ fontFamily: 'Georgia, Times New Roman, serif' }}
-                  >
-                    More Than
-                    <br />
-                    Fashion.
-                    <br />
-                    A Feeling.
-                  </h3>
-
-                  <div className="mt-5 h-[2px] w-10 bg-[#D8B978]" />
-
-                  <p className="mt-4 max-w-[235px] text-[8px] font-medium uppercase leading-[1.7] tracking-[0.20em] text-white/65">
-                    Timeless pieces
-                    <br />
-                    for a bolder you.
-                  </p>
-
-                  <div className="mt-6 grid max-w-[285px] grid-cols-3 border-t border-white/20 pt-4">
-                    <div className="text-left">
-                      <Truck className="h-[15px] w-[15px] text-[#D8B978]" strokeWidth={1.3} />
-                      <p className="mt-1.5 text-[6px] font-semibold uppercase tracking-[0.14em] text-white/90">Worldwide</p>
+                    <div className="relative z-10">
+                      <p className="text-[8px] font-bold uppercase tracking-[0.38em] text-[#D4AF37]">
+                        KOVENIK ATELIER
+                      </p>
+                      <div className="mt-5 h-px w-14 bg-[#D4AF37]/60" />
+                      <h2 className="mt-6 max-w-[290px] text-[42px] font-normal leading-[0.94] tracking-[-0.045em] text-[#F5F3EE]" style={{ fontFamily: 'Bodoni MT, Didot, Cormorant Garamond, Times New Roman, serif' }}>
+                        Wear Your
+                        <span className="block text-[#D4AF37]">Essence.</span>
+                      </h2>
+                      <p className="mt-5 max-w-[270px] text-[11px] leading-5 text-[#938a7c]">
+                        Your wardrobe, your identity, your signature. Enter the KOVENIK world and continue your style journey.
+                      </p>
                     </div>
-                    <div className="border-l border-white/15 pl-4 text-left">
-                      <ShieldCheck className="h-[15px] w-[15px] text-[#D8B978]" strokeWidth={1.3} />
-                      <p className="mt-1.5 text-[6px] font-semibold uppercase tracking-[0.14em] text-white/90">Secure</p>
-                    </div>
-                    <div className="border-l border-white/15 pl-4 text-left">
-                      <RotateCcw className="h-[15px] w-[15px] text-[#D8B978]" strokeWidth={1.3} />
-                      <p className="mt-1.5 text-[6px] font-semibold uppercase tracking-[0.14em] text-white/90">Returns</p>
+
+                    <div className="relative z-10">
+                      <div className="mb-5 flex items-center gap-3">
+                        <span className="h-px w-10 bg-[#D4AF37]/40" />
+                        <span className="text-[7px] uppercase tracking-[0.28em] text-[#756b5d]">
+                          EST. KOVENIK
+                        </span>
+                      </div>
+                      <p className="text-[8px] uppercase tracking-[0.25em] text-[#625a4e]">
+                        Crafted for the ones who stand apart.
+                      </p>
                     </div>
                   </div>
 
-                  <div className="mt-5 flex items-center justify-between border-t border-white/20 pt-3">
-                    <span className="text-[6px] uppercase tracking-[0.28em] text-white/70">
-                      01 / 04
-                    </span>
-                    <span className="text-[6px] uppercase tracking-[0.30em] text-white/70">
-                      EST. 2026
-                    </span>
-                  </div>
-                </div>
-              </div>
-
-              {/* =====================================================
-                  FORM PANEL
-              ====================================================== */}
-              <div className="relative flex min-h-[500px] flex-1 flex-col justify-center overflow-y-auto bg-[#FCFBF8] px-6 py-10 sm:px-10 lg:px-11">
-                {/* Mobile brand */}
-                <div className="mb-7 flex flex-col items-center lg:hidden">
-                  <div className="relative inline-block">
-                    <span
-                      className="text-[28px] font-semibold uppercase leading-none tracking-[-0.055em] text-[#B28A56]"
-                      style={{ fontFamily: 'Georgia, Times New Roman, serif' }}
-                    >
-                      ARDENBY
-                    </span>
-                  </div>
-                  <div className="mt-3 flex items-center gap-2">
-                    <span className="h-px w-6 bg-[#C9A96E]" />
-                    <span className="text-[6px] uppercase tracking-[0.4em] text-[#9B9185]">
-                      WEAR YOUR ESSENCE
-                    </span>
-                    <span className="h-px w-6 bg-[#C9A96E]" />
-                  </div>
+                  <div className="relative overflow-visible px-6 py-5 sm:px-10 sm:py-6 lg:px-12 lg:py-7">
+                  <div className="pointer-events-none absolute left-0 top-0 h-px w-full bg-gradient-to-r from-transparent via-[#D4AF37] to-transparent opacity-80" />
+                  <div className="pointer-events-none absolute -left-24 -top-24 h-48 w-48 rounded-full bg-[#D4AF37]/[0.07] blur-3xl" />
+                  <div className="pointer-events-none absolute -bottom-24 -right-24 h-48 w-48 rounded-full bg-[#8B1E1E]/[0.08] blur-3xl" />
+                    <div className="mb-3 flex items-center justify-center gap-3 text-[7px] font-bold uppercase tracking-[0.42em] text-[#D4AF37]/80">
+                  <span className="h-px w-8 bg-[#D4AF37]/40" />
+                  KOVENIK ATELIER
+                  <span className="h-px w-8 bg-[#D4AF37]/40" />
                 </div>
 
                 <AnimatePresence mode="wait">
@@ -242,50 +225,45 @@ export function NavbarAuthModal({
                   {step === 'LOGIN' && (
                     <motion.div
                       key="login"
-                      initial={{ opacity: 0, y: 8 }}
+                      initial={{ opacity: 0, y: 12 }}
                       animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: -8 }}
-                      transition={{ duration: 0.22 }}
-                      className="mx-auto flex w-full max-w-[390px] flex-col justify-center"
+                      exit={{ opacity: 0, y: -12 }}
+                      transition={{ duration: 0.25 }}
                     >
-                      <div className="mb-5">
-                        <p className="mb-2 text-[9px] font-bold uppercase tracking-[0.28em] text-[#A77A3E]">
-                          Welcome Back
-                        </p>
-
-                        <h2
-                          className="text-[25px] font-normal leading-[1.12] tracking-[-0.018em] text-[#17120E] sm:text-[27px]"
-                          style={{
-                            fontFamily: 'Georgia, Times New Roman, serif',
-                            fontWeight: 400,
-                          }}
+                      <div className="mb-4 pt-2 text-center">
+                        <h1
+                          className="text-[32px] font-normal leading-none tracking-[-0.035em] text-[#FFFFFF] sm:text-[42px]"
+                          style={{ fontFamily: 'Bodoni MT, Didot, Cormorant Garamond, Times New Roman, serif' }}
                         >
-                          Sign in to ARDENBY
-                        </h2>
+                          Sign in to KOVENIK
+                        </h1>
 
-                        <p className="mt-2 max-w-[310px] text-[12px] leading-[1.55] text-[#81776D]">
+                        <p className="mx-auto mt-1 max-w-[500px] text-[11px] leading-4 text-[#D6D0C7]">
                           Access your account and continue your style journey.
                         </p>
                       </div>
 
                       {error && (
                         <motion.div
-                          initial={{ opacity: 0, y: -4 }}
+                          initial={{ opacity: 0, y: -5 }}
                           animate={{ opacity: 1, y: 0 }}
-                          className="mb-4 border border-red-200 bg-red-50 px-3 py-2 text-center text-xs text-red-700"
+                          className="mb-5 border border-red-900/60 bg-red-950/40 px-4 py-3 text-center text-xs text-red-300"
                         >
                           {error}
                         </motion.div>
                       )}
 
-                      <form onSubmit={handleEmailAuth} className="space-y-3">
+                      <form onSubmit={handleEmailAuth} className="mx-auto max-w-[620px] space-y-2.5">
                         <label className="block">
-                          <span className="mb-1.5 block text-[9px] font-bold uppercase tracking-[0.20em] text-[#5F5750]">
+                          <span className="mb-1 block text-[9px] font-bold uppercase tracking-[0.2em] text-[#E4DED5]">
                             Email Address
                           </span>
 
                           <div className="relative">
-                            <Mail className="pointer-events-none absolute left-3.5 top-1/2 h-[15px] w-[15px] -translate-y-1/2 text-[#A79D91]" strokeWidth={1.4} />
+                            <Mail
+                              className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-[#81786b]"
+                              strokeWidth={1.4}
+                            />
 
                             <input
                               type="email"
@@ -293,18 +271,21 @@ export function NavbarAuthModal({
                               onChange={(e) => setEmail(e.target.value)}
                               placeholder="you@example.com"
                               autoComplete="email"
-                              className="h-[49px] w-full rounded-[3px] border border-[#DED6CD] bg-[#FFFFFF] py-3 pl-10 pr-4 text-[13px] text-[#1A0F0A] outline-none transition-all duration-200 focus:border-[#C9A96E] focus:bg-[#FFFDF9] focus:shadow-[0_0_0_3px_rgba(201,169,110,0.08)] placeholder:text-[#AEA59B]"
+                              className="h-[44px] w-full rounded-[2px] border border-[#5a4d39] bg-[#11100e] px-11 text-[13px] text-[#FFFFFF] outline-none transition focus:border-[#D4AF37] focus:ring-4 focus:ring-[#D4AF37]/10 placeholder:text-[#746c60]"
                             />
                           </div>
                         </label>
 
                         <label className="block">
-                          <span className="mb-1.5 block text-[9px] font-bold uppercase tracking-[0.20em] text-[#5F5750]">
+                          <span className="mb-1 block text-[9px] font-bold uppercase tracking-[0.2em] text-[#E4DED5]">
                             Password
                           </span>
 
                           <div className="relative">
-                            <Lock className="pointer-events-none absolute left-3.5 top-1/2 h-[15px] w-[15px] -translate-y-1/2 text-[#A79D91]" strokeWidth={1.4} />
+                            <Lock
+                              className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-[#81786b]"
+                              strokeWidth={1.4}
+                            />
 
                             <input
                               type={showPassword ? 'text' : 'password'}
@@ -312,13 +293,13 @@ export function NavbarAuthModal({
                               onChange={(e) => setPassword(e.target.value)}
                               placeholder="Enter your password"
                               autoComplete="current-password"
-                              className="h-[49px] w-full rounded-[3px] border border-[#DED6CD] bg-[#FFFFFF] py-3 pl-10 pr-11 text-[13px] text-[#181614] outline-none transition-all duration-200 focus:border-[#C9A96E] focus:bg-[#FFFDF9] focus:shadow-[0_0_0_3px_rgba(201,169,110,0.08)] placeholder:text-[#AEA59B]"
+                              className="h-[44px] w-full rounded-[2px] border border-[#5a4d39] bg-[#11100e] px-11 pr-12 text-[13px] text-[#FFFFFF] outline-none transition focus:border-[#D4AF37] focus:ring-4 focus:ring-[#D4AF37]/10 placeholder:text-[#746c60]"
                             />
 
                             <button
                               type="button"
                               onClick={() => setShowPassword((v) => !v)}
-                              className="absolute right-2.5 top-1/2 flex h-8 w-8 -translate-y-1/2 items-center justify-center text-[#999087] transition hover:text-[#181614]"
+                              className="absolute right-2 top-1/2 flex h-10 w-10 -translate-y-1/2 items-center justify-center text-[#928980] hover:text-[#F5F3EE]"
                               aria-label={showPassword ? 'Hide password' : 'Show password'}
                             >
                               {showPassword ? (
@@ -330,13 +311,13 @@ export function NavbarAuthModal({
                           </div>
                         </label>
 
-                        <div className="flex items-center justify-between pt-0.5">
-                          <label className="flex cursor-pointer items-center gap-2 text-[12px] text-[#766B63]">
+                        <div className="flex items-center justify-between">
+                          <label className="flex cursor-pointer items-center gap-2 text-[11px] text-[#a89e8e]">
                             <input
                               type="checkbox"
                               checked={rememberMe}
                               onChange={(e) => setRememberMe(e.target.checked)}
-                              className="h-[13px] w-[13px] accent-[#C9A96E]"
+                              className="h-3.5 w-3.5 accent-[#D4AF37]"
                             />
                             Remember me
                           </label>
@@ -345,7 +326,7 @@ export function NavbarAuthModal({
                             type="button"
                             onClick={handleForgotPassword}
                             disabled={isLoading}
-                            className="text-[12px] font-medium text-[#B28A56] transition-colors hover:text-[#1A0F0A] disabled:opacity-50"
+                            className="text-[11px] font-semibold text-[#D4AF37] transition hover:text-[#F5F3EE] disabled:opacity-50"
                           >
                             Forgot password?
                           </button>
@@ -354,7 +335,7 @@ export function NavbarAuthModal({
                         <button
                           type="submit"
                           disabled={isLoading}
-                          className="flex h-[52px] w-full items-center justify-center gap-3 rounded-[6px] bg-[#0A0A0A] px-6 text-[11px] font-bold tracking-[0.20em] text-white transition-all duration-200 hover:-translate-y-0.5 hover:scale-[1.005] hover:bg-[#171717] hover:shadow-[0_14px_30px_rgba(10,10,10,0.24)] active:translate-y-0 active:scale-[0.995] disabled:cursor-not-allowed disabled:opacity-50"
+                          className="flex h-[46px] w-full items-center justify-center gap-3 rounded-[3px] bg-gradient-to-r from-[#7A1717] via-[#C7A24A] to-[#7A1717] px-6 text-[10px] font-bold tracking-[0.22em] text-[#120D08] shadow-[inset_0_1px_0_rgba(255,255,255,.28),0_8px_24px_rgba(180,130,45,.16)] transition duration-300 hover:from-[#8F2020] hover:via-[#D8B75C] hover:to-[#8F2020] hover:shadow-[inset_0_1px_0_rgba(255,255,255,.4),0_12px_30px_rgba(190,140,55,.25)] disabled:cursor-not-allowed disabled:opacity-50"
                         >
                           {isLoading ? (
                             <>
@@ -370,60 +351,39 @@ export function NavbarAuthModal({
                         </button>
                       </form>
 
-                      <div className="my-3 flex items-center gap-3">
-                        <div className="h-px flex-1 bg-[#E4DDD4]" />
-                        <span className="text-[7px] font-bold uppercase tracking-[0.3em] text-[#9B9185]">
+                      <div className="my-3 flex items-center gap-4">
+                        <div className="h-px flex-1 bg-[#E1DBD3]" />
+                        <span className="text-[7px] font-bold uppercase tracking-[0.3em] text-[#746b5d]">
                           OR
                         </span>
-                        <div className="h-px flex-1 bg-[#E4DDD4]" />
+                        <div className="h-px flex-1 bg-[#E1DBD3]" />
                       </div>
 
-                      <div className="group relative h-[46px] w-full">
-                        {/* Visible luxury Google button */}
-                        <div className="pointer-events-none absolute inset-0 flex h-[46px] w-full items-center justify-center gap-4 rounded-[3px] border border-[#E3DDD5] bg-white px-4 text-[12px] font-medium text-[#3A332E] transition-all duration-200 group-hover:border-[#C9A96E] group-hover:bg-[#FFFDF9]">
+                      <div className="group relative mx-auto h-[44px] w-full max-w-[620px]">
+                        <div className="pointer-events-none absolute inset-0 flex items-center justify-center gap-3 rounded-[3px] border border-[#5a4d39] bg-[#11100e] text-[12px] font-medium text-[#FFFFFF] transition group-hover:border-[#BFA16E] group-hover:bg-[#15130f]">
                           <svg width="17" height="17" viewBox="0 0 24 24" aria-hidden="true">
                             <path fill="#4285F4" d="M21.35 12.27c0-.72-.06-1.42-.18-2.09H12v3.95h5.22a4.46 4.46 0 0 1-1.94 2.93v2.43h3.14c1.84-1.69 2.93-4.18 2.93-7.22Z"/>
                             <path fill="#34A853" d="M12 21.72c2.63 0 4.84-.87 6.45-2.35l-3.14-2.43c-.87.58-1.98.93-3.31.93-2.54 0-4.69-1.72-5.46-4.03H3.3v2.51A9.74 9.74 0 0 0 12 21.72Z"/>
                             <path fill="#FBBC05" d="M6.54 13.84A5.85 5.85 0 0 1 6.24 12c0-.64.11-1.26.3-1.84V7.65H3.3A9.74 9.74 0 0 0 2.28 12c0 1.57.38 3.05 1.02 4.35l3.24-2.51Z"/>
                             <path fill="#EA4335" d="M12 6.13c1.43 0 2.71.49 3.72 1.46l2.79-2.79C16.84 3.25 14.63 2.28 12 2.28a9.74 9.74 0 0 0-8.7 5.37l3.24 2.51C7.31 7.85 9.46 6.13 12 6.13Z"/>
                           </svg>
-                          <span>Continue with Google</span>
+                          Continue with Google
                         </div>
 
-                        {/* Real Google Identity Services button */}
                         <div
                           ref={googleButtonRef}
-                          className={`absolute inset-0 z-10 h-[46px] w-full overflow-hidden opacity-[0.01] ${
+                          className={`absolute inset-0 z-10 h-full w-full overflow-hidden opacity-[0.01] ${
                             isGoogleLoading ? 'cursor-wait' : 'cursor-pointer'
                           }`}
                           aria-label="Continue with Google"
                         />
                       </div>
 
-                      {/* Trust strip */}
-                      <div className="mt-4 grid grid-cols-3 border-t border-[#EDE5D8] pt-3">
-                        <div className="text-center">
-                          <Truck className="mx-auto h-[17px] w-[17px] text-[#C9A96E]" strokeWidth={1.4} />
-                          <p className="mt-1.5 text-[7px] font-bold uppercase tracking-[0.09em] text-[#5F5750]">
-                            Free Shipping
-                          </p>
-                        </div>
-
-                        <div className="border-x border-[#EDE5D8] text-center">
-                          <ShieldCheck className="mx-auto h-[17px] w-[17px] text-[#C9A96E]" strokeWidth={1.4} />
-                          <p className="mt-1.5 text-[7px] font-bold uppercase tracking-[0.09em] text-[#5F5750]">
-                            Secure
-                          </p>
-                        </div>
-
-                        <div className="text-center">
-                          <RotateCcw className="mx-auto h-[17px] w-[17px] text-[#C9A96E]" strokeWidth={1.4} />
-                          <p className="mt-1.5 text-[7px] font-bold uppercase tracking-[0.09em] text-[#5F5750]">
-                            Easy Returns
-                          </p>
-                        </div>
+                      <div className="mt-3 border-t border-[#342d23] pt-5 text-center">
+                        <p className="text-[7px] uppercase tracking-[0.22em] text-[#71685b]">
+                          KOVENIK · WEAR YOUR ESSENCE
+                        </p>
                       </div>
-
                     </motion.div>
                   )}
 
@@ -431,53 +391,49 @@ export function NavbarAuthModal({
                   {step === 'OTP' && (
                     <motion.div
                       key="otp"
-                      initial={{ opacity: 0, x: 10 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      exit={{ opacity: 0, x: -10 }}
-                      transition={{ duration: 0.22 }}
-                      className="mx-auto flex w-full max-w-[390px] flex-col justify-center"
+                      initial={{ opacity: 0, y: 12 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -12 }}
+                      transition={{ duration: 0.25 }}
                     >
-                      <div className="mb-5 text-center">
-                        <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center border border-[#D6CDC0] bg-white">
-                          <Mail className="h-5 w-5 text-[#C9A96E]" strokeWidth={1.4} />
+                      <div className="mb-8 text-center">
+                        <div className="mx-auto mb-5 flex h-12 w-12 items-center justify-center rounded-full border border-[#59492f] bg-[#0d0d0c]">
+                          <Mail className="h-5 w-5 text-[#B58A4B]" strokeWidth={1.4} />
                         </div>
 
-                        <p className="mb-1.5 text-[9px] font-bold uppercase tracking-[0.3em] text-[#C9A96E]">
+                        <p className="mb-3 text-[9px] font-bold uppercase tracking-[0.3em] text-[#D4AF37]">
                           Secure Verification
                         </p>
 
-                        <h2
-                          className="mt-2 text-[28px] font-normal leading-none tracking-[-0.025em] text-[#1A0F0A] sm:text-[31px]"
-                          style={{
-                            fontFamily: 'Arial, Helvetica, sans-serif',
-                            fontWeight: 400,
-                          }}
+                        <h1
+                          className="text-[36px] font-normal leading-none tracking-[-0.03em] text-[#F5F3EE]"
+                          style={{ fontFamily: 'Bodoni MT, Didot, Cormorant Garamond, Times New Roman, serif' }}
                         >
                           Verify Your Email
-                        </h2>
+                        </h1>
 
-                        <p className="mx-auto mt-2 max-w-[330px] text-[12px] leading-5 text-[#81796F]">
-                          Enter the six-digit code sent to your email.
+                        <p className="mt-4 text-[12px] leading-5 text-[#9f9585]">
+                          Enter the six-digit code sent to
                         </p>
 
-                        <p className="mt-1 break-all text-xs font-bold text-[#27231F]">
+                        <p className="mt-1 break-all text-[12px] font-semibold text-[#e9dfcf]">
                           {email}
                         </p>
                       </div>
 
                       {error && (
                         <motion.div
-                          initial={{ opacity: 0, y: -4 }}
+                          initial={{ opacity: 0, y: -5 }}
                           animate={{ opacity: 1, y: 0 }}
-                          className="mb-4 border border-red-200 bg-red-50 p-2.5 text-center text-xs text-red-700"
+                          className="mb-5 border border-red-900/60 bg-red-950/40 px-4 py-3 text-center text-xs text-red-300"
                         >
                           {error}
                         </motion.div>
                       )}
 
-                      <form onSubmit={handleVerifyOtp} className="space-y-3.5">
+                      <form onSubmit={handleVerifyOtp} className="mx-auto max-w-[600px] space-y-2.5">
                         <div
-                          className="flex w-full justify-center gap-1.5 sm:gap-3"
+                          className="flex justify-center gap-2 sm:gap-3"
                           onPaste={handleOtpPaste}
                         >
                           {otp.map((digit, index) => (
@@ -493,26 +449,26 @@ export function NavbarAuthModal({
                               value={digit}
                               onChange={(e) => handleOtpChange(e.target.value, index)}
                               onKeyDown={(e) => handleOtpKeyDown(e, index)}
-                              className="h-11 w-11 min-w-0 border border-[#DED6CD] bg-white text-center text-base font-bold text-[#1A0F0A] outline-none transition focus:border-[#C9A96E] focus:bg-[#FFFDF9] focus:shadow-[0_0_0_3px_rgba(201,169,110,0.08)] sm:h-[50px] sm:w-[47px] sm:text-lg"
+                              className="h-12 w-11 border border-[#4a4031] bg-[#0d0d0c] text-center text-lg font-bold text-[#F5F3EE] outline-none transition focus:border-[#B58A4B] focus:ring-4 focus:ring-[#D4AF37]/10 sm:h-[52px] sm:w-[50px]"
                               aria-label={`OTP digit ${index + 1}`}
                             />
                           ))}
                         </div>
 
-                        <div className="flex items-center justify-between gap-3 text-[12px] text-[#7A6E65]">
+                        <div className="flex items-center justify-between text-[11px] text-[#9c9282]">
                           {canResend ? (
                             <button
                               type="button"
                               onClick={handleResendOtp}
                               disabled={isLoading}
-                              className="font-bold text-[#A07845] transition hover:text-[#181614] disabled:opacity-50"
+                              className="font-bold text-[#D4AF37] hover:text-[#F5F3EE] disabled:opacity-50"
                             >
                               RESEND OTP
                             </button>
                           ) : (
                             <span>
                               Resend in{' '}
-                              <strong className="text-[#181614]">
+                              <strong className="text-[#F5F3EE]">
                                 00:{otpTimer < 10 ? `0${otpTimer}` : otpTimer}
                               </strong>
                             </span>
@@ -527,7 +483,7 @@ export function NavbarAuthModal({
                               setOtpPurpose('login');
                               setStep('LOGIN');
                             }}
-                            className="transition hover:text-[#181614]"
+                            className="hover:text-[#F5F3EE]"
                           >
                             ← Back to login
                           </button>
@@ -536,7 +492,7 @@ export function NavbarAuthModal({
                         <button
                           type="submit"
                           disabled={otp.join('').length !== 6 || isLoading}
-                          className="flex h-[50px] w-full items-center justify-center gap-2 rounded-[3px] bg-[#0A0A0A] px-6 text-[11px] font-bold tracking-[0.18em] text-white transition-all duration-200 hover:-translate-y-0.5 hover:bg-[#151515] disabled:cursor-not-allowed disabled:opacity-50"
+                          className="flex h-[46px] w-full items-center justify-center gap-3 rounded-[3px] bg-gradient-to-r from-[#7A1717] via-[#C7A24A] to-[#7A1717] text-[10px] font-bold tracking-[0.2em] text-[#120D08] shadow-[inset_0_1px_0_rgba(255,255,255,.28),0_8px_24px_rgba(180,130,45,.16)] transition duration-300 hover:from-[#8F2020] hover:via-[#D8B75C] hover:to-[#8F2020] hover:shadow-[inset_0_1px_0_rgba(255,255,255,.4),0_12px_30px_rgba(190,140,55,.25)] disabled:cursor-not-allowed disabled:opacity-50"
                         >
                           {isLoading ? (
                             <>
@@ -545,35 +501,12 @@ export function NavbarAuthModal({
                             </>
                           ) : (
                             <>
-                              VERIFY &amp; CONTINUE
+                              VERIFY & CONTINUE
                               <ArrowRight className="h-4 w-4" strokeWidth={1.8} />
                             </>
                           )}
                         </button>
                       </form>
-
-                      <div className="mt-6 grid grid-cols-3 border-y border-[#EDE5D8] py-3.5 text-center">
-                        <div>
-                          <ShieldCheck className="mx-auto h-[17px] w-[17px] text-[#C9A96E]" strokeWidth={1.4} />
-                          <p className="mt-1.5 text-[9px] font-bold uppercase tracking-[0.08em] text-[#9A8E82]">
-                            Secure
-                          </p>
-                        </div>
-
-                        <div className="border-x border-[#EDE5D8]">
-                          <Clock3 className="mx-auto h-[17px] w-[17px] text-[#C9A96E]" strokeWidth={1.4} />
-                          <p className="mt-1.5 text-[9px] font-bold uppercase tracking-[0.08em] text-[#9A8E82]">
-                            Expires
-                          </p>
-                        </div>
-
-                        <div>
-                          <Inbox className="mx-auto h-[17px] w-[17px] text-[#C9A96E]" strokeWidth={1.4} />
-                          <p className="mt-1.5 text-[9px] font-bold uppercase tracking-[0.08em] text-[#9A8E82]">
-                            Check Spam
-                          </p>
-                        </div>
-                      </div>
                     </motion.div>
                   )}
 
@@ -581,59 +514,51 @@ export function NavbarAuthModal({
                   {step === 'RESET_PASSWORD' && (
                     <motion.div
                       key="reset-password"
-                      initial={{ opacity: 0, x: 10 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      exit={{ opacity: 0, x: -10 }}
-                      transition={{ duration: 0.22 }}
-                      className="mx-auto flex w-full max-w-[390px] flex-col justify-center"
+                      initial={{ opacity: 0, y: 12 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -12 }}
+                      transition={{ duration: 0.25 }}
                     >
-                      <div className="mb-5 text-center">
-                        <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center border border-[#D6CDC0] bg-white">
-                          <Lock className="h-5 w-5 text-[#C9A96E]" strokeWidth={1.4} />
+                      <div className="mb-8 text-center">
+                        <div className="mx-auto mb-5 flex h-12 w-12 items-center justify-center rounded-full border border-[#59492f] bg-[#0d0d0c]">
+                          <Lock className="h-5 w-5 text-[#B58A4B]" strokeWidth={1.4} />
                         </div>
 
-                        <p className="mb-1.5 text-[9px] font-bold uppercase tracking-[0.3em] text-[#C9A96E]">
+                        <p className="mb-3 text-[9px] font-bold uppercase tracking-[0.3em] text-[#D4AF37]">
                           Secure Reset
                         </p>
 
-                        <h2
-                          className="mt-2 text-[28px] font-normal leading-none tracking-[-0.025em] text-[#1A0F0A] sm:text-[31px]"
-                          style={{
-                            fontFamily: 'Arial, Helvetica, sans-serif',
-                            fontWeight: 400,
-                          }}
+                        <h1
+                          className="text-[36px] font-normal leading-none tracking-[-0.03em] text-[#F5F3EE]"
+                          style={{ fontFamily: 'Bodoni MT, Didot, Cormorant Garamond, Times New Roman, serif' }}
                         >
                           Create New Password
-                        </h2>
+                        </h1>
 
-                        <p className="mx-auto mt-2 max-w-[330px] text-[12px] leading-5 text-[#81796F]">
-                          Enter a new password for your ARDENBY account.
-                        </p>
-
-                        <p className="mt-1 break-all text-xs font-bold text-[#27231F]">
-                          {email}
+                        <p className="mt-4 text-[12px] leading-5 text-[#9f9585]">
+                          Create a new password for your KOVENIK account.
                         </p>
                       </div>
 
                       {error && (
                         <motion.div
-                          initial={{ opacity: 0, y: -4 }}
+                          initial={{ opacity: 0, y: -5 }}
                           animate={{ opacity: 1, y: 0 }}
-                          className="mb-4 border border-red-200 bg-red-50 p-2.5 text-center text-xs text-red-700"
+                          className="mb-5 border border-red-900/60 bg-red-950/40 px-4 py-3 text-center text-xs text-red-300"
                         >
                           {error}
                         </motion.div>
                       )}
 
-                      <form onSubmit={handleResetPassword} className="space-y-3.5">
+                      <form onSubmit={handleResetPassword} className="mx-auto max-w-[600px] space-y-2.5">
                         <label className="block">
-                          <span className="mb-1.5 block text-[9px] font-bold uppercase tracking-[0.20em] text-[#5F5750]">
+                          <span className="mb-1 block text-[9px] font-bold uppercase tracking-[0.2em] text-[#E4DED5]">
                             New Password
                           </span>
 
                           <div className="relative">
                             <Lock
-                              className="pointer-events-none absolute left-3.5 top-1/2 h-[15px] w-[15px] -translate-y-1/2 text-[#A79D91]"
+                              className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-[#81786b]"
                               strokeWidth={1.4}
                             />
 
@@ -643,13 +568,13 @@ export function NavbarAuthModal({
                               onChange={(e) => setPassword(e.target.value)}
                               placeholder="Enter your new password"
                               autoComplete="new-password"
-                              className="h-[49px] w-full rounded-[3px] border border-[#DED6CD] bg-white py-3 pl-10 pr-11 text-[13px] text-[#181614] outline-none transition-all duration-200 focus:border-[#C9A96E] focus:bg-[#FFFDF9] focus:shadow-[0_0_0_3px_rgba(201,169,110,0.08)] placeholder:text-[#AEA59B]"
+                              className="h-[44px] w-full rounded-[2px] border border-[#5a4d39] bg-[#11100e] px-11 pr-12 text-[13px] text-[#FFFFFF] outline-none transition focus:border-[#D4AF37] focus:ring-4 focus:ring-[#D4AF37]/10 placeholder:text-[#746c60]"
                             />
 
                             <button
                               type="button"
                               onClick={() => setShowPassword((v) => !v)}
-                              className="absolute right-2.5 top-1/2 flex h-8 w-8 -translate-y-1/2 items-center justify-center text-[#999087] transition hover:text-[#181614]"
+                              className="absolute right-2 top-1/2 flex h-10 w-10 -translate-y-1/2 items-center justify-center text-[#928980] hover:text-[#F5F3EE]"
                               aria-label={showPassword ? 'Hide password' : 'Show password'}
                             >
                               {showPassword ? (
@@ -664,7 +589,7 @@ export function NavbarAuthModal({
                         <button
                           type="submit"
                           disabled={password.length < 8 || isLoading}
-                          className="flex h-[50px] w-full items-center justify-center gap-2 rounded-[3px] bg-[#0A0A0A] px-6 text-[11px] font-bold tracking-[0.18em] text-white transition-all duration-200 hover:-translate-y-0.5 hover:bg-[#151515] disabled:cursor-not-allowed disabled:opacity-50"
+                          className="flex h-[46px] w-full items-center justify-center gap-3 rounded-[3px] bg-gradient-to-r from-[#7A1717] via-[#C7A24A] to-[#7A1717] text-[10px] font-bold tracking-[0.2em] text-[#120D08] shadow-[inset_0_1px_0_rgba(255,255,255,.28),0_8px_24px_rgba(180,130,45,.16)] transition duration-300 hover:from-[#8F2020] hover:via-[#D8B75C] hover:to-[#8F2020] hover:shadow-[inset_0_1px_0_rgba(255,255,255,.4),0_12px_30px_rgba(190,140,55,.25)] disabled:cursor-not-allowed disabled:opacity-50"
                         >
                           {isLoading ? (
                             <>
@@ -689,19 +614,21 @@ export function NavbarAuthModal({
                             setOtpPurpose('login');
                             setStep('LOGIN');
                           }}
-                          className="w-full text-center text-[12px] text-[#7A6E65] transition hover:text-[#181614]"
+                          className="w-full text-center text-[11px] text-[#9c9282] hover:text-[#F5F3EE]"
                         >
                           ← Back to login
                         </button>
                       </form>
                     </motion.div>
                   )}
-                </AnimatePresence>
+                  </AnimatePresence>
+                  </div>
+                </div>
               </div>
-            </motion.div>
-          </div>
-        )}
-      </AnimatePresence>
-    </>
+            </main>
+          </motion.div>
+        </div>
+      )}
+    </AnimatePresence>
   );
 }

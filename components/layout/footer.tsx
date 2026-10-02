@@ -66,6 +66,36 @@ const socialLinks = [
   },
 ];
 
+
+const KOVENIK_LOGO_STYLE = {
+  color: '#F5F3EE',
+  fontFamily:
+    'Bodoni MT, Didot, Cormorant Garamond, Times New Roman, serif',
+  backgroundImage: `
+    radial-gradient(circle at 3% 45%, #D4AF37 0 2px, transparent 2.5px),
+    radial-gradient(circle at 7% 20%, #8B1E1E 0 1.5px, transparent 2px),
+    radial-gradient(circle at 12% 75%, #A52A2A 0 3px, transparent 3.5px),
+    radial-gradient(circle at 18% 8%, #D4AF37 0 2px, transparent 2.5px),
+    radial-gradient(circle at 25% 92%, #8B1E1E 0 1.5px, transparent 2px),
+    radial-gradient(circle at 34% 3%, #E6CA65 0 3px, transparent 3.5px),
+    radial-gradient(circle at 43% 95%, #A52A2A 0 2px, transparent 2.5px),
+    radial-gradient(circle at 52% 4%, #D4AF37 0 1.5px, transparent 2px),
+    radial-gradient(circle at 62% 94%, #8B1E1E 0 3px, transparent 3.5px),
+    radial-gradient(circle at 71% 7%, #D4AF37 0 2px, transparent 2.5px),
+    radial-gradient(circle at 79% 91%, #A52A2A 0 2px, transparent 2.5px),
+    radial-gradient(circle at 88% 15%, #E6CA65 0 3px, transparent 3.5px),
+    radial-gradient(circle at 94% 48%, #D4AF37 0 2px, transparent 2.5px),
+    radial-gradient(circle at 98% 78%, #8B1E1E 0 3px, transparent 3.5px)
+  `,
+  backgroundRepeat: 'no-repeat',
+  textShadow: `
+    2px 0 0 rgba(139,30,30,0.85),
+    -2px 0 0 rgba(80,15,15,0.65),
+    0 4px 0 rgba(212,175,55,0.45),
+    0 8px 18px rgba(0,0,0,0.6)
+  `,
+};
+
 const marqueeText = "WEAR BEYOND ORDINARY";
 
 /* ================================================================
@@ -297,35 +327,38 @@ export function Footer() {
 
                 <span
                   className="
+                    relative inline-block
                     text-[34px]
                     font-bold
-                    sm:text-[42px]
                     uppercase
-                    tracking-[-0.08em]
-                    bg-gradient-to-r from-[#F3E5AB] via-[#D4AF37] to-[#AA771C]
-                    bg-clip-text text-transparent
-                    transition-opacity
+                    leading-none
+                    tracking-[-0.075em]
+                    transition-all
                     duration-300
-                    group-hover:opacity-90
+                    group-hover:scale-[1.015]
                     sm:text-[50px]
                   "
-                  style={{
-                    fontFamily: "Didot, Bodoni MT, serif",
-                  }}
+                  style={KOVENIK_LOGO_STYLE}
                 >
                   KOVENIK
+
+                  <span
+                    className="absolute -bottom-[8px] left-1/2 h-[1px] w-0 -translate-x-1/2 transition-all duration-500 group-hover:w-[72%]"
+                    style={{ backgroundColor: '#D4AF37' }}
+                  />
                 </span>
 
                 <div className="mt-3 flex items-center gap-3">
-
                   <span className="h-px w-10 bg-[#D4AF37]/50" />
 
-                  <span className="text-[10px] uppercase tracking-[0.34em] text-[#F3E5AB]">
+                  <span
+                    className="text-[10px] uppercase tracking-[0.34em]"
+                    style={{ color: '#D4AF37' }}
+                  >
                     WEAR YOUR ESSENCE
                   </span>
 
                   <span className="h-px w-10 bg-[#D4AF37]/50" />
-
                 </div>
               </div>
             </Link>
