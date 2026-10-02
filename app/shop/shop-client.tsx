@@ -8,9 +8,10 @@ import {
   ChevronDown,
   ChevronUp,
   RotateCcw,
-  Sparkles,
   Grid,
   Check,
+  LayoutGrid,
+  List,
 } from 'lucide-react';
 import { ProductCard } from '@/components/product/product-card';
 import { categories, products as staticProducts } from '@/lib/data';
@@ -154,7 +155,7 @@ function normalizeProduct(product: ApiProduct) {
 }
 
 const sortOptions = [
-  { value: 'featured', label: 'Featured Drops' },
+  { value: 'featured', label: 'Featured' },
   { value: 'best-selling', label: 'Best Selling' },
   { value: 'newest', label: 'Newest Arrivals' },
   { value: 'price-low', label: 'Price: Low to High' },
@@ -178,7 +179,13 @@ const allFabrics: FabricType[] = ['100% Cotton', 'Textured', 'Pattern', 'Printed
 const allCoverages: CoverageType[] = ['Front', 'Back', 'All Over'];
 const allFits: FitType[] = ['Oversized', 'Regular', 'Cargo', 'Hoodie', 'Jogger'];
 
-// Dynamic Collapsible Component
+/* ------------------------------------------------------------------
+   Design tokens (used as Tailwind arbitrary values below)
+   bg page      #0a0a0a     panel      #111111     line   #262626
+   gold         #f0b845     gold-soft  #c9962f     text   #f3ede2
+   muted        #9a948a
+------------------------------------------------------------------- */
+
 function DynamicFilterSection({
   title,
   children,
@@ -191,32 +198,64 @@ function DynamicFilterSection({
   const [isOpen, setIsOpen] = useState(defaultOpen);
 
   return (
-    <div className="border-b border-stone-200/80 pb-5 pt-2 transition-all">
+    <div className="border-b border-[#262626] py-4">
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center justify-between w-full text-left font-serif text-sm font-medium tracking-wide text-neutral-900 group"
+        className="group flex w-full items-center justify-between text-left text-[12px] font-bold uppercase tracking-[0.06em] text-[#f3ede2]"
       >
         <span>{title}</span>
         {isOpen ? (
-          <ChevronUp className="h-4 w-4 text-neutral-400 group-hover:text-neutral-900 transition-colors" />
+          <ChevronUp className="h-4 w-4 text-[#9a948a] transition-colors group-hover:text-[#f0b845]" />
         ) : (
-          <ChevronDown className="h-4 w-4 text-neutral-400 group-hover:text-neutral-900 transition-colors" />
+          <ChevronDown className="h-4 w-4 text-[#9a948a] transition-colors group-hover:text-[#f0b845]" />
         )}
       </button>
-      <AnimatePresence>
+      <AnimatePresence initial={false}>
         {isOpen && (
           <motion.div
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: 'auto' }}
             exit={{ opacity: 0, height: 0 }}
-            transition={{ duration: 0.25 }}
-            className="overflow-hidden pt-3"
+            transition={{ duration: 0.22 }}
+            className="overflow-hidden pt-3.5"
           >
             {children}
           </motion.div>
         )}
       </AnimatePresence>
     </div>
+  );
+}
+
+/* Square checkbox used by Category + Fabric rows */
+function CheckRow({
+  label,
+  count,
+  checked,
+  onClick,
+}: {
+  label: string;
+  count?: number;
+  checked: boolean;
+  onClick: () => void;
+}) {
+  return (
+    <button onClick={onClick} className="group flex w-full items-center gap-3 py-1.5 text-left">
+      <span
+        className={cn(
+          'flex h-[18px] w-[18px] shrink-0 items-center justify-center rounded-[3px] border transition-colors',
+          checked
+            ? 'border-[#f0b845] bg-[#f0b845]'
+            : 'border-[#4a4a46] bg-transparent group-hover:border-[#f0b845]'
+        )}
+      >
+        {checked && <Check className="h-3 w-3 stroke-[3] text-black" />}
+      </span>
+      <span className="text-[13px] text-[#cfc9be] transition-colors group-hover:text-white">
+        {label}
+        {typeof count === 'number' && <span className="ml-1 text-[#9a948a]">({count})</span>}
+      </span>
+    </button>
   );
 }
 
@@ -228,6 +267,7 @@ export function ShopClient() {
   const [products, setProducts] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [sort, setSort] = useState('featured');
+  const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
   const [selectedSizes, setSelectedSizes] = useState<ProductSize[]>([]);
   const [priceRange, setPriceRange] = useState<[number, number]>([0, 2000]);
   const [selectedColors, setSelectedColors] = useState<ProductColor[]>([]);
@@ -383,10 +423,22 @@ export function ShopClient() {
     }
 
     return result;
-  }, [categoryParam, selectedSizes, selectedColors, selectedFabrics, selectedCoverages, selectedFits, priceRange, sort]);
+  }, [
+    products,
+    categoryParam,
+    selectedSizes,
+    selectedColors,
+    selectedFabrics,
+    selectedCoverages,
+    selectedFits,
+    priceRange,
+    sort,
+  ]);
 
   const totalPages = Math.ceil(filtered.length / itemsPerPage);
   const paged = filtered.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
+  const rangeStart = filtered.length === 0 ? 0 : (currentPage - 1) * itemsPerPage + 1;
+  const rangeEnd = Math.min(currentPage * itemsPerPage, filtered.length);
 
   useEffect(() => {
     setCurrentPage(1);
@@ -420,20 +472,31 @@ export function ShopClient() {
     selectedFits.length +
     (priceRange[0] !== 0 || priceRange[1] !== 2000 ? 1 : 0);
 
-  const FilterContent = () => (
-    <div className="space-y-1">
-      {/* Size Filter */}
-      <DynamicFilterSection title="SIZES">
+  const pillClass = (active: boolean, round = 'rounded-md') =>
+    cn(
+      'border px-3.5 py-1.5 text-[12px] transition-all duration-200',
+      round,
+      active
+        ? 'border-[#f0b845] bg-[#f0b845] font-semibold text-black'
+        : 'border-[#3a3a37] bg-transparent text-[#d8d2c7] hover:border-[#f0b845] hover:text-white'
+    );
+
+  // NOTE: kept as a plain JSX value (not an inner component) so that
+  // collapsible sections keep their open/closed state when a filter is clicked.
+  const filterContent = (
+    <div>
+      {/* Sizes */}
+      <DynamicFilterSection title="Sizes">
         <div className="flex flex-wrap gap-2">
           {allSizes.map((s) => (
             <button
               key={s}
               onClick={() => toggleSize(s)}
               className={cn(
-                'min-w-[38px] h-9 px-2.5 rounded-md text-xs font-semibold tracking-wider transition-all duration-200 border',
+                'h-9 min-w-[40px] rounded-[4px] border px-2.5 text-[12px] font-semibold transition-all duration-200',
                 selectedSizes.includes(s)
-                  ? 'bg-neutral-900 text-white border-neutral-900 shadow-sm'
-                  : 'bg-white text-neutral-700 border-stone-300 hover:border-neutral-900'
+                  ? 'border-[#f0b845] bg-[#f0b845] text-black'
+                  : 'border-[#3a3a37] bg-transparent text-[#d8d2c7] hover:border-[#f0b845]'
               )}
             >
               {s}
@@ -442,43 +505,45 @@ export function ShopClient() {
         </div>
       </DynamicFilterSection>
 
-      {/* Price Filter */}
-      <DynamicFilterSection title="PRICE RANGE">
-        <div className="px-1 pt-2">
+      {/* Price */}
+      <DynamicFilterSection title="Price Range">
+        <div className="px-1 pt-1">
           <Slider
             value={priceRange}
             onValueChange={(v) => setPriceRange([v[0], v[1]] as [number, number])}
             min={0}
             max={2000}
             step={100}
-            className="mb-4"
+            className="mb-4 [&_[class*='bg-primary']]:bg-[#f0b845] [&_[class*='bg-secondary']]:bg-[#34342f] [&_[role=slider]]:h-4 [&_[role=slider]]:w-4 [&_[role=slider]]:border-[#f0b845] [&_[role=slider]]:bg-[#f0b845]"
           />
-          <div className="flex items-center justify-between font-mono text-xs text-neutral-600 bg-stone-100 px-3 py-1.5 rounded-md">
+          <div className="flex items-center justify-between text-[12px] text-[#cfc9be]">
             <span>{formatINR(priceRange[0])}</span>
-            <span className="text-neutral-400">—</span>
             <span>{formatINR(priceRange[1])}</span>
           </div>
         </div>
       </DynamicFilterSection>
 
-      {/* Color Filter */}
-      <DynamicFilterSection title="COLORS">
-        <div className="flex flex-wrap gap-2.5">
+      {/* Colors */}
+      <DynamicFilterSection title="Colors">
+        <div className="flex flex-wrap gap-3">
           {allColors.map((c) => (
             <button
               key={c.name}
               onClick={() => toggleColor(c.name)}
               title={c.name}
+              aria-label={c.name}
               className={cn(
-                'relative w-7 h-7 rounded-full border transition-transform duration-200 flex items-center justify-center',
-                selectedColors.includes(c.name) ? 'scale-110 ring-2 ring-neutral-900 ring-offset-2' : 'hover:scale-105 border-black/10'
+                'relative flex h-[26px] w-[26px] items-center justify-center rounded-full border border-white/20 transition-transform duration-200',
+                selectedColors.includes(c.name)
+                  ? 'scale-110 ring-2 ring-[#f0b845] ring-offset-2 ring-offset-[#0a0a0a]'
+                  : 'hover:scale-110'
               )}
               style={{ backgroundColor: c.hex }}
             >
               {selectedColors.includes(c.name) && (
                 <Check
                   className={cn(
-                    'h-3.5 w-3.5',
+                    'h-3.5 w-3.5 stroke-[3]',
                     c.name === 'White' || c.name === 'Beige' ? 'text-black' : 'text-white'
                   )}
                 />
@@ -488,42 +553,28 @@ export function ShopClient() {
         </div>
       </DynamicFilterSection>
 
-      {/* Fabric Filter */}
-      <DynamicFilterSection title="FABRIC TYPE">
-        <div className="space-y-2">
+      {/* Fabric */}
+      <DynamicFilterSection title="Fabric Type">
+        <div>
           {allFabrics.map((f) => (
-            <button
+            <CheckRow
               key={f}
+              label={f}
+              checked={selectedFabrics.includes(f)}
               onClick={() => toggleFabric(f)}
-              className="flex items-center justify-between w-full text-left py-1 group"
-            >
-              <span className="text-xs text-neutral-700 group-hover:text-neutral-900">{f}</span>
-              <div
-                className={cn(
-                  'w-4 h-4 rounded border flex items-center justify-center transition-colors',
-                  selectedFabrics.includes(f) ? 'bg-neutral-900 border-neutral-900' : 'border-stone-300'
-                )}
-              >
-                {selectedFabrics.includes(f) && <Check className="h-3 w-3 text-white" />}
-              </div>
-            </button>
+            />
           ))}
         </div>
       </DynamicFilterSection>
 
-      {/* Coverage Filter */}
-      <DynamicFilterSection title="PRINT COVERAGE">
+      {/* Coverage */}
+      <DynamicFilterSection title="Print Coverage">
         <div className="flex flex-wrap gap-2">
           {allCoverages.map((c) => (
             <button
               key={c}
               onClick={() => toggleCoverage(c)}
-              className={cn(
-                'px-3 py-1.5 text-xs rounded-full border transition-all duration-200',
-                selectedCoverages.includes(c)
-                  ? 'bg-neutral-900 text-white border-neutral-900'
-                  : 'bg-white text-neutral-700 border-stone-300 hover:border-neutral-900'
-              )}
+              className={pillClass(selectedCoverages.includes(c), 'rounded-md')}
             >
               {c}
             </button>
@@ -531,19 +582,14 @@ export function ShopClient() {
         </div>
       </DynamicFilterSection>
 
-      {/* Fit / Silhouette Filter */}
-      <DynamicFilterSection title="FIT & CATEGORY">
+      {/* Fit */}
+      <DynamicFilterSection title="Fit Type">
         <div className="flex flex-wrap gap-2">
           {allFits.map((f) => (
             <button
               key={f}
               onClick={() => toggleFit(f)}
-              className={cn(
-                'px-3 py-1.5 text-xs rounded-full border transition-all duration-200',
-                selectedFits.includes(f)
-                  ? 'bg-neutral-900 text-white border-neutral-900'
-                  : 'bg-white text-neutral-700 border-stone-300 hover:border-neutral-900'
-              )}
+              className={pillClass(selectedFits.includes(f), 'rounded-full')}
             >
               {f}
             </button>
@@ -552,11 +598,11 @@ export function ShopClient() {
       </DynamicFilterSection>
 
       {activeFilterCount > 0 && (
-        <div className="pt-4">
+        <div className="pt-5">
           <Button
             onClick={clearAll}
             variant="outline"
-            className="w-full text-xs uppercase tracking-widest border-stone-300 hover:bg-neutral-900 hover:text-white transition-all duration-300 gap-2"
+            className="w-full gap-2 rounded-md border-[#f0b845]/60 bg-transparent text-[12px] font-semibold uppercase tracking-wider text-[#f0b845] transition-all hover:bg-[#f0b845] hover:text-black"
           >
             <RotateCcw className="h-3.5 w-3.5" />
             Reset Filters ({activeFilterCount})
@@ -566,170 +612,438 @@ export function ShopClient() {
     </div>
   );
 
+  const sortSelect = (compact = false) => (
+    <div className={cn('relative', compact && 'min-w-0 flex-1')}>
+      <select
+        value={sort}
+        onChange={(e) => setSort(e.target.value)}
+        className={cn(
+          'cursor-pointer appearance-none rounded-md border border-[#3a3a37] bg-[#111111] text-[#f3ede2] outline-none transition hover:border-[#f0b845] focus:border-[#f0b845]',
+          compact ? 'h-11 w-full pl-3.5 pr-9 text-[14px]' : 'h-10 min-w-[150px] pl-3 pr-9 text-[13px]'
+        )}
+      >
+        {sortOptions.map((opt) => (
+          <option key={opt.value} value={opt.value} className="bg-[#111111] text-white">
+            {compact ? `Sort: ${opt.label}` : opt.label}
+          </option>
+        ))}
+      </select>
+      <ChevronDown className="pointer-events-none absolute right-2.5 top-1/2 h-4 w-4 -translate-y-1/2 text-[#f3ede2]" />
+    </div>
+  );
+
+  const navPill = (active: boolean) =>
+    cn(
+      'shrink-0 rounded-md border px-5 py-2.5 text-[12px] font-semibold uppercase tracking-[0.04em] transition-all',
+      active
+        ? 'border-[#f0b845] bg-[#f0b845] text-black'
+        : 'border-[#34342f] bg-[#101010]/80 text-[#e9e3d8] hover:border-[#f0b845] hover:text-[#f0b845]'
+    );
+
   return (
-    <div className="max-w-[1480px] mx-auto px-5 sm:px-8 lg:px-12 py-8 lg:py-14 bg-[#FAF9F6]">
-      {/* Dynamic Header */}
-      <div className="flex flex-col md:flex-row md:items-end justify-between border-b border-stone-200 pb-8 mb-8">
-        <div>
-          <div className="inline-flex items-center gap-2 px-3 py-1 bg-neutral-100 rounded-full text-[10px] uppercase tracking-widest text-neutral-500 font-semibold mb-3">
-            <Sparkles className="h-3 w-3 text-amber-500" /> Catalog Lookbook
-          </div>
-          <h1 className="font-serif text-3xl sm:text-5xl font-normal text-neutral-900 tracking-tight">
-            {activeCategory ? activeCategory.name : 'All Collections'}
-          </h1>
-          <p className="text-xs sm:text-sm text-neutral-500 mt-2 font-light max-w-lg">
-            {activeCategory ? activeCategory.desc : 'Explore our range of oversized heavyweights and essentials.'}
-          </p>
-        </div>
+    <div className="min-h-screen w-full overflow-x-hidden bg-[#0a0a0a] text-[#f3ede2]">
+      {/* ============================================================
+          PRODUCT-CARD VISUAL SYSTEM
+          ProductCard component / data / actions are NOT replaced.
+          These styles only restyle its rendered output inside this grid.
+      ============================================================ */}
+      <style jsx global>{`
+        [data-kevonik-product-grid] > * {
+          min-width: 0 !important;
+          background: #111111 !important;
+          border: 1px solid #262626 !important;
+          border-radius: 6px !important;
+          box-shadow: none !important;
+          overflow: hidden !important;
+          padding-bottom: 14px !important;
+        }
 
-        <div className="mt-6 md:mt-0 flex items-center gap-4">
-          {/* Desktop Sort Dropdown */}
-          <div className="relative hidden lg:block">
-            <select
-              value={sort}
-              onChange={(e) => setSort(e.target.value)}
-              className="appearance-none bg-white border border-stone-300 text-neutral-900 text-xs font-semibold uppercase tracking-wider rounded-lg pl-4 pr-10 py-3 cursor-pointer focus:outline-none focus:ring-1 focus:ring-black transition-all"
+        /* text area: breathing room inside the card border (image stays full-bleed) */
+        [data-kevonik-product-grid] > *
+          > :not(:has([class*='aspect-'])):not([class*='aspect-']):not([class*='absolute']),
+        [data-kevonik-product-grid] > * > a
+          > :not(:has([class*='aspect-'])):not([class*='aspect-']):not([class*='absolute']) {
+          padding: 12px 14px 0 !important;
+        }
+
+        /* readable text on dark */
+        [data-kevonik-product-grid] > * h1,
+        [data-kevonik-product-grid] > * h2,
+        [data-kevonik-product-grid] > * h3,
+        [data-kevonik-product-grid] > * h4 {
+          color: #f3ede2 !important;
+          opacity: 1 !important;
+          font-size: 14px !important;
+          line-height: 1.35 !important;
+          font-weight: 400 !important;
+        }
+        [data-kevonik-product-grid] > * p,
+        [data-kevonik-product-grid] > * span,
+        [data-kevonik-product-grid] > * div {
+          color: #e6e0d4;
+          opacity: 1 !important;
+        }
+        [data-kevonik-product-grid] > * [class*='line-through'] {
+          color: #8d877c !important;
+        }
+        [data-kevonik-product-grid] > * [class*='text-green'],
+        [data-kevonik-product-grid] > * [class*='text-emerald'] {
+          color: #22c55e !important;
+        }
+        [data-kevonik-product-grid] > * a {
+          color: inherit !important;
+          text-decoration: none !important;
+        }
+
+        /* image: fill the card's own image box (no white gap) */
+        [data-kevonik-product-grid] > * [class*='aspect-'] {
+          background: #161614 !important;
+          border-radius: 0 !important;
+        }
+        [data-kevonik-product-grid] > * img {
+          display: block !important;
+          width: 100% !important;
+          height: 100% !important;
+          object-fit: cover !important;
+          border-radius: 0 !important;
+        }
+
+        /* white badges (BESTSELLER etc.) -> gold with black text */
+        [data-kevonik-product-grid] > * span[class*='bg-white'],
+        [data-kevonik-product-grid] > * div[class*='bg-white']:not([class*='aspect-']) {
+          background: #f0b845 !important;
+          border-radius: 3px !important;
+        }
+        [data-kevonik-product-grid] > * span[class*='bg-white'],
+        [data-kevonik-product-grid] > * span[class*='bg-white'] * {
+          color: #000 !important;
+        }
+
+        /* Add to cart -> outlined gold */
+        [data-kevonik-product-grid] > * button[class*='bg-neutral'],
+        [data-kevonik-product-grid] > * button[class*='bg-black'],
+        [data-kevonik-product-grid] > * button[class*='bg-primary'],
+        [data-kevonik-product-grid] > * button[class*='bg-stone'] {
+          color: #f0b845 !important;
+          border: 1px solid #b98b3f !important;
+          background: #1a1508 !important;
+          border-radius: 4px !important;
+          font-weight: 600 !important;
+        }
+        [data-kevonik-product-grid] > * button[class*='bg-neutral'] *,
+        [data-kevonik-product-grid] > * button[class*='bg-black'] * {
+          color: inherit !important;
+        }
+        [data-kevonik-product-grid] > * button[class*='bg-neutral']:hover,
+        [data-kevonik-product-grid] > * button[class*='bg-black']:hover,
+        [data-kevonik-product-grid] > * button[class*='bg-primary']:hover {
+          background: #f0b845 !important;
+          color: #000 !important;
+        }
+
+        @media (max-width: 767px) {
+          [data-kevonik-product-grid] > * h1,
+          [data-kevonik-product-grid] > * h2,
+          [data-kevonik-product-grid] > * h3,
+          [data-kevonik-product-grid] > * h4 {
+            font-size: 14px !important;
+            line-height: 1.3 !important;
+            font-weight: 500 !important;
+          }
+          /* rating / best-price / small meta text: bump up from tiny sizes */
+          [data-kevonik-product-grid] > * [class*='text-xs']:not([class*='uppercase']),
+          [data-kevonik-product-grid] > * [class*='text-[10px]']:not([class*='uppercase']),
+          [data-kevonik-product-grid] > * [class*='text-[11px]']:not([class*='uppercase']),
+          [data-kevonik-product-grid] > * [class*='text-[9px]']:not([class*='uppercase']) {
+            font-size: 13px !important;
+          }
+          [data-kevonik-product-grid] > * [class*='line-through'] {
+            font-size: 13px !important;
+          }
+          [data-kevonik-product-grid] > * button[class*='bg-neutral'],
+          [data-kevonik-product-grid] > * button[class*='bg-black'] {
+            min-height: 42px !important;
+            font-size: 13px !important;
+          }
+          [data-kevonik-product-grid] > *
+            > :not(:has([class*='aspect-'])):not([class*='aspect-']):not([class*='absolute']),
+          [data-kevonik-product-grid] > * > a
+            > :not(:has([class*='aspect-'])):not([class*='aspect-']):not([class*='absolute']) {
+            padding: 14px 12px 0 !important;
+          }
+        }
+      `}</style>
+
+      {/* ============================================================
+          COLLECTION HEADER
+          ============================================================ */}
+      <section className="relative overflow-hidden border-b border-[#262626] bg-[#0a0a0a]">
+        <div
+          className="pointer-events-none absolute inset-0 bg-cover bg-[position:70%_20%] opacity-60"
+          style={{
+            backgroundImage: paged[0]?.images?.[0]
+              ? `linear-gradient(90deg,rgba(10,10,10,1) 0%,rgba(10,10,10,.82) 38%,rgba(10,10,10,.25) 100%), url("${paged[0].images[0]}")`
+              : 'linear-gradient(90deg,#0a0a0a,#1a1408)',
+          }}
+        />
+        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_75%_30%,rgba(240,184,69,0.18),transparent_40%)]" />
+
+        <div className="relative mx-auto w-full max-w-[1920px] px-4 pb-5 pt-6 sm:px-6 lg:px-8 lg:pb-8 lg:pt-10 xl:px-10">
+          <div className="flex items-end justify-between gap-6">
+            <div className="min-w-0">
+              <div className="mb-2 text-[10px] font-medium uppercase tracking-[0.42em] text-[#e9e3d8]/80 md:mb-4 md:text-[13px] md:tracking-[0.5em]">
+                Luxury Streetwear
+              </div>
+
+              <h1 className="font-serif text-[32px] font-bold leading-[1.05] tracking-[-0.01em] text-[#f6f0e4] sm:text-5xl md:uppercase lg:text-[64px] lg:tracking-[0.01em]">
+                {activeCategory ? activeCategory.name : 'All Products'}
+              </h1>
+
+              <p className="mt-2 max-w-xl text-[12px] text-[#e9e3d8]/80 sm:text-sm md:mt-3 md:text-base">
+                {activeCategory ? activeCategory.desc : 'Premium essentials for a bolder you.'}
+              </p>
+            </div>
+
+            <div
+              aria-hidden
+              className="mr-6 hidden shrink-0 flex-col gap-1.5 text-[12px] font-medium uppercase tracking-[0.6em] text-[#e9e3d8]/70 xl:flex"
             >
-              {sortOptions.map((opt) => (
-                <option key={opt.value} value={opt.value}>
-                  {opt.label}
-                </option>
-              ))}
-            </select>
-            <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 pointer-events-none text-neutral-500" />
-          </div>
-
-          <div className="text-xs text-neutral-400 font-mono">
-            Showing <span className="font-bold text-neutral-900">{filtered.length}</span> pieces
-          </div>
-        </div>
-      </div>
-
-      {/* Dynamic Active Filters Bar */}
-      {activeFilterCount > 0 && (
-        <div className="flex flex-wrap items-center gap-2 mb-8 p-3 bg-stone-100/70 rounded-lg border border-stone-200">
-          <span className="text-[10px] font-bold uppercase tracking-widest text-neutral-400 mr-2">Active Filters:</span>
-          {selectedSizes.map((s) => (
-            <button
-              key={s}
-              onClick={() => toggleSize(s)}
-              className="inline-flex items-center gap-1.5 px-3 py-1 bg-white border border-stone-300 rounded-full text-[11px] font-medium text-neutral-800 hover:border-black transition-all"
-            >
-              Size: {s} <X className="h-3 w-3 text-neutral-400" />
-            </button>
-          ))}
-          {selectedColors.map((c) => (
-            <button
-              key={c}
-              onClick={() => toggleColor(c)}
-              className="inline-flex items-center gap-1.5 px-3 py-1 bg-white border border-stone-300 rounded-full text-[11px] font-medium text-neutral-800 hover:border-black transition-all"
-            >
-              Color: {c} <X className="h-3 w-3 text-neutral-400" />
-            </button>
-          ))}
-          {selectedFabrics.map((f) => (
-            <button
-              key={f}
-              onClick={() => toggleFabric(f)}
-              className="inline-flex items-center gap-1.5 px-3 py-1 bg-white border border-stone-300 rounded-full text-[11px] font-medium text-neutral-800 hover:border-black transition-all"
-            >
-              Fabric: {f} <X className="h-3 w-3 text-neutral-400" />
-            </button>
-          ))}
-          {selectedFits.map((f) => (
-            <button
-              key={f}
-              onClick={() => toggleFit(f)}
-              className="inline-flex items-center gap-1.5 px-3 py-1 bg-white border border-stone-300 rounded-full text-[11px] font-medium text-neutral-800 hover:border-black transition-all"
-            >
-              Fit: {f} <X className="h-3 w-3 text-neutral-400" />
-            </button>
-          ))}
-          <button
-            onClick={clearAll}
-            className="text-[11px] font-semibold uppercase tracking-wider text-red-600 hover:underline ml-auto"
-          >
-            Clear All
-          </button>
-        </div>
-      )}
-
-      <div className="flex gap-10">
-        {/* Desktop Sidebar Filters */}
-        <aside className="hidden lg:block w-64 flex-shrink-0">
-          <div className="sticky top-28 space-y-4">
-            <h2 className="text-xs font-bold uppercase tracking-[0.2em] text-neutral-400 pb-2 border-b border-stone-200">
-              Filter Options
-            </h2>
-            <FilterContent />
-          </div>
-        </aside>
-
-        {/* Main Content Area */}
-        <div className="flex-1 min-w-0">
-          {/* Mobile Filter & Sort Controls Bar */}
-          <div className="flex items-center justify-between mb-6 lg:hidden">
-            <Sheet open={mobileFiltersOpen} onOpenChange={setMobileFiltersOpen}>
-              <SheetTrigger asChild>
-                <Button variant="outline" size="sm" className="gap-2 text-xs uppercase tracking-wider">
-                  <SlidersHorizontal className="h-4 w-4" />
-                  Filter Selection
-                  {activeFilterCount > 0 && (
-                    <span className="bg-neutral-900 text-white text-[10px] rounded-full h-4 w-4 flex items-center justify-center">
-                      {activeFilterCount}
-                    </span>
-                  )}
-                </Button>
-              </SheetTrigger>
-              <SheetContent side="left" className="w-[310px] overflow-y-auto bg-[#FAF9F6]">
-                <SheetHeader>
-                  <SheetTitle className="font-serif text-lg font-normal">Filters</SheetTitle>
-                </SheetHeader>
-                <div className="mt-6">
-                  <FilterContent />
-                </div>
-              </SheetContent>
-            </Sheet>
-
-            <div className="relative">
-              <select
-                value={sort}
-                onChange={(e) => setSort(e.target.value)}
-                className="appearance-none bg-white border border-stone-300 text-neutral-900 text-xs font-semibold uppercase tracking-wider rounded-lg pl-3 pr-8 py-2 focus:outline-none"
-              >
-                {sortOptions.map((opt) => (
-                  <option key={opt.value} value={opt.value}>
-                    {opt.label}
-                  </option>
-                ))}
-              </select>
-              <ChevronDown className="absolute right-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 pointer-events-none text-neutral-500" />
+              <span>Wear</span>
+              <span>Your</span>
+              <span>Essence</span>
             </div>
           </div>
 
-          {/* Dynamic Grid Layout */}
+          {/* Collection navigation */}
+          <div className="mt-6 flex gap-2.5 overflow-x-auto pb-1 [scrollbar-width:none] md:mt-8 [&::-webkit-scrollbar]:hidden">
+            <a
+              href="/shop?category=all-products"
+              className={navPill(!categoryParam || categoryParam === 'all-products')}
+            >
+              All
+            </a>
+
+            {categories.map((category: any) => (
+              <a
+                key={category.slug}
+                href={`/shop?category=${category.slug}`}
+                className={navPill(categoryParam === category.slug)}
+              >
+                {category.name}
+              </a>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ============================================================
+          MOBILE FILTER + SORT BAR
+          ============================================================ */}
+      <div className="border-b border-[#262626] bg-[#0a0a0a] lg:hidden">
+        <div className="mx-auto flex max-w-[1600px] items-center gap-3 px-4 py-3 sm:px-6">
+          <Sheet open={mobileFiltersOpen} onOpenChange={setMobileFiltersOpen}>
+            <SheetTrigger asChild>
+              <Button
+                variant="outline"
+                size="sm"
+                className="h-11 flex-1 justify-center rounded-md border-[#f0b845]/70 bg-transparent px-4 text-[14px] font-medium text-[#f3ede2] hover:bg-[#1a1508] hover:text-[#f0b845]"
+              >
+                <SlidersHorizontal className="mr-2 h-4 w-4 text-[#f0b845]" />
+                Filter
+                {activeFilterCount > 0 && (
+                  <span className="ml-2 flex h-5 min-w-5 items-center justify-center rounded-full bg-[#f0b845] px-1 text-[10px] font-bold text-black">
+                    {activeFilterCount}
+                  </span>
+                )}
+              </Button>
+            </SheetTrigger>
+
+            <SheetContent
+              side="left"
+              className="w-[86vw] max-w-[360px] overflow-y-auto border-r border-[#262626] bg-[#0a0a0a] text-[#f3ede2]"
+            >
+              <SheetHeader className="border-b border-[#262626] pb-4">
+                <div className="flex items-center justify-between pr-6">
+                  <SheetTitle className="text-sm font-bold uppercase tracking-[0.08em] text-[#f3ede2]">
+                    Filters
+                  </SheetTitle>
+                  {activeFilterCount > 0 && (
+                    <button
+                      onClick={clearAll}
+                      className="flex items-center gap-1.5 text-[12px] font-medium text-[#f0b845]"
+                    >
+                      Clear All
+                      <RotateCcw className="h-3 w-3" />
+                    </button>
+                  )}
+                </div>
+              </SheetHeader>
+
+              <div className="mt-1">{filterContent}</div>
+            </SheetContent>
+          </Sheet>
+
+          {sortSelect(true)}
+        </div>
+      </div>
+
+      {/* ============================================================
+          ACTIVE FILTER CHIPS
+          ============================================================ */}
+      {activeFilterCount > 0 && (
+        <div className="border-b border-[#262626] bg-[#0a0a0a]">
+          <div className="mx-auto flex max-w-[1920px] flex-wrap items-center gap-2 px-4 py-3 sm:px-6 lg:px-8 xl:px-10">
+            <span className="mr-1 text-[11px] font-semibold uppercase tracking-[0.12em] text-[#9a948a]">
+              Filters
+            </span>
+
+            {(
+              [
+                ...selectedSizes.map((v) => ({ key: `s-${v}`, label: `Size: ${v}`, remove: () => toggleSize(v) })),
+                ...selectedColors.map((v) => ({ key: `c-${v}`, label: `Color: ${v}`, remove: () => toggleColor(v) })),
+                ...selectedFabrics.map((v) => ({ key: `f-${v}`, label: `Fabric: ${v}`, remove: () => toggleFabric(v) })),
+                ...selectedCoverages.map((v) => ({ key: `cv-${v}`, label: `Coverage: ${v}`, remove: () => toggleCoverage(v) })),
+                ...selectedFits.map((v) => ({ key: `fit-${v}`, label: `Fit: ${v}`, remove: () => toggleFit(v) })),
+              ] as { key: string; label: string; remove: () => void }[]
+            ).map((chip) => (
+              <button
+                key={chip.key}
+                onClick={chip.remove}
+                className="inline-flex items-center gap-1.5 rounded-full border border-[#4a3d20] bg-[#14110a] px-3 py-1.5 text-[12px] text-[#f0b845] transition hover:border-[#f0b845]"
+              >
+                {chip.label}
+                <X className="h-3 w-3 text-[#9a948a]" />
+              </button>
+            ))}
+
+            {(priceRange[0] !== 0 || priceRange[1] !== 2000) && (
+              <span className="inline-flex items-center gap-1.5 rounded-full border border-[#4a3d20] bg-[#14110a] px-3 py-1.5 text-[12px] text-[#f0b845]">
+                Price: {formatINR(priceRange[0])} - {formatINR(priceRange[1])}
+              </span>
+            )}
+
+            <button
+              onClick={clearAll}
+              className="ml-auto text-[12px] font-semibold text-[#f0b845] hover:text-[#ffd27a]"
+            >
+              Clear All
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* ============================================================
+          SHOP BODY
+          ============================================================ */}
+      <div className="mx-auto flex w-full max-w-[1920px] items-stretch">
+        {/* Desktop filter sidebar */}
+        <aside className="hidden w-[270px] shrink-0 border-r border-[#262626] lg:block xl:w-[285px]">
+          <div className="px-6 pb-10 pt-6">
+            <div className="flex items-center justify-between border-b border-[#262626] pb-4">
+              <h2 className="text-[13px] font-bold uppercase tracking-[0.06em] text-[#f3ede2]">
+                Filters
+              </h2>
+
+              <button
+                onClick={clearAll}
+                disabled={activeFilterCount === 0}
+                className="flex items-center gap-1.5 text-[12px] font-medium italic text-[#f0b845] transition hover:text-[#ffd27a] disabled:opacity-40"
+              >
+                Clear All
+                <RotateCcw className="h-3 w-3" />
+              </button>
+            </div>
+
+            {filterContent}
+          </div>
+        </aside>
+
+        {/* Products */}
+        <main className="min-w-0 flex-1 px-4 py-5 sm:px-6 lg:px-6 lg:py-6 xl:px-8">
+          <p className="mb-4 whitespace-nowrap text-[13px] text-[#cfc9be] lg:hidden">
+            <span className="font-semibold text-[#f3ede2]">{filtered.length}</span> products
+          </p>
+
+          {/* Desktop result toolbar */}
+          <div className="mb-5 hidden items-center justify-between lg:flex">
+            <p className="text-[13px] text-[#e9e3d8]">
+              Showing {rangeStart}–{rangeEnd} of {filtered.length} products
+            </p>
+
+            <div className="flex items-center gap-3">
+              <span className="text-[13px] text-[#cfc9be]">Sort by:</span>
+              {sortSelect()}
+
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={() => setViewMode('grid')}
+                  aria-label="Grid view"
+                  className={cn(
+                    'flex h-10 w-10 items-center justify-center rounded-md border transition',
+                    viewMode === 'grid'
+                      ? 'border-[#f0b845] bg-[#f0b845] text-black'
+                      : 'border-[#3a3a37] text-[#cfc9be] hover:border-[#f0b845]'
+                  )}
+                >
+                  <LayoutGrid className="h-[18px] w-[18px]" />
+                </button>
+                <button
+                  onClick={() => setViewMode('list')}
+                  aria-label="List view"
+                  className={cn(
+                    'flex h-10 w-10 items-center justify-center rounded-md border transition',
+                    viewMode === 'list'
+                      ? 'border-[#f0b845] bg-[#f0b845] text-black'
+                      : 'border-[#3a3a37] text-[#cfc9be] hover:border-[#f0b845]'
+                  )}
+                >
+                  <List className="h-[18px] w-[18px]" />
+                </button>
+              </div>
+            </div>
+          </div>
+
           {!isLoading && paged.length === 0 ? (
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              className="flex flex-col items-center justify-center py-24 text-center border border-dashed border-stone-300 rounded-2xl bg-white/50"
+              className="flex min-h-[430px] flex-col items-center justify-center rounded-md border border-dashed border-[#3a3a37] bg-[#111111] px-6 text-center"
             >
-              <Grid className="h-10 w-10 text-neutral-300 mb-4 stroke-[1.2]" />
-              <p className="font-serif text-xl font-normal text-neutral-900 mb-1">No products found</p>
-              <p className="text-xs text-neutral-500 mb-6 max-w-xs">
+              <Grid className="mb-5 h-10 w-10 stroke-[1] text-[#f0b845]" />
+
+              <p className="font-serif text-2xl text-[#f3ede2]">No products found</p>
+
+              <p className="mb-7 mt-2 max-w-xs text-sm text-[#9a948a]">
                 We couldn't find any items matching your selected criteria.
               </p>
+
               <Button
                 onClick={clearAll}
-                className="bg-neutral-900 text-white hover:bg-neutral-800 text-xs uppercase tracking-widest px-6 py-2.5 rounded-full"
+                className="rounded-md bg-[#f0b845] px-7 text-[12px] font-semibold uppercase tracking-[0.12em] text-black hover:bg-[#ffd27a]"
               >
                 Clear All Filters
               </Button>
             </motion.div>
           ) : isLoading ? (
-            <div className="min-h-[300px]" />
+            <div className="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-3 xl:grid-cols-4">
+              {Array.from({ length: 8 }).map((_, i) => (
+                <div
+                  key={i}
+                  className="aspect-[0.7] animate-pulse rounded-md border border-[#262626] bg-[#111111]"
+                />
+              ))}
+            </div>
           ) : (
-            <motion.div layout className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">
+            <motion.div
+              layout
+              data-kevonik-product-grid
+              className={cn(
+                'grid gap-3 sm:gap-4 xl:gap-5',
+                viewMode === 'grid'
+                  ? 'grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'
+                  : 'grid-cols-2 lg:grid-cols-2 xl:grid-cols-3'
+              )}
+            >
               <AnimatePresence>
                 {paged.map((p, i) => (
                   <ProductCard key={p.id} product={p} index={i} />
@@ -740,36 +1054,38 @@ export function ShopClient() {
 
           {/* Pagination */}
           {totalPages > 1 && (
-            <div className="flex items-center justify-center gap-2 mt-16 pt-8 border-t border-stone-200">
+            <div className="mt-12 flex items-center justify-center gap-2 border-t border-[#262626] pt-7">
               <Button
                 variant="outline"
                 size="sm"
-                className="text-xs font-medium uppercase tracking-wider"
+                className="h-9 rounded-md border-[#3a3a37] bg-transparent px-4 text-[12px] font-medium text-[#e9e3d8] hover:bg-[#f0b845] hover:text-black disabled:opacity-40"
                 onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
                 disabled={currentPage === 1}
               >
                 Prev
               </Button>
-              <div className="flex items-center gap-1.5 px-2">
+
+              <div className="flex items-center gap-1">
                 {Array.from({ length: totalPages }).map((_, i) => (
                   <button
                     key={i}
                     onClick={() => setCurrentPage(i + 1)}
                     className={cn(
-                      'w-8 h-8 rounded-full text-xs font-semibold transition-all duration-200',
+                      'flex h-9 w-9 items-center justify-center rounded-md text-[12px] font-semibold transition-all',
                       currentPage === i + 1
-                        ? 'bg-neutral-900 text-white shadow-md'
-                        : 'text-neutral-600 hover:bg-stone-200'
+                        ? 'bg-[#f0b845] text-black'
+                        : 'text-[#9a948a] hover:bg-[#1a1a18] hover:text-[#f0b845]'
                     )}
                   >
                     {i + 1}
                   </button>
                 ))}
               </div>
+
               <Button
                 variant="outline"
                 size="sm"
-                className="text-xs font-medium uppercase tracking-wider"
+                className="h-9 rounded-md border-[#3a3a37] bg-transparent px-4 text-[12px] font-medium text-[#e9e3d8] hover:bg-[#f0b845] hover:text-black disabled:opacity-40"
                 onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
                 disabled={currentPage === totalPages}
               >
@@ -777,7 +1093,7 @@ export function ShopClient() {
               </Button>
             </div>
           )}
-        </div>
+        </main>
       </div>
     </div>
   );
