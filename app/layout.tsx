@@ -19,12 +19,16 @@ export const metadata: Metadata = {
     process.env.NEXT_PUBLIC_SITE_URL || 'https://kovenik.in'
   ),
 
-  title: 'Kevonik — Wear Beyond Ordinary | Premium Men\'s Clothing',
+  title: "KÖVENIK — Wear Beyond Ordinary | Premium Men's Clothing",
 
   description:
-    "Shop premium oversized tees, graphic prints, hoodies, cargos and joggers. Discover Kevonik — premium men's fashion crafted for the bold.",
+    "Shop KÖVENIK premium oversized tees, graphic prints, hoodies, cargos and joggers. Discover KÖVENIK — premium men's streetwear crafted for the bold.",
 
   keywords: [
+    'KÖVENIK',
+    'KOVENIK',
+    'KOVENIK clothing',
+    'KOVENIK streetwear',
     'men clothing',
     'oversized t-shirts',
     'graphic tees',
@@ -32,7 +36,7 @@ export const metadata: Metadata = {
     'cargo pants',
     'joggers',
     'premium fashion',
-    'Kevonik',
+    'premium streetwear',
   ],
 
   icons: {
@@ -40,7 +44,7 @@ export const metadata: Metadata = {
       {
         url: '/image.png',
         type: 'image/png',
-        sizes: '512x512',
+        sizes: '600x600',
       },
     ],
     apple: [
@@ -53,11 +57,11 @@ export const metadata: Metadata = {
   },
 
   openGraph: {
-    title: 'Kevonik — Wear Beyond Ordinary',
+    title: 'KÖVENIK — Wear Beyond Ordinary',
     description:
-      "Premium men's clothing. Oversized tees, graphic prints, hoodies, cargos & more.",
+      "Premium men's streetwear. Oversized tees, graphic prints, hoodies, cargos & more.",
     type: 'website',
-    siteName: 'Kevonik',
+    siteName: 'KÖVENIK',
   },
 };
 

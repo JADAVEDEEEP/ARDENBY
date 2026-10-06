@@ -9,6 +9,7 @@ import {
   ShoppingBag,
   TrendingUp,
   Users,
+  ArrowRight,
 } from 'lucide-react';
 
 import { apiUrl } from '@/lib/api-url';
@@ -155,22 +156,38 @@ function money(value: number) {
   }).format(value);
 }
 
+// Presentation-only helpers (display formatting of existing fields)
+function formatDate(value: string) {
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return '—';
+  return date.toLocaleDateString('en-IN', {
+    day: 'numeric',
+    month: 'short',
+    year: 'numeric',
+  });
+}
+
+function getFirstItemName(order: Order) {
+  const first = getItems(order)[0];
+  return first?.product_name || first?.productName || first?.name || '';
+}
+
 function statusClass(status?: string) {
   const value = String(status || '').toLowerCase();
 
   if (value.includes('cancel')) {
-    return 'bg-red-500/10 text-red-400 border border-red-500/20';
+    return 'bg-red-500/10 text-red-300 border border-red-400/30';
   }
 
   if (value.includes('deliver') || value.includes('complete')) {
-    return 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20';
+    return 'bg-emerald-500/10 text-emerald-300 border border-emerald-400/30';
   }
 
   if (value.includes('ship') || value.includes('process')) {
-    return 'bg-blue-500/10 text-blue-400 border border-blue-500/20';
+    return 'bg-[#C9A24B]/10 text-[#E8D3A0] border border-[#C9A24B]/40';
   }
 
-  return 'bg-amber-500/10 text-amber-400 border border-amber-500/20';
+  return 'bg-[#8F8878]/10 text-[#C9C2AE] border border-[#8F8878]/40';
 }
 
 function smoothPath(points: { x: number; y: number }[]) {
@@ -196,14 +213,29 @@ function smoothPath(points: { x: number; y: number }[]) {
   return d;
 }
 
+// Gold-system palette for category legend dots + ring segments
 const CATEGORY_COLORS = [
-  'bg-amber-600',
-  'bg-blue-600',
-  'bg-emerald-600',
-  'bg-pink-600',
-  'bg-purple-600',
-  'bg-slate-600',
+  'bg-[#C9A24B]',
+  'bg-[#E8D3A0]',
+  'bg-[#E3C673]',
+  'bg-[#8F8878]',
+  'bg-[#F4EEDD]',
+  'bg-[#7A6130]',
 ];
+
+const CATEGORY_HEX = [
+  '#C9A24B',
+  '#E8D3A0',
+  '#E3C673',
+  '#8F8878',
+  '#F4EEDD',
+  '#7A6130',
+];
+
+const RING_C = 251.2; // circumference for r = 40
+
+const PANEL_SURFACE =
+  'rounded-2xl border border-[#C9A24B]/40 bg-gradient-to-br from-[#12100D] via-[#0D0F0F] to-[#0A0908] shadow-[0_0_28px_rgba(201,162,75,0.07)]';
 
 export default function AdminDashboardPage() {
   const [products, setProducts] = useState<Product[]>([]);
@@ -278,6 +310,33 @@ export default function AdminDashboardPage() {
       }));
   }, [products]);
 
+  // Real order-status breakdown (replaces the previous static percentages)
+  const statusStats = useMemo(() => {
+    const buckets = [
+      { key: 'delivered', label: 'Delivered', hex: '#34d399', count: 0 },
+      { key: 'shipped', label: 'Shipped', hex: '#E3C673', count: 0 },
+      { key: 'processing', label: 'Processing', hex: '#C9A24B', count: 0 },
+      { key: 'cancelled', label: 'Cancelled', hex: '#f87171', count: 0 },
+      { key: 'pending', label: 'Pending', hex: '#8F8878', count: 0 },
+    ];
+    orders.forEach((order) => {
+      const value = String(order.status || '').toLowerCase();
+      const key =
+        value.includes('cancel')
+          ? 'cancelled'
+          : value.includes('deliver') || value.includes('complete')
+          ? 'delivered'
+          : value.includes('ship')
+          ? 'shipped'
+          : value.includes('process')
+          ? 'processing'
+          : 'pending';
+      const bucket = buckets.find((b) => b.key === key);
+      if (bucket) bucket.count += 1;
+    });
+    return buckets;
+  }, [orders]);
+
   const recentOrders = useMemo(
     () =>
       [...orders]
@@ -347,23 +406,47 @@ export default function AdminDashboardPage() {
       .slice(0, 3);
   }, [orders]);
 
+  // Ring segments built from the real category counts
+  let ringOffset = 0;
+  const categoryRing = categoryStats.map((item, index) => {
+    const length = (item.count / (products.length || 1)) * RING_C;
+    const segment = {
+      name: item.name,
+      hex: CATEGORY_HEX[index % CATEGORY_HEX.length],
+      length,
+      offset: ringOffset,
+    };
+    ringOffset += length;
+    return segment;
+  });
+
+  let statusOffset = 0;
+  const statusRing = statusStats.map((item) => {
+    const length = (item.count / (orders.length || 1)) * RING_C;
+    const segment = { ...item, length, offset: statusOffset };
+    statusOffset += length;
+    return segment;
+  });
+
   return (
-    <div className="w-full max-w-7xl mx-auto space-y-6 text-[#1a1c23] font-sans selection:bg-amber-500/30 selection:text-amber-900 pb-10">
+    <div className="mx-auto w-full max-w-7xl space-y-5 pb-10 font-sans text-[#F4EEDD] selection:bg-[#C9A24B]/30 selection:text-white sm:space-y-6">
+      <p className="text-sm text-[#B9B09C]">
+        Welcome back! Here&apos;s what&apos;s happening with your store.
+      </p>
+
       {error && (
-        <div className="rounded-2xl border border-red-500/30 bg-red-500/10 px-4 py-3.5 text-xs text-red-600 backdrop-blur-md">
+        <div className="rounded-2xl border border-red-400/40 bg-red-500/10 px-4 py-3.5 text-xs text-red-300">
           {error}
         </div>
       )}
 
       {/* KPI CARDS */}
-      <section className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      <section className="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
         <MetricCard
           title="Total Revenue"
           value={loading ? '—' : money(revenue)}
           change="+12.5% from last month"
           icon={CircleDollarSign}
-          gradient="from-amber-500/10 via-orange-500/5 to-transparent"
-          iconBg="bg-amber-500/15 text-amber-700 border border-amber-500/30 shadow-sm"
         />
 
         <MetricCard
@@ -371,8 +454,6 @@ export default function AdminDashboardPage() {
           value={loading ? '—' : orders.length}
           change="+18.2% from last month"
           icon={ShoppingBag}
-          gradient="from-blue-500/10 via-cyan-500/5 to-transparent"
-          iconBg="bg-blue-500/15 text-blue-700 border border-blue-500/30 shadow-sm"
         />
 
         <MetricCard
@@ -380,8 +461,6 @@ export default function AdminDashboardPage() {
           value={loading ? '—' : products.length}
           change="+6.3% from last month"
           icon={Boxes}
-          gradient="from-emerald-500/10 via-teal-500/5 to-transparent"
-          iconBg="bg-emerald-500/15 text-emerald-700 border border-emerald-500/30 shadow-sm"
         />
 
         <MetricCard
@@ -389,25 +468,21 @@ export default function AdminDashboardPage() {
           value={loading ? '—' : customers}
           change="+22.1% from last month"
           icon={Users}
-          gradient="from-pink-500/10 via-rose-500/5 to-transparent"
-          iconBg="bg-pink-500/15 text-pink-700 border border-pink-500/30 shadow-sm"
         />
       </section>
 
-      {/* SUMMARY + REAL SALES BY CATEGORY */}
-      <section className="grid gap-6 xl:grid-cols-[minmax(0,1.5fr)_minmax(280px,1fr)]">
-        <Panel title="Revenue Overview">
-          <div className="mb-4 flex items-center justify-between">
-            <div className="flex items-center gap-4 text-[11px] font-medium text-slate-600">
-              <span className="flex items-center gap-1.5">
-                <span className="h-2.5 w-2.5 rounded-full bg-amber-600 shadow-sm" />
-                Revenue
-              </span>
-              <span className="flex items-center gap-1.5">
-                <span className="h-2.5 w-2.5 rounded-full bg-amber-400" />
-                Orders
-              </span>
-            </div>
+      {/* SUMMARY + SALES BY CATEGORY */}
+      <section className="grid gap-5 sm:gap-6 xl:grid-cols-[minmax(0,1.5fr)_minmax(280px,1fr)]">
+        <Panel title="Revenue Overview" subtitle="Track your revenue and order trends">
+          <div className="mb-4 flex items-center gap-5 text-[11px] font-medium text-[#B9B09C]">
+            <span className="flex items-center gap-1.5">
+              <span className="h-2.5 w-2.5 rounded-full bg-[#C9A24B] shadow-[0_0_8px_rgba(201,162,75,0.7)]" />
+              Revenue
+            </span>
+            <span className="flex items-center gap-1.5">
+              <span className="h-2.5 w-2.5 rounded-full bg-[#E8D3A0]" />
+              Orders
+            </span>
           </div>
 
           {loading ? (
@@ -423,11 +498,11 @@ export default function AdminDashboardPage() {
           )}
         </Panel>
 
-        <Panel title="Sales by Category">
+        <Panel title="Sales by Category" subtitle="Product distribution across categories">
           {categoryStats.length === 0 ? (
             <Empty text="No category data available." />
           ) : (
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-6 py-4">
+            <div className="flex flex-col items-center justify-center gap-6 py-4 sm:flex-row">
               <div className="relative flex h-36 w-36 shrink-0 items-center justify-center">
                 <svg className="h-full w-full -rotate-90" viewBox="0 0 100 100">
                   <circle
@@ -435,66 +510,46 @@ export default function AdminDashboardPage() {
                     cy="50"
                     r="40"
                     fill="transparent"
-                    stroke="rgba(0,0,0,0.06)"
-                    strokeWidth="14"
+                    stroke="rgba(201,162,75,0.12)"
+                    strokeWidth="12"
                   />
-                  <circle
-                    cx="50"
-                    cy="50"
-                    r="40"
-                    fill="transparent"
-                    stroke="#d97706"
-                    strokeWidth="14"
-                    strokeDasharray="251.2"
-                    strokeDashoffset="60"
-                    strokeLinecap="round"
-                  />
-                  <circle
-                    cx="50"
-                    cy="50"
-                    r="40"
-                    fill="transparent"
-                    stroke="#2563eb"
-                    strokeWidth="14"
-                    strokeDasharray="251.2"
-                    strokeDashoffset="160"
-                    strokeLinecap="round"
-                  />
-                  <circle
-                    cx="50"
-                    cy="50"
-                    r="40"
-                    fill="transparent"
-                    stroke="#059669"
-                    strokeWidth="14"
-                    strokeDasharray="251.2"
-                    strokeDashoffset="210"
-                    strokeLinecap="round"
-                  />
+                  {categoryRing.map((segment) => (
+                    <circle
+                      key={segment.name}
+                      cx="50"
+                      cy="50"
+                      r="40"
+                      fill="transparent"
+                      stroke={segment.hex}
+                      strokeWidth="12"
+                      strokeDasharray={`${segment.length} ${RING_C - segment.length}`}
+                      strokeDashoffset={-segment.offset}
+                    />
+                  ))}
                 </svg>
                 <div className="absolute inset-0 flex flex-col items-center justify-center text-center">
-                  <span className="text-lg font-bold text-slate-900">
+                  <span className="font-serif text-2xl font-semibold text-[#F4EEDD]">
                     {products.length}
                   </span>
-                  <span className="text-[10px] font-medium text-slate-500">
+                  <span className="text-[10px] font-medium text-[#8F8878]">
                     Products
                   </span>
                 </div>
               </div>
 
-              <div className="flex-1 w-full space-y-2">
+              <div className="w-full flex-1 space-y-2.5">
                 {categoryStats.map((item) => (
                   <div
                     key={item.name}
                     className="flex items-center justify-between text-xs"
                   >
-                    <div className="flex items-center gap-2 min-w-0 pr-2">
+                    <div className="flex min-w-0 items-center gap-2 pr-2">
                       <span className={`h-2 w-2 shrink-0 rounded-full ${item.color}`} />
-                      <span className="font-medium text-slate-700 truncate">
+                      <span className="truncate font-medium text-[#D9D2BF]">
                         {item.name}
                       </span>
                     </div>
-                    <span className="shrink-0 font-semibold text-slate-900">
+                    <span className="shrink-0 font-semibold text-[#F4EEDD]">
                       {item.pct}
                     </span>
                   </div>
@@ -505,8 +560,8 @@ export default function AdminDashboardPage() {
         </Panel>
       </section>
 
-      {/* ORDER STATUS + REAL TOP SELLING PRODUCTS + RECENT ORDERS */}
-      <section className="grid gap-6 lg:grid-cols-3">
+      {/* ORDER STATUS + TOP SELLING PRODUCTS + RECENT ORDERS */}
+      <section className="grid gap-5 sm:gap-6 lg:grid-cols-3">
         <Panel title="Order Status Breakdown">
           <div className="flex flex-col items-center justify-center py-4">
             <div className="relative flex h-32 w-32 items-center justify-center">
@@ -516,93 +571,56 @@ export default function AdminDashboardPage() {
                   cy="50"
                   r="40"
                   fill="transparent"
-                  stroke="#059669"
+                  stroke="rgba(201,162,75,0.12)"
                   strokeWidth="12"
-                  strokeDasharray="251.2"
-                  strokeDashoffset="80"
                 />
-                <circle
-                  cx="50"
-                  cy="50"
-                  r="40"
-                  fill="transparent"
-                  stroke="#2563eb"
-                  strokeWidth="12"
-                  strokeDasharray="251.2"
-                  strokeDashoffset="210"
-                />
-                <circle
-                  cx="50"
-                  cy="50"
-                  r="40"
-                  fill="transparent"
-                  stroke="#d97706"
-                  strokeWidth="12"
-                  strokeDasharray="251.2"
-                  strokeDashoffset="235"
-                />
-                <circle
-                  cx="50"
-                  cy="50"
-                  r="40"
-                  fill="transparent"
-                  stroke="#dc2626"
-                  strokeWidth="12"
-                  strokeDasharray="251.2"
-                  strokeDashoffset="245"
-                />
+                {statusRing.map((segment) => (
+                  <circle
+                    key={segment.key}
+                    cx="50"
+                    cy="50"
+                    r="40"
+                    fill="transparent"
+                    stroke={segment.hex}
+                    strokeWidth="12"
+                    strokeDasharray={`${segment.length} ${RING_C - segment.length}`}
+                    strokeDashoffset={-segment.offset}
+                  />
+                ))}
               </svg>
               <div className="absolute inset-0 flex flex-col items-center justify-center text-center">
-                <span className="text-sm font-bold text-slate-900">
+                <span className="font-serif text-xl font-semibold text-[#F4EEDD]">
                   {orders.length}
                 </span>
-                <span className="text-[10px] text-slate-500">Orders</span>
+                <span className="text-[10px] text-[#8F8878]">Orders</span>
               </div>
             </div>
 
-            <div className="mt-4 grid grid-cols-2 gap-x-4 gap-y-2 w-full px-2 text-xs">
-              <div className="flex items-center justify-between">
-                <span className="flex items-center gap-1.5 text-slate-700">
-                  <span className="h-2 w-2 rounded-full bg-emerald-600" />
-                  Delivered
-                </span>
-                <span className="font-semibold text-slate-900">68%</span>
-              </div>
-              <div className="flex items-center justify-between">
-                <span className="flex items-center gap-1.5 text-slate-700">
-                  <span className="h-2 w-2 rounded-full bg-blue-600" />
-                  Processing
-                </span>
-                <span className="font-semibold text-slate-900">18%</span>
-              </div>
-              <div className="flex items-center justify-between">
-                <span className="flex items-center gap-1.5 text-slate-700">
-                  <span className="h-2 w-2 rounded-full bg-amber-600" />
-                  Shipped
-                </span>
-                <span className="font-semibold text-slate-900">10%</span>
-              </div>
-              <div className="flex items-center justify-between">
-                <span className="flex items-center gap-1.5 text-slate-700">
-                  <span className="h-2 w-2 rounded-full bg-red-600" />
-                  Cancelled
-                </span>
-                <span className="font-semibold text-slate-900">4%</span>
-              </div>
+            <div className="mt-5 grid w-full grid-cols-2 gap-x-4 gap-y-2.5 px-1 text-xs">
+              {statusStats.map((item) => (
+                <div key={item.key} className="flex items-center justify-between">
+                  <span className="flex items-center gap-1.5 text-[#D9D2BF]">
+                    <span
+                      className="h-2 w-2 rounded-full"
+                      style={{ backgroundColor: item.hex }}
+                    />
+                    {item.label}
+                  </span>
+                  <span className="font-semibold text-[#F4EEDD]">
+                    {orders.length
+                      ? `${Math.round((item.count / orders.length) * 100)}%`
+                      : '0%'}
+                  </span>
+                </div>
+              ))}
             </div>
           </div>
         </Panel>
 
         <Panel
           title="Top Selling Products"
-          action={
-            <Link
-              href="/admin/products"
-              className="text-xs font-semibold text-amber-700 hover:text-amber-900 transition-colors"
-            >
-              View Products
-            </Link>
-          }
+          subtitle="Your best performing products"
+          action={<GoldLink href="/admin/products">View Products</GoldLink>}
         >
           {sellingProducts.length === 0 ? (
             <Empty text="No sales item data available yet." />
@@ -621,10 +639,10 @@ export default function AdminDashboardPage() {
                 return (
                   <div
                     key={product.name}
-                    className="flex items-center justify-between gap-3 rounded-2xl border border-black/[0.06] bg-white p-3 hover:border-amber-500/40 transition-all shadow-sm"
+                    className="flex items-center justify-between gap-3 rounded-xl border border-[#C9A24B]/20 bg-[#0A0908] p-3 shadow-sm transition-all duration-200 hover:border-[#C9A24B]/60 hover:bg-[#C9A24B]/[0.04]"
                   >
-                    <div className="flex items-center gap-3 min-w-0">
-                      <div className="h-10 w-10 shrink-0 overflow-hidden rounded-xl bg-slate-100 border border-slate-200">
+                    <div className="flex min-w-0 items-center gap-3">
+                      <div className="h-11 w-11 shrink-0 overflow-hidden rounded-lg border border-[#C9A24B]/30 bg-[#12100D]">
                         {image ? (
                           <img
                             src={image}
@@ -633,21 +651,24 @@ export default function AdminDashboardPage() {
                           />
                         ) : (
                           <div className="flex h-full items-center justify-center">
-                            <Boxes className="h-4 w-4 text-slate-400" />
+                            <Boxes className="h-4 w-4 text-[#8F8878]" />
                           </div>
                         )}
                       </div>
                       <div className="min-w-0">
-                        <p className="truncate text-xs font-bold text-slate-900">
+                        <p className="truncate text-xs font-semibold text-[#F4EEDD]">
                           {product.name}
                         </p>
-                        <p className="text-[11px] text-slate-500 mt-0.5">
-                          {product.sales} units sold
+                        <p className="mt-0.5 text-[11px] text-[#8F8878]">
+                          {matchedProduct?.category_label ||
+                            matchedProduct?.category_slug ||
+                            'General'}{' '}
+                          · {product.sales} units sold
                         </p>
                       </div>
                     </div>
 
-                    <span className="shrink-0 text-xs font-bold text-amber-700 bg-amber-500/10 px-2 py-1 rounded-lg border border-amber-500/20">
+                    <span className="shrink-0 rounded-lg border border-[#C9A24B]/40 bg-[#C9A24B]/10 px-2 py-1 text-xs font-bold text-[#E8D3A0]">
                       {money(productPrice)}
                     </span>
                   </div>
@@ -659,46 +680,51 @@ export default function AdminDashboardPage() {
 
         <Panel
           title="Recent Orders"
-          action={
-            <Link
-              href="/admin/orders"
-              className="text-xs font-semibold text-amber-700 hover:text-amber-900 transition-colors"
-            >
-              View All
-            </Link>
-          }
+          subtitle="Latest orders from your customers"
+          action={<GoldLink href="/admin/orders">View All</GoldLink>}
         >
           {loading ? (
-            <div className="h-40 animate-pulse rounded-xl bg-black/[0.03]" />
+            <div className="h-40 animate-pulse rounded-xl bg-[#C9A24B]/[0.06]" />
           ) : recentOrders.length === 0 ? (
             <Empty text="No orders available." />
           ) : (
-            <div className="space-y-3">
-              {recentOrders.map((order, index) => (
-                <div
-                  key={`${getOrderId(order)}-${index}`}
-                  className="flex items-center justify-between gap-2 border-b border-black/[0.06] pb-3 last:border-0 last:pb-0 text-xs"
-                >
-                  <div className="min-w-0 pr-2">
-                    <p className="font-bold text-slate-900 truncate">
-                      #{getOrderId(order)}
-                    </p>
-                    <p className="truncate text-[11px] text-slate-500">
-                      {getCustomer(order)}
-                    </p>
-                  </div>
-                  <span
-                    className={`shrink-0 rounded-full px-2 py-0.5 text-[10px] font-semibold capitalize ${statusClass(
-                      order.status
-                    )}`}
+            <div className="space-y-1">
+              {recentOrders.map((order, index) => {
+                const firstItem = getFirstItemName(order);
+                return (
+                  <div
+                    key={`${getOrderId(order)}-${index}`}
+                    className="-mx-2 flex items-center justify-between gap-2 rounded-xl border-b border-[#C9A24B]/15 px-2 py-3 text-xs transition-colors last:border-0 hover:bg-[#C9A24B]/[0.05]"
                   >
-                    {order.status || 'Pending'}
-                  </span>
-                  <span className="shrink-0 font-bold text-slate-900">
-                    {money(getAmount(order))}
-                  </span>
-                </div>
-              ))}
+                    <div className="flex min-w-0 items-center gap-2.5 pr-1">
+                      <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-[#C9A24B]/40 bg-[#C9A24B]/10 text-[11px] font-bold text-[#E8D3A0]">
+                        {getCustomer(order).charAt(0).toUpperCase()}
+                      </span>
+                      <div className="min-w-0">
+                        <p className="truncate font-semibold text-[#F4EEDD]">
+                          #{getOrderId(order)} · {getCustomer(order)}
+                        </p>
+                        <p className="truncate text-[11px] text-[#8F8878]">
+                          {firstItem ? `${firstItem} · ` : ''}
+                          {getDate(order) ? formatDate(getDate(order)) : '—'}
+                        </p>
+                      </div>
+                    </div>
+                    <div className="flex shrink-0 flex-col items-end gap-1">
+                      <span className="font-bold text-[#F4EEDD]">
+                        {money(getAmount(order))}
+                      </span>
+                      <span
+                        className={`rounded-full px-2 py-0.5 text-[10px] font-semibold capitalize ${statusClass(
+                          order.status
+                        )}`}
+                      >
+                        {order.status || 'Pending'}
+                      </span>
+                    </div>
+                  </div>
+                );
+              })}
             </div>
           )}
         </Panel>
@@ -706,22 +732,17 @@ export default function AdminDashboardPage() {
 
       {/* INVENTORY PREVIEW TABLE */}
       <section>
-        <div className="rounded-3xl border border-black/[0.08] bg-white p-4 sm:p-6 shadow-md backdrop-blur-xl">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-4 border-b border-black/[0.06]">
+        <div className={`${PANEL_SURFACE} p-4 sm:p-6`}>
+          <div className="flex flex-col justify-between gap-2 border-b border-[#C9A24B]/20 pb-4 sm:flex-row sm:items-center">
             <div>
-              <h2 className="text-sm font-bold text-slate-900 tracking-wide">
+              <h2 className="font-serif text-xl font-semibold tracking-wide text-[#F4EEDD]">
                 Inventory Preview
               </h2>
-              <p className="text-[11px] text-slate-500 mt-0.5">
+              <p className="mt-0.5 text-[11px] text-[#8F8878]">
                 Quick overview of recent products in your store
               </p>
             </div>
-            <Link
-              href="/admin/products"
-              className="text-xs font-semibold text-amber-700 hover:text-amber-900 transition-colors"
-            >
-              Manage Inventory
-            </Link>
+            <GoldLink href="/admin/products">Manage Inventory</GoldLink>
           </div>
 
           <div className="pt-2">
@@ -730,7 +751,7 @@ export default function AdminDashboardPage() {
                 {Array.from({ length: 4 }).map((_, i) => (
                   <div
                     key={i}
-                    className="h-16 animate-pulse rounded-2xl bg-black/[0.03]"
+                    className="h-16 animate-pulse rounded-xl bg-[#C9A24B]/[0.06]"
                   />
                 ))}
               </div>
@@ -738,17 +759,17 @@ export default function AdminDashboardPage() {
               <Empty text="No products found." />
             ) : (
               <div className="w-full overflow-x-auto">
-                <table className="w-full text-left border-collapse min-w-[600px]">
+                <table className="w-full min-w-[600px] border-collapse text-left">
                   <thead>
-                    <tr className="border-b border-black/[0.06] text-[11px] font-bold text-slate-400 uppercase tracking-wider">
-                      <th className="py-3 px-3 w-[35%]">Product</th>
-                      <th className="py-3 px-3 w-[20%]">Category</th>
-                      <th className="py-3 px-3 w-[15%]">Price</th>
-                      <th className="py-3 px-3 w-[15%]">Stock</th>
-                      <th className="py-3 px-3 w-[15%] text-right">Status</th>
+                    <tr className="border-b border-[#C9A24B]/20 text-[11px] font-semibold uppercase tracking-wider text-[#C9A24B]">
+                      <th className="w-[35%] px-3 py-3">Product</th>
+                      <th className="w-[20%] px-3 py-3">Category</th>
+                      <th className="w-[15%] px-3 py-3">Price</th>
+                      <th className="w-[15%] px-3 py-3">Stock</th>
+                      <th className="w-[15%] px-3 py-3 text-right">Status</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-black/[0.04] text-xs">
+                  <tbody className="divide-y divide-[#C9A24B]/10 text-xs">
                     {products.slice(0, 4).map((product) => {
                       const image = product.images?.[0]?.image_url;
                       const price = product.price || product.best_price || 1499;
@@ -756,48 +777,48 @@ export default function AdminDashboardPage() {
                       return (
                         <tr
                           key={product.id}
-                          className="group hover:bg-amber-500/[0.02] transition-colors"
+                          className="group transition-colors hover:bg-[#C9A24B]/[0.05]"
                         >
-                          <td className="py-3 px-3">
+                          <td className="px-3 py-3">
                             <div className="flex items-center gap-3">
-                              <div className="h-10 w-10 shrink-0 overflow-hidden rounded-xl bg-[#F9F6EE] border border-black/[0.08] shadow-sm">
+                              <div className="h-10 w-10 shrink-0 overflow-hidden rounded-lg border border-[#C9A24B]/30 bg-[#12100D]">
                                 {image ? (
                                   <img
                                     src={image}
                                     alt={product.name}
-                                    className="h-full w-full object-cover group-hover:scale-105 transition-transform duration-300"
+                                    className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
                                   />
                                 ) : (
                                   <div className="flex h-full items-center justify-center">
-                                    <Boxes className="h-4 w-4 text-slate-400" />
+                                    <Boxes className="h-4 w-4 text-[#8F8878]" />
                                   </div>
                                 )}
                               </div>
-                              <span className="font-bold text-slate-900 tracking-tight text-xs line-clamp-1">
+                              <span className="line-clamp-1 text-xs font-semibold tracking-tight text-[#F4EEDD]">
                                 {product.name}
                               </span>
                             </div>
                           </td>
 
-                          <td className="py-3 px-3 font-semibold text-slate-600">
-                            <span className="inline-block text-[11px] tracking-wide text-amber-800 bg-amber-500/10 px-2 py-0.5 rounded-lg border border-amber-500/20 truncate max-w-[120px]">
+                          <td className="px-3 py-3">
+                            <span className="inline-block max-w-[120px] truncate rounded-lg border border-[#C9A24B]/35 bg-[#C9A24B]/10 px-2 py-0.5 text-[11px] tracking-wide text-[#E8D3A0]">
                               {product.category_label ||
                                 product.category_slug ||
                                 'General'}
                             </span>
                           </td>
 
-                          <td className="py-3 px-3 font-extrabold text-amber-700 text-xs">
+                          <td className="px-3 py-3 text-xs font-bold text-[#E3C673]">
                             {money(price)}
                           </td>
 
-                          <td className="py-3 px-3 font-bold text-slate-800 text-xs">
+                          <td className="px-3 py-3 text-xs font-semibold text-[#D9D2BF]">
                             {product.inventory ?? 0} units
                           </td>
 
-                          <td className="py-3 px-3 text-right">
-                            <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[11px] font-bold bg-emerald-500/10 text-emerald-700 border border-emerald-500/20">
-                              <span className="h-1.5 w-1.5 rounded-full bg-emerald-600 animate-pulse" />
+                          <td className="px-3 py-3 text-right">
+                            <span className="inline-flex items-center gap-1.5 rounded-full border border-emerald-400/30 bg-emerald-500/10 px-2 py-0.5 text-[11px] font-semibold text-emerald-300">
+                              <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-emerald-400" />
                               Active
                             </span>
                           </td>
@@ -815,45 +836,64 @@ export default function AdminDashboardPage() {
   );
 }
 
+function GoldLink({ href, children }: { href: string; children: ReactNode }) {
+  return (
+    <Link
+      href={href}
+      className="inline-flex shrink-0 items-center gap-1.5 rounded-lg border border-[#C9A24B]/50 px-3 py-1.5 text-xs font-semibold text-[#E8D3A0] outline-none transition-all duration-200 hover:bg-[#C9A24B]/15 hover:text-white hover:shadow-[0_0_14px_rgba(201,162,75,0.25)] focus-visible:ring-1 focus-visible:ring-[#E3C673]"
+    >
+      {children}
+      <ArrowRight className="h-3.5 w-3.5" />
+    </Link>
+  );
+}
+
 function MetricCard({
   title,
   value,
   change,
   icon: Icon,
-  gradient,
-  iconBg,
 }: {
   title: string;
   value: string | number;
   change: string;
   icon: any;
-  gradient: string;
-  iconBg: string;
 }) {
   return (
-    <div className="relative overflow-hidden rounded-3xl border border-black/[0.08] bg-white p-5 shadow-md backdrop-blur-xl">
-      <div
-        className={`absolute inset-0 bg-gradient-to-br ${gradient} opacity-50 pointer-events-none`}
-      />
+    <div
+      className={`${PANEL_SURFACE} group relative overflow-hidden p-4 transition-all duration-300 hover:border-[#E3C673]/70 hover:shadow-[0_0_32px_rgba(201,162,75,0.2)] sm:p-5`}
+    >
+      {/* decorative gold curve */}
+      <svg
+        className="pointer-events-none absolute bottom-0 right-0 h-16 w-3/4 opacity-60"
+        viewBox="0 0 200 60"
+        preserveAspectRatio="none"
+        aria-hidden="true"
+      >
+        <path
+          d="M0 58 C 60 56, 110 50, 150 30 S 190 6, 200 4"
+          fill="none"
+          stroke="#C9A24B"
+          strokeWidth="1.5"
+        />
+      </svg>
 
-      <div className="relative z-10 flex items-center justify-between">
-        <p className="text-[11px] font-semibold text-slate-500 tracking-wider uppercase">
+      <div className="relative z-10 flex items-start justify-between gap-2">
+        <p className="text-[10px] font-semibold uppercase tracking-wider text-[#B9B09C] sm:text-[11px]">
           {title}
         </p>
-        <span
-          className={`flex h-9 w-9 items-center justify-center rounded-2xl ${iconBg}`}
-        >
+        <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border border-[#C9A24B]/50 bg-[#C9A24B]/10 text-[#E3C673] shadow-[0_0_12px_rgba(201,162,75,0.2)]">
           <Icon className="h-4 w-4" />
         </span>
       </div>
 
-      <p className="relative z-10 mt-3 text-2xl font-black tracking-tight text-slate-900">
+      <p className="relative z-10 mt-3 truncate font-sans text-xl font-bold tracking-tight text-[#F4EEDD] sm:text-2xl">
         {value}
       </p>
 
-      <p className="relative z-10 mt-2 flex items-center gap-1 text-[10px] font-semibold text-emerald-700">
-        <TrendingUp className="h-3 w-3" />
-        {change}
+      <p className="relative z-10 mt-2 flex items-center gap-1 text-[10px] font-semibold text-emerald-400">
+        <TrendingUp className="h-3 w-3 shrink-0" />
+        <span className="truncate">{change}</span>
       </p>
     </div>
   );
@@ -861,20 +901,29 @@ function MetricCard({
 
 function Panel({
   title,
+  subtitle,
   action,
   children,
 }: {
   title: string;
+  subtitle?: string;
   action?: ReactNode;
   children: ReactNode;
 }) {
   return (
-    <div className="min-w-0 rounded-3xl border border-black/[0.08] bg-white p-5 sm:p-6 shadow-md backdrop-blur-xl">
-      <div className="flex items-center justify-between pb-3 border-b border-black/[0.06]">
-        <h2 className="text-sm font-bold text-slate-900 tracking-wide">{title}</h2>
+    <div className={`${PANEL_SURFACE} min-w-0 p-4 sm:p-6`}>
+      <div className="flex items-start justify-between gap-3 border-b border-[#C9A24B]/20 pb-3">
+        <div className="min-w-0">
+          <h2 className="font-serif text-xl font-semibold tracking-wide text-[#F4EEDD]">
+            {title}
+          </h2>
+          {subtitle && (
+            <p className="mt-0.5 text-[11px] text-[#8F8878]">{subtitle}</p>
+          )}
+        </div>
         {action}
       </div>
-      <div className="pt-3">{children}</div>
+      <div className="pt-4">{children}</div>
     </div>
   );
 }
@@ -926,9 +975,9 @@ function SalesChart({
   return (
     <div className="overflow-hidden">
       <div className="relative h-[200px]">
-        <div className="absolute inset-0 flex flex-col justify-between pointer-events-none">
+        <div className="pointer-events-none absolute inset-0 flex flex-col justify-between">
           {[4, 3, 2, 1, 0].map((item) => (
-            <div key={item} className="border-t border-black/[0.06]" />
+            <div key={item} className="border-t border-[#C9A24B]/10" />
           ))}
         </div>
 
@@ -939,8 +988,8 @@ function SalesChart({
         >
           <defs>
             <linearGradient id="revGrad" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stopColor="#d97706" stopOpacity="0.2" />
-              <stop offset="100%" stopColor="#d97706" stopOpacity="0.0" />
+              <stop offset="0%" stopColor="#C9A24B" stopOpacity="0.35" />
+              <stop offset="100%" stopColor="#C9A24B" stopOpacity="0.0" />
             </linearGradient>
           </defs>
 
@@ -949,7 +998,7 @@ function SalesChart({
           <path
             d={revenueLine}
             fill="none"
-            stroke="#d97706"
+            stroke="#C9A24B"
             strokeWidth="3"
             strokeLinecap="round"
             strokeLinejoin="round"
@@ -958,7 +1007,7 @@ function SalesChart({
           <path
             d={countLine}
             fill="none"
-            stroke="#f59e0b"
+            stroke="#E8D3A0"
             strokeWidth="2"
             strokeLinecap="round"
             strokeLinejoin="round"
@@ -971,8 +1020,8 @@ function SalesChart({
               cx={point.x}
               cy={point.y}
               r="4"
-              fill="#ffffff"
-              stroke="#d97706"
+              fill="#0A0908"
+              stroke="#E3C673"
               strokeWidth="2.5"
             />
           ))}
@@ -982,7 +1031,7 @@ function SalesChart({
           {data.map((item) => (
             <span
               key={item.label}
-              className="text-[10px] font-medium text-slate-500"
+              className="text-[10px] font-medium text-[#8F8878]"
             >
               {item.label}
             </span>
@@ -995,11 +1044,11 @@ function SalesChart({
 
 function ChartPlaceholder() {
   return (
-    <div className="flex h-[200px] items-end gap-4 border-b border-black/[0.06] px-2">
+    <div className="flex h-[200px] items-end gap-4 border-b border-[#C9A24B]/15 px-2">
       {Array.from({ length: 7 }).map((_, index) => (
         <div
           key={index}
-          className="h-24 flex-1 animate-pulse rounded-t-lg bg-black/[0.04]"
+          className="h-24 flex-1 animate-pulse rounded-t-lg bg-[#C9A24B]/[0.08]"
         />
       ))}
     </div>
@@ -1008,7 +1057,7 @@ function ChartPlaceholder() {
 
 function Empty({ text }: { text: string; [key: string]: any }) {
   return (
-    <div className="flex min-h-[90px] items-center justify-center px-4 text-center text-xs text-slate-500 font-medium">
+    <div className="flex min-h-[90px] items-center justify-center rounded-xl border border-dashed border-[#C9A24B]/25 px-4 text-center text-xs font-medium text-[#8F8878]">
       {text}
     </div>
   );

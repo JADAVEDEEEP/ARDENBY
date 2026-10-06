@@ -543,36 +543,28 @@ export function useProfile() {
   };
 
   const deleteAddress = async (
-    id: string
-  ) => {
-    if (
-      !window.confirm(
-        'Delete this saved address?'
-      )
-    ) {
-      return;
-    }
+  id: string
+) => {
+  try {
+    await profileRequest(
+      `/api/addresses/${id}`,
+      {
+        method: 'DELETE',
+      }
+    );
 
-    try {
-      await profileRequest(
-        `/api/addresses/${id}`,
-        {
-          method: 'DELETE',
-        }
-      );
+    await loadSection('addresses');
 
-      await loadSection('addresses');
-
-      setMessage(
-        'Address deleted.'
-      );
-    } catch (err: any) {
-      setError(
-        err.message ||
-          'Unable to delete address.'
-      );
-    }
-  };
+    setMessage(
+      'Address deleted.'
+    );
+  } catch (err: any) {
+    setError(
+      err.message ||
+        'Unable to delete address.'
+    );
+  }
+};
 
   const setDefaultAddress = async (
     id: string

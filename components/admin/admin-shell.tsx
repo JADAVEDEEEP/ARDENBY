@@ -109,12 +109,12 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
 
   if (status !== 'allowed') {
     return (
-      <main className="flex min-h-screen items-center justify-center bg-[#F5F2EB] text-[#1a1a1a]">
+      <main className="flex min-h-screen items-center justify-center bg-[#050505] text-[#F4EEDD]">
         <div className="text-center">
-          <p className="text-xs font-semibold uppercase tracking-[0.3em] text-[#b89b72]">
-            ARDENBY
+          <p className="font-serif text-2xl uppercase tracking-[0.3em] text-[#C9A24B]">
+            KÖVENIK
           </p>
-          <p className="mt-3 text-sm text-[#736a60]">Checking admin access...</p>
+          <p className="mt-3 text-sm text-[#8F8878]">Checking admin access...</p>
         </div>
       </main>
     );
@@ -127,35 +127,34 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
   };
 
   const sidebarContent = (
-    <div className="flex h-full min-h-screen flex-col justify-between p-6 bg-[#0f1115] text-[#d4cfc4]">
+    <div className="flex h-full min-h-screen flex-col justify-between bg-gradient-to-b from-[#0A0908] via-[#080807] to-[#050505] p-6 text-[#F4EEDD]">
       <div>
         {/* Brand Header */}
-        <div className="flex items-center justify-between pb-8 border-b border-white/[0.08]">
-          <Link href="/admin" className="flex items-center gap-3.5 group">
-            <span className="flex h-11 w-11 items-center justify-center rounded-2xl bg-gradient-to-br from-[#c8b391] to-[#9a7d53] font-serif text-lg text-white shadow-md shadow-black/40 group-hover:scale-105 transition-transform">
-              A
+        <div className="flex items-center justify-between border-b border-[#C9A24B]/25 pb-7">
+          <Link
+            href="/admin"
+            className="group flex flex-col items-center outline-none focus-visible:ring-1 focus-visible:ring-[#E3C673]"
+          >
+            <span className="font-serif text-[26px] uppercase leading-none tracking-[0.14em] text-transparent bg-clip-text bg-gradient-to-b from-[#F4E3B0] via-[#C9A24B] to-[#8E6F2A] transition-opacity group-hover:opacity-90">
+              KÖVENIK
             </span>
-            <div>
-              <span className="block font-serif text-base tracking-[0.2em] text-white uppercase">
-                Ardenby
-              </span>
-              <span className="block text-[9px] uppercase tracking-[0.3em] text-[#c8b391] font-semibold mt-0.5">
-                Luxury Admin
-              </span>
-            </div>
+            <span className="mt-2 block text-[9px] font-semibold uppercase tracking-[0.42em] text-[#C9A24B]">
+              Luxury Admin
+            </span>
           </Link>
 
           <button
             type="button"
             onClick={() => setSidebarOpen(false)}
-            className="rounded-xl p-2 text-white/60 hover:bg-white/10 hover:text-white lg:hidden transition-colors"
+            aria-label="Close menu"
+            className="rounded-xl border border-[#C9A24B]/30 p-2 text-[#E8D3A0] outline-none transition-colors hover:bg-[#C9A24B]/10 hover:text-white focus-visible:ring-1 focus-visible:ring-[#E3C673] lg:hidden"
           >
             <X className="h-5 w-5" />
           </button>
         </div>
 
         {/* Navigation Links */}
-        <nav className="mt-6 space-y-1.5">
+        <nav className="mt-7 space-y-2">
           {adminLinks.map((item) => {
             const Icon = item.icon;
             const active =
@@ -168,16 +167,18 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
                 key={item.href}
                 href={item.href}
                 className={cn(
-                  'flex items-center gap-3.5 rounded-2xl px-4 py-3 text-xs font-medium transition-all duration-200',
+                  'group flex items-center gap-3.5 rounded-xl border px-4 py-3 text-[13px] font-medium outline-none transition-all duration-200 focus-visible:ring-1 focus-visible:ring-[#E3C673]',
                   active
-                    ? 'bg-gradient-to-r from-[#c8b391]/20 to-transparent text-white border-l-4 border-[#c8b391] shadow-inner'
-                    : 'text-[#9e9689] hover:bg-white/[0.04] hover:text-white'
+                    ? 'border-[#C9A24B]/70 bg-gradient-to-r from-[#C9A24B]/20 via-[#12100D] to-[#0D0F0F] text-[#F4EEDD] shadow-[0_0_18px_rgba(201,162,75,0.22)]'
+                    : 'border-transparent text-[#8F8878] hover:border-[#C9A24B]/25 hover:bg-[#C9A24B]/[0.05] hover:text-[#F4EEDD]'
                 )}
               >
                 <Icon
                   className={cn(
-                    'h-4 w-4 transition-colors',
-                    active ? 'text-[#c8b391]' : 'text-[#827a6e]'
+                    'h-[18px] w-[18px] transition-colors',
+                    active
+                      ? 'text-[#E3C673]'
+                      : 'text-[#6f6858] group-hover:text-[#C9A24B]'
                   )}
                 />
                 <span className="tracking-wide">{item.label}</span>
@@ -188,17 +189,17 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
       </div>
 
       {/* User Profile & Logout Box */}
-      <div className="pt-6 border-t border-white/[0.08]">
-        <div className="rounded-2xl bg-white/[0.03] border border-white/[0.06] p-4 backdrop-blur-md">
-          <div className="flex items-center gap-3 mb-3">
-            <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-[#c8b391]/15 text-[#c8b391] font-bold text-xs border border-[#c8b391]/30">
+      <div className="border-t border-[#C9A24B]/25 pt-6">
+        <div className="rounded-2xl border border-[#C9A24B]/30 bg-gradient-to-br from-[#12100D] to-[#0A0908] p-4 shadow-[0_0_20px_rgba(201,162,75,0.08)]">
+          <div className="mb-3 flex items-center gap-3">
+            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-[#E8D3A0] to-[#B8903A] text-sm font-bold text-[#0A0908]">
               {user?.fullName?.charAt(0) || 'A'}
             </div>
             <div className="min-w-0">
-              <p className="truncate text-xs font-bold text-white tracking-wide">
+              <p className="truncate text-xs font-semibold tracking-wide text-[#F4EEDD]">
                 {user?.fullName || 'Admin User'}
               </p>
-              <p className="truncate text-[10px] text-[#9e9689] mt-0.5">
+              <p className="mt-0.5 truncate text-[10px] text-[#8F8878]">
                 {user?.email || 'admin@ardenby.com'}
               </p>
             </div>
@@ -207,7 +208,7 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
           <button
             type="button"
             onClick={handleLogout}
-            className="flex h-9 w-full items-center justify-center gap-2 rounded-xl bg-red-500/10 text-red-400 border border-red-500/20 text-xs font-semibold transition hover:bg-red-500 hover:text-white"
+            className="flex h-9 w-full items-center justify-center gap-2 rounded-xl border border-[#C9A24B]/40 bg-[#C9A24B]/[0.06] text-xs font-semibold text-[#E8D3A0] outline-none transition hover:bg-[#C9A24B] hover:text-[#0A0908] focus-visible:ring-1 focus-visible:ring-[#E3C673]"
           >
             <LogOut className="h-3.5 w-3.5" />
             Logout System
@@ -218,17 +219,17 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
   );
 
   return (
-    <main className="min-h-screen bg-[#F5F2EB] text-[#1a1c23]">
-      <div className="grid min-h-screen lg:grid-cols-[280px_1fr]">
+    <main className="min-h-screen bg-[#050505] text-[#F4EEDD]">
+      <div className="grid min-h-screen lg:grid-cols-[272px_1fr]">
         {/* Desktop Sidebar */}
-        <aside className="hidden border-r border-[#E7DDD1] bg-[#0f1115] lg:block shadow-xl">
+        <aside className="hidden border-r border-[#C9A24B]/30 bg-[#080807] shadow-[8px_0_40px_rgba(0,0,0,0.6)] lg:block">
           {sidebarContent}
         </aside>
 
         {/* Mobile Sidebar Overlay */}
         {sidebarOpen && (
           <div
-            className="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm lg:hidden"
+            className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm lg:hidden"
             onClick={() => setSidebarOpen(false)}
           />
         )}
@@ -236,7 +237,7 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
         {/* Mobile Sliding Sidebar */}
         <aside
           className={cn(
-            'fixed inset-y-0 left-0 z-50 w-[280px] bg-[#0f1115] transition-transform duration-300 ease-in-out lg:hidden shadow-2xl',
+            'fixed inset-y-0 left-0 z-50 w-[280px] max-w-[85vw] overflow-y-auto border-r border-[#C9A24B]/30 bg-[#080807] shadow-2xl transition-transform duration-300 ease-in-out lg:hidden',
             sidebarOpen ? 'translate-x-0' : '-translate-x-full'
           )}
         >
@@ -244,28 +245,63 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
         </aside>
 
         {/* Main Section */}
-        <section className="min-w-0 flex flex-col">
-          <header className="sticky top-0 z-30 flex items-center justify-between border-b border-[#E7DDD1] bg-[#F5F2EB]/90 px-6 py-4 backdrop-blur-md">
-            <div>
-              <p className="text-[10px] font-bold uppercase tracking-[0.28em] text-[#b89b72]">
+        <section className="flex min-w-0 flex-col bg-[radial-gradient(ellipse_at_top_right,rgba(201,162,75,0.07),transparent_55%)]">
+          <header className="sticky top-0 z-30 flex items-center justify-between gap-3 border-b border-[#C9A24B]/25 bg-[#050505]/90 px-4 py-3.5 backdrop-blur-md sm:px-6 sm:py-4">
+            {/* Mobile hamburger */}
+            <button
+              type="button"
+              onClick={() => setSidebarOpen(true)}
+              aria-label="Open menu"
+              className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-[#C9A24B]/40 bg-[#0D0F0F] text-[#E8D3A0] outline-none transition hover:bg-[#C9A24B]/10 focus-visible:ring-1 focus-visible:ring-[#E3C673] lg:hidden"
+            >
+              <Menu className="h-5 w-5" />
+            </button>
+
+            {/* Mobile brand */}
+            <div className="flex flex-col items-center lg:hidden">
+              <span className="font-serif text-lg uppercase leading-none tracking-[0.14em] text-transparent bg-clip-text bg-gradient-to-b from-[#F4E3B0] via-[#C9A24B] to-[#8E6F2A]">
+                KÖVENIK
+              </span>
+              <span className="mt-1 text-[8px] font-semibold uppercase tracking-[0.4em] text-[#C9A24B]">
+                Luxury Admin
+              </span>
+            </div>
+
+            {/* Desktop title */}
+            <div className="hidden lg:block">
+              <p className="text-[10px] font-semibold uppercase tracking-[0.3em] text-[#C9A24B]">
                 Admin Console
               </p>
-              <h1 className="mt-0.5 font-serif text-2xl font-bold text-slate-900 tracking-tight">
+              <h1 className="mt-0.5 font-serif text-3xl font-semibold tracking-tight text-[#F4EEDD]">
                 {title}
               </h1>
             </div>
 
-            {/* Mobile Hamburger Toggle Button */}
-            <button
-              type="button"
-              onClick={() => setSidebarOpen(true)}
-              className="flex h-11 w-11 items-center justify-center rounded-2xl border border-black/[0.08] bg-white text-slate-800 shadow-sm transition hover:bg-[#FAF8F5] lg:hidden"
-            >
-              <Menu className="h-5 w-5" />
-            </button>
+            {/* Profile chip */}
+            <div className="flex items-center gap-3">
+              <div className="hidden text-right sm:block">
+                <p className="max-w-[160px] truncate text-xs font-semibold text-[#F4EEDD]">
+                  {user?.fullName || 'Admin User'}
+                </p>
+                <p className="text-[10px] text-[#8F8878]">Admin</p>
+              </div>
+              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-[#E8D3A0] to-[#B8903A] text-sm font-bold text-[#0A0908] shadow-[0_0_14px_rgba(201,162,75,0.35)]">
+                {user?.fullName?.charAt(0) || 'A'}
+              </div>
+            </div>
           </header>
 
-          <div className="p-4 sm:p-6 lg:p-10 flex-1">{children}</div>
+          {/* Mobile page title */}
+          <div className="border-b border-[#C9A24B]/15 px-4 pb-3 pt-4 lg:hidden">
+            <p className="text-[10px] font-semibold uppercase tracking-[0.3em] text-[#C9A24B]">
+              Admin Console
+            </p>
+            <h1 className="mt-0.5 font-serif text-2xl font-semibold tracking-tight text-[#F4EEDD]">
+              {title}
+            </h1>
+          </div>
+
+          <div className="flex-1 p-4 sm:p-6 lg:p-8">{children}</div>
         </section>
       </div>
     </main>

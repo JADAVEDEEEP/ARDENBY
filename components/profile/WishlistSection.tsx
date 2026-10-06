@@ -2,47 +2,37 @@
 
 import type { useProfile } from '../../hooks/use-profile';
 
-import {
-  Heart,
-  ShoppingBag,
-  Trash2,
-  ArrowUpRight,
-} from 'lucide-react';
-
-import { EmptyState, Panel } from './ui';
+import { Heart, ShoppingBag, Trash2, ArrowUpRight, ArrowRight } from 'lucide-react';
 
 type ProfileState = ReturnType<typeof useProfile>;
 
-export function WishlistSection({
-  profile,
-}: {
-  profile: ProfileState;
-}) {
+/* KOVENIK: surfaces #0A0A0A/#101010/#141414 · ivory #F3EBDD · gold #C9A24B · champagne #E6CF92 */
+const GOLD_SURFACE =
+  'bg-[linear-gradient(135deg,#9C7A32_0%,#E6CF92_45%,#B8903A_100%)] text-[#0A0A0A]';
+
+export function WishlistSection({ profile }: { profile: ProfileState }) {
   const wishlistCount = profile.wishlist.length;
 
   return (
-    <Panel
-      title="Wishlist"
-      subtitle="Pieces you've chosen to keep close."
-    >
+    <section>
+      <p className="mb-5 text-[13px] text-[#F3EBDD]/60">Pieces you&apos;ve chosen to keep close.</p>
+
       {/* Header */}
       {wishlistCount > 0 && (
-        <div className="mb-8 flex items-end justify-between border-b border-black/10 pb-5">
+        <div className="mb-6 flex items-end justify-between gap-4 border-b border-[#C9A24B]/20 pb-4">
           <div>
-            <p className="text-[10px] uppercase tracking-[0.22em] text-[#8A8177]">
+            <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-[#C9A24B]">
               Saved Pieces
             </p>
-
-            <p className="mt-1 text-sm text-[#2F2B27]">
-              {wishlistCount}{' '}
-              {wishlistCount === 1 ? 'piece' : 'pieces'} saved
+            <p className="mt-1 text-sm text-[#F3EBDD]">
+              {wishlistCount} {wishlistCount === 1 ? 'piece' : 'pieces'} saved
             </p>
           </div>
 
           <button
             type="button"
             onClick={() => profile.clearWishlist()}
-            className="group inline-flex items-center gap-2 text-[9px] uppercase tracking-[0.18em] text-[#6F685F] transition-colors duration-300 hover:text-black"
+            className="group inline-flex min-h-[44px] items-center gap-2 text-[10px] uppercase tracking-[0.18em] text-[#F3EBDD]/55 transition-colors duration-300 hover:text-[#E6CF92]"
           >
             <Trash2 className="h-3.5 w-3.5 transition-transform duration-300 group-hover:scale-90" />
             Clear Wishlist
@@ -52,36 +42,37 @@ export function WishlistSection({
 
       {/* Empty State */}
       {wishlistCount === 0 ? (
-        <div className="border border-black/8 bg-[#F8F6F2]">
-          <EmptyState
-            icon={Heart}
-            title="Nothing saved yet"
-            text="Save pieces you love and they will appear here."
-            action="Explore Collection"
-            onAction={() => profile.router.push('/')}
-          />
+        <div className="flex flex-col items-center rounded-2xl border-[1px] border-dashed border-[#C9A24B]/30 bg-[#0A0A0A] px-6 py-14 text-center">
+          <div className="mb-5 flex h-16 w-16 items-center justify-center rounded-full border-[1px] border-[#C9A24B]/60 shadow-[0_0_20px_rgba(201,162,75,0.12)]">
+            <Heart className="h-7 w-7 text-[#C9A24B]" strokeWidth={1.4} />
+          </div>
+          <h3 className="font-serif text-2xl text-[#F3EBDD]">Nothing saved yet</h3>
+          <p className="mt-2 max-w-xs text-[13px] text-[#F3EBDD]/55">
+            Save pieces you love and they will appear here.
+          </p>
+          <button
+            type="button"
+            onClick={() => profile.router.push('/')}
+            className={`mt-7 inline-flex min-h-[48px] items-center gap-2 rounded-lg px-7 text-[11px] font-bold uppercase tracking-[0.16em] shadow-[0_0_20px_rgba(201,162,75,0.22)] transition hover:brightness-110 ${GOLD_SURFACE}`}
+          >
+            Explore Collection
+            <ArrowRight className="h-3.5 w-3.5" />
+          </button>
         </div>
       ) : (
-        <div className="grid grid-cols-2 gap-x-3 gap-y-10 sm:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4">
+        <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4 xl:grid-cols-4">
           {profile.wishlist.map((item) => {
             /*
              * Backend wishlist response contains:
-             * primary_image
-             * slug
-             * name
-             * product_id
-             * price
+             * primary_image, slug, name, product_id, price
              */
-
             const wishlistItem = item as typeof item & {
               primary_image?: string;
               slug?: string;
             };
 
             const productName =
-              wishlistItem.product_name ||
-              wishlistItem.name ||
-              'ARDENBY Product';
+              wishlistItem.product_name || wishlistItem.name || 'KOVENIK Product';
 
             const image =
               wishlistItem.primary_image?.trim() ||
@@ -93,25 +84,21 @@ export function WishlistSection({
 
             const viewProduct = () => {
               if (productSlug) {
-                profile.router.push(
-                  `/product/${productSlug}`
-                );
+                profile.router.push(`/product/${productSlug}`);
                 return;
               }
 
               // Safe fallback if slug is unavailable.
-              profile.router.push(
-                `/products/${wishlistItem.product_id}`
-              );
+              profile.router.push(`/products/${wishlistItem.product_id}`);
             };
 
             return (
               <article
                 key={wishlistItem.product_id}
-                className="group min-w-0"
+                className="group min-w-0 rounded-2xl border-[1px] border-[#C9A24B]/20 bg-[linear-gradient(180deg,#141414_0%,#0A0A0A_100%)] p-2 shadow-[inset_0_1px_0_rgba(230,207,146,0.06)] transition-all duration-300 hover:border-[#C9A24B]/50 hover:shadow-[0_0_24px_rgba(201,162,75,0.08)] sm:p-2.5"
               >
                 {/* Product Image */}
-                <div className="relative overflow-hidden bg-[#ECE8E0]">
+                <div className="relative overflow-hidden rounded-xl border-[1px] border-[#C9A24B]/30 bg-[#050505]">
                   {image ? (
                     <img
                       src={image}
@@ -120,110 +107,77 @@ export function WishlistSection({
                       referrerPolicy="no-referrer"
                       className="aspect-[4/5] w-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.035]"
                       onError={() => {
-                        console.error(
-                          'Wishlist image failed:',
-                          image
-                        );
+                        console.error('Wishlist image failed:', image);
                       }}
                     />
                   ) : (
                     <div className="flex aspect-[4/5] items-center justify-center">
-                      <ShoppingBag className="h-7 w-7 text-[#A0988E]" />
+                      <ShoppingBag className="h-7 w-7 text-[#C9A24B]/60" strokeWidth={1.4} />
                     </div>
                   )}
 
                   {/* Image Overlay */}
-                  <div className="pointer-events-none absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-black/20 to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
+                  <div className="pointer-events-none absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-black/60 to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
 
-                  {/* Remove Button */}
+                  {/* Remove (heart) Button */}
                   <button
                     type="button"
-                    onClick={() =>
-                      profile.removeFromWishlist(
-                        wishlistItem.product_id
-                      )
-                    }
+                    onClick={() => profile.removeFromWishlist(wishlistItem.product_id)}
                     aria-label={`Remove ${productName} from wishlist`}
-                    className="absolute right-3 top-3 flex h-9 w-9 items-center justify-center rounded-full bg-white/95 text-[#302C28] shadow-sm opacity-100 transition-all duration-300 hover:bg-black hover:text-white sm:opacity-0 sm:group-hover:opacity-100"
+                    className="absolute right-2 top-2 flex h-11 w-11 items-center justify-center rounded-full border-[1px] border-[#C9A24B]/50 bg-[#0A0A0A]/80 text-[#E6CF92] backdrop-blur transition-all duration-300 hover:border-[#E6CF92] focus-visible:opacity-100 sm:right-3 sm:top-3 sm:h-10 sm:w-10 sm:opacity-0 sm:group-hover:opacity-100"
                   >
-                    <Heart
-                      className="h-3.5 w-3.5"
-                      fill="currentColor"
-                      strokeWidth={1.5}
-                    />
+                    <Heart className="h-3.5 w-3.5" fill="currentColor" strokeWidth={1.5} />
                   </button>
 
-                  {/* View Button */}
+                  {/* View Button (desktop hover) */}
                   <button
                     type="button"
                     onClick={viewProduct}
-                    className="absolute bottom-3 left-3 right-3 hidden items-center justify-center gap-2 bg-white/95 py-3 text-[9px] uppercase tracking-[0.2em] text-[#211F1C] opacity-0 backdrop-blur-sm transition-all duration-500 group-hover:opacity-100 sm:flex"
+                    className="absolute bottom-3 left-3 right-3 hidden items-center justify-center gap-2 rounded-lg border-[1px] border-[#C9A24B]/60 bg-[#0A0A0A]/85 py-3 text-[10px] uppercase tracking-[0.2em] text-[#F3EBDD] opacity-0 backdrop-blur-sm transition-all duration-500 hover:border-[#E6CF92] hover:text-[#E6CF92] focus-visible:opacity-100 group-hover:opacity-100 sm:flex"
                   >
                     View Piece
-
-                    <ArrowUpRight
-                      className="h-3 w-3"
-                      strokeWidth={1.5}
-                    />
+                    <ArrowUpRight className="h-3 w-3" strokeWidth={1.5} />
                   </button>
                 </div>
 
                 {/* Product Information */}
-                <div className="pt-4">
-                  <div className="flex items-start justify-between gap-3">
-                    <div className="min-w-0">
-                      <h3 className="truncate text-[11px] font-medium uppercase tracking-[0.04em] text-[#24211E]">
-                        {productName}
-                      </h3>
+                <div className="px-1 pb-1 pt-3">
+                  <h3 className="truncate text-[12px] font-medium tracking-[0.02em] text-[#F3EBDD]">
+                    {productName}
+                  </h3>
 
-                      {wishlistItem.price !== undefined && (
-                        <p className="mt-1.5 text-[11px] text-[#71695F]">
-                          {profile.money(
-                            wishlistItem.price
-                          )}
-                        </p>
-                      )}
-                    </div>
+                  {wishlistItem.price !== undefined && (
+                    <p className="mt-1 text-[13px] font-semibold text-[#E6CF92]">
+                      {profile.money(wishlistItem.price)}
+                    </p>
+                  )}
 
-                    <Heart
-                      className="mt-0.5 h-3.5 w-3.5 shrink-0 text-[#24211E]"
-                      fill="currentColor"
-                      strokeWidth={1.5}
-                    />
+                  <div className="mt-2 flex items-center justify-between sm:justify-end">
+                    {/* Mobile View Action */}
+                    <button
+                      type="button"
+                      onClick={viewProduct}
+                      className="inline-flex min-h-[44px] items-center gap-1.5 text-[10px] uppercase tracking-[0.16em] text-[#E6CF92] transition-colors hover:text-[#F3EBDD] sm:hidden"
+                    >
+                      View
+                      <ArrowUpRight className="h-3 w-3" strokeWidth={1.5} />
+                    </button>
+
+                    {/* Remove */}
+                    <button
+                      type="button"
+                      onClick={() => profile.removeFromWishlist(wishlistItem.product_id)}
+                      className="min-h-[44px] px-1 text-[10px] uppercase tracking-[0.16em] text-[#F3EBDD]/45 transition-colors hover:text-red-300 sm:min-h-[32px]"
+                    >
+                      Remove
+                    </button>
                   </div>
-
-                  {/* Mobile View Action */}
-                  <button
-                    type="button"
-                    onClick={viewProduct}
-                    className="mt-4 inline-flex items-center gap-1.5 border-b border-black/30 pb-1 text-[9px] uppercase tracking-[0.17em] text-[#38332E] transition-colors hover:border-black hover:text-black sm:hidden"
-                  >
-                    View Piece
-
-                    <ArrowUpRight
-                      className="h-3 w-3"
-                      strokeWidth={1.5}
-                    />
-                  </button>
-
-                  {/* Remove */}
-                  <button
-                    type="button"
-                    onClick={() =>
-                      profile.removeFromWishlist(
-                        wishlistItem.product_id
-                      )
-                    }
-                    className="mt-4 ml-4 text-[9px] uppercase tracking-[0.17em] text-[#9A9288] transition-colors hover:text-black sm:ml-0"
-                  >
-                    Remove
-                  </button>
                 </div>
               </article>
             );
           })}
         </div>
       )}
-    </Panel>
+    </section>
   );
 }

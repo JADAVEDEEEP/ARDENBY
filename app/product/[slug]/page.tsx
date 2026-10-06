@@ -1237,7 +1237,7 @@ export default function ProductPage() {
             <div className="mx-auto mb-4 h-1 w-12 bg-[#d3a64f]" />
             <div className="flex items-center justify-between gap-4">
               <div>
-                <p className="text-[8px] font-black uppercase tracking-[0.28em] text-[#d3a64f]">ARDENBY</p>
+                <p className="text-[8px] font-black uppercase tracking-[0.28em] text-[#d3a64f]">KOVENIK</p>
                 <h2 className="mt-1 font-serif text-xl text-white">Select Size</h2>
                 <p className="mt-1 text-[10px] text-[#817768]">Choose your size to continue.</p>
               </div>

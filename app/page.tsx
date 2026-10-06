@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, motion, MotionConfig } from "framer-motion";
 import {
   ArrowRight,
   ArrowUpRight,
@@ -367,6 +367,49 @@ function normalizeStaticProduct(product: any): HomeProduct {
   };
 }
 
+/* Shared header for the mobile sections (label / heading / action). */
+function MobileSectionHeader({
+  label,
+  title,
+  href,
+  actionLabel = "View all",
+  meta,
+}: {
+  label: string;
+  title: string;
+  href?: string;
+  actionLabel?: string;
+  meta?: string;
+}) {
+  return (
+    <div className="mb-5 flex items-end justify-between gap-4 border-b border-white/10 pb-4">
+      <div className="min-w-0">
+        <p className="mb-1.5 text-[10px] font-semibold uppercase tracking-[0.24em] text-[#D4AF37]">
+          {label}
+        </p>
+        <h2
+          className="font-serif text-[30px] leading-[1.05] tracking-[-0.03em] text-[#F3E5AB]"
+          style={{ fontFamily: "Bodoni MT, Didot, Times New Roman, serif" }}
+        >
+          {title}
+        </h2>
+      </div>
+      {href ? (
+        <Link
+          href={href}
+          className="-mb-1 flex min-h-[44px] shrink-0 items-center gap-1 text-[10px] font-semibold uppercase tracking-[0.14em] text-[#D4AF37]"
+        >
+          {actionLabel} <ArrowUpRight className="h-3.5 w-3.5" />
+        </Link>
+      ) : meta ? (
+        <span className="pb-1 text-[10px] uppercase tracking-[0.16em] text-neutral-400">
+          {meta}
+        </span>
+      ) : null}
+    </div>
+  );
+}
+
 export default function HomePage() {
   const [slide, setSlide] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
@@ -505,6 +548,7 @@ export default function HomePage() {
   };
 
   return (
+    <MotionConfig reducedMotion="user">
     <main className="w-full overflow-x-hidden bg-[#F6F5F0] text-[#111111] selection:bg-neutral-900 selection:text-white">
       <style jsx global>{`
         .ardenby-product-section img,
@@ -639,6 +683,72 @@ export default function HomePage() {
         from { transform: translateX(0); }
         to { transform: translateX(-35%); }
       }
+
+        /* =========================================================
+           POLISH ADDITIONS (appended — win over earlier rules)
+        ========================================================= */
+        .scrollbar-none { scrollbar-width: none; -ms-overflow-style: none; }
+        .scrollbar-none::-webkit-scrollbar { display: none; }
+
+        @media (max-width: 1023px) {
+          /* Product title: readable, medium weight, max 2 lines */
+          .kovenik-mobile-product-card h3,
+          .kovenik-mobile-product-card h4 {
+            font-size: 12.5px !important;
+            font-weight: 500 !important;
+            line-height: 1.35 !important;
+            letter-spacing: 0 !important;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+          }
+          /* Price: clearer hierarchy (badges with bg-white excluded) */
+          .kovenik-mobile-product-card [class*="font-semibold"]:not([class*="bg-white"]):not([class*="absolute"]):not([class*="uppercase"]) {
+            font-size: 14px !important;
+            font-weight: 600 !important;
+          }
+          /* Badges (LIMITED DROP / BESTSELLER / -33%): one small, equal size */
+          .kovenik-mobile-product-card.kovenik-mobile-product-card [class*="absolute"]:not(button),
+          .kovenik-mobile-product-card.kovenik-mobile-product-card [class*="absolute"] *:not(svg):not(button) {
+            font-size: 10px !important;
+            line-height: 1.2 !important;
+            letter-spacing: 0.06em !important;
+          }
+          /* MRP: secondary but legible */
+          .kovenik-mobile-product-card [class*="line-through"] {
+            font-size: 11px !important;
+            font-weight: 400 !important;
+          }
+          /* Best Price: readable, secondary */
+          .kovenik-mobile-product-card [class*="text-emerald"] {
+            font-size: 10.5px !important;
+            font-weight: 500 !important;
+          }
+        }
+
+        @media (min-width: 1024px) {
+          .ardenby-product-section :not(button)[class*="bg-white"] {
+            background-color: #0b0b0b !important;
+            color: #E6C65A !important;
+            border: 1px solid rgba(212, 175, 55, 0.65) !important;
+            font-size: 11px !important;
+            font-weight: 700 !important;
+            letter-spacing: 0.14em !important;
+            line-height: 1.2 !important;
+            padding: 5px 10px !important;
+            opacity: 1 !important;
+          }
+          .ardenby-product-section :not(button)[class*="bg-white"] * {
+            color: #E6C65A !important;
+            font-size: inherit !important;
+            opacity: 1 !important;
+          }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+          .kovenik-mobile-product-card img { transition: none !important; }
+        }
       `}</style>
       {/* ================= PREMIUM DARK LUXURY HERO SECTION ================= */}
 <section
@@ -674,7 +784,7 @@ export default function HomePage() {
           transition={{ duration: 0.5, ease }}
           className="absolute inset-x-0 top-[45%] z-[110] -translate-y-1/2 mx-auto w-[94%] text-center drop-shadow-[0_4px_18px_rgba(0,0,0,1)]"
         >
-          <p className="mb-2 text-[8px] font-semibold uppercase tracking-[0.28em] text-neutral-400">
+          <p className="mb-2 text-[10px] font-semibold uppercase tracking-[0.26em] text-neutral-300">
             Premium streetwear
           </p>
           <h1
@@ -687,13 +797,13 @@ export default function HomePage() {
             <br />
             <span className="text-white">Wear.</span>
           </h1>
-          <p className="mx-auto mt-4 max-w-[220px] text-center text-[11px] leading-[1.55] text-neutral-300">
+          <p className="mx-auto mt-4 max-w-[240px] text-center text-[12px] leading-[1.55] text-neutral-200">
             Premium streetwear for those who stand out.
           </p>
 
           <Link
             href="/shop"
-            className="mx-auto mt-5 flex w-fit items-center gap-3 rounded-full bg-gradient-to-r from-[#F3E5AB] via-[#D4AF37] to-[#AA771C] px-5 py-3 text-[9px] font-bold uppercase tracking-[0.2em] text-neutral-950 shadow-[0_8px_30px_rgba(212,175,55,0.16)]"
+            className="mx-auto mt-5 flex min-h-[44px] w-fit items-center gap-3 rounded-full bg-gradient-to-r from-[#F3E5AB] via-[#D4AF37] to-[#AA771C] px-6 py-3 text-[10px] font-bold uppercase tracking-[0.2em] text-neutral-950 shadow-[0_8px_30px_rgba(212,175,55,0.16)]"
           >
             Shop Now
             <ArrowRight className="h-3.5 w-3.5" />
@@ -741,7 +851,7 @@ export default function HomePage() {
             </button>
           ))}
         </div>
-        <span className="text-[8px] font-medium uppercase tracking-[0.22em] text-neutral-500">
+        <span className="text-[9px] font-medium uppercase tracking-[0.22em] text-neutral-400">
           0{slide + 1} / 0{heroSlides.length}
         </span>
       </div>
@@ -1012,27 +1122,9 @@ export default function HomePage() {
    This entire block is mobile-only. Desktop sections below are untouched.
 ========================================================= */}
 
-{/* MOBILE CATEGORY — REFERENCE-MATCHED 3-COLUMN EDITORIAL GRID */}
-<section className="lg:hidden w-full bg-[#070707] px-4 pb-9 pt-7 text-white">
-  <div className="mb-5 flex items-end justify-between border-b border-white/10 pb-3.5">
-    <div>
-      <p className="mb-1.5 text-[7px] font-bold uppercase tracking-[0.28em] text-[#D4AF37]">
-        Explore by category
-      </p>
-      <h2
-        className="font-serif text-[31px] leading-none tracking-[-0.04em] text-[#F3E5AB]"
-        style={{ fontFamily: "Bodoni MT, Didot, Times New Roman, serif" }}
-      >
-        Category
-      </h2>
-    </div>
-    <Link
-      href="/shop"
-      className="mb-0.5 flex items-center gap-1 text-[7px] font-bold uppercase tracking-[0.14em] text-[#D4AF37]"
-    >
-      View All <ArrowUpRight className="h-3 w-3" />
-    </Link>
-  </div>
+{/* MOBILE CATEGORY */}
+<section className="w-full border-t border-white/5 bg-[#070707] px-4 py-8 text-white lg:hidden">
+  <MobileSectionHeader label="Explore by category" title="Category" href="/shop" />
 
   <div className="grid grid-cols-3 gap-2.5">
     {[
@@ -1057,27 +1149,28 @@ export default function HomePage() {
       return (
         <motion.div
           key={cat.slug}
-          initial={{ opacity: 0, y: 10 }}
+          initial={{ opacity: 0, y: 8 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.12 }}
-          transition={{ duration: 0.35, delay: index * 0.035 }}
+          transition={{ duration: 0.3, delay: index * 0.03 }}
         >
           <Link
             href={cat.slug === "all-products" ? "/shop" : `/shop?category=${cat.slug}`}
-            className="group relative block overflow-hidden rounded-[10px] border border-[#D4AF37]/20 bg-[#111111] shadow-[0_8px_24px_rgba(0,0,0,0.55)] transition-all duration-300 active:border-[#D4AF37]/60"
+            className="group relative block overflow-hidden rounded-[10px] border border-[#D4AF37]/20 bg-[#111111] transition-colors duration-300 active:border-[#D4AF37]/60"
           >
             <div className="relative aspect-[0.74] overflow-hidden">
               <img
                 src={image}
                 alt={cat.name}
+                loading="lazy"
                 className="h-full w-full object-cover object-center transition-transform duration-500 group-active:scale-[1.04]"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/25 to-transparent" />
-              <span className="absolute left-1.5 top-1.5 flex h-4 min-w-4 items-center justify-center rounded-full border border-white/20 bg-black/55 px-1 text-[5px] font-bold uppercase tracking-[0.08em] text-[#F3E5AB] backdrop-blur-sm">
+              <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/30 to-transparent" />
+              <span className="absolute left-1.5 top-1.5 flex h-5 min-w-5 items-center justify-center rounded-full border border-white/20 bg-black/55 px-1 text-[8px] font-semibold tracking-[0.06em] text-[#F3E5AB] backdrop-blur-sm">
                 0{index + 1}
               </span>
-              <div className="absolute inset-x-1.5 bottom-1.5 flex min-h-[30px] items-end justify-center text-center">
-                <p className="max-w-full text-[8px] font-bold uppercase leading-[1.05] tracking-[0.01em] text-white drop-shadow-[0_2px_6px_rgba(0,0,0,0.9)]">
+              <div className="absolute inset-x-1.5 bottom-2 flex min-h-[28px] items-end justify-center text-center">
+                <p className="line-clamp-2 text-[10px] font-semibold uppercase leading-[1.15] tracking-[0.04em] text-white drop-shadow-[0_2px_6px_rgba(0,0,0,0.9)]">
                   {cat.name}
                 </p>
               </div>
@@ -1089,34 +1182,19 @@ export default function HomePage() {
   </div>
 </section>
 
-{/* MOBILE BEST SELLERS — 2-COLUMN PRODUCT SHOWCASE */}
-<section className="lg:hidden w-full bg-[#060606] px-4 py-9 text-white">
-  <div className="mb-5 flex items-end justify-between border-b border-white/10 pb-3.5">
-    <div>
-      <p className="mb-1.5 text-[7px] font-bold uppercase tracking-[0.28em] text-[#D4AF37]">
-        Most Loved
-      </p>
-      <h2
-        className="font-serif text-[30px] leading-none tracking-[-0.035em] text-[#F3E5AB]"
-        style={{ fontFamily: "Bodoni MT, Didot, Times New Roman, serif" }}
-      >
-        Best Sellers
-      </h2>
-    </div>
-    <Link href="/shop" className="mb-0.5 flex items-center gap-1 text-[7px] font-bold uppercase tracking-[0.14em] text-[#D4AF37]">
-      View All <ArrowUpRight className="h-3 w-3" />
-    </Link>
-  </div>
+{/* MOBILE BEST SELLERS */}
+<section className="w-full border-t border-white/5 bg-[#060606] px-4 py-8 text-white lg:hidden">
+  <MobileSectionHeader label="Most loved" title="Best Sellers" href="/shop" />
 
-  <div className="grid grid-cols-2 gap-2.5">
+  <div className="grid grid-cols-2 gap-3">
     {bestSellers.slice(0, 4).map((product, index) => (
       <motion.div
         key={product.id}
-        className="kovenik-mobile-product-card min-w-0 border border-white/10 bg-[#111111] p-1.5"
-        initial={{ opacity: 0, y: 10 }}
+        className="kovenik-mobile-product-card min-w-0 border border-white/10 bg-[#111111] p-2"
+        initial={{ opacity: 0, y: 8 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, amount: 0.1 }}
-        transition={{ duration: 0.35, delay: index * 0.035 }}
+        transition={{ duration: 0.3, delay: index * 0.03 }}
       >
         <ProductCard product={product as Product} index={index} />
       </motion.div>
@@ -1125,25 +1203,14 @@ export default function HomePage() {
 </section>
 
 {/* MOBILE NEW ARRIVALS */}
-<section className="lg:hidden w-full bg-[#090909] px-4 py-9 text-white">
-  <div className="mb-5 flex items-end justify-between border-b border-white/10 pb-3.5">
-    <div>
-      <p className="mb-1.5 text-[7px] font-bold uppercase tracking-[0.28em] text-[#D4AF37]">
-        Fresh Drops • SS26
-      </p>
-      <h2
-        className="font-serif text-[30px] leading-none tracking-[-0.035em] text-[#F3E5AB]"
-        style={{ fontFamily: "Bodoni MT, Didot, Times New Roman, serif" }}
-      >
-        New Arrivals
-      </h2>
-    </div>
-    <span className="pb-0.5 text-[7px] uppercase tracking-[0.16em] text-neutral-500">
-      {filteredNewArrivals.length} Pieces
-    </span>
-  </div>
+<section className="w-full border-t border-white/5 bg-[#090909] px-4 py-8 text-white lg:hidden">
+  <MobileSectionHeader
+    label="Fresh drops • SS26"
+    title="New Arrivals"
+    meta={`${filteredNewArrivals.length} ${filteredNewArrivals.length === 1 ? "piece" : "pieces"}`}
+  />
 
-  <div className="scrollbar-none mb-4 flex gap-1.5 overflow-x-auto pb-1">
+  <div className="scrollbar-none -mx-4 mb-4 flex gap-2 overflow-x-auto px-4 pb-1">
     {[
       { id: "all", label: "All" },
       { id: "supreme-edition", label: "Supreme" },
@@ -1157,10 +1224,11 @@ export default function HomePage() {
           key={tab.id}
           type="button"
           onClick={() => setSelectedSubCat(tab.id)}
-          className={`shrink-0 rounded-full border px-3 py-1.5 text-[6.5px] font-bold uppercase tracking-[0.14em] ${
+          aria-pressed={active}
+          className={`shrink-0 rounded-full border px-4 py-2.5 text-[10px] font-semibold uppercase tracking-[0.12em] transition-colors ${
             active
               ? "border-[#D4AF37] bg-[#D4AF37] text-black"
-              : "border-white/10 bg-[#141414] text-neutral-400"
+              : "border-white/10 bg-[#141414] text-neutral-300"
           }`}
         >
           {tab.label}
@@ -1169,11 +1237,42 @@ export default function HomePage() {
     })}
   </div>
 
-  <div className="grid grid-cols-2 gap-2.5">
-    {filteredNewArrivals.map((product, index) => (
+  {filteredNewArrivals.length > 0 ? (
+    <div className="grid grid-cols-2 gap-3">
+      {filteredNewArrivals.map((product, index) => (
+        <div
+          key={product.id}
+          className="kovenik-mobile-product-card min-w-0 border border-white/10 bg-[#111111] p-2"
+        >
+          <ProductCard product={product as Product} index={index} />
+        </div>
+      ))}
+    </div>
+  ) : (
+    <div className="flex min-h-[200px] flex-col items-center justify-center border border-white/10 bg-[#111111] px-6 text-center">
+      <p className="text-[13px] text-neutral-300">No new arrivals in this collection yet.</p>
+      <button
+        type="button"
+        onClick={() => setSelectedSubCat("all")}
+        className="mt-4 rounded-full bg-[#D4AF37] px-5 py-2.5 text-[10px] font-bold uppercase tracking-[0.16em] text-black"
+      >
+        Show all new arrivals
+      </button>
+    </div>
+  )}
+</section>
+
+{/* MOBILE TRENDING — horizontal snap rail */}
+<section className="w-full border-t border-white/5 bg-[#050505] py-8 text-white lg:hidden">
+  <div className="px-4">
+    <MobileSectionHeader label="Community top picks" title="Trending Now" href="/shop" actionLabel="Discover" />
+  </div>
+
+  <div className="scrollbar-none flex snap-x snap-mandatory gap-3 overflow-x-auto scroll-smooth px-4 pb-1 [-webkit-overflow-scrolling:touch]">
+    {trending.map((product, index) => (
       <div
         key={product.id}
-        className="kovenik-mobile-product-card min-w-0 border border-white/10 bg-[#111111] p-1.5"
+        className="kovenik-mobile-product-card w-[46vw] max-w-[190px] shrink-0 snap-start border border-white/10 bg-[#111111] p-2"
       >
         <ProductCard product={product as Product} index={index} />
       </div>
@@ -1181,77 +1280,40 @@ export default function HomePage() {
   </div>
 </section>
 
-{/* MOBILE TRENDING */}
-<section className="lg:hidden w-full bg-[#050505] px-4 py-9 text-white">
-  <div className="mb-5 flex items-end justify-between border-b border-white/10 pb-4">
-    <div>
-      <p className="mb-1.5 text-[7.5px] font-bold uppercase tracking-[0.28em] text-[#D4AF37]">
-        Community Top Picks
-      </p>
-      <h2
-        className="font-serif text-[30px] leading-none tracking-[-0.035em] text-[#F3E5AB]"
-        style={{ fontFamily: "Bodoni MT, Didot, Times New Roman, serif" }}
-      >
-        Trending Now
-      </h2>
-    </div>
-    <Link href="/shop" className="mb-1 text-[7.5px] font-bold uppercase tracking-[0.15em] text-[#D4AF37]">
-      Discover
-    </Link>
-  </div>
-
-  <div className="grid grid-cols-2 gap-2.5">
-    {trending.slice(0, 4).map((product, index) => (
-      <motion.div
-        key={product.id}
-        className="kovenik-mobile-product-card min-w-0 border border-white/10 bg-[#111111] p-2"
-        initial={{ opacity: 0, y: 12 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, amount: 0.12 }}
-        transition={{ duration: 0.4, delay: index * 0.04 }}
-      >
-        <ProductCard product={product as Product} index={index} />
-      </motion.div>
-    ))}
-  </div>
-</section>
-
 {/* MOBILE REVIEWS */}
-<section className="lg:hidden w-full bg-[#080808] px-4 py-10 text-white">
-  <div className="mb-5 flex items-end justify-between">
+<section className="w-full border-t border-white/5 bg-[#080808] py-8 text-white lg:hidden">
+  <div className="mb-5 flex items-end justify-between px-4">
     <div>
-      <p className="mb-1.5 text-[7.5px] font-bold uppercase tracking-[0.28em] text-[#D4AF37]">
+      <p className="mb-1.5 text-[10px] font-semibold uppercase tracking-[0.24em] text-[#D4AF37]">
         Community
       </p>
       <h2
-        className="font-serif text-[38px] leading-none text-[#F3E5AB]"
+        className="font-serif text-[30px] leading-[1.05] tracking-[-0.03em] text-[#F3E5AB]"
         style={{ fontFamily: "Bodoni MT, Didot, Times New Roman, serif" }}
       >
         What They Say
       </h2>
     </div>
-    <Star className="h-4 w-4 fill-[#D4AF37] text-[#D4AF37]" />
+    <Star className="mb-1 h-4 w-4 fill-[#D4AF37] text-[#D4AF37]" />
   </div>
 
-  <div className="scrollbar-none flex snap-x snap-mandatory gap-2.5 overflow-x-auto">
+  <div className="scrollbar-none flex snap-x snap-mandatory gap-3 overflow-x-auto px-4 [-webkit-overflow-scrolling:touch]">
     {reviews.map((review) => (
       <article
         key={review.name}
-        className="w-[84vw] max-w-[350px] shrink-0 snap-start border border-[#D4AF37]/25 bg-[#111111] p-5"
+        className="w-[82vw] max-w-[340px] shrink-0 snap-start border border-[#D4AF37]/25 bg-[#111111] p-5"
       >
-        <div className="mb-4 flex gap-1">
+        <div className="mb-3 flex gap-1" aria-label={`${review.rating} out of 5 stars`}>
           {Array.from({ length: review.rating }).map((_, i) => (
-            <Star key={i} className="h-3 w-3 fill-[#D4AF37] text-[#D4AF37]" />
+            <Star key={i} className="h-3.5 w-3.5 fill-[#D4AF37] text-[#D4AF37]" />
           ))}
         </div>
-        <p className="text-[13px] leading-[1.65] text-neutral-200">
-          “{review.text}”
-        </p>
-        <div className="mt-6 border-t border-white/10 pt-4">
-          <p className="text-[9px] font-bold uppercase tracking-[0.14em] text-white">
+        <p className="text-[14px] leading-[1.6] text-neutral-200">“{review.text}”</p>
+        <div className="mt-5 border-t border-white/10 pt-4">
+          <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-white">
             {review.name}
           </p>
-          <p className="mt-1 text-[7px] uppercase tracking-[0.18em] text-[#D4AF37]">
+          <p className="mt-1 text-[10px] uppercase tracking-[0.16em] text-[#D4AF37]">
             {review.tag}
           </p>
         </div>
@@ -1259,9 +1321,6 @@ export default function HomePage() {
     ))}
   </div>
 </section>
-
-{/* MOBILE NEWSLETTER */}
-
 
 <section className="hidden lg:block w-full bg-neutral-950 px-4 pt-10 pb-12 sm:px-6 sm:pt-14 sm:pb-16 lg:px-8 lg:pt-16 lg:pb-20">
   {/* ============================================================
@@ -1956,10 +2015,7 @@ export default function HomePage() {
   </div>
 </section>
 
-
-
-      {/* ================= NEWSLETTER ================= */}
-     
     </main>
+    </MotionConfig>
   );
 }
