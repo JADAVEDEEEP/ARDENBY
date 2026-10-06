@@ -37,7 +37,7 @@ import { useCartStore, getCartSubtotal } from '@/store/cart-store';
 import { formatINR } from '@/lib/format';
 
 const API_URL =
-  process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
+  process.env.NEXT_PUBLIC_PRODUCTION_API_URL || 'http://localhost:5000';
 
 const GOLD = '#D4AF37';
 
