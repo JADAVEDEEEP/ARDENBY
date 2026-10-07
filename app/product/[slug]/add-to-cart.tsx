@@ -12,20 +12,39 @@ export function AddToCart({ product }: { product: Product }) {
 
   const addItem = useCartStore((state) => state.addItem);
 
-  const handleAddToCart = () => {
-    addItem({
-      productId: product.id,
-      slug: product.slug,
-      name: product.name,
-      image: product.images[0],
-      size,
-      color,
-      price: product.price,
-      mrp: product.mrp,
-    });
+ const handleAddToCart = () => {
+  const selectedVariant =
+    product.variants?.find(
+      (variant) =>
+        variant.size === size &&
+        variant.color === color &&
+        variant.inventory > 0
+    ) ||
+    product.variants?.find(
+      (variant) =>
+        variant.size === size &&
+        variant.inventory > 0
+    );
 
-    toast.success('Added to cart');
-  };
+  if (!selectedVariant?.id) {
+    toast.error('Selected size/color is currently unavailable.');
+    return;
+  }
+
+  addItem({
+    productId: product.id,
+    variantId: selectedVariant.id,
+    slug: product.slug,
+    name: product.name,
+    image: product.images[0],
+    size: selectedVariant.size,
+    color: selectedVariant.color,
+    price: product.price,
+    mrp: product.mrp,
+  });
+
+  toast.success('Added to cart');
+};
 
   return (
     <div className="mt-8 space-y-7">
