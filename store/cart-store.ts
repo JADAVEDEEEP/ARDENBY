@@ -194,25 +194,34 @@ function normalizeServerCartItem(
         ''
     ),
     name: String(
-      serverItem?.name ||
-        serverItem?.product_name ||
-        'Product'
-    ),
-    image: String(
-      serverItem?.image ||
-        serverItem?.product_image ||
-        ''
-    ),
+  serverItem?.name ||
+    serverItem?.product_name ||
+    serverItem?.product_name_snapshot ||
+    'Product'
+),
+
+image: String(
+  serverItem?.image ||
+    serverItem?.product_image ||
+    serverItem?.image_snapshot ||
+    ''
+),
     size: size as ProductSize,
     color: color as ProductColor,
     quantity,
-    price: Number(serverItem?.price || 0),
-    mrp: Number(
-      serverItem?.mrp ||
-        serverItem?.original_price ||
-        serverItem?.price ||
-        0
-    ),
+   price: Number(
+  serverItem?.price ??
+    serverItem?.price_snapshot ??
+    0
+),
+
+mrp: Number(
+  serverItem?.mrp ??
+    serverItem?.mrp_snapshot ??
+    serverItem?.price ??
+    serverItem?.price_snapshot ??
+    0
+),
   };
 }
 
