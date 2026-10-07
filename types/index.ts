@@ -12,11 +12,21 @@ export type ProductColor =
   | 'Red'
   | 'Green';
 
-export type FabricType = '100% Cotton' | 'Textured' | 'Pattern' | 'Printed' | 'Puff Print';
+export type FabricType =
+  | '100% Cotton'
+  | 'Textured'
+  | 'Pattern'
+  | 'Printed'
+  | 'Puff Print';
 
 export type CoverageType = 'Front' | 'Back' | 'All Over';
 
-export type FitType = 'Oversized' | 'Regular' | 'Cargo' | 'Hoodie' | 'Jogger';
+export type FitType =
+  | 'Oversized'
+  | 'Regular'
+  | 'Cargo'
+  | 'Hoodie'
+  | 'Jogger';
 
 export type CategorySlug =
   | 'supreme-edition'
@@ -38,6 +48,23 @@ export interface Review {
   verified: boolean;
 }
 
+/* ==========================================
+   PRODUCT VARIANT
+========================================== */
+
+export interface ProductVariant {
+  id: string;
+  product_id: string;
+  size: ProductSize;
+  color: ProductColor;
+  inventory: number;
+  sku?: string | null;
+}
+
+/* ==========================================
+   PRODUCT
+========================================== */
+
 export interface Product {
   id: string;
   slug: string;
@@ -47,38 +74,60 @@ export interface Product {
   fit: FitType;
   fabric: FabricType;
   coverage: CoverageType;
+
   colors: ProductColor[];
   sizes: ProductSize[];
+  variants: ProductVariant[];
+
   images: string[];
   fabricImage: string;
+
   price: number;
   mrp: number;
   bestPrice: number;
+
   rating: number;
   reviewCount: number;
   reviews: Review[];
+
   description: string;
   fabricDetails: string;
   washCare: string;
+
   tags: string[];
+
   bestSeller: boolean;
   newArrival: boolean;
   trending: boolean;
   limitedEdition: boolean;
+
   inventory: number;
 }
 
+/* ==========================================
+   CART ITEM
+========================================== */
+
 export interface CartItem {
   productId: string;
+  variantId: string;
+
   slug: string;
   name: string;
   image: string;
+
   size: ProductSize;
   color: ProductColor;
+
   quantity: number;
+
   price: number;
   mrp: number;
 }
+
+/* ==========================================
+   ADDRESS
+========================================== */
 
 export interface Address {
   id: string;
@@ -92,6 +141,10 @@ export interface Address {
   isDefault: boolean;
 }
 
+/* ==========================================
+   ORDER
+========================================== */
+
 export interface Order {
   id: string;
   orderNumber: string;
@@ -102,6 +155,10 @@ export interface Order {
   address: Address;
   paymentMethod: string;
 }
+
+/* ==========================================
+   COUPON
+========================================== */
 
 export interface Coupon {
   id: string;

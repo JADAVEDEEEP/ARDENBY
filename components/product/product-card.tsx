@@ -48,7 +48,8 @@ export function ProductCard({
     // User is not logged in
     if (!token) {
       toast('❤️ Please log in to add this to your favourites.', {
-        description: 'Create an account or sign in to save your favourite pieces.',
+        description:
+          'Create an account or sign in to save your favourite pieces.',
         duration: 3500,
       });
 
@@ -79,13 +80,40 @@ export function ProductCard({
     e.preventDefault();
     e.stopPropagation();
 
+    /*
+     * Quick Add uses M when that variant exists.
+     * Otherwise it falls back to the first available variant.
+     *
+     * This keeps the existing Quick Add UI/flow unchanged
+     * while ensuring the real variant ID is stored in the cart.
+     */
+    const quickAddVariant =
+      product.variants?.find(
+        (variant) =>
+          variant.size === 'M' &&
+          variant.inventory > 0
+      ) ||
+      product.variants?.find(
+        (variant) => variant.inventory > 0
+      ) ||
+      product.variants?.[0];
+
+    if (!quickAddVariant?.id) {
+      toast.error('This product is currently unavailable.', {
+        duration: 2500,
+      });
+
+      return;
+    }
+
     addItem({
       productId: product.id,
+      variantId: quickAddVariant.id,
       slug: product.slug,
       name: product.name,
       image: product.images[0],
-      size: 'M',
-      color: product.colors[0],
+      size: quickAddVariant.size,
+      color: quickAddVariant.color,
       price: product.price,
       mrp: product.mrp,
     });

@@ -690,6 +690,21 @@ export default function HomePage() {
         .scrollbar-none { scrollbar-width: none; -ms-overflow-style: none; }
         .scrollbar-none::-webkit-scrollbar { display: none; }
 
+        /* MOBILE FASHION SVG — subtle continuous editorial motion */
+        @keyframes kovenik-fashion-drift {
+          0%, 100% { transform: translate3d(-2px, 0, 0) rotate(-1deg); opacity: .52; }
+          50% { transform: translate3d(9px, -4px, 0) rotate(1deg); opacity: .88; }
+        }
+        @keyframes kovenik-fashion-shimmer {
+          0%, 100% { stroke-dashoffset: 120; opacity: .28; }
+          50% { stroke-dashoffset: 0; opacity: .78; }
+        }
+        .kovenik-fashion-svg { animation: kovenik-fashion-drift 5.5s ease-in-out infinite; transform-origin: center; }
+        .kovenik-fashion-svg path, .kovenik-fashion-svg circle, .kovenik-fashion-svg line { stroke-dasharray: 120; animation: kovenik-fashion-shimmer 4.5s ease-in-out infinite; }
+        @media (prefers-reduced-motion: reduce) {
+          .kovenik-fashion-svg, .kovenik-fashion-svg path, .kovenik-fashion-svg circle, .kovenik-fashion-svg line { animation: none !important; }
+        }
+
         @media (max-width: 1023px) {
           /* Product title: readable, medium weight, max 2 lines */
           .kovenik-mobile-product-card h3,
@@ -746,273 +761,282 @@ export default function HomePage() {
           }
         }
 
+        /* =========================================================
+           MOBILE HOME — FULL KÖVENIK GOLD-METALLIC SYSTEM
+           Mobile only. Desktop remains untouched.
+        ========================================================= */
+        @media (max-width: 1023px) {
+          .kovenik-mobile-luxury,
+          .kovenik-mobile-category-shell {
+            background:
+              radial-gradient(circle at 50% 0%, rgba(212,175,55,0.13), transparent 38%),
+              linear-gradient(180deg, #090909 0%, #11100c 48%, #070707 100%) !important;
+            color: #f4ead0 !important;
+          }
+
+          .kovenik-mobile-luxury,
+          .kovenik-mobile-luxury *,
+          .kovenik-mobile-category-shell,
+          .kovenik-mobile-category-shell * {
+            font-family: Arial, Helvetica, sans-serif !important;
+            font-style: normal !important;
+          }
+
+          .kovenik-mobile-luxury h1,
+          .kovenik-mobile-luxury h2,
+          .kovenik-mobile-luxury h3,
+          .kovenik-mobile-luxury h4,
+          .kovenik-mobile-category-shell h1,
+          .kovenik-mobile-category-shell h2,
+          .kovenik-mobile-category-shell h3,
+          .kovenik-mobile-category-shell h4 {
+            font-weight: 800 !important;
+            letter-spacing: -0.025em !important;
+          }
+
+          .kovenik-mobile-luxury [class*="bg-white"],
+          .kovenik-mobile-luxury [class*="bg-[#f7f6f2]"],
+          .kovenik-mobile-luxury [class*="bg-[#fffdf8]"],
+          .kovenik-mobile-luxury [class*="bg-[#eee8dc]"],
+          .kovenik-mobile-luxury [class*="bg-[#ddd6c8]"],
+          .kovenik-mobile-luxury [class*="bg-[#ececec]"],
+          .kovenik-mobile-category-shell [class*="bg-white"],
+          .kovenik-mobile-category-shell [class*="bg-neutral-900"] {
+            background: linear-gradient(180deg, #15130d 0%, #090909 100%) !important;
+            color: #f4ead0 !important;
+            border-color: rgba(212,175,55,0.42) !important;
+          }
+
+          .kovenik-mobile-luxury [class*="text-[#111]"],
+          .kovenik-mobile-luxury [class*="text-neutral-900"],
+          .kovenik-mobile-luxury [class*="text-neutral-700"],
+          .kovenik-mobile-luxury [class*="text-neutral-600"],
+          .kovenik-mobile-category-shell [class*="text-neutral-200"] {
+            color: #eadfbf !important;
+          }
+
+          .kovenik-mobile-luxury [class*="text-[#9b7514]"],
+          .kovenik-mobile-luxury [class*="text-[#D4AF37]"],
+          .kovenik-mobile-category-shell [class*="text-amber-300"],
+          .kovenik-mobile-category-shell [class*="text-amber-200"] {
+            color: #F2C94C !important;
+          }
+
+          .kovenik-mobile-luxury .border-black\/10,
+          .kovenik-mobile-luxury .border-black\/15,
+          .kovenik-mobile-category-shell .border-neutral-800 {
+            border-color: rgba(212,175,55,0.35) !important;
+          }
+
+          .kovenik-mobile-luxury .shadow-\[0_8px_24px_rgba\(0\,0\,0\,0\.07\)\],
+          .kovenik-mobile-luxury .shadow-\[0_10px_30px_rgba\(0\,0\,0\,0\.12\)\] {
+            box-shadow: 0 14px 34px rgba(0,0,0,0.38), 0 0 24px rgba(212,175,55,0.07) !important;
+          }
+
+          .kovenik-mobile-luxury a:not([class*="bg-[#D4AF37"]]) {
+            color: inherit;
+          }
+
+          /* Product cards: clean spacing so text never touches the image/card edge. */
+          .kovenik-mobile-luxury .kovenik-mobile-product-card {
+            padding-bottom: 8px !important;
+            background: #0d0d0c !important;
+            border-color: rgba(212,175,55,0.28) !important;
+          }
+
+          .kovenik-mobile-luxury .kovenik-mobile-product-card h3,
+          .kovenik-mobile-luxury .kovenik-mobile-product-card h4 {
+            margin-top: 7px !important;
+            padding-left: 8px !important;
+            padding-right: 8px !important;
+          }
+
+          .kovenik-mobile-luxury .kovenik-mobile-product-card p {
+            padding-left: 8px !important;
+            padding-right: 8px !important;
+          }
+
+          /* Gold section separators. */
+          .kovenik-mobile-luxury hr,
+          .kovenik-mobile-luxury [class*="border-b"] {
+            border-color: rgba(212,175,55,0.25) !important;
+          }
+        }
+
         @media (prefers-reduced-motion: reduce) {
           .kovenik-mobile-product-card img { transition: none !important; }
         }
       `}</style>
-      {/* ================= PREMIUM DARK LUXURY HERO SECTION ================= */}
-<section
-  className="relative left-1/2 z-0 w-screen max-w-none -translate-x-1/2 overflow-hidden bg-[#0A0A0A] min-h-[560px] h-[calc(100svh-76px)] sm:h-[calc(100svh-84px)] md:h-[calc(100svh-76px)] lg:h-[calc(100svh-128px)] lg:min-h-0"
-  onMouseLeave={() => setIsPaused(false)}
->
-  <div className="relative h-full w-full">
-
-    {/* Luxury Marble & Gold Glow Background */}
-    <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(212,175,55,0.08)_0%,rgba(10,10,10,0.95)_70%,#050505_100%)]" />
-    <div className="absolute inset-0 opacity-20 bg-[radial-gradient(#d4af37_1px,transparent_1px)] [background-size:24px_24px] pointer-events-none" />
-
-    {/* =====================================================
-        MOBILE HERO — KOVENIK PRODUCTION MOBILE COMPOSITION
-        Desktop hero below is intentionally untouched.
-    ====================================================== */}
-    <div className="absolute inset-0 block md:hidden bg-[#070707]">
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_72%_42%,rgba(212,175,55,0.10),transparent_42%),linear-gradient(180deg,#080808_0%,#050505_100%)]" />
-      <div className="pointer-events-none absolute inset-0 opacity-[0.14] [background-image:radial-gradient(#d4af37_0.7px,transparent_0.7px)] [background-size:18px_18px]" />
-
-      {/* Hero copy */}
-      <AnimatePresence mode="wait">
-        <div className="pointer-events-none absolute left-1/2 top-[42%] z-[90] h-[250px] -translate-y-1/2 w-[94%] -translate-x-1/2 rounded-[50%] bg-black/35 blur-[28px]" />
-        <div
-          aria-hidden="true"
-          className="mobile-hero-copy-vignette pointer-events-none absolute left-1/2 top-[43%] z-[95] h-[250px] w-[88%] -translate-x-1/2 -translate-y-1/2 rounded-full"
-        />
-        <motion.div
-          key={`mobile-headline-${slide}`}
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: -8 }}
-          transition={{ duration: 0.5, ease }}
-          className="absolute inset-x-0 top-[45%] z-[110] -translate-y-1/2 mx-auto w-[94%] text-center drop-shadow-[0_4px_18px_rgba(0,0,0,1)]"
-        >
-          <p className="mb-2 text-[10px] font-semibold uppercase tracking-[0.26em] text-neutral-300">
-            Premium streetwear
-          </p>
-          <h1
-            className="mx-auto max-w-[310px] text-center font-serif text-[54px] font-medium uppercase leading-[0.84] tracking-[-0.055em] text-[#F5E7B0]"
-            style={{ fontFamily: "Bodoni MT, Didot, Times New Roman, serif" }}
-          >
-            Art
-            <br />
-            You Can
-            <br />
-            <span className="text-white">Wear.</span>
-          </h1>
-          <p className="mx-auto mt-4 max-w-[240px] text-center text-[12px] leading-[1.55] text-neutral-200">
-            Premium streetwear for those who stand out.
-          </p>
-
-          <Link
-            href="/shop"
-            className="mx-auto mt-5 flex min-h-[44px] w-fit items-center gap-3 rounded-full bg-gradient-to-r from-[#F3E5AB] via-[#D4AF37] to-[#AA771C] px-6 py-3 text-[10px] font-bold uppercase tracking-[0.2em] text-neutral-950 shadow-[0_8px_30px_rgba(212,175,55,0.16)]"
-          >
-            Shop Now
-            <ArrowRight className="h-3.5 w-3.5" />
-          </Link>
-        </motion.div>
-      </AnimatePresence>
-
-      {/* Model / product visual */}
-      <div className="pointer-events-none absolute inset-0 z-20 overflow-hidden">
-        <AnimatePresence mode="wait">
-          <motion.div
-            key={`mobile-model-${slide}`}
-            initial={{ opacity: 0, y: 22, scale: 1.03 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: 12 }}
-            transition={{ duration: 0.6, ease }}
-            className="relative flex h-full w-full items-end justify-center"
-          >
-            <div className="absolute bottom-[-20px] left-1/2 h-[360px] w-[320px] -translate-x-1/2 rounded-full bg-[#D4AF37]/10 blur-[75px]" />
-            <img
-              src="/images/hero-linen.png"
-              alt="Art You Can Wear"
-              className="absolute bottom-[0%] left-1/2 z-30 h-[92%] w-auto max-w-none -translate-x-1/2 object-contain object-bottom drop-shadow-[0_24px_45px_rgba(0,0,0,0.95)]"
-            />
-          </motion.div>
-        </AnimatePresence>
-      </div>
-
-      {/* Bottom slide control */}
-      <div className="absolute bottom-5 left-5 right-5 z-[60] flex items-center justify-between">
-        <div className="flex items-center gap-2">
-          {heroSlides.map((_, index) => (
-            <button
-              key={index}
-              type="button"
-              onClick={() => setSlide(index)}
-              aria-label={`Go to slide ${index + 1}`}
-              className="p-1"
-            >
-              <span
-                className={`block h-[2px] transition-all duration-500 ${
-                  index === slide ? "w-8 bg-[#D4AF37]" : "w-3 bg-white/25"
-                }`}
-              />
-            </button>
-          ))}
-        </div>
-        <span className="text-[9px] font-medium uppercase tracking-[0.22em] text-neutral-400">
-          0{slide + 1} / 0{heroSlides.length}
-        </span>
-      </div>
-    </div>
-
-    {/* =====================================================
-        DESKTOP / TABLET LUXURY HERO
-    ===================================================== */}
-    <div className="absolute inset-0 hidden md:block">
-
-      {/* Premium Badge Desktop */}
-      <motion.div
-        initial={{ opacity: 0, y: -6 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.45 }}
-        className="absolute left-7 top-7 z-30 lg:left-9 lg:top-8"
+      {/* ================= KÖVENIK PREMIUM LUXURY HERO — HERO ONLY ================= */}
+      <section
+        className="hidden md:block relative left-1/2 z-0 w-screen max-w-none -translate-x-1/2 overflow-hidden bg-[#050505] text-white h-[calc(100svh-76px)] min-h-0 md:h-[calc(100svh-76px)] lg:h-[calc(100svh-128px)]"
+        onMouseEnter={() => setIsPaused(true)}
+        onMouseLeave={() => setIsPaused(false)}
       >
-        <div className="rounded-md border border-amber-500/30 bg-neutral-900/70 px-4 py-2 backdrop-blur-md">
-          <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-amber-400">
-            The New Standard • SS26
-          </p>
-          <p className="mt-0.5 text-[10px] text-neutral-400">
-            Crafted with Unrivaled West Delhi Precision
-          </p>
+        <div className="relative h-full w-full">
+          <div className="absolute inset-0 bg-[#050505]" />
+          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_58%_48%,rgba(212,175,55,0.17)_0%,rgba(212,175,55,0.055)_24%,transparent_54%),radial-gradient(ellipse_at_10%_72%,rgba(212,175,55,0.06),transparent_34%),linear-gradient(115deg,#050505_0%,#0c0b08_48%,#020202_100%)]" />
+          <div className="pointer-events-none absolute inset-0 opacity-[0.13] [background-image:radial-gradient(#D4AF37_0.65px,transparent_0.65px)] [background-size:21px_21px]" />
+          <div className="pointer-events-none absolute inset-0 opacity-[0.2] [background-image:linear-gradient(115deg,transparent_0%,rgba(255,255,255,0.025)_24%,transparent_42%,rgba(212,175,55,0.035)_62%,transparent_78%)]" />
+          <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_36%,rgba(0,0,0,0.78)_100%)]" />
+
+          {/* MOBILE — dedicated luxury campaign composition */}
+          <div className="absolute inset-0 block overflow-hidden md:hidden">
+            <div className="absolute inset-0 bg-[#050505]" />
+            <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_50%_48%,rgba(212,175,55,0.20)_0%,rgba(212,175,55,0.07)_32%,transparent_65%),linear-gradient(180deg,#050505_0%,#090806_55%,#020202_100%)]" />
+            <div className="pointer-events-none absolute inset-0 opacity-[0.13] [background-image:radial-gradient(#D4AF37_0.65px,transparent_0.65px)] [background-size:18px_18px]" />
+            <div className="pointer-events-none absolute inset-x-3 top-3 bottom-3 border border-[#D4AF37]/15" />
+            <div className="pointer-events-none absolute left-4 top-[20%] bottom-[15%] w-px bg-gradient-to-b from-transparent via-[#D4AF37]/45 to-transparent" />
+            <div className="pointer-events-none absolute right-4 top-[23%] bottom-[17%] w-px bg-gradient-to-b from-transparent via-[#D4AF37]/28 to-transparent" />
+
+            {/* Mobile headline — giant editorial type behind the model */}
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={`mobile-headline-${slide}`}
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -8 }}
+                transition={{ duration: 0.55, ease }}
+                className="absolute inset-x-0 top-[13%] z-20 px-1 text-center"
+              >
+                <p className="mb-2 text-[8px] font-black uppercase tracking-[0.34em] text-[#F0D46E]">The New Standard • SS26</p>
+                <h1
+                  className="font-serif text-[clamp(52px,16.5vw,76px)] font-black uppercase leading-[0.78] tracking-[-0.065em]"
+                  style={{
+                    fontFamily: "Bodoni MT, Didot, Times New Roman, serif",
+                    background: "linear-gradient(180deg,#FFFDF4 0%,#F8EBC0 25%,#D4AF37 55%,#8A661D 76%,#F3D36B 100%)",
+                    WebkitBackgroundClip: "text",
+                    WebkitTextFillColor: "transparent",
+                    filter: "drop-shadow(0 7px 18px rgba(0,0,0,0.9)) drop-shadow(0 0 20px rgba(212,175,55,0.18))",
+                  }}
+                >
+                  {activeHero.headline}
+                </h1>
+              </motion.div>
+            </AnimatePresence>
+
+            {/* Mobile model — wide, dominant, gold-lit, NO black silhouette */}
+            <div className="pointer-events-none absolute inset-x-0 top-[9%] bottom-[25%] z-30 flex items-end justify-center">
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={`mobile-model-${slide}`}
+                  initial={{ opacity: 0, y: 16, scale: 1.025 }}
+                  animate={{ opacity: 1, y: 0, scale: 1 }}
+                  exit={{ opacity: 0, y: 10 }}
+                  transition={{ duration: 0.65, ease }}
+                  className="relative flex h-full w-full items-end justify-center"
+                >
+                  <div className="absolute bottom-[6%] left-1/2 h-[54%] w-[92%] -translate-x-1/2 rounded-full bg-[#D4AF37]/22 blur-[70px]" />
+                  <div className="absolute bottom-[10%] left-1/2 h-[38%] w-[70%] -translate-x-1/2 rounded-full bg-[#F5D76E]/12 blur-[48px]" />
+                  <img
+                    src={transparentHeroImages[slide % transparentHeroImages.length]}
+                    alt={activeHero.headline}
+                    className="relative z-20 h-[104%] w-auto max-w-[118%] object-contain object-bottom drop-shadow-[0_0_20px_rgba(212,175,55,0.34)] drop-shadow-[0_22px_42px_rgba(212,175,55,0.24)]"
+                  />
+                </motion.div>
+              </AnimatePresence>
+            </div>
+
+            {/* Clean mobile information + full-width CTAs */}
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={`mobile-details-${slide}`}
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -6 }}
+                transition={{ duration: 0.45, ease, delay: 0.08 }}
+                className="absolute inset-x-3 bottom-[38px] z-50"
+              >
+                <div className="border border-[#D4AF37]/55 bg-[#050505]/88 px-4 py-4 shadow-[0_18px_50px_rgba(0,0,0,0.65)] backdrop-blur-md">
+                  <div className="mb-2.5 flex items-center gap-2.5">
+                    <span className="h-px w-7 bg-[#F5D76E]" />
+                    <span className="text-[9px] font-black uppercase tracking-[0.28em] text-[#F0D46E]">Unrivaled Finish</span>
+                  </div>
+                  <p className="max-w-[330px] text-[12px] leading-[1.45] text-neutral-200">
+                    Heavyweight custom milled fabrics engineered for elite street presence.
+                  </p>
+                </div>
+              </motion.div>
+            </AnimatePresence>
+
+            {/* Editorial pagination */}
+            <div className="absolute bottom-3.5 left-5 right-5 z-[60] flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <span className="text-[8px] font-bold uppercase tracking-[0.25em] text-neutral-300">0{slide + 1}</span>
+                <span className="h-px w-10 bg-gradient-to-r from-[#D4AF37] to-transparent" />
+                <span className="text-[8px] font-bold uppercase tracking-[0.25em] text-neutral-600">0{heroSlides.length}</span>
+              </div>
+              <div className="flex items-center gap-1.5">
+                {heroSlides.map((_, index) => (
+                  <button key={index} type="button" onClick={() => setSlide(index)} aria-label={`Go to slide ${index + 1}`} className="p-1">
+                    <span className={`block h-[2px] transition-all duration-500 ${index === slide ? "w-7 bg-[#D4AF37] shadow-[0_0_10px_rgba(212,175,55,0.65)]" : "w-2.5 bg-white/25"}`} />
+                  </button>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          {/* DESKTOP / TABLET — editorial fashion campaign */}
+          <div className="absolute inset-0 hidden md:block">
+            <div className="pointer-events-none absolute inset-5 border border-white/[0.055] lg:inset-7" />
+            <div className="pointer-events-none absolute left-7 top-[8%] bottom-[8%] w-px bg-gradient-to-b from-transparent via-[#D4AF37]/55 to-transparent" />
+            <div className="pointer-events-none absolute right-7 top-[12%] bottom-[12%] w-px bg-gradient-to-b from-transparent via-[#D4AF37]/28 to-transparent" />
+            <div className="pointer-events-none absolute right-[10%] top-[7%] h-[82%] w-[31%] border-x border-[#D4AF37]/10 bg-[linear-gradient(90deg,transparent,rgba(212,175,55,0.035),transparent)]" />
+            <div className="pointer-events-none absolute right-[18%] top-[5%] h-[88%] w-px rotate-[8deg] bg-gradient-to-b from-transparent via-[#F5D76E]/45 to-transparent" />
+            <div className="pointer-events-none absolute right-[22%] top-[17%] h-[45%] w-[20%] border border-[#D4AF37]/10 rotate-[8deg]" />
+            <div className="pointer-events-none absolute bottom-[15%] left-[4%] h-px w-[75%] bg-gradient-to-r from-transparent via-[#D4AF37]/42 to-transparent" />
+            <div className="pointer-events-none absolute left-[3.5%] top-[17%] h-2 w-2 rounded-full bg-[#D4AF37] shadow-[0_0_16px_rgba(212,175,55,0.75)]" />
+
+            <motion.div initial={{ opacity: 0, y: -8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, ease }} className="absolute left-9 top-[5%] z-50 xl:left-12 xl:top-[5.5%]">
+              <div className="border border-[#D4AF37]/45 bg-[#090909]/75 px-4 py-2.5 shadow-[0_10px_35px_rgba(0,0,0,0.45)] backdrop-blur-md">
+                <p className="text-[10px] font-black uppercase tracking-[0.22em] text-[#F5D76E]">The New Standard • SS26</p>
+                <p className="mt-1 text-[9px] tracking-[0.04em] text-neutral-400">Crafted with Unrivaled West Delhi Precision</p>
+              </div>
+            </motion.div>
+
+            {/* GIANT HEADLINE — behind model */}
+            <AnimatePresence mode="wait">
+              <motion.div key={`desktop-headline-${slide}`} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8 }} transition={{ duration: 0.55, ease }} className="absolute left-[3%] right-[3%] top-[20%] z-20 text-center px-2">
+                <h1
+                  className="mx-auto w-full max-w-[1320px] whitespace-nowrap font-serif text-[clamp(76px,8.1vw,142px)] font-black uppercase leading-[0.72] tracking-[-0.07em]"
+                  style={{ fontFamily: "Bodoni MT, Didot, Times New Roman, serif", background: "linear-gradient(180deg,#FFFDF3 0%,#FFF7DC 25%,#E7D487 48%,#D4AF37 68%,#84621D 83%,#F1D46D 100%)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", filter: "drop-shadow(0 8px 18px rgba(0,0,0,0.98)) drop-shadow(0 0 28px rgba(212,175,55,0.13))" }}
+                >{activeHero.headline}</h1>
+              </motion.div>
+            </AnimatePresence>
+
+            {/* MODEL — in front of headline */}
+            <div className="pointer-events-none absolute inset-0 z-30 overflow-hidden">
+              <div className="absolute left-[53%] top-[49%] h-[72%] w-[62%] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#D4AF37]/20 blur-[105px]" />
+              <AnimatePresence mode="wait">
+                <motion.div key={`desktop-model-${slide}`} initial={{ opacity: 0, y: 22, scale: 1.025 }} animate={{ opacity: 1, y: 0, scale: 1 }} exit={{ opacity: 0, y: 15 }} transition={{ duration: 0.65, ease }} className="absolute inset-0 flex items-end justify-center">
+                  <img src={transparentHeroImages[slide % transparentHeroImages.length]} alt={activeHero.headline} className="relative z-30 h-[98%] w-auto max-w-none translate-x-[1%] translate-y-0 object-contain object-bottom drop-shadow-[0_0_14px_rgba(245,215,110,0.72)] drop-shadow-[0_0_34px_rgba(212,175,55,0.38)] drop-shadow-[0_26px_54px_rgba(212,175,55,0.28)]" />
+                </motion.div>
+              </AnimatePresence>
+            </div>
+
+            {/* Side editorial copy */}
+            <AnimatePresence mode="wait">
+              <motion.div key={`desktop-left-${slide}`} initial={{ opacity: 0, x: -12 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0 }} transition={{ duration: 0.45, ease }} className="absolute left-[5.5%] top-[55%] z-40 w-[320px] xl:left-[6%] xl:w-[340px]">
+                <p className="text-[14px] font-black uppercase tracking-[0.28em] text-[#D4AF37]">Unrivaled Finish</p>
+                <div className="mt-3 h-px w-14 bg-gradient-to-r from-[#D4AF37] to-transparent" />
+                <p className="mt-4 text-[16px] leading-[1.65] text-neutral-100 xl:text-[17px]">Heavyweight custom milled fabrics engineered for elite street presence.</p>
+              </motion.div>
+            </AnimatePresence>
+
+            <AnimatePresence mode="wait">
+              <motion.div key={`desktop-right-${slide}`} initial={{ opacity: 0, x: 12 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0 }} transition={{ duration: 0.45, ease, delay: 0.08 }} className="absolute right-[5%] top-[50%] z-40 w-[280px] text-right xl:right-[5.5%] xl:w-[300px]">
+                <p className="text-[14px] font-black uppercase tracking-[0.28em] text-[#D4AF37]">Elite Status</p>
+                <div className="mt-3 ml-auto h-px w-12 bg-[#D4AF37]/65" />
+                <p className="mt-4 text-[15px] leading-[1.65] text-neutral-200">Designed in West Delhi, crafted with global luxury precision.</p>
+                <p className="mt-7 text-[8px] font-semibold uppercase tracking-[0.28em] text-neutral-600">KÖVENIK / 2026</p>
+              </motion.div>
+            </AnimatePresence>
+
+            <div className="absolute bottom-[30px] left-[5.5%] z-50 hidden items-center gap-4 md:flex"><span className="text-[9px] font-bold uppercase tracking-[0.25em] text-neutral-500">01</span><span className="h-px w-16 bg-gradient-to-r from-[#D4AF37] to-transparent" /><span className="text-[9px] font-bold uppercase tracking-[0.25em] text-neutral-600">03</span></div>
+            <div className="absolute bottom-[30px] right-[4%] z-50 hidden items-center gap-2 lg:flex">{heroSlides.map((_, index) => <button key={index} type="button" onClick={() => setSlide(index)} aria-label={`Go to slide ${index + 1}`} className="group p-1"><span className={`block h-[2px] transition-all duration-500 ${index === slide ? "w-9 bg-[#D4AF37] shadow-[0_0_12px_rgba(212,175,55,0.65)]" : "w-3.5 bg-white/20 group-hover:bg-white/45"}`} /></button>)}</div>
+          </div>
         </div>
-      </motion.div>
-
-      {/* Desktop Luxury Headline with Gold Gradient */}
-      <AnimatePresence mode="wait">
-        <motion.div
-          key={`desktop-headline-${slide}`}
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: -8 }}
-          transition={{ duration: 0.5, ease }}
-          className="absolute left-0 right-0 top-[65px] z-10 flex justify-center px-4 lg:top-[50px]"
-        >
-          <h1
-            className="w-full max-w-[1450px] text-center font-serif text-[72px] font-black uppercase leading-[0.8] tracking-[-0.04em] md:text-[88px] lg:text-[clamp(90px,9vw,140px)]"
-            style={{
-              fontFamily: "Bodoni MT, Didot, Times New Roman, serif",
-              background: "linear-gradient(180deg, #FFFFFF 20%, #E6CA65 70%, #997A30 100%)",
-              WebkitBackgroundClip: "text",
-              WebkitTextFillColor: "transparent",
-              filter: "drop-shadow(0 4px 25px rgba(212,175,55,0.2))",
-            }}
-          >
-            {activeHero.headline}
-          </h1>
-        </motion.div>
-      </AnimatePresence>
-
-      {/* Central 3D Podium & Floating Apparel Glow Effect */}
-      <div className="pointer-events-none absolute inset-0 z-30 overflow-hidden flex items-center justify-center">
-        <div className="absolute left-1/2 top-[56%] h-[380px] w-[750px] -translate-x-1/2 -translate-y-1/2 bg-gradient-to-r from-amber-500/10 via-amber-300/5 to-transparent blur-[60px] rounded-full" />
-      </div>
-
-      {/* Desktop Model / Product Display */}
-      <div className="pointer-events-none absolute inset-0 z-40 flex items-end justify-center">
-        <AnimatePresence mode="wait">
-          <motion.div
-            key={`desktop-model-${slide}`}
-            initial={{ opacity: 0, y: 20, scale: 1.01 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: 16 }}
-            transition={{ duration: 0.6, ease }}
-            className="relative z-40 flex h-full w-full items-end justify-center"
-          >
-            <div className="absolute bottom-[20px] left-1/2 h-[320px] w-[450px] -translate-x-1/2 rounded-full bg-black/80 blur-[50px]" />
-            <img
-              src={transparentHeroImages[slide % transparentHeroImages.length]}
-              alt={activeHero.headline}
-              className="relative z-40 h-[82%] w-auto max-w-[90%] object-contain object-bottom drop-shadow-[0_20px_40px_rgba(0,0,0,0.9)]"
-            />
-          </motion.div>
-        </AnimatePresence>
-      </div>
-
-      {/* Desktop Left Copy - West Delhi Vibe */}
-      <AnimatePresence mode="wait">
-        <motion.div
-          key={`left-${slide}`}
-          initial={{ opacity: 0, x: -10 }}
-          animate={{ opacity: 1, x: 0 }}
-          exit={{ opacity: 0 }}
-          transition={{ duration: 0.4 }}
-          className="absolute left-8 top-[200px] z-30 hidden w-[280px] md:block lg:left-12 lg:top-[220px]"
-        >
-          <p className="text-[15px] font-bold uppercase tracking-[0.2em] text-amber-400">
-            Unrivaled Finish
-          </p>
-          <div className="mt-3 h-px w-14 bg-amber-500/40" />
-          <p className="mt-4 text-[16px] font-light leading-[1.6] text-neutral-400">
-            Heavyweight custom milled fabrics engineered for elite street presence.
-          </p>
-        </motion.div>
-      </AnimatePresence>
-
-      {/* Desktop Right Copy */}
-      <AnimatePresence mode="wait">
-        <motion.div
-          key={`right-${slide}`}
-          initial={{ opacity: 0, x: 10 }}
-          animate={{ opacity: 1, x: 0 }}
-          exit={{ opacity: 0 }}
-          transition={{ duration: 0.4 }}
-          className="absolute right-8 top-[200px] z-30 hidden w-[280px] text-right md:block lg:right-12 lg:top-[220px]"
-        >
-          <p className="text-[15px] font-bold uppercase tracking-[0.22em] text-amber-400">
-            Elite Status
-          </p>
-          <div className="mt-3 ml-auto h-px w-14 bg-amber-500/40" />
-          <p className="mt-4 ml-auto text-[16px] font-light leading-[1.6] text-neutral-400">
-            Designed in West Delhi, crafted with global luxury precision.
-          </p>
-        </motion.div>
-      </AnimatePresence>
-
-      {/* Central Shop Button (Desktop) */}
-      <div className="absolute bottom-10 left-1/2 z-50 -translate-x-1/2 hidden md:block">
-  <Link href="/shop">
-    <motion.button
-      whileHover={{
-        scale: 1.06,
-        y: -2,
-      }}
-      whileTap={{ scale: 0.96 }}
-      className="group relative overflow-hidden rounded-full border border-[#E6CA65]/40 bg-gradient-to-r from-[#8B1E1E] via-[#D4AF37] to-[#E6CA65] px-9 py-3.5 text-[12px] font-bold uppercase tracking-[0.25em] text-[#090909] shadow-[0_8px_30px_rgba(139,30,30,0.28),0_0_35px_rgba(212,175,55,0.22)] transition-all duration-300"
-    >
-      <span className="absolute inset-y-0 -left-[100%] w-[60%] skew-x-[-20deg] bg-white/25 transition-all duration-700 group-hover:left-[120%]" />
-
-      <span className="relative z-10">
-        Shop The Drop
-      </span>
-    </motion.button>
-  </Link>
-</div>
-
-      {/* Desktop Slide Indicators */}
-      <div className="absolute bottom-8 right-9 z-[60] hidden items-center gap-2 lg:flex">
-        {heroSlides.map((_, index) => (
-          <button
-            key={index}
-            type="button"
-            onClick={() => setSlide(index)}
-            aria-label={`Go to slide ${index + 1}`}
-            className="group p-1"
-          >
-            <span
-              className={`block h-[2px] transition-all duration-500 ${
-                index === slide
-                  ? "w-8 bg-amber-400"
-                  : "w-3.5 bg-neutral-700 group-hover:bg-neutral-500"
-              }`}
-            />
-          </button>
-        ))}
-      </div>
-    </div>
-  </div>
-</section>
+      </section>
 
   {/* =========================================================
     KOVENIK PREMIUM EDITORIAL SPLIT (DARK THEME - DESKTOP ONLY)
@@ -1118,14 +1142,92 @@ export default function HomePage() {
 </section>
 
 {/* =========================================================
-   KOVENIK — PRODUCTION MOBILE HOME
-   This entire block is mobile-only. Desktop sections below are untouched.
+   KOVENIK — MOBILE HOME / REFERENCE-STYLE SHOPPING LAYOUT
+   Mobile-only. Desktop content below remains untouched.
 ========================================================= */}
 
-{/* MOBILE CATEGORY */}
-<section className="w-full border-t border-white/5 bg-[#070707] px-4 py-8 text-white lg:hidden">
-  <MobileSectionHeader label="Explore by category" title="Category" href="/shop" />
+{/* MOBILE FEATURED BANNER — premium metallic campaign card */}
+<section className="kovenik-mobile-luxury w-full bg-[#050505] px-3 pb-7 pt-3 text-white lg:hidden">
+  <div className="relative overflow-hidden border border-[#D4AF37]/45 bg-[#090909] shadow-[0_18px_45px_rgba(0,0,0,0.55),0_0_28px_rgba(212,175,55,0.08)]">
+    <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_50%_18%,rgba(212,175,55,0.16),transparent_38%),linear-gradient(180deg,#12100a_0%,#070707_58%,#030303_100%)]" />
+    <div className="pointer-events-none absolute inset-2 border border-[#D4AF37]/15" />
 
+    <div className="relative h-[315px] overflow-hidden border-b border-[#D4AF37]/35 bg-[#0b0b0b]">
+      {bestSellers[0]?.images?.[0] ? (
+        <img src={bestSellers[0].images[0]} alt={bestSellers[0].name} loading="lazy" className="h-full w-full object-cover object-center" />
+      ) : (
+        <div className="h-full w-full bg-[#111]" />
+      )}
+      <div className="absolute inset-0 bg-gradient-to-t from-[#050505]/80 via-transparent to-[#050505]/10" />
+      {/* Animated fashion-line SVG — decorative only */}
+      <div className="pointer-events-none absolute right-2 top-1/2 z-10 -translate-y-1/2 opacity-70" aria-hidden="true">
+        <svg className="kovenik-fashion-svg h-[190px] w-[115px]" viewBox="0 0 120 210" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M60 24c-11 0-19 8-19 18s8 18 19 18 19-8 19-18-8-18-19-18Z" stroke="#F5D76E" strokeWidth="1.25"/>
+          <path d="M48 61 29 78l-13 44M72 61l19 17 13 44M43 65l17 14 17-14M29 78l-3 71M91 78l3 71M26 149l-6 45M94 149l6 45M20 194h22M78 194h22" stroke="#D4AF37" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round"/>
+          <path d="M43 65c5 6 9 9 17 14 8-5 12-8 17-14M33 91h54M31 112h58" stroke="#FFF0B0" strokeWidth=".8" strokeLinecap="round" opacity=".75"/>
+          <circle cx="60" cy="112" r="39" stroke="#D4AF37" strokeWidth=".55" opacity=".35"/>
+        </svg>
+      </div>
+
+      <div className="absolute left-4 top-4 border border-[#D4AF37]/55 bg-black/65 px-3 py-1.5 backdrop-blur-sm">
+        <span className="text-[9px] font-black uppercase tracking-[0.2em] text-[#F5D76E]">KÖVENIK / SS26</span>
+      </div>
+      <div className="absolute bottom-4 left-4 right-4 flex items-end justify-between gap-3">
+        <div>
+          <p className="text-[9px] font-bold uppercase tracking-[0.24em] text-[#F5D76E]">Featured Drop</p>
+          <p className="mt-1 text-[12px] font-black uppercase tracking-[0.08em] text-white">{bestSellers[0]?.categoryLabel || "KÖVENIK EDIT"}</p>
+        </div>
+        <span className="text-[9px] font-bold uppercase tracking-[0.18em] text-white/60">01 / 03</span>
+      </div>
+    </div>
+
+    <div className="relative px-5 pb-5 pt-5">
+      <p className="text-[9px] font-black uppercase tracking-[0.24em] text-[#D4AF37]">Built for the everyday</p>
+      <h2 className="mt-2 max-w-[330px] text-[29px] font-black uppercase leading-[0.95] tracking-[-0.035em] text-[#F5E7B8]">
+        {bestSellers[0]?.name || "KOVENIK ESSENTIALS"}
+      </h2>
+      <p className="mt-3 max-w-[330px] text-[12px] leading-[1.55] text-neutral-300">Premium streetwear. Strong silhouettes. Pieces made to stand apart.</p>
+      <Link href="/shop" className="relative mt-5 flex min-h-[46px] w-full items-center justify-center gap-2 overflow-hidden border border-[#D4AF37] bg-gradient-to-r from-[#8E691B] via-[#D4AF37] to-[#9A741E] text-[10px] font-black uppercase tracking-[0.18em] text-black shadow-[0_8px_22px_rgba(212,175,55,0.16)]">
+        <span className="relative z-10">Explore Collection</span>
+        <ArrowUpRight className="relative z-10 h-3.5 w-3.5" />
+      </Link>
+    </div>
+  </div>
+  <div className="mt-3 flex justify-center gap-1.5"><span className="h-1 w-2 rounded-full bg-white/20" /><span className="h-1 w-7 rounded-full bg-[#D4AF37] shadow-[0_0_8px_rgba(212,175,55,0.5)]" /><span className="h-1 w-2 rounded-full bg-white/20" /></div>
+</section>
+
+{/* MOBILE COLLECTION / OFFERS STRIP — cleaner metallic editorial cards */}
+<section className="kovenik-mobile-luxury w-full bg-[#050505] py-8 text-white lg:hidden">
+  <div className="px-4">
+    <div className="flex items-end justify-between gap-3 border-b border-[#D4AF37]/25 pb-4">
+      <div>
+        <p className="mb-1 text-[9px] font-black uppercase tracking-[0.24em] text-[#D4AF37]">KÖVENIK EDIT</p>
+        <h2 className="text-[28px] font-black uppercase leading-none tracking-[-0.035em] text-[#F3E5AB]">Collection Highlights</h2>
+      </div>
+      <span className="text-[9px] font-bold uppercase tracking-[0.16em] text-white/45">03 Stories</span>
+    </div>
+  </div>
+  <div className="scrollbar-none mt-5 flex gap-3 overflow-x-auto px-4 pb-1">
+    {philosophy.map((item) => (
+      <article key={item.num} className="relative min-h-[205px] w-[78vw] max-w-[300px] shrink-0 overflow-hidden border border-[#D4AF37]/35 bg-[linear-gradient(145deg,#17140b,#080808)] p-5 shadow-[0_16px_35px_rgba(0,0,0,0.42)]">
+        <span className="absolute right-4 top-4 text-[10px] font-black tracking-[0.18em] text-[#D4AF37]">{item.num}</span>
+        <div className="mb-5 mt-7 h-[2px] w-12 bg-gradient-to-r from-[#F5D76E] to-[#8A661D]" />
+        <h3 className="max-w-[245px] text-[20px] font-black uppercase leading-[1.02] tracking-[-0.02em] text-[#F5E7B8]">{item.title}</h3>
+        <p className="mt-3 text-[11px] leading-[1.55] text-neutral-300">{item.desc}</p>
+      </article>
+    ))}
+  </div>
+</section>
+
+{/* MOBILE CATEGORY TABS + TRENDING CATEGORIES */}
+<section className="kovenik-mobile-luxury w-full bg-white px-4 py-8 text-[#111] lg:hidden">
+  <div className="mb-5 flex items-end justify-between">
+    <div>
+      <p className="mb-1 text-[10px] font-bold uppercase tracking-[0.22em] text-[#9b7514]">Explore the collection</p>
+      <h2 className="font-serif text-[31px] font-bold italic leading-none" style={{ fontFamily: "Bodoni MT, Didot, Times New Roman, serif" }}>Trending Categories</h2>
+    </div>
+    <span className="text-2xl text-[#D4AF37]">↙</span>
+  </div>
   <div className="grid grid-cols-3 gap-2.5">
     {[
       ...categories.slice(0, 4),
@@ -1134,83 +1236,33 @@ export default function HomePage() {
     ].map((cat, index) => {
       const staticCatProduct = staticHomeProducts.find((p) => p.category === cat.slug);
       const catProduct = products.find((p) => p.category === cat.slug);
-      const image =
-        staticCatProduct?.images?.[0] ||
-        catProduct?.images?.[0] ||
-        [
-          "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=800&q=85",
-          "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?auto=format&fit=crop&w=800&q=85",
-          "https://images.unsplash.com/photo-1551488831-00ddcb6c6bd3?auto=format&fit=crop&w=800&q=85",
-          "https://images.unsplash.com/photo-1602810318383-e386cc2a3ccf?auto=format&fit=crop&w=800&q=85",
-          "https://images.unsplash.com/photo-1552902865-b72c031ac5ea?auto=format&fit=crop&w=800&q=85",
-          "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=800&q=85",
-        ][index];
-
+      const fallbackImage = products[index]?.images?.[0] || bestSellers[index]?.images?.[0];
+      const image = staticCatProduct?.images?.[0] || catProduct?.images?.[0] || fallbackImage;
+      if (!image) return null;
       return (
-        <motion.div
-          key={cat.slug}
-          initial={{ opacity: 0, y: 8 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0.12 }}
-          transition={{ duration: 0.3, delay: index * 0.03 }}
-        >
-          <Link
-            href={cat.slug === "all-products" ? "/shop" : `/shop?category=${cat.slug}`}
-            className="group relative block overflow-hidden rounded-[10px] border border-[#D4AF37]/20 bg-[#111111] transition-colors duration-300 active:border-[#D4AF37]/60"
-          >
-            <div className="relative aspect-[0.74] overflow-hidden">
-              <img
-                src={image}
-                alt={cat.name}
-                loading="lazy"
-                className="h-full w-full object-cover object-center transition-transform duration-500 group-active:scale-[1.04]"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/30 to-transparent" />
-              <span className="absolute left-1.5 top-1.5 flex h-5 min-w-5 items-center justify-center rounded-full border border-white/20 bg-black/55 px-1 text-[8px] font-semibold tracking-[0.06em] text-[#F3E5AB] backdrop-blur-sm">
-                0{index + 1}
-              </span>
-              <div className="absolute inset-x-1.5 bottom-2 flex min-h-[28px] items-end justify-center text-center">
-                <p className="line-clamp-2 text-[10px] font-semibold uppercase leading-[1.15] tracking-[0.04em] text-white drop-shadow-[0_2px_6px_rgba(0,0,0,0.9)]">
-                  {cat.name}
-                </p>
-              </div>
-            </div>
-          </Link>
-        </motion.div>
+        <Link key={cat.slug} href={cat.slug === "all-products" ? "/shop" : `/shop?category=${cat.slug}`} className="group relative overflow-hidden rounded-[14px] bg-[#ececec]">
+          <div className="relative aspect-[0.76] overflow-hidden">
+            <img src={image} alt={cat.name} loading="lazy" className="h-full w-full object-cover transition-transform duration-500 group-active:scale-[1.03]" />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
+            <span className="absolute left-2 top-2 text-[8px] font-black tracking-[0.14em] text-white">0{index + 1}</span>
+            <p className="absolute inset-x-2 bottom-2 text-[11px] font-bold uppercase leading-[1.05] text-white">{cat.name}</p>
+          </div>
+        </Link>
       );
     })}
   </div>
 </section>
 
-{/* MOBILE BEST SELLERS */}
-<section className="w-full border-t border-white/5 bg-[#060606] px-4 py-8 text-white lg:hidden">
-  <MobileSectionHeader label="Most loved" title="Best Sellers" href="/shop" />
-
-  <div className="grid grid-cols-2 gap-3">
-    {bestSellers.slice(0, 4).map((product, index) => (
-      <motion.div
-        key={product.id}
-        className="kovenik-mobile-product-card min-w-0 border border-white/10 bg-[#111111] p-2"
-        initial={{ opacity: 0, y: 8 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, amount: 0.1 }}
-        transition={{ duration: 0.3, delay: index * 0.03 }}
-      >
-        <ProductCard product={product as Product} index={index} />
-      </motion.div>
-    ))}
+{/* MOBILE NEW ARRIVALS — reference-style tabbed grid */}
+<section className="kovenik-mobile-luxury w-full bg-[#f7f6f2] px-4 py-8 text-[#111] lg:hidden">
+  <div className="mb-4 flex items-end justify-between">
+    <div>
+      <p className="mb-1 text-[10px] font-bold uppercase tracking-[0.22em] text-[#9b7514]">Fresh drops • SS26</p>
+      <h2 className="font-serif text-[31px] font-bold italic leading-none" style={{ fontFamily: "Bodoni MT, Didot, Times New Roman, serif" }}>New Arrivals</h2>
+    </div>
+    <Link href="/shop" className="text-[10px] font-bold uppercase tracking-[0.12em] text-[#9b7514]">Explore All →</Link>
   </div>
-</section>
-
-{/* MOBILE NEW ARRIVALS */}
-<section className="w-full border-t border-white/5 bg-[#090909] px-4 py-8 text-white lg:hidden">
-  <MobileSectionHeader
-    label="Fresh drops • SS26"
-    title="New Arrivals"
-    meta={`${filteredNewArrivals.length} ${filteredNewArrivals.length === 1 ? "piece" : "pieces"}`}
-  />
-
-  <div className="scrollbar-none -mx-4 mb-4 flex gap-2 overflow-x-auto px-4 pb-1">
+  <div className="mb-5 flex overflow-x-auto border-b border-black/10">
     {[
       { id: "all", label: "All" },
       { id: "supreme-edition", label: "Supreme" },
@@ -1219,110 +1271,76 @@ export default function HomePage() {
       { id: "the-print-club", label: "Print Club" },
     ].map((tab) => {
       const active = selectedSubCat === tab.id;
-      return (
-        <button
-          key={tab.id}
-          type="button"
-          onClick={() => setSelectedSubCat(tab.id)}
-          aria-pressed={active}
-          className={`shrink-0 rounded-full border px-4 py-2.5 text-[10px] font-semibold uppercase tracking-[0.12em] transition-colors ${
-            active
-              ? "border-[#D4AF37] bg-[#D4AF37] text-black"
-              : "border-white/10 bg-[#141414] text-neutral-300"
-          }`}
-        >
-          {tab.label}
-        </button>
-      );
+      return <button key={tab.id} type="button" onClick={() => setSelectedSubCat(tab.id)} className={`shrink-0 px-4 py-3 text-[10px] font-black uppercase tracking-[0.12em] ${active ? "border-b-2 border-[#111] text-[#111]" : "text-neutral-400"}`}>{tab.label}</button>;
     })}
   </div>
-
   {filteredNewArrivals.length > 0 ? (
     <div className="grid grid-cols-2 gap-3">
       {filteredNewArrivals.map((product, index) => (
-        <div
-          key={product.id}
-          className="kovenik-mobile-product-card min-w-0 border border-white/10 bg-[#111111] p-2"
-        >
+        <div key={product.id} className="overflow-hidden border border-[#D4AF37]/35 bg-[#0b0b0b] p-1.5 shadow-[0_8px_22px_rgba(0,0,0,0.22)]">
           <ProductCard product={product as Product} index={index} />
         </div>
       ))}
     </div>
-  ) : (
-    <div className="flex min-h-[200px] flex-col items-center justify-center border border-white/10 bg-[#111111] px-6 text-center">
-      <p className="text-[13px] text-neutral-300">No new arrivals in this collection yet.</p>
-      <button
-        type="button"
-        onClick={() => setSelectedSubCat("all")}
-        className="mt-4 rounded-full bg-[#D4AF37] px-5 py-2.5 text-[10px] font-bold uppercase tracking-[0.16em] text-black"
-      >
-        Show all new arrivals
-      </button>
-    </div>
-  )}
+  ) : <div className="bg-white px-5 py-12 text-center text-[12px] text-neutral-500">No new arrivals in this collection yet.</div>}
 </section>
 
-{/* MOBILE TRENDING — horizontal snap rail */}
-<section className="w-full border-t border-white/5 bg-[#050505] py-8 text-white lg:hidden">
-  <div className="px-4">
-    <MobileSectionHeader label="Community top picks" title="Trending Now" href="/shop" actionLabel="Discover" />
+{/* MOBILE BEST SELLERS — three-column visual rail like reference */}
+<section className="kovenik-mobile-luxury w-full bg-white py-8 text-[#111] lg:hidden">
+  <div className="mb-5 px-4">
+    <p className="mb-1 text-center text-[10px] font-bold uppercase tracking-[0.22em] text-[#9b7514]">KÖVENIK / MOST LOVED</p>
+    <h2 className="text-center font-serif text-[30px] font-bold italic leading-none" style={{ fontFamily: "Bodoni MT, Didot, Times New Roman, serif" }}>Best Sellers</h2>
   </div>
-
-  <div className="scrollbar-none flex snap-x snap-mandatory gap-3 overflow-x-auto scroll-smooth px-4 pb-1 [-webkit-overflow-scrolling:touch]">
-    {trending.map((product, index) => (
-      <div
-        key={product.id}
-        className="kovenik-mobile-product-card w-[46vw] max-w-[190px] shrink-0 snap-start border border-white/10 bg-[#111111] p-2"
-      >
-        <ProductCard product={product as Product} index={index} />
-      </div>
+  <div className="scrollbar-none flex gap-3 overflow-x-auto px-4">
+    {bestSellers.slice(0, 6).map((product, index) => (
+      <Link key={product.id} href={`/product/${product.slug}`} className="w-[36vw] max-w-[155px] shrink-0 overflow-hidden border border-[#D4AF37]/25 bg-[#0a0a0a] p-2 shadow-[0_10px_24px_rgba(0,0,0,0.28)]">
+        <div className="relative aspect-[0.78] overflow-hidden border border-[#D4AF37]/35 bg-[#111]">
+          <img src={product.images?.[0]} alt={product.name} loading="lazy" className="h-full w-full object-cover" />
+        </div>
+        <p className="mt-2 px-1 text-[8px] font-bold uppercase leading-[1.2] tracking-[0.12em] text-[#D4AF37]">{product.categoryLabel || "KÖVENIK"}</p>
+        <p className="mt-1 min-h-[28px] px-1 line-clamp-2 text-[11px] font-bold uppercase leading-[1.2]">{product.name}</p>
+        <p className="mt-1 px-1 text-[11px] font-black text-[#F5D76E]">₹{product.price}</p>
+      </Link>
     ))}
   </div>
 </section>
 
-{/* MOBILE REVIEWS */}
-<section className="w-full border-t border-white/5 bg-[#080808] py-8 text-white lg:hidden">
-  <div className="mb-5 flex items-end justify-between px-4">
-    <div>
-      <p className="mb-1.5 text-[10px] font-semibold uppercase tracking-[0.24em] text-[#D4AF37]">
-        Community
-      </p>
-      <h2
-        className="font-serif text-[30px] leading-[1.05] tracking-[-0.03em] text-[#F3E5AB]"
-        style={{ fontFamily: "Bodoni MT, Didot, Times New Roman, serif" }}
-      >
-        What They Say
-      </h2>
+{/* MOBILE DEALS / STYLE GRID — same visual rhythm as reference, using existing KÖVENIK products */}
+<section className="kovenik-mobile-luxury w-full bg-[#fffdf8] py-9 text-[#111] lg:hidden">
+  <div className="px-4">
+    <div className="mb-6 flex items-center justify-center gap-3"><span className="h-px flex-1 bg-black/15" /><h2 className="text-center font-serif text-[24px] font-bold italic" style={{ fontFamily: "Bodoni MT, Didot, Times New Roman, serif" }}>Style Worthy Drops</h2><span className="h-px flex-1 bg-black/15" /></div>
+    <div className="grid grid-cols-3 gap-3">
+      {products.slice(0, 6).map((product, index) => (
+        <Link key={`${product.id}-${index}`} href={`/product/${product.slug}`} className="block">
+          <div className="relative overflow-hidden border border-[#D4AF37] bg-[#eee]">
+            <img src={product.images?.[0]} alt={product.name} loading="lazy" className="aspect-[0.78] w-full object-cover" />
+          </div>
+          <p className="mt-2 text-center text-[10px] font-black uppercase leading-[1.1]">{product.name}</p>
+          <p className="mt-1 text-center text-[10px] font-bold text-neutral-700">₹{product.price}</p>
+        </Link>
+      ))}
     </div>
-    <Star className="mb-1 h-4 w-4 fill-[#D4AF37] text-[#D4AF37]" />
   </div>
+</section>
 
-  <div className="scrollbar-none flex snap-x snap-mandatory gap-3 overflow-x-auto px-4 [-webkit-overflow-scrolling:touch]">
+{/* MOBILE REVIEWS */}
+<section className="kovenik-mobile-luxury w-full bg-[#080808] py-9 text-white lg:hidden">
+  <div className="mb-5 px-4 text-center">
+    <p className="mb-1 text-[10px] font-bold uppercase tracking-[0.22em] text-[#D4AF37]">Community</p>
+    <h2 className="font-serif text-[30px] font-bold italic leading-none text-[#F3E5AB]" style={{ fontFamily: "Bodoni MT, Didot, Times New Roman, serif" }}>What They Say</h2>
+  </div>
+  <div className="scrollbar-none flex gap-3 overflow-x-auto px-4">
     {reviews.map((review) => (
-      <article
-        key={review.name}
-        className="w-[82vw] max-w-[340px] shrink-0 snap-start border border-[#D4AF37]/25 bg-[#111111] p-5"
-      >
-        <div className="mb-3 flex gap-1" aria-label={`${review.rating} out of 5 stars`}>
-          {Array.from({ length: review.rating }).map((_, i) => (
-            <Star key={i} className="h-3.5 w-3.5 fill-[#D4AF37] text-[#D4AF37]" />
-          ))}
-        </div>
+      <article key={review.name} className="w-[82vw] max-w-[340px] shrink-0 border border-[#D4AF37]/25 bg-[#111] p-5">
+        <div className="mb-3 flex gap-1">{Array.from({ length: review.rating }).map((_, i) => <Star key={i} className="h-3.5 w-3.5 fill-[#D4AF37] text-[#D4AF37]" />)}</div>
         <p className="text-[14px] leading-[1.6] text-neutral-200">“{review.text}”</p>
-        <div className="mt-5 border-t border-white/10 pt-4">
-          <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-white">
-            {review.name}
-          </p>
-          <p className="mt-1 text-[10px] uppercase tracking-[0.16em] text-[#D4AF37]">
-            {review.tag}
-          </p>
-        </div>
+        <div className="mt-5 border-t border-white/10 pt-4"><p className="text-[11px] font-semibold uppercase tracking-[0.12em]">{review.name}</p><p className="mt-1 text-[10px] uppercase tracking-[0.16em] text-[#D4AF37]">{review.tag}</p></div>
       </article>
     ))}
   </div>
 </section>
 
-<section className="hidden lg:block w-full bg-neutral-950 px-4 pt-10 pb-12 sm:px-6 sm:pt-14 sm:pb-16 lg:px-8 lg:pt-16 lg:pb-20">
+<section className="kovenik-mobile-category-shell hidden lg:block w-full bg-neutral-950 px-4 pt-10 pb-12 sm:px-6 sm:pt-14 sm:pb-16 lg:px-8 lg:pt-16 lg:pb-20">
   {/* ============================================================
       ARDENBY / KOVENIK — CLEAN LUXURY EDITORIAL GRID (DARK THEME)
   ============================================================ */}
@@ -1536,7 +1554,10 @@ export default function HomePage() {
         MOBILE — RESPONSIVE GRID
     ============================================================ */}
     <div className="grid grid-cols-2 gap-3.5 lg:hidden">
-      {categories.slice(0, 4).map((cat, index) => {
+      {[
+        ...categories.slice(0, 4),
+        { slug: "bottom-wear", name: "Bottom Wear" },
+      ].map((cat, index) => {
         const staticCatProduct = staticHomeProducts.find(
           (p) => p.category === cat.slug,
         );
@@ -1635,7 +1656,7 @@ export default function HomePage() {
         >
           <div>
             <p className="mb-1 text-[7px] font-bold uppercase tracking-[0.2em] text-amber-300">
-              05 / COMPLETE COLLECTION
+              06 / COMPLETE COLLECTION
             </p>
             <h3
               className="pb-0.5 pr-1 text-[25px] font-medium leading-[1.1] tracking-[-0.035em] bg-gradient-to-r from-amber-200 via-yellow-300 to-amber-500 bg-clip-text text-transparent drop-shadow-[0_2px_10px_rgba(245,158,11,0.25)]"
