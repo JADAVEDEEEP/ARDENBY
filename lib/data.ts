@@ -1,849 +1,1987 @@
 import type { Product, Review } from '@/types';
+
 const img = (url: string, w = 600, h = 750) =>
+
   `${url.split('?')[0]}?auto=compress&cs=tinysrgb&w=${w}&h=${h}&fit=crop`;
+
 const fabricImgs = [
+
   'https://images.pexels.com/photos/6276063/pexels-photo-6276063.jpeg',
+
   'https://images.pexels.com/photos/7598534/pexels-photo-7598534.jpeg',
+
   'https://images.pexels.com/photos/9654637/pexels-photo-9654637.jpeg',
+
   'https://images.pexels.com/photos/6275967/pexels-photo-6275967.jpeg',
+
 ];
+
 function makeReviews(seed: number, rating: number, count: number): Review[] {
+
   const names = ['Aarav S.', 'Rahul M.', 'Karan P.', 'Vikram R.', 'Aditya K.', 'Rohan G.', 'Arjun N.', 'Siddharth T.'];
+
   const titles = ['Great fit!', 'Premium quality', 'Worth every rupee', 'Love the fabric', 'Perfect oversized look', 'Excellent print'];
+
   const comments = [
+
     'The fabric quality is outstanding and the fit is exactly as described. Will buy again.',
+
     'Got many compliments. The oversized fit is perfect for my build.',
+
     'Print quality is top notch, does not fade after multiple washes.',
+
     'Fast delivery and great packaging. The tee feels premium.',
+
     'Exactly like the photos. The color is spot on and fabric is thick.',
+
     'Best purchase this season. Highly recommend KOVENIK.',
+
   ];
+
   const reviews: Review[] = [];
+
   const n = Math.min(count, 6);
+
   for (let i = 0; i < n; i++) {
+
     const idx = (seed + i) % names.length;
+
     reviews.push({
+
       id: `r${seed}-${i}`,
+
       author: names[idx],
+
       rating: i === 0 ? rating : Math.max(3, Math.min(5, rating + ((i % 3) - 1))),
+
       date: `2025-${String(8 - i).padStart(2, '0')}-${15 - i * 2}`,
+
       title: titles[(seed + i) % titles.length],
+
       comment: comments[(seed + i) % comments.length],
+
       verified: true,
+
     });
+
   }
+
   return reviews;
+
 }
+
 const ALL_SIZES: Product['sizes'] = ['S', 'M', 'L', 'XL', 'XXL'];
+
 export const products: Product[] = [
+
   {
+
     id: 'p1',
+
     slug: 'phantom-beige-oversized-tee',
+
     name: 'Phantom Beige Oversized Tee',
+
     category: 'supreme-edition',
+
     categoryLabel: 'Supreme Edition',
+
     fit: 'Oversized',
+
     fabric: '100% Cotton',
+
     coverage: 'Front',
+
     colors: ['Beige', 'Olive', 'Black'],
+
     sizes: ALL_SIZES,
+    variants: [
+      { id: 'p1-s-1', product_id: 'p1', size: 'S', color: 'Beige', inventory: 10, sku: 'P1-BEIGE-S' },
+      { id: 'p1-m-1', product_id: 'p1', size: 'M', color: 'Beige', inventory: 10, sku: 'P1-BEIGE-M' },
+      { id: 'p1-l-1', product_id: 'p1', size: 'L', color: 'Beige', inventory: 10, sku: 'P1-BEIGE-L' },
+      { id: 'p1-xl-1', product_id: 'p1', size: 'XL', color: 'Beige', inventory: 10, sku: 'P1-BEIGE-XL' },
+      { id: 'p1-xxl-1', product_id: 'p1', size: 'XXL', color: 'Beige', inventory: 10, sku: 'P1-BEIGE-XXL' },
+      { id: 'p1-s-2', product_id: 'p1', size: 'S', color: 'Olive', inventory: 10, sku: 'P1-OLIVE-S' },
+      { id: 'p1-m-2', product_id: 'p1', size: 'M', color: 'Olive', inventory: 10, sku: 'P1-OLIVE-M' },
+      { id: 'p1-l-2', product_id: 'p1', size: 'L', color: 'Olive', inventory: 10, sku: 'P1-OLIVE-L' },
+      { id: 'p1-xl-2', product_id: 'p1', size: 'XL', color: 'Olive', inventory: 10, sku: 'P1-OLIVE-XL' },
+      { id: 'p1-xxl-2', product_id: 'p1', size: 'XXL', color: 'Olive', inventory: 10, sku: 'P1-OLIVE-XXL' },
+      { id: 'p1-s-3', product_id: 'p1', size: 'S', color: 'Black', inventory: 10, sku: 'P1-BLACK-S' },
+      { id: 'p1-m-3', product_id: 'p1', size: 'M', color: 'Black', inventory: 10, sku: 'P1-BLACK-M' },
+      { id: 'p1-l-3', product_id: 'p1', size: 'L', color: 'Black', inventory: 10, sku: 'P1-BLACK-L' },
+      { id: 'p1-xl-3', product_id: 'p1', size: 'XL', color: 'Black', inventory: 10, sku: 'P1-BLACK-XL' },
+      { id: 'p1-xxl-3', product_id: 'p1', size: 'XXL', color: 'Black', inventory: 10, sku: 'P1-BLACK-XXL' },
+    ],
+
     images: [
+
       img('https://images.unsplash.com/photo-1503342217505-b0a15ec3261c?q=80&w=1600&auto=format&fit=crop'),
+
       img('https://images.pexels.com/photos/16485645/pexels-photo-16485645.jpeg'),
+
       img('https://images.pexels.com/photos/7643904/pexels-photo-7643904.jpeg'),
+
       img('https://images.pexels.com/photos/36942018/pexels-photo-36942018.jpeg'),
+
     ],
+
     fabricImage: fabricImgs[1],
+
     price: 549,
+
     mrp: 1499,
+
     bestPrice: 399,
+
     rating: 4.8,
+
     reviewCount: 234,
+
     reviews: makeReviews(1, 5, 234),
+
     description:
+
       'The Phantom Beige Oversized Tee is our signature drop — a boxy, relaxed silhouette in heavyweight 240 GSM cotton. Designed for those who move with intention, it pairs effortlessly with cargos or joggers for a statement look.',
+
     fabricDetails: '240 GSM | 100% Combed Cotton | Bio-Washed | Pre-Shrunk',
+
     washCare: 'Machine wash cold | Do not bleach | Tumble dry low | Iron inside out',
+
     tags: ['oversized', 'beige', 'cotton', 'minimal'],
+
     bestSeller: true,
+
     newArrival: false,
+
     trending: true,
+
     limitedEdition: false,
+
     inventory: 45,
+
   },
+
   {
+
     id: 'p2',
+
     slug: 'skyline-white-graphic-tee',
+
     name: 'Skyline White Graphic Tee',
+
     category: 'the-print-club',
+
     categoryLabel: 'The Print Club',
+
     fit: 'Regular',
+
     fabric: 'Printed',
+
     coverage: 'Front',
+
     colors: ['White', 'Black', 'Sky Blue'],
+
     sizes: ALL_SIZES,
+    variants: [
+      { id: 'p2-s-1', product_id: 'p2', size: 'S', color: 'White', inventory: 10, sku: 'P2-WHITE-S' },
+      { id: 'p2-m-1', product_id: 'p2', size: 'M', color: 'White', inventory: 10, sku: 'P2-WHITE-M' },
+      { id: 'p2-l-1', product_id: 'p2', size: 'L', color: 'White', inventory: 10, sku: 'P2-WHITE-L' },
+      { id: 'p2-xl-1', product_id: 'p2', size: 'XL', color: 'White', inventory: 10, sku: 'P2-WHITE-XL' },
+      { id: 'p2-xxl-1', product_id: 'p2', size: 'XXL', color: 'White', inventory: 10, sku: 'P2-WHITE-XXL' },
+      { id: 'p2-s-2', product_id: 'p2', size: 'S', color: 'Black', inventory: 10, sku: 'P2-BLACK-S' },
+      { id: 'p2-m-2', product_id: 'p2', size: 'M', color: 'Black', inventory: 10, sku: 'P2-BLACK-M' },
+      { id: 'p2-l-2', product_id: 'p2', size: 'L', color: 'Black', inventory: 10, sku: 'P2-BLACK-L' },
+      { id: 'p2-xl-2', product_id: 'p2', size: 'XL', color: 'Black', inventory: 10, sku: 'P2-BLACK-XL' },
+      { id: 'p2-xxl-2', product_id: 'p2', size: 'XXL', color: 'Black', inventory: 10, sku: 'P2-BLACK-XXL' },
+      { id: 'p2-s-3', product_id: 'p2', size: 'S', color: 'Sky Blue', inventory: 10, sku: 'P2-SKY-BLUE-S' },
+      { id: 'p2-m-3', product_id: 'p2', size: 'M', color: 'Sky Blue', inventory: 10, sku: 'P2-SKY-BLUE-M' },
+      { id: 'p2-l-3', product_id: 'p2', size: 'L', color: 'Sky Blue', inventory: 10, sku: 'P2-SKY-BLUE-L' },
+      { id: 'p2-xl-3', product_id: 'p2', size: 'XL', color: 'Sky Blue', inventory: 10, sku: 'P2-SKY-BLUE-XL' },
+      { id: 'p2-xxl-3', product_id: 'p2', size: 'XXL', color: 'Sky Blue', inventory: 10, sku: 'P2-SKY-BLUE-XXL' },
+    ],
+
     images: [
+
       img('https://images.pexels.com/photos/9775825/pexels-photo-9775825.jpeg'),
+
       img('https://images.pexels.com/photos/8217533/pexels-photo-8217533.jpeg'),
+
       img('https://images.pexels.com/photos/7597494/pexels-photo-7597494.jpeg'),
+
       img('https://images.pexels.com/photos/6311251/pexels-photo-6311251.jpeg'),
+
     ],
+
     fabricImage: fabricImgs[0],
+
     price: 549,
+
     mrp: 1499,
+
     bestPrice: 399,
+
     rating: 4.7,
+
     reviewCount: 189,
+
     reviews: makeReviews(2, 5, 189),
+
     description:
+
       'The Skyline White Graphic Tee features our original KOVENIK skyline print — a bold front graphic inspired by urban horizons. Crafted in 200 GSM cotton with a regular fit that sits clean on the shoulders.',
+
     fabricDetails: '200 GSM | 100% Cotton | DTF Print | Bio-Washed',
+
     washCare: 'Machine wash cold inside out | Do not bleach | Air dry',
+
     tags: ['graphic', 'white', 'printed', 'regular'],
+
     bestSeller: true,
+
     newArrival: true,
+
     trending: false,
+
     limitedEdition: false,
+
     inventory: 62,
+
   },
+
   {
+
     id: 'p3',
+
     slug: 'savage-black-back-print-tee',
+
     name: 'Savage Black Back Print Tee',
+
     category: 'the-print-club',
+
     categoryLabel: 'The Print Club',
+
     fit: 'Oversized',
+
     fabric: 'Printed',
+
     coverage: 'Back',
+
     colors: ['Black', 'Olive'],
+
     sizes: ALL_SIZES,
+    variants: [
+      { id: 'p3-s-1', product_id: 'p3', size: 'S', color: 'Black', inventory: 10, sku: 'P3-BLACK-S' },
+      { id: 'p3-m-1', product_id: 'p3', size: 'M', color: 'Black', inventory: 10, sku: 'P3-BLACK-M' },
+      { id: 'p3-l-1', product_id: 'p3', size: 'L', color: 'Black', inventory: 10, sku: 'P3-BLACK-L' },
+      { id: 'p3-xl-1', product_id: 'p3', size: 'XL', color: 'Black', inventory: 10, sku: 'P3-BLACK-XL' },
+      { id: 'p3-xxl-1', product_id: 'p3', size: 'XXL', color: 'Black', inventory: 10, sku: 'P3-BLACK-XXL' },
+      { id: 'p3-s-2', product_id: 'p3', size: 'S', color: 'Olive', inventory: 10, sku: 'P3-OLIVE-S' },
+      { id: 'p3-m-2', product_id: 'p3', size: 'M', color: 'Olive', inventory: 10, sku: 'P3-OLIVE-M' },
+      { id: 'p3-l-2', product_id: 'p3', size: 'L', color: 'Olive', inventory: 10, sku: 'P3-OLIVE-L' },
+      { id: 'p3-xl-2', product_id: 'p3', size: 'XL', color: 'Olive', inventory: 10, sku: 'P3-OLIVE-XL' },
+      { id: 'p3-xxl-2', product_id: 'p3', size: 'XXL', color: 'Olive', inventory: 10, sku: 'P3-OLIVE-XXL' },
+    ],
+
     images: [
+
       img('https://images.pexels.com/photos/36986582/pexels-photo-36986582.jpeg'),
+
       img('https://images.pexels.com/photos/37043496/pexels-photo-37043496.jpeg'),
+
       img('https://images.pexels.com/photos/37014370/pexels-photo-37014370.jpeg'),
+
       img('https://images.pexels.com/photos/37232797/pexels-photo-37232797.jpeg'),
+
     ],
+
     fabricImage: fabricImgs[3],
+
     price: 599,
+
     mrp: 1599,
+
     bestPrice: 449,
+
     rating: 4.9,
+
     reviewCount: 312,
+
     reviews: makeReviews(3, 5, 312),
+
     description:
+
       'The Savage Black Back Print Tee makes a statement from every angle. The oversized back graphic features our original Savage artwork — bold, unapologetic, and built for the streets. Heavyweight 240 GSM cotton holds its shape wash after wash.',
+
     fabricDetails: '240 GSM | 100% Combed Cotton | DTF Back Print | Pre-Shrunk',
+
     washCare: 'Machine wash cold inside out | Do not bleach | Tumble dry low',
+
     tags: ['oversized', 'black', 'back-print', 'graphic'],
+
     bestSeller: true,
+
     newArrival: false,
+
     trending: true,
+
     limitedEdition: false,
+
     inventory: 38,
+
   },
+
   {
+
     id: 'p4',
+
     slug: 'echo-olive-textured-tee',
+
     name: 'Echo Olive Textured Tee',
+
     category: 'ardenby-premium',
+
     categoryLabel: 'Kovenik Premium',
+
     fit: 'Oversized',
+
     fabric: 'Textured',
+
     coverage: 'All Over',
+
     colors: ['Olive', 'Beige', 'Black'],
+
     sizes: ALL_SIZES,
+    variants: [
+      { id: 'p4-s-1', product_id: 'p4', size: 'S', color: 'Olive', inventory: 10, sku: 'P4-OLIVE-S' },
+      { id: 'p4-m-1', product_id: 'p4', size: 'M', color: 'Olive', inventory: 10, sku: 'P4-OLIVE-M' },
+      { id: 'p4-l-1', product_id: 'p4', size: 'L', color: 'Olive', inventory: 10, sku: 'P4-OLIVE-L' },
+      { id: 'p4-xl-1', product_id: 'p4', size: 'XL', color: 'Olive', inventory: 10, sku: 'P4-OLIVE-XL' },
+      { id: 'p4-xxl-1', product_id: 'p4', size: 'XXL', color: 'Olive', inventory: 10, sku: 'P4-OLIVE-XXL' },
+      { id: 'p4-s-2', product_id: 'p4', size: 'S', color: 'Beige', inventory: 10, sku: 'P4-BEIGE-S' },
+      { id: 'p4-m-2', product_id: 'p4', size: 'M', color: 'Beige', inventory: 10, sku: 'P4-BEIGE-M' },
+      { id: 'p4-l-2', product_id: 'p4', size: 'L', color: 'Beige', inventory: 10, sku: 'P4-BEIGE-L' },
+      { id: 'p4-xl-2', product_id: 'p4', size: 'XL', color: 'Beige', inventory: 10, sku: 'P4-BEIGE-XL' },
+      { id: 'p4-xxl-2', product_id: 'p4', size: 'XXL', color: 'Beige', inventory: 10, sku: 'P4-BEIGE-XXL' },
+      { id: 'p4-s-3', product_id: 'p4', size: 'S', color: 'Black', inventory: 10, sku: 'P4-BLACK-S' },
+      { id: 'p4-m-3', product_id: 'p4', size: 'M', color: 'Black', inventory: 10, sku: 'P4-BLACK-M' },
+      { id: 'p4-l-3', product_id: 'p4', size: 'L', color: 'Black', inventory: 10, sku: 'P4-BLACK-L' },
+      { id: 'p4-xl-3', product_id: 'p4', size: 'XL', color: 'Black', inventory: 10, sku: 'P4-BLACK-XL' },
+      { id: 'p4-xxl-3', product_id: 'p4', size: 'XXL', color: 'Black', inventory: 10, sku: 'P4-BLACK-XXL' },
+    ],
+
     images: [
+
       img('https://images.pexels.com/photos/28338020/pexels-photo-28338020.jpeg'),
+
       img('https://images.pexels.com/photos/36942017/pexels-photo-36942017.jpeg'),
+
       img('https://images.pexels.com/photos/29811574/pexels-photo-29811574.jpeg'),
+
       img('https://images.pexels.com/photos/22305180/pexels-photo-22305180.jpeg'),
+
     ],
+
     fabricImage: fabricImgs[2],
+
     price: 649,
+
     mrp: 1799,
+
     bestPrice: 499,
+
     rating: 4.6,
+
     reviewCount: 156,
+
     reviews: makeReviews(4, 5, 156),
+
     description:
+
       'The Echo Olive Textured Tee brings depth and dimension with an all-over textured weave. The olive tone draws from nature, while the structured 220 GSM fabric gives a premium hand-feel that stands apart from flat cotton.',
+
     fabricDetails: '220 GSM | Textured Cotton Blend | All-Over Texture | Bio-Washed',
+
     washCare: 'Machine wash cold | Do not bleach | Air dry | Iron low',
+
     tags: ['textured', 'olive', 'oversized', 'premium'],
+
     bestSeller: false,
+
     newArrival: true,
+
     trending: true,
+
     limitedEdition: false,
+
     inventory: 29,
+
   },
+
   {
+
     id: 'p5',
+
     slug: 'titan-navy-puff-tee',
+
     name: 'Titan Navy Puff Tee',
+
     category: 'the-print-club',
+
     categoryLabel: 'The Print Club',
+
     fit: 'Oversized',
+
     fabric: 'Puff Print',
+
     coverage: 'Front',
+
     colors: ['Navy', 'Black'],
+
     sizes: ALL_SIZES,
+    variants: [
+      { id: 'p5-s-1', product_id: 'p5', size: 'S', color: 'Navy', inventory: 10, sku: 'P5-NAVY-S' },
+      { id: 'p5-m-1', product_id: 'p5', size: 'M', color: 'Navy', inventory: 10, sku: 'P5-NAVY-M' },
+      { id: 'p5-l-1', product_id: 'p5', size: 'L', color: 'Navy', inventory: 10, sku: 'P5-NAVY-L' },
+      { id: 'p5-xl-1', product_id: 'p5', size: 'XL', color: 'Navy', inventory: 10, sku: 'P5-NAVY-XL' },
+      { id: 'p5-xxl-1', product_id: 'p5', size: 'XXL', color: 'Navy', inventory: 10, sku: 'P5-NAVY-XXL' },
+      { id: 'p5-s-2', product_id: 'p5', size: 'S', color: 'Black', inventory: 10, sku: 'P5-BLACK-S' },
+      { id: 'p5-m-2', product_id: 'p5', size: 'M', color: 'Black', inventory: 10, sku: 'P5-BLACK-M' },
+      { id: 'p5-l-2', product_id: 'p5', size: 'L', color: 'Black', inventory: 10, sku: 'P5-BLACK-L' },
+      { id: 'p5-xl-2', product_id: 'p5', size: 'XL', color: 'Black', inventory: 10, sku: 'P5-BLACK-XL' },
+      { id: 'p5-xxl-2', product_id: 'p5', size: 'XXL', color: 'Black', inventory: 10, sku: 'P5-BLACK-XXL' },
+    ],
+
     images: [
+
       img('https://images.pexels.com/photos/37066864/pexels-photo-37066864.jpeg'),
+
       img('https://images.pexels.com/photos/37043496/pexels-photo-37043496.jpeg'),
+
       img('https://images.pexels.com/photos/36986582/pexels-photo-36986582.jpeg'),
+
       img('https://images.pexels.com/photos/37232797/pexels-photo-37232797.jpeg'),
+
     ],
+
     fabricImage: fabricImgs[0],
+
     price: 599,
+
     mrp: 1599,
+
     bestPrice: 449,
+
     rating: 4.7,
+
     reviewCount: 198,
+
     reviews: makeReviews(5, 5, 198),
+
     description:
+
       'The Titan Navy Puff Tee elevates the classic graphic tee with raised puff-print detailing. The tactile, 3D front graphic adds a new dimension to your fit. Navy base with a heavyweight 240 GSM body.',
+
     fabricDetails: '240 GSM | 100% Cotton | Puff Print Front | Pre-Shrunk',
+
     washCare: 'Machine wash cold inside out | Do not iron print | Air dry',
+
     tags: ['puff-print', 'navy', 'oversized', 'graphic'],
+
     bestSeller: false,
+
     newArrival: true,
+
     trending: false,
+
     limitedEdition: true,
+
     inventory: 22,
+
   },
+
   {
+
     id: 'p6',
+
     slug: 'midnight-royal-oversized-tee',
+
     name: 'Midnight Royal Oversized Tee',
+
     category: 'supreme-edition',
+
     categoryLabel: 'Supreme Edition',
+
     fit: 'Oversized',
+
     fabric: '100% Cotton',
+
     coverage: 'Front',
+
     colors: ['Royal Blue', 'Black'],
+
     sizes: ALL_SIZES,
+    variants: [
+      { id: 'p6-s-1', product_id: 'p6', size: 'S', color: 'Royal Blue', inventory: 10, sku: 'P6-ROYAL-BLUE-S' },
+      { id: 'p6-m-1', product_id: 'p6', size: 'M', color: 'Royal Blue', inventory: 10, sku: 'P6-ROYAL-BLUE-M' },
+      { id: 'p6-l-1', product_id: 'p6', size: 'L', color: 'Royal Blue', inventory: 10, sku: 'P6-ROYAL-BLUE-L' },
+      { id: 'p6-xl-1', product_id: 'p6', size: 'XL', color: 'Royal Blue', inventory: 10, sku: 'P6-ROYAL-BLUE-XL' },
+      { id: 'p6-xxl-1', product_id: 'p6', size: 'XXL', color: 'Royal Blue', inventory: 10, sku: 'P6-ROYAL-BLUE-XXL' },
+      { id: 'p6-s-2', product_id: 'p6', size: 'S', color: 'Black', inventory: 10, sku: 'P6-BLACK-S' },
+      { id: 'p6-m-2', product_id: 'p6', size: 'M', color: 'Black', inventory: 10, sku: 'P6-BLACK-M' },
+      { id: 'p6-l-2', product_id: 'p6', size: 'L', color: 'Black', inventory: 10, sku: 'P6-BLACK-L' },
+      { id: 'p6-xl-2', product_id: 'p6', size: 'XL', color: 'Black', inventory: 10, sku: 'P6-BLACK-XL' },
+      { id: 'p6-xxl-2', product_id: 'p6', size: 'XXL', color: 'Black', inventory: 10, sku: 'P6-BLACK-XXL' },
+    ],
+
     images: [
+
       img('https://images.pexels.com/photos/16485645/pexels-photo-16485645.jpeg'),
+
       img('https://images.pexels.com/photos/18584221/pexels-photo-18584221.jpeg'),
+
       img('https://images.pexels.com/photos/7643904/pexels-photo-7643904.jpeg'),
+
       img('https://images.pexels.com/photos/36942018/pexels-photo-36942018.jpeg'),
+
     ],
+
     fabricImage: fabricImgs[0],
+
     price: 549,
+
     mrp: 1499,
+
     bestPrice: 399,
+
     rating: 4.8,
+
     reviewCount: 221,
+
     reviews: makeReviews(6, 5, 221),
+
     description:
+
       'The Midnight Royal Oversized Tee in deep royal blue is a wardrobe essential with attitude. The boxy drop-shoulder cut and 240 GSM heavyweight cotton create a structured drape that holds its shape.',
+
     fabricDetails: '240 GSM | 100% Combed Cotton | Bio-Washed | Pre-Shrunk',
+
     washCare: 'Machine wash cold | Do not bleach | Tumble dry low | Iron inside out',
+
     tags: ['oversized', 'royal-blue', 'cotton', 'minimal'],
+
     bestSeller: true,
+
     newArrival: false,
+
     trending: false,
+
     limitedEdition: false,
+
     inventory: 51,
+
   },
+
   {
+
     id: 'p7',
+
     slug: 'nomad-beige-graphic-tee',
+
     name: 'Nomad Beige Graphic Tee',
+
     category: 'epic-thread',
+
     categoryLabel: 'Epic Thread',
+
     fit: 'Regular',
+
     fabric: 'Printed',
+
     coverage: 'Front',
+
     colors: ['Beige', 'White'],
+
     sizes: ALL_SIZES,
+    variants: [
+      { id: 'p7-s-1', product_id: 'p7', size: 'S', color: 'Beige', inventory: 10, sku: 'P7-BEIGE-S' },
+      { id: 'p7-m-1', product_id: 'p7', size: 'M', color: 'Beige', inventory: 10, sku: 'P7-BEIGE-M' },
+      { id: 'p7-l-1', product_id: 'p7', size: 'L', color: 'Beige', inventory: 10, sku: 'P7-BEIGE-L' },
+      { id: 'p7-xl-1', product_id: 'p7', size: 'XL', color: 'Beige', inventory: 10, sku: 'P7-BEIGE-XL' },
+      { id: 'p7-xxl-1', product_id: 'p7', size: 'XXL', color: 'Beige', inventory: 10, sku: 'P7-BEIGE-XXL' },
+      { id: 'p7-s-2', product_id: 'p7', size: 'S', color: 'White', inventory: 10, sku: 'P7-WHITE-S' },
+      { id: 'p7-m-2', product_id: 'p7', size: 'M', color: 'White', inventory: 10, sku: 'P7-WHITE-M' },
+      { id: 'p7-l-2', product_id: 'p7', size: 'L', color: 'White', inventory: 10, sku: 'P7-WHITE-L' },
+      { id: 'p7-xl-2', product_id: 'p7', size: 'XL', color: 'White', inventory: 10, sku: 'P7-WHITE-XL' },
+      { id: 'p7-xxl-2', product_id: 'p7', size: 'XXL', color: 'White', inventory: 10, sku: 'P7-WHITE-XXL' },
+    ],
+
     images: [
+
       img('https://images.pexels.com/photos/36942017/pexels-photo-36942017.jpeg'),
+
       img('https://images.pexels.com/photos/37014370/pexels-photo-37014370.jpeg'),
+
       img('https://images.pexels.com/photos/28338020/pexels-photo-28338020.jpeg'),
+
       img('https://images.pexels.com/photos/36942018/pexels-photo-36942018.jpeg'),
+
     ],
+
     fabricImage: fabricImgs[1],
+
     price: 549,
+
     mrp: 1499,
+
     bestPrice: 399,
+
     rating: 4.5,
+
     reviewCount: 143,
+
     reviews: makeReviews(7, 4, 143),
+
     description:
+
       'The Nomad Beige Graphic Tee captures the spirit of wander. A subtle front graphic in earthy tones sits on 200 GSM cotton with a regular fit — understated, versatile, and ready for the road.',
+
     fabricDetails: '200 GSM | 100% Cotton | Screen Print | Bio-Washed',
+
     washCare: 'Machine wash cold inside out | Do not bleach | Air dry',
+
     tags: ['graphic', 'beige', 'printed', 'regular'],
+
     bestSeller: false,
+
     newArrival: true,
+
     trending: true,
+
     limitedEdition: false,
+
     inventory: 67,
+
   },
+
   {
+
     id: 'p8',
+
     slug: 'motion-white-premium-tee',
+
     name: 'Motion White Premium Tee',
+
     category: 'ardenby-premium',
+
     categoryLabel: 'Kovenik Premium',
+
     fit: 'Regular',
+
     fabric: '100% Cotton',
+
     coverage: 'Front',
+
     colors: ['White', 'Sky Blue'],
+
     sizes: ALL_SIZES,
+    variants: [
+      { id: 'p8-s-1', product_id: 'p8', size: 'S', color: 'White', inventory: 10, sku: 'P8-WHITE-S' },
+      { id: 'p8-m-1', product_id: 'p8', size: 'M', color: 'White', inventory: 10, sku: 'P8-WHITE-M' },
+      { id: 'p8-l-1', product_id: 'p8', size: 'L', color: 'White', inventory: 10, sku: 'P8-WHITE-L' },
+      { id: 'p8-xl-1', product_id: 'p8', size: 'XL', color: 'White', inventory: 10, sku: 'P8-WHITE-XL' },
+      { id: 'p8-xxl-1', product_id: 'p8', size: 'XXL', color: 'White', inventory: 10, sku: 'P8-WHITE-XXL' },
+      { id: 'p8-s-2', product_id: 'p8', size: 'S', color: 'Sky Blue', inventory: 10, sku: 'P8-SKY-BLUE-S' },
+      { id: 'p8-m-2', product_id: 'p8', size: 'M', color: 'Sky Blue', inventory: 10, sku: 'P8-SKY-BLUE-M' },
+      { id: 'p8-l-2', product_id: 'p8', size: 'L', color: 'Sky Blue', inventory: 10, sku: 'P8-SKY-BLUE-L' },
+      { id: 'p8-xl-2', product_id: 'p8', size: 'XL', color: 'Sky Blue', inventory: 10, sku: 'P8-SKY-BLUE-XL' },
+      { id: 'p8-xxl-2', product_id: 'p8', size: 'XXL', color: 'Sky Blue', inventory: 10, sku: 'P8-SKY-BLUE-XXL' },
+    ],
+
     images: [
+
       img('https://images.pexels.com/photos/9775824/pexels-photo-9775824.jpeg'),
+
       img('https://images.pexels.com/photos/8346219/pexels-photo-8346219.jpeg'),
+
       img('https://images.pexels.com/photos/24779116/pexels-photo-24779116.jpeg'),
+
       img('https://images.pexels.com/photos/28900431/pexels-photo-28900431.jpeg'),
+
     ],
+
     fabricImage: fabricImgs[0],
+
     price: 649,
+
     mrp: 1799,
+
     bestPrice: 499,
+
     rating: 4.7,
+
     reviewCount: 167,
+
     reviews: makeReviews(8, 5, 167),
+
     description:
+
       'The Motion White Premium Tee is cut from 220 GSM long-staple cotton for a smoother, softer hand-feel. The regular fit sits clean and the bright white base works from office to evening.',
+
     fabricDetails: '220 GSM | Long-Staple Cotton | Combed | Bio-Washed',
+
     washCare: 'Machine wash cold | Do not bleach | Air dry | Iron medium',
+
     tags: ['premium', 'white', 'cotton', 'regular'],
+
     bestSeller: false,
+
     newArrival: false,
+
     trending: false,
+
     limitedEdition: false,
+
     inventory: 44,
+
   },
+
   {
+
     id: 'p9',
+
     slug: 'desert-black-graphic-tee',
+
     name: 'Desert Black Graphic Tee',
+
     category: 'epic-thread',
+
     categoryLabel: 'Epic Thread',
+
     fit: 'Oversized',
+
     fabric: 'Printed',
+
     coverage: 'Front',
+
     colors: ['Black', 'Beige'],
+
     sizes: ALL_SIZES,
+    variants: [
+      { id: 'p9-s-1', product_id: 'p9', size: 'S', color: 'Black', inventory: 10, sku: 'P9-BLACK-S' },
+      { id: 'p9-m-1', product_id: 'p9', size: 'M', color: 'Black', inventory: 10, sku: 'P9-BLACK-M' },
+      { id: 'p9-l-1', product_id: 'p9', size: 'L', color: 'Black', inventory: 10, sku: 'P9-BLACK-L' },
+      { id: 'p9-xl-1', product_id: 'p9', size: 'XL', color: 'Black', inventory: 10, sku: 'P9-BLACK-XL' },
+      { id: 'p9-xxl-1', product_id: 'p9', size: 'XXL', color: 'Black', inventory: 10, sku: 'P9-BLACK-XXL' },
+      { id: 'p9-s-2', product_id: 'p9', size: 'S', color: 'Beige', inventory: 10, sku: 'P9-BEIGE-S' },
+      { id: 'p9-m-2', product_id: 'p9', size: 'M', color: 'Beige', inventory: 10, sku: 'P9-BEIGE-M' },
+      { id: 'p9-l-2', product_id: 'p9', size: 'L', color: 'Beige', inventory: 10, sku: 'P9-BEIGE-L' },
+      { id: 'p9-xl-2', product_id: 'p9', size: 'XL', color: 'Beige', inventory: 10, sku: 'P9-BEIGE-XL' },
+      { id: 'p9-xxl-2', product_id: 'p9', size: 'XXL', color: 'Beige', inventory: 10, sku: 'P9-BEIGE-XXL' },
+    ],
+
     images: [
+
       img('https://images.pexels.com/photos/37043496/pexels-photo-37043496.jpeg'),
+
       img('https://images.pexels.com/photos/36986582/pexels-photo-36986582.jpeg'),
+
       img('https://images.pexels.com/photos/37066864/pexels-photo-37066864.jpeg'),
+
       img('https://images.pexels.com/photos/37232797/pexels-photo-37232797.jpeg'),
+
     ],
+
     fabricImage: fabricImgs[3],
+
     price: 599,
+
     mrp: 1599,
+
     bestPrice: 449,
+
     rating: 4.6,
+
     reviewCount: 178,
+
     reviews: makeReviews(9, 5, 178),
+
     description:
+
       'The Desert Black Graphic Tee features an original KOVENIK desert graphic — a minimalist line-art front print on 240 GSM black cotton. Oversized fit with a structured drape.',
+
     fabricDetails: '240 GSM | 100% Cotton | DTF Print | Pre-Shrunk',
+
     washCare: 'Machine wash cold inside out | Do not bleach | Tumble dry low',
+
     tags: ['graphic', 'black', 'oversized', 'printed'],
+
     bestSeller: true,
+
     newArrival: false,
+
     trending: true,
+
     limitedEdition: false,
+
     inventory: 33,
+
   },
+
   {
+
     id: 'p10',
+
     slug: 'urban-red-typography-tee',
+
     name: 'Urban Red Typography Tee',
+
     category: 'the-print-club',
+
     categoryLabel: 'The Print Club',
+
     fit: 'Oversized',
+
     fabric: 'Printed',
+
     coverage: 'Front',
+
     colors: ['Red', 'Black'],
+
     sizes: ALL_SIZES,
+    variants: [
+      { id: 'p10-s-1', product_id: 'p10', size: 'S', color: 'Red', inventory: 10, sku: 'P10-RED-S' },
+      { id: 'p10-m-1', product_id: 'p10', size: 'M', color: 'Red', inventory: 10, sku: 'P10-RED-M' },
+      { id: 'p10-l-1', product_id: 'p10', size: 'L', color: 'Red', inventory: 10, sku: 'P10-RED-L' },
+      { id: 'p10-xl-1', product_id: 'p10', size: 'XL', color: 'Red', inventory: 10, sku: 'P10-RED-XL' },
+      { id: 'p10-xxl-1', product_id: 'p10', size: 'XXL', color: 'Red', inventory: 10, sku: 'P10-RED-XXL' },
+      { id: 'p10-s-2', product_id: 'p10', size: 'S', color: 'Black', inventory: 10, sku: 'P10-BLACK-S' },
+      { id: 'p10-m-2', product_id: 'p10', size: 'M', color: 'Black', inventory: 10, sku: 'P10-BLACK-M' },
+      { id: 'p10-l-2', product_id: 'p10', size: 'L', color: 'Black', inventory: 10, sku: 'P10-BLACK-L' },
+      { id: 'p10-xl-2', product_id: 'p10', size: 'XL', color: 'Black', inventory: 10, sku: 'P10-BLACK-XL' },
+      { id: 'p10-xxl-2', product_id: 'p10', size: 'XXL', color: 'Black', inventory: 10, sku: 'P10-BLACK-XXL' },
+    ],
+
     images: [
+
       img('https://images.pexels.com/photos/29652516/pexels-photo-29652516.jpeg'),
+
       img('https://images.pexels.com/photos/10801614/pexels-photo-10801614.jpeg'),
+
       img('https://images.pexels.com/photos/29600851/pexels-photo-29600851.jpeg'),
+
       img('https://images.pexels.com/photos/29817648/pexels-photo-29817648.jpeg'),
+
     ],
+
     fabricImage: fabricImgs[0],
+
     price: 599,
+
     mrp: 1599,
+
     bestPrice: 449,
+
     rating: 4.5,
+
     reviewCount: 134,
+
     reviews: makeReviews(10, 4, 134),
+
     description:
+
       'The Urban Red Typography Tee makes a bold statement with a typographic front print in red. The 240 GSM oversized body gives a structured, fashion-forward silhouette.',
+
     fabricDetails: '240 GSM | 100% Cotton | Typography Print | Pre-Shrunk',
+
     washCare: 'Machine wash cold inside out | Do not bleach | Air dry',
+
     tags: ['typography', 'red', 'oversized', 'printed'],
+
     bestSeller: false,
+
     newArrival: true,
+
     trending: false,
+
     limitedEdition: false,
+
     inventory: 41,
+
   },
+
   {
+
     id: 'p11',
+
     slug: 'tokyo-blue-oversized-tee',
+
     name: 'Tokyo Blue Oversized Tee',
+
     category: 'supreme-edition',
+
     categoryLabel: 'Supreme Edition',
+
     fit: 'Oversized',
+
     fabric: '100% Cotton',
+
     coverage: 'Front',
+
     colors: ['Sky Blue', 'Navy'],
+
     sizes: ALL_SIZES,
+    variants: [
+      { id: 'p11-s-1', product_id: 'p11', size: 'S', color: 'Sky Blue', inventory: 10, sku: 'P11-SKY-BLUE-S' },
+      { id: 'p11-m-1', product_id: 'p11', size: 'M', color: 'Sky Blue', inventory: 10, sku: 'P11-SKY-BLUE-M' },
+      { id: 'p11-l-1', product_id: 'p11', size: 'L', color: 'Sky Blue', inventory: 10, sku: 'P11-SKY-BLUE-L' },
+      { id: 'p11-xl-1', product_id: 'p11', size: 'XL', color: 'Sky Blue', inventory: 10, sku: 'P11-SKY-BLUE-XL' },
+      { id: 'p11-xxl-1', product_id: 'p11', size: 'XXL', color: 'Sky Blue', inventory: 10, sku: 'P11-SKY-BLUE-XXL' },
+      { id: 'p11-s-2', product_id: 'p11', size: 'S', color: 'Navy', inventory: 10, sku: 'P11-NAVY-S' },
+      { id: 'p11-m-2', product_id: 'p11', size: 'M', color: 'Navy', inventory: 10, sku: 'P11-NAVY-M' },
+      { id: 'p11-l-2', product_id: 'p11', size: 'L', color: 'Navy', inventory: 10, sku: 'P11-NAVY-L' },
+      { id: 'p11-xl-2', product_id: 'p11', size: 'XL', color: 'Navy', inventory: 10, sku: 'P11-NAVY-XL' },
+      { id: 'p11-xxl-2', product_id: 'p11', size: 'XXL', color: 'Navy', inventory: 10, sku: 'P11-NAVY-XXL' },
+    ],
+
     images: [
+
       img('https://images.pexels.com/photos/8960117/pexels-photo-8960117.jpeg'),
+
       img('https://images.pexels.com/photos/16485645/pexels-photo-16485645.jpeg'),
+
       img('https://images.pexels.com/photos/18584221/pexels-photo-18584221.jpeg'),
+
       img('https://images.pexels.com/photos/7643904/pexels-photo-7643904.jpeg'),
+
     ],
+
     fabricImage: fabricImgs[0],
+
     price: 549,
+
     mrp: 1499,
+
     bestPrice: 399,
+
     rating: 4.7,
+
     reviewCount: 201,
+
     reviews: makeReviews(11, 5, 201),
+
     description:
+
       'The Tokyo Blue Oversized Tee brings a clean sky-blue tone to our signature oversized silhouette. 240 GSM heavyweight cotton with a drop-shoulder cut for that structured, premium drape.',
+
     fabricDetails: '240 GSM | 100% Combed Cotton | Bio-Washed | Pre-Shrunk',
+
     washCare: 'Machine wash cold | Do not bleach | Tumble dry low | Iron inside out',
+
     tags: ['oversized', 'sky-blue', 'cotton', 'minimal'],
+
     bestSeller: true,
+
     newArrival: false,
+
     trending: false,
+
     limitedEdition: false,
+
     inventory: 48,
+
   },
+
   {
+
     id: 'p12',
+
     slug: 'ghost-lilac-premium-tee',
+
     name: 'Ghost Lilac Premium Tee',
+
     category: 'ardenby-premium',
+
     categoryLabel: 'Kovenik Premium',
+
     fit: 'Regular',
+
     fabric: '100% Cotton',
+
     coverage: 'Front',
+
     colors: ['Lilac', 'White'],
+
     sizes: ALL_SIZES,
+    variants: [
+      { id: 'p12-s-1', product_id: 'p12', size: 'S', color: 'Lilac', inventory: 10, sku: 'P12-LILAC-S' },
+      { id: 'p12-m-1', product_id: 'p12', size: 'M', color: 'Lilac', inventory: 10, sku: 'P12-LILAC-M' },
+      { id: 'p12-l-1', product_id: 'p12', size: 'L', color: 'Lilac', inventory: 10, sku: 'P12-LILAC-L' },
+      { id: 'p12-xl-1', product_id: 'p12', size: 'XL', color: 'Lilac', inventory: 10, sku: 'P12-LILAC-XL' },
+      { id: 'p12-xxl-1', product_id: 'p12', size: 'XXL', color: 'Lilac', inventory: 10, sku: 'P12-LILAC-XXL' },
+      { id: 'p12-s-2', product_id: 'p12', size: 'S', color: 'White', inventory: 10, sku: 'P12-WHITE-S' },
+      { id: 'p12-m-2', product_id: 'p12', size: 'M', color: 'White', inventory: 10, sku: 'P12-WHITE-M' },
+      { id: 'p12-l-2', product_id: 'p12', size: 'L', color: 'White', inventory: 10, sku: 'P12-WHITE-L' },
+      { id: 'p12-xl-2', product_id: 'p12', size: 'XL', color: 'White', inventory: 10, sku: 'P12-WHITE-XL' },
+      { id: 'p12-xxl-2', product_id: 'p12', size: 'XXL', color: 'White', inventory: 10, sku: 'P12-WHITE-XXL' },
+    ],
+
     images: [
+
       img('https://images.pexels.com/photos/9558769/pexels-photo-9558769.jpeg'),
+
       img('https://images.pexels.com/photos/9775825/pexels-photo-9775825.jpeg'),
+
       img('https://images.pexels.com/photos/8217533/pexels-photo-8217533.jpeg'),
+
       img('https://images.pexels.com/photos/7597494/pexels-photo-7597494.jpeg'),
+
     ],
+
     fabricImage: fabricImgs[0],
+
     price: 649,
+
     mrp: 1799,
+
     bestPrice: 499,
+
     rating: 4.6,
+
     reviewCount: 112,
+
     reviews: makeReviews(12, 5, 112),
+
     description:
+
       'The Ghost Lilac Premium Tee is a soft, standout piece in lilac. Cut from 220 GSM long-staple cotton with a regular fit — a fresh, versatile tone for the modern wardrobe.',
+
     fabricDetails: '220 GSM | Long-Staple Cotton | Combed | Bio-Washed',
+
     washCare: 'Machine wash cold | Do not bleach | Air dry | Iron medium',
+
     tags: ['premium', 'lilac', 'cotton', 'regular'],
+
     bestSeller: false,
+
     newArrival: true,
+
     trending: true,
+
     limitedEdition: false,
+
     inventory: 36,
+
   },
+
   {
+
     id: 'p13',
+
     slug: 'warning-green-textured-tee',
+
     name: 'Warning Green Textured Tee',
+
     category: 'ardenby-premium',
+
     categoryLabel: 'Kovenik Premium',
+
     fit: 'Oversized',
+
     fabric: 'Textured',
+
     coverage: 'All Over',
+
     colors: ['Green', 'Olive', 'Black'],
+
     sizes: ALL_SIZES,
+    variants: [
+      { id: 'p13-s-1', product_id: 'p13', size: 'S', color: 'Green', inventory: 10, sku: 'P13-GREEN-S' },
+      { id: 'p13-m-1', product_id: 'p13', size: 'M', color: 'Green', inventory: 10, sku: 'P13-GREEN-M' },
+      { id: 'p13-l-1', product_id: 'p13', size: 'L', color: 'Green', inventory: 10, sku: 'P13-GREEN-L' },
+      { id: 'p13-xl-1', product_id: 'p13', size: 'XL', color: 'Green', inventory: 10, sku: 'P13-GREEN-XL' },
+      { id: 'p13-xxl-1', product_id: 'p13', size: 'XXL', color: 'Green', inventory: 10, sku: 'P13-GREEN-XXL' },
+      { id: 'p13-s-2', product_id: 'p13', size: 'S', color: 'Olive', inventory: 10, sku: 'P13-OLIVE-S' },
+      { id: 'p13-m-2', product_id: 'p13', size: 'M', color: 'Olive', inventory: 10, sku: 'P13-OLIVE-M' },
+      { id: 'p13-l-2', product_id: 'p13', size: 'L', color: 'Olive', inventory: 10, sku: 'P13-OLIVE-L' },
+      { id: 'p13-xl-2', product_id: 'p13', size: 'XL', color: 'Olive', inventory: 10, sku: 'P13-OLIVE-XL' },
+      { id: 'p13-xxl-2', product_id: 'p13', size: 'XXL', color: 'Olive', inventory: 10, sku: 'P13-OLIVE-XXL' },
+      { id: 'p13-s-3', product_id: 'p13', size: 'S', color: 'Black', inventory: 10, sku: 'P13-BLACK-S' },
+      { id: 'p13-m-3', product_id: 'p13', size: 'M', color: 'Black', inventory: 10, sku: 'P13-BLACK-M' },
+      { id: 'p13-l-3', product_id: 'p13', size: 'L', color: 'Black', inventory: 10, sku: 'P13-BLACK-L' },
+      { id: 'p13-xl-3', product_id: 'p13', size: 'XL', color: 'Black', inventory: 10, sku: 'P13-BLACK-XL' },
+      { id: 'p13-xxl-3', product_id: 'p13', size: 'XXL', color: 'Black', inventory: 10, sku: 'P13-BLACK-XXL' },
+    ],
+
     images: [
+
       img('https://images.pexels.com/photos/28338020/pexels-photo-28338020.jpeg'),
+
       img('https://images.pexels.com/photos/36942017/pexels-photo-36942017.jpeg'),
+
       img('https://images.pexels.com/photos/29811574/pexels-photo-29811574.jpeg'),
+
       img('https://images.pexels.com/photos/22305180/pexels-photo-22305180.jpeg'),
+
     ],
+
     fabricImage: fabricImgs[2],
+
     price: 649,
+
     mrp: 1799,
+
     bestPrice: 499,
+
     rating: 4.5,
+
     reviewCount: 98,
+
     reviews: makeReviews(13, 4, 98),
+
     description:
+
       'The Warning Green Textured Tee brings an all-over textured weave in a bold green tone. The 220 GSM structured fabric and oversized fit create a premium, tactile piece that stands out.',
+
     fabricDetails: '220 GSM | Textured Cotton Blend | All-Over Texture | Bio-Washed',
+
     washCare: 'Machine wash cold | Do not bleach | Air dry | Iron low',
+
     tags: ['textured', 'green', 'oversized', 'premium'],
+
     bestSeller: false,
+
     newArrival: false,
+
     trending: false,
+
     limitedEdition: true,
+
     inventory: 19,
+
   },
+
   {
+
     id: 'p14',
+
     slug: 'wicked-white-textured-tee',
+
     name: 'Wicked White Textured Tee',
+
     category: 'ardenby-premium',
+
     categoryLabel: 'Kovenik Premium',
+
     fit: 'Oversized',
+
     fabric: 'Textured',
+
     coverage: 'All Over',
+
     colors: ['White', 'Beige'],
+
     sizes: ALL_SIZES,
+    variants: [
+      { id: 'p14-s-1', product_id: 'p14', size: 'S', color: 'White', inventory: 10, sku: 'P14-WHITE-S' },
+      { id: 'p14-m-1', product_id: 'p14', size: 'M', color: 'White', inventory: 10, sku: 'P14-WHITE-M' },
+      { id: 'p14-l-1', product_id: 'p14', size: 'L', color: 'White', inventory: 10, sku: 'P14-WHITE-L' },
+      { id: 'p14-xl-1', product_id: 'p14', size: 'XL', color: 'White', inventory: 10, sku: 'P14-WHITE-XL' },
+      { id: 'p14-xxl-1', product_id: 'p14', size: 'XXL', color: 'White', inventory: 10, sku: 'P14-WHITE-XXL' },
+      { id: 'p14-s-2', product_id: 'p14', size: 'S', color: 'Beige', inventory: 10, sku: 'P14-BEIGE-S' },
+      { id: 'p14-m-2', product_id: 'p14', size: 'M', color: 'Beige', inventory: 10, sku: 'P14-BEIGE-M' },
+      { id: 'p14-l-2', product_id: 'p14', size: 'L', color: 'Beige', inventory: 10, sku: 'P14-BEIGE-L' },
+      { id: 'p14-xl-2', product_id: 'p14', size: 'XL', color: 'Beige', inventory: 10, sku: 'P14-BEIGE-XL' },
+      { id: 'p14-xxl-2', product_id: 'p14', size: 'XXL', color: 'Beige', inventory: 10, sku: 'P14-BEIGE-XXL' },
+    ],
+
     images: [
+
       img('https://images.pexels.com/photos/9775825/pexels-photo-9775825.jpeg'),
+
       img('https://images.pexels.com/photos/24779116/pexels-photo-24779116.jpeg'),
+
       img('https://images.pexels.com/photos/8346219/pexels-photo-8346219.jpeg'),
+
       img('https://images.pexels.com/photos/28900431/pexels-photo-28900431.jpeg'),
+
     ],
+
     fabricImage: fabricImgs[0],
+
     price: 649,
+
     mrp: 1799,
+
     bestPrice: 499,
+
     rating: 4.7,
+
     reviewCount: 145,
+
     reviews: makeReviews(14, 5, 145),
+
     description:
+
       'The Wicked White Textured Tee features an all-over textured weave in crisp white. The 220 GSM fabric adds dimension and structure to the oversized silhouette — a refined take on the classic white tee.',
+
     fabricDetails: '220 GSM | Textured Cotton Blend | All-Over Texture | Bio-Washed',
+
     washCare: 'Machine wash cold | Do not bleach | Air dry | Iron low',
+
     tags: ['textured', 'white', 'oversized', 'premium'],
+
     bestSeller: true,
+
     newArrival: false,
+
     trending: false,
+
     limitedEdition: false,
+
     inventory: 52,
+
   },
+
   {
+
     id: 'p15',
+
     slug: 'legacy-beige-premium-tee',
+
     name: 'Legacy Beige Premium Tee',
+
     category: 'ardenby-premium',
+
     categoryLabel: 'Kovenik Premium',
+
     fit: 'Regular',
+
     fabric: '100% Cotton',
+
     coverage: 'Front',
+
     colors: ['Beige', 'Olive', 'White'],
+
     sizes: ALL_SIZES,
+    variants: [
+      { id: 'p15-s-1', product_id: 'p15', size: 'S', color: 'Beige', inventory: 10, sku: 'P15-BEIGE-S' },
+      { id: 'p15-m-1', product_id: 'p15', size: 'M', color: 'Beige', inventory: 10, sku: 'P15-BEIGE-M' },
+      { id: 'p15-l-1', product_id: 'p15', size: 'L', color: 'Beige', inventory: 10, sku: 'P15-BEIGE-L' },
+      { id: 'p15-xl-1', product_id: 'p15', size: 'XL', color: 'Beige', inventory: 10, sku: 'P15-BEIGE-XL' },
+      { id: 'p15-xxl-1', product_id: 'p15', size: 'XXL', color: 'Beige', inventory: 10, sku: 'P15-BEIGE-XXL' },
+      { id: 'p15-s-2', product_id: 'p15', size: 'S', color: 'Olive', inventory: 10, sku: 'P15-OLIVE-S' },
+      { id: 'p15-m-2', product_id: 'p15', size: 'M', color: 'Olive', inventory: 10, sku: 'P15-OLIVE-M' },
+      { id: 'p15-l-2', product_id: 'p15', size: 'L', color: 'Olive', inventory: 10, sku: 'P15-OLIVE-L' },
+      { id: 'p15-xl-2', product_id: 'p15', size: 'XL', color: 'Olive', inventory: 10, sku: 'P15-OLIVE-XL' },
+      { id: 'p15-xxl-2', product_id: 'p15', size: 'XXL', color: 'Olive', inventory: 10, sku: 'P15-OLIVE-XXL' },
+      { id: 'p15-s-3', product_id: 'p15', size: 'S', color: 'White', inventory: 10, sku: 'P15-WHITE-S' },
+      { id: 'p15-m-3', product_id: 'p15', size: 'M', color: 'White', inventory: 10, sku: 'P15-WHITE-M' },
+      { id: 'p15-l-3', product_id: 'p15', size: 'L', color: 'White', inventory: 10, sku: 'P15-WHITE-L' },
+      { id: 'p15-xl-3', product_id: 'p15', size: 'XL', color: 'White', inventory: 10, sku: 'P15-WHITE-XL' },
+      { id: 'p15-xxl-3', product_id: 'p15', size: 'XXL', color: 'White', inventory: 10, sku: 'P15-WHITE-XXL' },
+    ],
+
     images: [
+
       img('https://images.pexels.com/photos/36942017/pexels-photo-36942017.jpeg'),
+
       img('https://images.pexels.com/photos/28338020/pexels-photo-28338020.jpeg'),
+
       img('https://images.pexels.com/photos/36942018/pexels-photo-36942018.jpeg'),
+
       img('https://images.pexels.com/photos/37014370/pexels-photo-37014370.jpeg'),
+
     ],
+
     fabricImage: fabricImgs[1],
+
     price: 649,
+
     mrp: 1799,
+
     bestPrice: 499,
+
     rating: 4.8,
+
     reviewCount: 187,
+
     reviews: makeReviews(15, 5, 187),
+
     description:
+
       'The Legacy Beige Premium Tee is a timeless essential in warm beige. 220 GSM long-staple cotton with a regular fit — the kind of tee that gets better with every wear.',
+
     fabricDetails: '220 GSM | Long-Staple Cotton | Combed | Bio-Washed',
+
     washCare: 'Machine wash cold | Do not bleach | Air dry | Iron medium',
+
     tags: ['premium', 'beige', 'cotton', 'regular'],
+
     bestSeller: false,
+
     newArrival: false,
+
     trending: true,
+
     limitedEdition: false,
+
     inventory: 39,
+
   },
+
   {
+
     id: 'p16',
+
     slug: 'storm-black-graphic-tee',
+
     name: 'Storm Black Graphic Tee',
+
     category: 'epic-thread',
+
     categoryLabel: 'Epic Thread',
+
     fit: 'Oversized',
+
     fabric: 'Printed',
+
     coverage: 'Front',
+
     colors: ['Black', 'Navy'],
+
     sizes: ALL_SIZES,
+    variants: [
+      { id: 'p16-s-1', product_id: 'p16', size: 'S', color: 'Black', inventory: 10, sku: 'P16-BLACK-S' },
+      { id: 'p16-m-1', product_id: 'p16', size: 'M', color: 'Black', inventory: 10, sku: 'P16-BLACK-M' },
+      { id: 'p16-l-1', product_id: 'p16', size: 'L', color: 'Black', inventory: 10, sku: 'P16-BLACK-L' },
+      { id: 'p16-xl-1', product_id: 'p16', size: 'XL', color: 'Black', inventory: 10, sku: 'P16-BLACK-XL' },
+      { id: 'p16-xxl-1', product_id: 'p16', size: 'XXL', color: 'Black', inventory: 10, sku: 'P16-BLACK-XXL' },
+      { id: 'p16-s-2', product_id: 'p16', size: 'S', color: 'Navy', inventory: 10, sku: 'P16-NAVY-S' },
+      { id: 'p16-m-2', product_id: 'p16', size: 'M', color: 'Navy', inventory: 10, sku: 'P16-NAVY-M' },
+      { id: 'p16-l-2', product_id: 'p16', size: 'L', color: 'Navy', inventory: 10, sku: 'P16-NAVY-L' },
+      { id: 'p16-xl-2', product_id: 'p16', size: 'XL', color: 'Navy', inventory: 10, sku: 'P16-NAVY-XL' },
+      { id: 'p16-xxl-2', product_id: 'p16', size: 'XXL', color: 'Navy', inventory: 10, sku: 'P16-NAVY-XXL' },
+    ],
+
     images: [
+
       img('https://images.pexels.com/photos/36986582/pexels-photo-36986582.jpeg'),
+
       img('https://images.pexels.com/photos/37043496/pexels-photo-37043496.jpeg'),
+
       img('https://images.pexels.com/photos/37066864/pexels-photo-37066864.jpeg'),
+
       img('https://images.pexels.com/photos/37232797/pexels-photo-37232797.jpeg'),
+
     ],
+
     fabricImage: fabricImgs[3],
+
     price: 599,
+
     mrp: 1599,
+
     bestPrice: 449,
+
     rating: 4.6,
+
     reviewCount: 165,
+
     reviews: makeReviews(16, 5, 165),
+
     description:
+
       'The Storm Black Graphic Tee features an original KOVENIK storm graphic — a bold front print on 240 GSM black cotton. The oversized fit and structured drape make it a streetwear staple.',
+
     fabricDetails: '240 GSM | 100% Cotton | DTF Print | Pre-Shrunk',
+
     washCare: 'Machine wash cold inside out | Do not bleach | Tumble dry low',
+
     tags: ['graphic', 'black', 'oversized', 'printed'],
+
     bestSeller: true,
+
     newArrival: true,
+
     trending: false,
+
     limitedEdition: false,
+
     inventory: 47,
+
   },
+
   {
+
     id: 'p17',
+
     slug: 'eclipse-hoodie',
+
     name: 'Eclipse Hoodie',
+
     category: 'top-wear',
+
     categoryLabel: 'Top Wear',
+
     fit: 'Hoodie',
+
     fabric: '100% Cotton',
+
     coverage: 'Front',
+
     colors: ['Black', 'Olive', 'Navy'],
+
     sizes: ALL_SIZES,
+    variants: [
+      { id: 'p17-s-1', product_id: 'p17', size: 'S', color: 'Black', inventory: 10, sku: 'P17-BLACK-S' },
+      { id: 'p17-m-1', product_id: 'p17', size: 'M', color: 'Black', inventory: 10, sku: 'P17-BLACK-M' },
+      { id: 'p17-l-1', product_id: 'p17', size: 'L', color: 'Black', inventory: 10, sku: 'P17-BLACK-L' },
+      { id: 'p17-xl-1', product_id: 'p17', size: 'XL', color: 'Black', inventory: 10, sku: 'P17-BLACK-XL' },
+      { id: 'p17-xxl-1', product_id: 'p17', size: 'XXL', color: 'Black', inventory: 10, sku: 'P17-BLACK-XXL' },
+      { id: 'p17-s-2', product_id: 'p17', size: 'S', color: 'Olive', inventory: 10, sku: 'P17-OLIVE-S' },
+      { id: 'p17-m-2', product_id: 'p17', size: 'M', color: 'Olive', inventory: 10, sku: 'P17-OLIVE-M' },
+      { id: 'p17-l-2', product_id: 'p17', size: 'L', color: 'Olive', inventory: 10, sku: 'P17-OLIVE-L' },
+      { id: 'p17-xl-2', product_id: 'p17', size: 'XL', color: 'Olive', inventory: 10, sku: 'P17-OLIVE-XL' },
+      { id: 'p17-xxl-2', product_id: 'p17', size: 'XXL', color: 'Olive', inventory: 10, sku: 'P17-OLIVE-XXL' },
+      { id: 'p17-s-3', product_id: 'p17', size: 'S', color: 'Navy', inventory: 10, sku: 'P17-NAVY-S' },
+      { id: 'p17-m-3', product_id: 'p17', size: 'M', color: 'Navy', inventory: 10, sku: 'P17-NAVY-M' },
+      { id: 'p17-l-3', product_id: 'p17', size: 'L', color: 'Navy', inventory: 10, sku: 'P17-NAVY-L' },
+      { id: 'p17-xl-3', product_id: 'p17', size: 'XL', color: 'Navy', inventory: 10, sku: 'P17-NAVY-XL' },
+      { id: 'p17-xxl-3', product_id: 'p17', size: 'XXL', color: 'Navy', inventory: 10, sku: 'P17-NAVY-XXL' },
+    ],
+
     images: [
+
       img('https://images.pexels.com/photos/15127546/pexels-photo-15127546.jpeg'),
+
       img('https://images.pexels.com/photos/14241847/pexels-photo-14241847.jpeg'),
+
       img('https://images.pexels.com/photos/34582210/pexels-photo-34582210.jpeg'),
+
       img('https://images.pexels.com/photos/29600851/pexels-photo-29600851.jpeg'),
+
     ],
+
     fabricImage: fabricImgs[3],
+
     price: 899,
+
     mrp: 2499,
+
     bestPrice: 749,
+
     rating: 4.8,
+
     reviewCount: 256,
+
     reviews: makeReviews(17, 5, 256),
+
     description:
+
       'The Eclipse Hoodie is a heavyweight 400 GSM cotton fleece hoodie built for comfort and structure. The oversized fit, double-layer hood, and ribbed cuffs create a premium, durable piece for everyday wear.',
+
     fabricDetails: '400 GSM | 100% Cotton Fleece | Double-Layer Hood | Pre-Shrunk',
+
     washCare: 'Machine wash cold inside out | Do not bleach | Tumble dry low | Do not iron print',
+
     tags: ['hoodie', 'black', 'cotton', 'oversized'],
+
     bestSeller: true,
+
     newArrival: true,
+
     trending: true,
+
     limitedEdition: false,
+
     inventory: 34,
+
   },
+
   {
+
     id: 'p18',
+
     slug: 'nomad-cargo-beige',
+
     name: 'Nomad Cargo Beige',
+
     category: 'bottom-wear',
+
     categoryLabel: 'Bottom Wear',
+
     fit: 'Cargo',
+
     fabric: '100% Cotton',
+
     coverage: 'All Over',
+
     colors: ['Beige', 'Olive', 'Black'],
+
     sizes: ALL_SIZES,
+    variants: [
+      { id: 'p18-s-1', product_id: 'p18', size: 'S', color: 'Beige', inventory: 10, sku: 'P18-BEIGE-S' },
+      { id: 'p18-m-1', product_id: 'p18', size: 'M', color: 'Beige', inventory: 10, sku: 'P18-BEIGE-M' },
+      { id: 'p18-l-1', product_id: 'p18', size: 'L', color: 'Beige', inventory: 10, sku: 'P18-BEIGE-L' },
+      { id: 'p18-xl-1', product_id: 'p18', size: 'XL', color: 'Beige', inventory: 10, sku: 'P18-BEIGE-XL' },
+      { id: 'p18-xxl-1', product_id: 'p18', size: 'XXL', color: 'Beige', inventory: 10, sku: 'P18-BEIGE-XXL' },
+      { id: 'p18-s-2', product_id: 'p18', size: 'S', color: 'Olive', inventory: 10, sku: 'P18-OLIVE-S' },
+      { id: 'p18-m-2', product_id: 'p18', size: 'M', color: 'Olive', inventory: 10, sku: 'P18-OLIVE-M' },
+      { id: 'p18-l-2', product_id: 'p18', size: 'L', color: 'Olive', inventory: 10, sku: 'P18-OLIVE-L' },
+      { id: 'p18-xl-2', product_id: 'p18', size: 'XL', color: 'Olive', inventory: 10, sku: 'P18-OLIVE-XL' },
+      { id: 'p18-xxl-2', product_id: 'p18', size: 'XXL', color: 'Olive', inventory: 10, sku: 'P18-OLIVE-XXL' },
+      { id: 'p18-s-3', product_id: 'p18', size: 'S', color: 'Black', inventory: 10, sku: 'P18-BLACK-S' },
+      { id: 'p18-m-3', product_id: 'p18', size: 'M', color: 'Black', inventory: 10, sku: 'P18-BLACK-M' },
+      { id: 'p18-l-3', product_id: 'p18', size: 'L', color: 'Black', inventory: 10, sku: 'P18-BLACK-L' },
+      { id: 'p18-xl-3', product_id: 'p18', size: 'XL', color: 'Black', inventory: 10, sku: 'P18-BLACK-XL' },
+      { id: 'p18-xxl-3', product_id: 'p18', size: 'XXL', color: 'Black', inventory: 10, sku: 'P18-BLACK-XXL' },
+    ],
+
     images: [
+
       img('https://images.pexels.com/photos/17400728/pexels-photo-17400728.jpeg'),
+
       img('https://images.pexels.com/photos/18393526/pexels-photo-18393526.jpeg'),
+
       img('https://images.pexels.com/photos/31068182/pexels-photo-31068182.jpeg'),
+
       img('https://images.pexels.com/photos/14437344/pexels-photo-14437344.jpeg'),
+
     ],
+
     fabricImage: fabricImgs[1],
+
     price: 999,
+
     mrp: 2799,
+
     bestPrice: 849,
+
     rating: 4.7,
+
     reviewCount: 189,
+
     reviews: makeReviews(18, 5, 189),
+
     description:
+
       'The Nomad Cargo Beige is a relaxed-fit cargo pant with six functional pockets and a tapered leg. 320 GSM cotton twill gives structure and durability, while the beige tone works with any tee or hoodie.',
+
     fabricDetails: '320 GSM | 100% Cotton Twill | 6-Pocket Design | Tapered Fit',
+
     washCare: 'Machine wash cold | Do not bleach | Tumble dry low | Iron medium',
+
     tags: ['cargo', 'beige', 'cotton', 'bottom-wear'],
+
     bestSeller: true,
+
     newArrival: false,
+
     trending: true,
+
     limitedEdition: false,
+
     inventory: 28,
+
   },
+
   {
+
     id: 'p19',
+
     slug: 'utility-olive-jogger',
+
     name: 'Utility Olive Jogger',
+
     category: 'bottom-wear',
+
     categoryLabel: 'Bottom Wear',
+
     fit: 'Jogger',
+
     fabric: '100% Cotton',
+
     coverage: 'All Over',
+
     colors: ['Olive', 'Black', 'Navy'],
+
     sizes: ALL_SIZES,
+    variants: [
+      { id: 'p19-s-1', product_id: 'p19', size: 'S', color: 'Olive', inventory: 10, sku: 'P19-OLIVE-S' },
+      { id: 'p19-m-1', product_id: 'p19', size: 'M', color: 'Olive', inventory: 10, sku: 'P19-OLIVE-M' },
+      { id: 'p19-l-1', product_id: 'p19', size: 'L', color: 'Olive', inventory: 10, sku: 'P19-OLIVE-L' },
+      { id: 'p19-xl-1', product_id: 'p19', size: 'XL', color: 'Olive', inventory: 10, sku: 'P19-OLIVE-XL' },
+      { id: 'p19-xxl-1', product_id: 'p19', size: 'XXL', color: 'Olive', inventory: 10, sku: 'P19-OLIVE-XXL' },
+      { id: 'p19-s-2', product_id: 'p19', size: 'S', color: 'Black', inventory: 10, sku: 'P19-BLACK-S' },
+      { id: 'p19-m-2', product_id: 'p19', size: 'M', color: 'Black', inventory: 10, sku: 'P19-BLACK-M' },
+      { id: 'p19-l-2', product_id: 'p19', size: 'L', color: 'Black', inventory: 10, sku: 'P19-BLACK-L' },
+      { id: 'p19-xl-2', product_id: 'p19', size: 'XL', color: 'Black', inventory: 10, sku: 'P19-BLACK-XL' },
+      { id: 'p19-xxl-2', product_id: 'p19', size: 'XXL', color: 'Black', inventory: 10, sku: 'P19-BLACK-XXL' },
+      { id: 'p19-s-3', product_id: 'p19', size: 'S', color: 'Navy', inventory: 10, sku: 'P19-NAVY-S' },
+      { id: 'p19-m-3', product_id: 'p19', size: 'M', color: 'Navy', inventory: 10, sku: 'P19-NAVY-M' },
+      { id: 'p19-l-3', product_id: 'p19', size: 'L', color: 'Navy', inventory: 10, sku: 'P19-NAVY-L' },
+      { id: 'p19-xl-3', product_id: 'p19', size: 'XL', color: 'Navy', inventory: 10, sku: 'P19-NAVY-XL' },
+      { id: 'p19-xxl-3', product_id: 'p19', size: 'XXL', color: 'Navy', inventory: 10, sku: 'P19-NAVY-XXL' },
+    ],
+
     images: [
+
       img('https://images.pexels.com/photos/18393519/pexels-photo-18393519.jpeg'),
+
       img('https://images.pexels.com/photos/6692473/pexels-photo-6692473.jpeg'),
+
       img('https://images.pexels.com/photos/21050240/pexels-photo-21050240.jpeg'),
+
       img('https://images.pexels.com/photos/13424781/pexels-photo-13424781.jpeg'),
+
     ],
+
     fabricImage: fabricImgs[2],
+
     price: 899,
+
     mrp: 2499,
+
     bestPrice: 749,
+
     rating: 4.6,
+
     reviewCount: 142,
+
     reviews: makeReviews(19, 5, 142),
+
     description:
+
       'The Utility Olive Jogger is a tapered-fit jogger with ribbed cuffs and four functional pockets. 300 GSM cotton fleece keeps it comfortable and structured, with an elastic waistband and drawcord for an adjustable fit.',
+
     fabricDetails: '300 GSM | 100% Cotton Fleece | Ribbed Cuffs | 4-Pocket Design',
+
     washCare: 'Machine wash cold | Do not bleach | Tumble dry low | Iron medium',
+
     tags: ['jogger', 'olive', 'cotton', 'bottom-wear'],
+
     bestSeller: false,
+
     newArrival: true,
+
     trending: false,
+
     limitedEdition: false,
+
     inventory: 31,
+
   },
+
   {
+
     id: 'p20',
+
     slug: 'horizon-premium-tee',
+
     name: 'Horizon Premium Tee',
+
     category: 'ardenby-premium',
+
     categoryLabel: 'Kovenik Premium',
+
     fit: 'Regular',
+
     fabric: '100% Cotton',
+
     coverage: 'Front',
+
     colors: ['White', 'Black', 'Navy', 'Beige'],
+
     sizes: ALL_SIZES,
+    variants: [
+      { id: 'p20-s-1', product_id: 'p20', size: 'S', color: 'White', inventory: 10, sku: 'P20-WHITE-S' },
+      { id: 'p20-m-1', product_id: 'p20', size: 'M', color: 'White', inventory: 10, sku: 'P20-WHITE-M' },
+      { id: 'p20-l-1', product_id: 'p20', size: 'L', color: 'White', inventory: 10, sku: 'P20-WHITE-L' },
+      { id: 'p20-xl-1', product_id: 'p20', size: 'XL', color: 'White', inventory: 10, sku: 'P20-WHITE-XL' },
+      { id: 'p20-xxl-1', product_id: 'p20', size: 'XXL', color: 'White', inventory: 10, sku: 'P20-WHITE-XXL' },
+      { id: 'p20-s-2', product_id: 'p20', size: 'S', color: 'Black', inventory: 10, sku: 'P20-BLACK-S' },
+      { id: 'p20-m-2', product_id: 'p20', size: 'M', color: 'Black', inventory: 10, sku: 'P20-BLACK-M' },
+      { id: 'p20-l-2', product_id: 'p20', size: 'L', color: 'Black', inventory: 10, sku: 'P20-BLACK-L' },
+      { id: 'p20-xl-2', product_id: 'p20', size: 'XL', color: 'Black', inventory: 10, sku: 'P20-BLACK-XL' },
+      { id: 'p20-xxl-2', product_id: 'p20', size: 'XXL', color: 'Black', inventory: 10, sku: 'P20-BLACK-XXL' },
+      { id: 'p20-s-3', product_id: 'p20', size: 'S', color: 'Navy', inventory: 10, sku: 'P20-NAVY-S' },
+      { id: 'p20-m-3', product_id: 'p20', size: 'M', color: 'Navy', inventory: 10, sku: 'P20-NAVY-M' },
+      { id: 'p20-l-3', product_id: 'p20', size: 'L', color: 'Navy', inventory: 10, sku: 'P20-NAVY-L' },
+      { id: 'p20-xl-3', product_id: 'p20', size: 'XL', color: 'Navy', inventory: 10, sku: 'P20-NAVY-XL' },
+      { id: 'p20-xxl-3', product_id: 'p20', size: 'XXL', color: 'Navy', inventory: 10, sku: 'P20-NAVY-XXL' },
+      { id: 'p20-s-4', product_id: 'p20', size: 'S', color: 'Beige', inventory: 10, sku: 'P20-BEIGE-S' },
+      { id: 'p20-m-4', product_id: 'p20', size: 'M', color: 'Beige', inventory: 10, sku: 'P20-BEIGE-M' },
+      { id: 'p20-l-4', product_id: 'p20', size: 'L', color: 'Beige', inventory: 10, sku: 'P20-BEIGE-L' },
+      { id: 'p20-xl-4', product_id: 'p20', size: 'XL', color: 'Beige', inventory: 10, sku: 'P20-BEIGE-XL' },
+      { id: 'p20-xxl-4', product_id: 'p20', size: 'XXL', color: 'Beige', inventory: 10, sku: 'P20-BEIGE-XXL' },
+    ],
+
     images: [
+
       img('https://images.pexels.com/photos/24779115/pexels-photo-24779115.jpeg'),
+
       img('https://images.pexels.com/photos/8346219/pexels-photo-8346219.jpeg'),
+
       img('https://images.pexels.com/photos/9775824/pexels-photo-9775824.jpeg'),
+
       img('https://images.pexels.com/photos/28900431/pexels-photo-28900431.jpeg'),
+
     ],
+
     fabricImage: fabricImgs[0],
+
     price: 649,
+
     mrp: 1799,
+
     bestPrice: 499,
+
     rating: 4.9,
+
     reviewCount: 278,
+
     reviews: makeReviews(20, 5, 278),
+
     description:
+
       'The Horizon Premium Tee is our flagship premium tee — 220 GSM long-staple cotton in a regular fit with a smooth, refined finish. Available in four core tones, it is the foundation of a great wardrobe.',
+
     fabricDetails: '220 GSM | Long-Staple Cotton | Combed | Bio-Washed',
+
     washCare: 'Machine wash cold | Do not bleach | Air dry | Iron medium',
+
     tags: ['premium', 'white', 'cotton', 'regular'],
+
     bestSeller: true,
+
     newArrival: false,
+
     trending: true,
+
     limitedEdition: false,
+
     inventory: 58,
+
   },
+
 ];
+
 export function getProductBySlug(slug: string): Product | undefined {
+
   return products.find((p) => p.slug === slug);
+
 }
+
 export function getProductById(id: string): Product | undefined {
+
   return products.find((p) => p.id === id);
+
 }
+
 export function getRelatedProducts(product: Product, count = 4): Product[] {
+
   return products
+
     .filter((p) => p.id !== product.id && p.category === product.category)
+
     .slice(0, count);
+
 }
+
 export function getRecentlyViewed(currentId: string, count = 4): Product[] {
+
   return products.filter((p) => p.id !== currentId).slice(0, count);
+
 }
+
 export const categories = [
+
   { slug: 'supreme-edition', name: 'Supreme Edition', desc: 'Heavyweight oversized drops' },
+
   { slug: 'epic-thread', name: 'Epic Thread', desc: 'Graphic & printed tees' },
+
   { slug: 'ardenby-premium', name: 'Kovenik Premium', desc: 'Long-staple cotton essentials' },
+
   { slug: 'the-print-club', name: 'The Print Club', desc: 'Bold prints & puff graphics' },
+
   { slug: 'top-wear', name: 'Top Wear', desc: 'Hoodies & sweatshirts' },
+
   { slug: 'plus-size', name: 'Plus Size', desc: 'Sizes up to XXL' },
+
   { slug: 'bottom-wear', name: 'Bottom Wear', desc: 'Cargos & joggers' },
+
   { slug: 'all-products', name: 'All Products', desc: 'Browse everything' },
+
 ] as const;
+
 export const heroSlides = [
+
   {
+
     id: 's1',
+
     image: '/images/hero-linen.jpg',
+
     headline: 'LIGHT FEELS RIGHT',
+
     sub: 'Premium linen — breathable, refined, effortless',
+
     cta: 'SHOP LINEN',
+
     href: '/shop',
+
   },
+
   {
+
     id: 's2',
+
     image: '/images/hero-dtf-back-print.jpg',
+
     headline: 'THE PRINT CLUB',
+
     sub: 'Statement DTF graphics built to stand out',
+
     cta: 'SHOP PRINTS',
+
     href: '/shop?category=the-print-club',
+
   },
+
   {
+
     id: 's3',
+
     image: '/images/hero-black-tee.jpg',
+
     headline: 'EVERYDAY ESSENTIALS',
+
     sub: 'Heavyweight oversized tees with a clean silhouette',
+
     cta: 'SHOP TEES',
+
     href: '/shop?category=supreme-edition',
+
   },
+
   {
+
     id: 's4',
+
     image: '/images/hero-olive-graphic.jpg',
+
     headline: 'ART YOU CAN WEAR',
+
     sub: 'Graphic streetwear made for everyday movement',
+
     cta: 'EXPLORE GRAPHICS',
+
     href: '/shop?category=epic-thread',
+
   },
+
 ];
+
 export const editorialBanners = {
+
   supreme: 'https://images.pexels.com/photos/32321512/pexels-photo-32321512.jpeg?auto=compress&cs=tinysrgb&w=1200&h=800&fit=crop',
+
   printClub: 'https://images.pexels.com/photos/32796327/pexels-photo-32796327.jpeg?auto=compress&cs=tinysrgb&w=1200&h=800&fit=crop',
+
   premium: 'https://images.pexels.com/photos/21369377/pexels-photo-21369377.jpeg?auto=compress&cs=tinysrgb&w=1200&h=800&fit=crop',
+
   epic: 'https://images.pexels.com/photos/9895332/pexels-photo-9895332.jpeg?auto=compress&cs=tinysrgb&w=1200&h=800&fit=crop',
+
 };
+
 export const coupons = [
+
   {
+
     id: 'c1',
+
     code: 'ARDENBY10',
+
     description: '10% off on orders above ₹999',
+
     discountType: 'percentage' as const,
+
     discountValue: 10,
+
     minOrder: 999,
+
     maxDiscount: 200,
+
     expiry: '2025-12-31',
+
     active: true,
+
   },
+
   {
+
     id: 'c2',
+
     code: 'WELCOME15',
+
     description: '15% off on your first order',
+
     discountType: 'percentage' as const,
+
     discountValue: 15,
+
     minOrder: 549,
+
     maxDiscount: 300,
+
     expiry: '2025-12-31',
+
     active: true,
+
   },
+
   {
+
     id: 'c3',
+
     code: 'FLAT100',
+
     description: 'Flat ₹100 off on orders above ₹799',
+
     discountType: 'flat' as const,
+
     discountValue: 100,
+
     minOrder: 799,
+
     maxDiscount: 100,
+
     expiry: '2025-12-31',
+
     active: true,
+
   },
+
   {
+
     id: 'c4',
+
     code: 'B3FOR1199',
+
     description: 'Buy 3 for ₹1199 — auto-applied',
+
     discountType: 'flat' as const,
+
     discountValue: 150,
+
     minOrder: 1199,
+
     maxDiscount: 150,
+
     expiry: '2025-12-31',
+
     active: true,
+
   },
+
 ];
