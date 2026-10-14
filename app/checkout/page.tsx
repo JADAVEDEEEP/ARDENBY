@@ -41,6 +41,32 @@ const API_URL =
 
 const GOLD = '#D4AF37';
 
+// Keep checkout pricing in sync with CartDrawer's applied-coupon storage.
+const COUPON_STORAGE_KEY = 'kovenik_applied_coupon';
+const FREE_SHIP_THRESHOLD = 999;
+const PAID_SHIPPING = 79;
+const GST_RATE = 0.05;
+
+type StoredCoupon = { code: string; discount: number };
+
+function readStoredCoupon(): StoredCoupon | null {
+  if (typeof window === 'undefined') return null;
+
+  try {
+    const raw = window.localStorage.getItem(COUPON_STORAGE_KEY);
+    if (!raw) return null;
+
+    const parsed = JSON.parse(raw);
+    const code = typeof parsed?.code === 'string' ? parsed.code.trim().toUpperCase() : '';
+    const discount = Number(parsed?.discount);
+
+    if (!code || !Number.isFinite(discount) || discount < 0) return null;
+    return { code, discount };
+  } catch {
+    return null;
+  }
+}
+
 const focusRing =
   'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#E8C96A]/70 focus-visible:ring-offset-2 focus-visible:ring-offset-[#050505]';
 
@@ -1361,6 +1387,56 @@ function AddressManager({
 export default function CheckoutPage() {
   const items = useCartStore((state) => state.items);
   const clearCart = useCartStore((state) => state.clearCart);
+  const [storedCoupon, setStoredCoupon] = useState<StoredCoupon | null>(null);
+
+  // Hydration fix: the persisted cart only exists on the client, so the server
+  // and the first client render must output the same neutral markup. We switch
+  // to the real checkout UI only after mount.
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    let cancelled = false;
+
+    const initializeCart = async () => {
+      try {
+        const token = window.localStorage.getItem('ardenby_token');
+        const cartState = useCartStore.getState();
+
+        if (token) {
+          // Keep the current in-memory cart (including the latest optimistic
+          // quantity changes). Only fetch the server cart when the store is empty.
+          if (cartState.items.length === 0) {
+            await cartState.loadUserCart();
+          }
+        } else {
+          cartState.loadGuestCart();
+        }
+      } catch (error) {
+        console.error('Unable to initialize checkout cart:', error);
+      } finally {
+        if (!cancelled) setMounted(true);
+      }
+    };
+
+    void initializeCart();
+
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  useEffect(() => {
+    const syncCoupon = () => setStoredCoupon(readStoredCoupon());
+    syncCoupon();
+
+    // Keep the checkout summary up to date if the coupon changes in another tab.
+    window.addEventListener('storage', syncCoupon);
+    window.addEventListener('focus', syncCoupon);
+    return () => {
+      window.removeEventListener('storage', syncCoupon);
+      window.removeEventListener('focus', syncCoupon);
+    };
+  }, []);
 
   const [placed, setPlaced] = useState(false);
   const [selectedPayment, setSelectedPayment] =
@@ -1368,7 +1444,13 @@ export default function CheckoutPage() {
   const [selectedAddress, setSelectedAddress] =
     useState<Address | null>(null);
 
-  const total = getCartSubtotal(items);
+  // Match CartDrawer: subtotal -> coupon discount -> 5% GST, plus shipping.
+  const subtotal = getCartSubtotal(items);
+  const discount = Math.min(storedCoupon?.discount ?? 0, subtotal);
+  const taxableAmount = Math.max(0, subtotal - discount);
+  const gst = Math.round(taxableAmount * GST_RATE);
+  const shipping = subtotal >= FREE_SHIP_THRESHOLD || subtotal === 0 ? 0 : PAID_SHIPPING;
+  const total = taxableAmount + shipping + gst;
   const itemCount = items.reduce((acc, item) => acc + item.quantity, 0);
 
   const trust = [
@@ -1377,6 +1459,17 @@ export default function CheckoutPage() {
     { Icon: RotateCcw, title: 'Easy Returns', sub: 'Hassle-free' },
     { Icon: Headset, title: 'Premium Support', sub: "We're here to help" },
   ];
+
+  // All hooks are declared above, so this early return is safe.
+  if (!mounted) {
+    return (
+      <Shell>
+        <div className="flex min-h-screen items-center justify-center">
+          <Loader2 className="h-6 w-6 animate-spin text-[#E8C96A]" />
+        </div>
+      </Shell>
+    );
+  }
 
   if (placed) {
     return (
@@ -1563,7 +1656,7 @@ export default function CheckoutPage() {
                 </span>
               </div>
 
-              <ul className="max-h-72 divide-y divide-white/10 overflow-y-auto pr-1">
+              <ul className="divide-y divide-white/10 pr-1">
                 {items.map((item) => (
                   <li
                     key={`${item.productId}-${item.size}-${item.color}`}
@@ -1607,14 +1700,26 @@ export default function CheckoutPage() {
 
                 <div className="flex justify-between text-neutral-300">
                   <dt>Subtotal</dt>
-                  <dd className="font-medium text-[#F5F1E8]">{formatINR(total)}</dd>
+                  <dd className="font-medium text-[#F5F1E8]">{formatINR(subtotal)}</dd>
                 </div>
+
+                {discount > 0 && (
+                  <div className="flex justify-between text-neutral-300">
+                    <dt>Coupon discount{storedCoupon?.code ? ` (${storedCoupon.code})` : ''}</dt>
+                    <dd className="font-medium text-emerald-400">−{formatINR(discount)}</dd>
+                  </div>
+                )}
 
                 <div className="flex justify-between text-neutral-300">
                   <dt>Shipping</dt>
-                  <dd className="text-xs font-semibold tracking-wider text-emerald-400">
-                    COMPLIMENTARY
+                  <dd className={shipping === 0 ? 'text-xs font-semibold tracking-wider text-emerald-400' : 'font-medium text-[#F5F1E8]'}>
+                    {shipping === 0 ? 'COMPLIMENTARY' : formatINR(shipping)}
                   </dd>
+                </div>
+
+                <div className="flex justify-between text-neutral-300">
+                  <dt>GST (5%)</dt>
+                  <dd className="font-medium text-[#F5F1E8]">{formatINR(gst)}</dd>
                 </div>
               </dl>
 

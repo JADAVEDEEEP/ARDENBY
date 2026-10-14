@@ -243,7 +243,13 @@ async function loadAuthenticatedCart() {
           const price = Number(item?.price_snapshot ?? item?.price ?? item?.product?.price ?? 0);
           const mrp = Number(item?.mrp_snapshot ?? item?.mrp ?? item?.product?.mrp ?? price);
           const image = item?.image_snapshot || item?.image || item?.product?.images?.[0] || '';
-          const name = item?.name_snapshot || item?.name || item?.product?.name || 'Product';
+const name =
+  item?.product_name_snapshot ||
+  item?.name_snapshot ||
+  item?.product_name ||
+  item?.name ||
+  item?.product?.name ||
+  'Product';
           const slug = item?.slug_snapshot || item?.slug || item?.product?.slug || '';
           if (!productId || !variantId || !size || !color) return null;
           return { productId, variantId, slug, name, image, size, color, quantity: Math.max(1, quantity), price, mrp };
@@ -714,6 +720,13 @@ export function Navbar() {
     setIsOpen(true);
 
   };
+
+  // Lets other pages (e.g. wishlist on product pages) open this same sign-in modal.
+  useEffect(() => {
+    const onOpenAuth = () => handleOpenProfile();
+    window.addEventListener('ardenby-open-auth', onOpenAuth);
+    return () => window.removeEventListener('ardenby-open-auth', onOpenAuth);
+  });
 
 
 

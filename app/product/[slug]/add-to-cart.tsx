@@ -43,7 +43,7 @@ export function AddToCart({ product }: { product: Product }) {
     mrp: product.mrp,
   });
 
-  toast.success('Added to cart');
+  toast.success('Added to cart', { description: product.name });
 };
 
   return (

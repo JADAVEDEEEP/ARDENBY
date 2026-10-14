@@ -2,15 +2,25 @@
 
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
+import type { ComponentType, ReactNode } from 'react';
 import {
   BadgePercent,
+  Bell,
+  BarChart3,
   Boxes,
+  CalendarDays,
+  ChevronDown,
   FolderTree,
   LayoutDashboard,
   LogOut,
   Menu,
   PackageCheck,
+  Search,
+  Settings,
+  Star,
+  Users,
+  Warehouse,
   X,
 } from 'lucide-react';
 
@@ -23,23 +33,294 @@ import {
 } from '@/components/admin/admin-auth';
 import { cn } from '@/lib/utils';
 
-const adminLinks = [
+type NavItem = {
+  href: string;
+  label: string;
+  icon: ComponentType<{ className?: string }>;
+  /**
+   * Routes that do not exist in the app yet are rendered as disabled
+   * ("Soon") so nothing 404s. Set to false/remove once the page exists.
+   */
+  soon?: boolean;
+};
+
+const adminLinks: NavItem[] = [
   { href: '/admin', label: 'Dashboard', icon: LayoutDashboard },
-  { href: '/admin/products', label: 'Products', icon: Boxes },
+  { href: '/admin/analytics', label: 'Analytics', icon: BarChart3, soon: true },
   { href: '/admin/orders', label: 'Orders', icon: PackageCheck },
+  { href: '/admin/products', label: 'Products', icon: Boxes },
   { href: '/admin/categories', label: 'Categories', icon: FolderTree },
+  { href: '/admin/customers', label: 'Customers', icon: Users, soon: true },
+  { href: '/admin/inventory', label: 'Inventory', icon: Warehouse, soon: true },
+  { href: '/admin/reviews', label: 'Reviews', icon: Star, soon: true },
   { href: '/admin/coupons', label: 'Coupons', icon: BadgePercent },
+  { href: '/admin/settings', label: 'Settings', icon: Settings, soon: true },
 ];
+
+const bottomLinks = ['/admin', '/admin/orders', '/admin/products'];
+
+function isActive(pathname: string, href: string) {
+  return href === '/admin' ? pathname === '/admin' : pathname.startsWith(href);
+}
+
+function Wordmark({ size = 'lg' }: { size?: 'lg' | 'sm' }) {
+  return (
+    <span className="flex flex-col items-center leading-none">
+      <span
+        className={cn(
+          'font-serif uppercase text-[#F4F0E6]',
+          size === 'lg' ? 'text-[24px] tracking-[0.2em]' : 'text-[18px] tracking-[0.18em]'
+        )}
+      >
+        Kovenik
+      </span>
+      <span
+        className={cn(
+          'font-semibold uppercase text-[#B89A5A]',
+          size === 'lg' ? 'mt-2 text-[9px] tracking-[0.5em]' : 'mt-1 text-[8px] tracking-[0.45em]'
+        )}
+      >
+        Admin
+      </span>
+    </span>
+  );
+}
+
+function Avatar({ user, className }: { user: AdminUser | null; className?: string }) {
+  return (
+    <span
+      className={cn(
+        'flex shrink-0 items-center justify-center rounded-full border border-[#B89A5A]/60 bg-[#12351F] font-serif text-sm text-[#C8A96B]',
+        className
+      )}
+    >
+      {(user?.fullName?.charAt(0) || 'A').toUpperCase()}
+    </span>
+  );
+}
+
+function NavList({ pathname }: { pathname: string }) {
+  return (
+    <nav className="space-y-1" aria-label="Admin navigation">
+      {adminLinks.map((item) => {
+        const Icon = item.icon;
+        const active = isActive(pathname, item.href);
+
+        const inner = (
+          <>
+            <span
+              className={cn(
+                'absolute inset-y-2 left-0 w-[3px] rounded-r bg-[#B89A5A] transition-opacity',
+                active ? 'opacity-100' : 'opacity-0'
+              )}
+            />
+            <Icon
+              className={cn(
+                'h-[18px] w-[18px] shrink-0 transition-colors',
+                active ? 'text-[#C8A96B]' : 'text-[#8FA394] group-hover:text-[#C8A96B]'
+              )}
+            />
+            <span className="tracking-wide md:hidden lg:inline">{item.label}</span>
+            {item.soon && (
+              <span className="ml-auto rounded border border-[#B89A5A]/30 px-1.5 py-px text-[8px] font-semibold uppercase tracking-widest text-[#B89A5A]/80 md:hidden lg:inline">
+                Soon
+              </span>
+            )}
+          </>
+        );
+
+        const base =
+          'group relative flex items-center gap-3.5 rounded-lg px-4 py-3 text-[13px] font-medium outline-none transition-colors md:justify-center md:px-0 lg:justify-start lg:px-4';
+
+        if (item.soon) {
+          return (
+            <span
+              key={item.href}
+              title={`${item.label} — coming soon`}
+              aria-disabled="true"
+              className={cn(base, 'cursor-not-allowed text-[#6F8576]/70')}
+            >
+              {inner}
+            </span>
+          );
+        }
+
+        return (
+          <Link
+            key={item.href}
+            href={item.href}
+            title={item.label}
+            aria-current={active ? 'page' : undefined}
+            className={cn(
+              base,
+              'focus-visible:ring-1 focus-visible:ring-[#C8A96B]',
+              active
+                ? 'bg-[#1A4528]/70 text-[#F4F0E6]'
+                : 'text-[#B9C4BB] hover:bg-[#12351F]/70 hover:text-[#F4F0E6]'
+            )}
+          >
+            {inner}
+          </Link>
+        );
+      })}
+    </nav>
+  );
+}
+
+function ProfileMenu({
+  user,
+  onLogout,
+  compactName,
+}: {
+  user: AdminUser | null;
+  onLogout: () => void;
+  compactName?: boolean;
+}) {
+  const [open, setOpen] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!open) return;
+    const close = (e: MouseEvent) => {
+      if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false);
+    };
+    const esc = (e: KeyboardEvent) => e.key === 'Escape' && setOpen(false);
+    document.addEventListener('mousedown', close);
+    document.addEventListener('keydown', esc);
+    return () => {
+      document.removeEventListener('mousedown', close);
+      document.removeEventListener('keydown', esc);
+    };
+  }, [open]);
+
+  return (
+    <div ref={ref} className="relative">
+      <button
+        type="button"
+        onClick={() => setOpen((v) => !v)}
+        aria-haspopup="menu"
+        aria-expanded={open}
+        className="flex items-center gap-2.5 rounded-full py-1 pl-1 pr-2 outline-none transition hover:bg-[#12351F]/70 focus-visible:ring-1 focus-visible:ring-[#C8A96B]"
+      >
+        <Avatar user={user} className="h-9 w-9" />
+        {!compactName && (
+          <>
+            <span className="hidden max-w-[120px] truncate text-sm font-medium text-[#F4F0E6] lg:block">
+              {user?.fullName || 'Admin'}
+            </span>
+            <ChevronDown
+              className={cn(
+                'hidden h-4 w-4 text-[#B89A5A] transition-transform lg:block',
+                open && 'rotate-180'
+              )}
+            />
+          </>
+        )}
+      </button>
+
+      {open && (
+        <div
+          role="menu"
+          className="absolute right-0 z-50 mt-2 w-60 overflow-hidden rounded-xl border border-[#B89A5A]/30 bg-[#0D2415] shadow-[0_20px_50px_rgba(0,0,0,0.5)]"
+        >
+          <div className="border-b border-[#B89A5A]/20 px-4 py-3">
+            <p className="truncate text-sm font-semibold text-[#F4F0E6]">
+              {user?.fullName || 'Admin'}
+            </p>
+            <p className="truncate text-xs text-[#8FA394]">{user?.email || ''}</p>
+          </div>
+          <button
+            type="button"
+            role="menuitem"
+            onClick={onLogout}
+            className="flex w-full items-center gap-2.5 px-4 py-3 text-left text-sm text-[#EAE4D5] transition hover:bg-[#12351F]"
+          >
+            <LogOut className="h-4 w-4 text-[#B89A5A]" />
+            Log out
+          </button>
+        </div>
+      )}
+    </div>
+  );
+}
+
+function NotificationBell() {
+  const [open, setOpen] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!open) return;
+    const close = (e: MouseEvent) => {
+      if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false);
+    };
+    document.addEventListener('mousedown', close);
+    return () => document.removeEventListener('mousedown', close);
+  }, [open]);
+
+  return (
+    <div ref={ref} className="relative">
+      <button
+        type="button"
+        onClick={() => setOpen((v) => !v)}
+        aria-label="Notifications"
+        aria-expanded={open}
+        className="flex h-10 w-10 items-center justify-center rounded-full border border-[#B89A5A]/25 text-[#EAE4D5] outline-none transition hover:border-[#B89A5A]/60 hover:text-[#C8A96B] focus-visible:ring-1 focus-visible:ring-[#C8A96B]"
+      >
+        <Bell className="h-[18px] w-[18px]" />
+      </button>
+      {open && (
+        <div className="absolute right-0 z-50 mt-2 w-72 max-w-[calc(100vw-2rem)] rounded-xl border border-[#B89A5A]/30 bg-[#0D2415] p-4 shadow-[0_20px_50px_rgba(0,0,0,0.5)]">
+          <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#B89A5A]">
+            Notifications
+          </p>
+          <p className="mt-3 text-sm text-[#B9C4BB]">You&apos;re all caught up.</p>
+        </div>
+      )}
+    </div>
+  );
+}
+
+function CommandSearch() {
+  const router = useRouter();
+  const [query, setQuery] = useState('');
+
+  const submit = (e: React.FormEvent) => {
+    e.preventDefault();
+    const q = query.trim().toLowerCase();
+    if (!q) return;
+    const match = adminLinks.find((l) => !l.soon && l.label.toLowerCase().includes(q));
+    if (match) {
+      router.push(match.href);
+      setQuery('');
+    }
+  };
+
+  return (
+    <form onSubmit={submit} role="search" className="relative w-full max-w-md">
+      <Search className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-[#B89A5A]" />
+      <input
+        value={query}
+        onChange={(e) => setQuery(e.target.value)}
+        placeholder="Search anything… (e.g. orders, products)"
+        className="h-10 w-full rounded-lg border border-[#B89A5A]/25 bg-[#0D2415]/80 pl-10 pr-3 text-sm text-[#F4F0E6] placeholder:text-[#6F8576] outline-none transition focus:border-[#B89A5A]/70"
+      />
+    </form>
+  );
+}
+
+function Frame({ children }: { children: ReactNode }) {
+  return (
+    <main className="min-h-screen bg-[#07180D] text-[#F4F0E6]">{children}</main>
+  );
+}
 
 export function AdminShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const router = useRouter();
 
   const [user, setUser] = useState<AdminUser | null>(null);
-  const [status, setStatus] = useState<'checking' | 'allowed' | 'blocked'>(
-    'checking'
-  );
-  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [status, setStatus] = useState<'checking' | 'allowed' | 'blocked'>('checking');
+  const [drawerOpen, setDrawerOpen] = useState(false);
 
   const isLoginRoute = pathname === '/admin/login';
 
@@ -87,21 +368,21 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
   }, [isLoginRoute, pathname, router]);
 
   useEffect(() => {
-    setSidebarOpen(false);
+    setDrawerOpen(false);
   }, [pathname]);
 
-  const title = useMemo(() => {
-    const activeLink = adminLinks
-      .slice()
-      .reverse()
-      .find((link) =>
-        link.href === '/admin'
-          ? pathname === '/admin'
-          : pathname.startsWith(link.href)
-      );
-
-    return activeLink?.label || 'Admin';
-  }, [pathname]);
+  // Lock body scroll while the drawer is open
+  useEffect(() => {
+    if (!drawerOpen) return;
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    const esc = (e: KeyboardEvent) => e.key === 'Escape' && setDrawerOpen(false);
+    document.addEventListener('keydown', esc);
+    return () => {
+      document.body.style.overflow = prev;
+      document.removeEventListener('keydown', esc);
+    };
+  }, [drawerOpen]);
 
   if (isLoginRoute) {
     return <>{children}</>;
@@ -109,14 +390,14 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
 
   if (status !== 'allowed') {
     return (
-      <main className="flex min-h-screen items-center justify-center bg-[#050505] text-[#F4EEDD]">
-        <div className="text-center">
-          <p className="font-serif text-2xl uppercase tracking-[0.3em] text-[#C9A24B]">
-            KÖVENIK
-          </p>
-          <p className="mt-3 text-sm text-[#8F8878]">Checking admin access...</p>
+      <Frame>
+        <div className="flex min-h-screen items-center justify-center">
+          <div className="text-center">
+            <Wordmark />
+            <p className="mt-6 text-sm text-[#8FA394]">Checking admin access…</p>
+          </div>
         </div>
-      </main>
+      </Frame>
     );
   }
 
@@ -126,184 +407,190 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
     router.replace('/admin/login');
   };
 
-  const sidebarContent = (
-    <div className="flex h-full min-h-screen flex-col justify-between bg-gradient-to-b from-[#0A0908] via-[#080807] to-[#050505] p-6 text-[#F4EEDD]">
-      <div>
-        {/* Brand Header */}
-        <div className="flex items-center justify-between border-b border-[#C9A24B]/25 pb-7">
+  const today = new Date().toLocaleDateString('en-IN', {
+    day: 'numeric',
+    month: 'short',
+    year: 'numeric',
+  });
+
+  const bottomItems = adminLinks.filter((l) => bottomLinks.includes(l.href));
+
+  return (
+    <Frame>
+      <div className="min-h-screen md:grid md:grid-cols-[76px_minmax(0,1fr)] lg:grid-cols-[264px_minmax(0,1fr)]">
+        {/* Desktop / tablet sidebar */}
+        <aside className="sticky top-0 hidden h-screen flex-col border-r border-[#B89A5A]/20 bg-gradient-to-b from-[#07180D] to-[#0D2415] md:flex">
           <Link
             href="/admin"
-            className="group flex flex-col items-center outline-none focus-visible:ring-1 focus-visible:ring-[#E3C673]"
+            aria-label="KOVENIK Admin home"
+            className="flex h-[88px] items-center justify-center border-b border-[#B89A5A]/20 outline-none focus-visible:ring-1 focus-visible:ring-[#C8A96B]"
           >
-            <span className="font-serif text-[26px] uppercase leading-none tracking-[0.14em] text-transparent bg-clip-text bg-gradient-to-b from-[#F4E3B0] via-[#C9A24B] to-[#8E6F2A] transition-opacity group-hover:opacity-90">
-              KÖVENIK
-            </span>
-            <span className="mt-2 block text-[9px] font-semibold uppercase tracking-[0.42em] text-[#C9A24B]">
-              Luxury Admin
+            <span className="lg:hidden font-serif text-xl tracking-widest text-[#C8A96B]">K</span>
+            <span className="hidden lg:block">
+              <Wordmark />
             </span>
           </Link>
 
-          <button
-            type="button"
-            onClick={() => setSidebarOpen(false)}
-            aria-label="Close menu"
-            className="rounded-xl border border-[#C9A24B]/30 p-2 text-[#E8D3A0] outline-none transition-colors hover:bg-[#C9A24B]/10 hover:text-white focus-visible:ring-1 focus-visible:ring-[#E3C673] lg:hidden"
-          >
-            <X className="h-5 w-5" />
-          </button>
-        </div>
-
-        {/* Navigation Links */}
-        <nav className="mt-7 space-y-2">
-          {adminLinks.map((item) => {
-            const Icon = item.icon;
-            const active =
-              item.href === '/admin'
-                ? pathname === '/admin'
-                : pathname.startsWith(item.href);
-
-            return (
-              <Link
-                key={item.href}
-                href={item.href}
-                className={cn(
-                  'group flex items-center gap-3.5 rounded-xl border px-4 py-3 text-[13px] font-medium outline-none transition-all duration-200 focus-visible:ring-1 focus-visible:ring-[#E3C673]',
-                  active
-                    ? 'border-[#C9A24B]/70 bg-gradient-to-r from-[#C9A24B]/20 via-[#12100D] to-[#0D0F0F] text-[#F4EEDD] shadow-[0_0_18px_rgba(201,162,75,0.22)]'
-                    : 'border-transparent text-[#8F8878] hover:border-[#C9A24B]/25 hover:bg-[#C9A24B]/[0.05] hover:text-[#F4EEDD]'
-                )}
-              >
-                <Icon
-                  className={cn(
-                    'h-[18px] w-[18px] transition-colors',
-                    active
-                      ? 'text-[#E3C673]'
-                      : 'text-[#6f6858] group-hover:text-[#C9A24B]'
-                  )}
-                />
-                <span className="tracking-wide">{item.label}</span>
-              </Link>
-            );
-          })}
-        </nav>
-      </div>
-
-      {/* User Profile & Logout Box */}
-      <div className="border-t border-[#C9A24B]/25 pt-6">
-        <div className="rounded-2xl border border-[#C9A24B]/30 bg-gradient-to-br from-[#12100D] to-[#0A0908] p-4 shadow-[0_0_20px_rgba(201,162,75,0.08)]">
-          <div className="mb-3 flex items-center gap-3">
-            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-[#E8D3A0] to-[#B8903A] text-sm font-bold text-[#0A0908]">
-              {user?.fullName?.charAt(0) || 'A'}
-            </div>
-            <div className="min-w-0">
-              <p className="truncate text-xs font-semibold tracking-wide text-[#F4EEDD]">
-                {user?.fullName || 'Admin User'}
-              </p>
-              <p className="mt-0.5 truncate text-[10px] text-[#8F8878]">
-                {user?.email || 'admin@ardenby.com'}
-              </p>
-            </div>
+          <div className="flex-1 overflow-y-auto px-2 py-5 lg:px-3">
+            <NavList pathname={pathname} />
           </div>
 
-          <button
-            type="button"
-            onClick={handleLogout}
-            className="flex h-9 w-full items-center justify-center gap-2 rounded-xl border border-[#C9A24B]/40 bg-[#C9A24B]/[0.06] text-xs font-semibold text-[#E8D3A0] outline-none transition hover:bg-[#C9A24B] hover:text-[#0A0908] focus-visible:ring-1 focus-visible:ring-[#E3C673]"
-          >
-            <LogOut className="h-3.5 w-3.5" />
-            Logout System
-          </button>
-        </div>
-      </div>
-    </div>
-  );
-
-  return (
-    <main className="min-h-screen bg-[#050505] text-[#F4EEDD]">
-      <div className="grid min-h-screen lg:grid-cols-[272px_1fr]">
-        {/* Desktop Sidebar */}
-        <aside className="hidden border-r border-[#C9A24B]/30 bg-[#080807] shadow-[8px_0_40px_rgba(0,0,0,0.6)] lg:block">
-          {sidebarContent}
+          <div className="border-t border-[#B89A5A]/20 p-3">
+            <div className="flex items-center gap-3 rounded-lg p-2 md:justify-center lg:justify-start">
+              <Avatar user={user} className="h-9 w-9" />
+              <div className="min-w-0 flex-1 md:hidden lg:block">
+                <p className="truncate text-[13px] font-medium text-[#F4F0E6]">
+                  {user?.fullName || 'Admin'}
+                </p>
+                <p className="truncate text-[11px] text-[#8FA394]">{user?.email || 'Administrator'}</p>
+              </div>
+              <button
+                type="button"
+                onClick={handleLogout}
+                aria-label="Log out"
+                title="Log out"
+                className="hidden rounded-md p-1.5 text-[#B89A5A] outline-none transition hover:bg-[#12351F] hover:text-[#C8A96B] focus-visible:ring-1 focus-visible:ring-[#C8A96B] lg:block"
+              >
+                <LogOut className="h-4 w-4" />
+              </button>
+            </div>
+          </div>
         </aside>
 
-        {/* Mobile Sidebar Overlay */}
-        {sidebarOpen && (
-          <div
-            className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm lg:hidden"
-            onClick={() => setSidebarOpen(false)}
-          />
-        )}
-
-        {/* Mobile Sliding Sidebar */}
-        <aside
-          className={cn(
-            'fixed inset-y-0 left-0 z-50 w-[280px] max-w-[85vw] overflow-y-auto border-r border-[#C9A24B]/30 bg-[#080807] shadow-2xl transition-transform duration-300 ease-in-out lg:hidden',
-            sidebarOpen ? 'translate-x-0' : '-translate-x-full'
-          )}
-        >
-          {sidebarContent}
-        </aside>
-
-        {/* Main Section */}
-        <section className="flex min-w-0 flex-col bg-[radial-gradient(ellipse_at_top_right,rgba(201,162,75,0.07),transparent_55%)]">
-          <header className="sticky top-0 z-30 flex items-center justify-between gap-3 border-b border-[#C9A24B]/25 bg-[#050505]/90 px-4 py-3.5 backdrop-blur-md sm:px-6 sm:py-4">
-            {/* Mobile hamburger */}
+        {/* Main column */}
+        <div className="flex min-w-0 flex-col">
+          {/* Mobile header */}
+          <header className="sticky top-0 z-40 flex h-16 items-center justify-between border-b border-[#B89A5A]/20 bg-[#07180D]/95 px-4 backdrop-blur md:hidden">
             <button
               type="button"
-              onClick={() => setSidebarOpen(true)}
+              onClick={() => setDrawerOpen(true)}
               aria-label="Open menu"
-              className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-[#C9A24B]/40 bg-[#0D0F0F] text-[#E8D3A0] outline-none transition hover:bg-[#C9A24B]/10 focus-visible:ring-1 focus-visible:ring-[#E3C673] lg:hidden"
+              className="flex h-10 w-10 items-center justify-center rounded-lg text-[#EAE4D5] outline-none transition hover:bg-[#12351F] focus-visible:ring-1 focus-visible:ring-[#C8A96B]"
             >
-              <Menu className="h-5 w-5" />
+              <Menu className="h-6 w-6" />
             </button>
-
-            {/* Mobile brand */}
-            <div className="flex flex-col items-center lg:hidden">
-              <span className="font-serif text-lg uppercase leading-none tracking-[0.14em] text-transparent bg-clip-text bg-gradient-to-b from-[#F4E3B0] via-[#C9A24B] to-[#8E6F2A]">
-                KÖVENIK
-              </span>
-              <span className="mt-1 text-[8px] font-semibold uppercase tracking-[0.4em] text-[#C9A24B]">
-                Luxury Admin
-              </span>
-            </div>
-
-            {/* Desktop title */}
-            <div className="hidden lg:block">
-              <p className="text-[10px] font-semibold uppercase tracking-[0.3em] text-[#C9A24B]">
-                Admin Console
-              </p>
-              <h1 className="mt-0.5 font-serif text-3xl font-semibold tracking-tight text-[#F4EEDD]">
-                {title}
-              </h1>
-            </div>
-
-            {/* Profile chip */}
-            <div className="flex items-center gap-3">
-              <div className="hidden text-right sm:block">
-                <p className="max-w-[160px] truncate text-xs font-semibold text-[#F4EEDD]">
-                  {user?.fullName || 'Admin User'}
-                </p>
-                <p className="text-[10px] text-[#8F8878]">Admin</p>
-              </div>
-              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-[#E8D3A0] to-[#B8903A] text-sm font-bold text-[#0A0908] shadow-[0_0_14px_rgba(201,162,75,0.35)]">
-                {user?.fullName?.charAt(0) || 'A'}
-              </div>
+            <Link href="/admin" aria-label="KOVENIK Admin home">
+              <Wordmark size="sm" />
+            </Link>
+            <div className="flex items-center gap-1">
+              <NotificationBell />
+              <ProfileMenu user={user} onLogout={handleLogout} compactName />
             </div>
           </header>
 
-          {/* Mobile page title */}
-          <div className="border-b border-[#C9A24B]/15 px-4 pb-3 pt-4 lg:hidden">
-            <p className="text-[10px] font-semibold uppercase tracking-[0.3em] text-[#C9A24B]">
-              Admin Console
-            </p>
-            <h1 className="mt-0.5 font-serif text-2xl font-semibold tracking-tight text-[#F4EEDD]">
-              {title}
-            </h1>
+          {/* Desktop / tablet header */}
+          <header className="sticky top-0 z-40 hidden h-[72px] items-center justify-between gap-6 border-b border-[#B89A5A]/20 bg-[#07180D]/90 px-6 backdrop-blur md:flex lg:px-8">
+            <CommandSearch />
+            <div className="flex items-center gap-3">
+              <span className="hidden items-center gap-2 rounded-lg border border-[#B89A5A]/25 px-3 py-2 text-xs text-[#EAE4D5] xl:flex">
+                <CalendarDays className="h-4 w-4 text-[#B89A5A]" />
+                {today}
+              </span>
+              <NotificationBell />
+              <ProfileMenu user={user} onLogout={handleLogout} />
+            </div>
+          </header>
+
+          <div className="min-w-0 flex-1 bg-[radial-gradient(ellipse_at_top_right,rgba(26,69,40,0.55),transparent_60%)] px-4 pb-28 pt-5 sm:px-6 md:pb-10 md:pt-8 lg:px-8">
+            <div className="mx-auto w-full max-w-[1400px]">{children}</div>
+          </div>
+        </div>
+      </div>
+
+      {/* Mobile bottom navigation */}
+      <nav
+        aria-label="Quick navigation"
+        className="fixed inset-x-0 bottom-0 z-40 flex border-t border-[#B89A5A]/25 bg-[#07180D]/95 pb-[env(safe-area-inset-bottom)] backdrop-blur md:hidden"
+      >
+        {bottomItems.map((item) => {
+          const Icon = item.icon;
+          const active = isActive(pathname, item.href);
+          return (
+            <Link
+              key={item.href}
+              href={item.href}
+              aria-current={active ? 'page' : undefined}
+              className={cn(
+                'flex flex-1 flex-col items-center gap-1 py-2.5 text-[11px] font-medium transition-colors',
+                active ? 'text-[#C8A96B]' : 'text-[#8FA394]'
+              )}
+            >
+              <Icon className="h-5 w-5" />
+              {item.label}
+            </Link>
+          );
+        })}
+        <button
+          type="button"
+          onClick={() => setDrawerOpen(true)}
+          className="flex flex-1 flex-col items-center gap-1 py-2.5 text-[11px] font-medium text-[#8FA394]"
+        >
+          <Menu className="h-5 w-5" />
+          More
+        </button>
+      </nav>
+
+      {/* Mobile drawer */}
+      <div
+        className={cn(
+          'fixed inset-0 z-50 md:hidden',
+          drawerOpen ? 'pointer-events-auto' : 'pointer-events-none'
+        )}
+        aria-hidden={!drawerOpen}
+      >
+        <div
+          onClick={() => setDrawerOpen(false)}
+          className={cn(
+            'absolute inset-0 bg-black/70 transition-opacity duration-300',
+            drawerOpen ? 'opacity-100' : 'opacity-0'
+          )}
+        />
+        <aside
+          role="dialog"
+          aria-modal="true"
+          aria-label="Navigation menu"
+          className={cn(
+            'absolute inset-y-0 left-0 flex h-full w-[300px] max-w-[85vw] flex-col border-r border-[#B89A5A]/30 bg-gradient-to-b from-[#0D2415] to-[#07180D] shadow-2xl transition-transform duration-300 ease-out',
+            drawerOpen ? 'translate-x-0' : '-translate-x-full'
+          )}
+        >
+          <div className="flex h-[88px] items-center justify-between border-b border-[#B89A5A]/20 px-5">
+            <Wordmark />
+            <button
+              type="button"
+              onClick={() => setDrawerOpen(false)}
+              aria-label="Close menu"
+              className="flex h-10 w-10 items-center justify-center rounded-lg border border-[#B89A5A]/30 text-[#C8A96B] outline-none transition hover:bg-[#12351F] focus-visible:ring-1 focus-visible:ring-[#C8A96B]"
+            >
+              <X className="h-5 w-5" />
+            </button>
           </div>
 
-          <div className="flex-1 p-4 sm:p-6 lg:p-8">{children}</div>
-        </section>
+          <div className="flex-1 overflow-y-auto px-3 py-5">
+            <NavList pathname={pathname} />
+          </div>
+
+          <div className="border-t border-[#B89A5A]/20 p-4 pb-[max(1rem,env(safe-area-inset-bottom))]">
+            <div className="mb-3 flex items-center gap-3">
+              <Avatar user={user} className="h-10 w-10" />
+              <div className="min-w-0">
+                <p className="truncate text-sm font-medium text-[#F4F0E6]">
+                  {user?.fullName || 'Admin'}
+                </p>
+                <p className="truncate text-xs text-[#8FA394]">{user?.email || 'Administrator'}</p>
+              </div>
+            </div>
+            <button
+              type="button"
+              onClick={handleLogout}
+              className="flex h-10 w-full items-center justify-center gap-2 rounded-lg border border-[#B89A5A]/40 text-sm font-medium text-[#C8A96B] transition hover:bg-[#B89A5A] hover:text-[#07180D]"
+            >
+              <LogOut className="h-4 w-4" />
+              Log out
+            </button>
+          </div>
+        </aside>
       </div>
-    </main>
+    </Frame>
   );
 }

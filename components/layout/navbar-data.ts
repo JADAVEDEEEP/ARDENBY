@@ -12,7 +12,7 @@ export const topNavItems = [
     desc: 'Graphic & printed tees',
   },
   {
-    label: 'ARDENBY PREMIUM',
+    label: 'KOVENIK PREMIUM',
     slug: 'ardenby-premium',
     desc: 'Long-staple cotton essentials',
   },

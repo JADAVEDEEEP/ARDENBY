@@ -10,7 +10,7 @@ export function Providers({ children }: { children: ReactNode }) {
     <TooltipProvider delayDuration={200}>
       {children}
       <CartDrawer />
-      <Toaster position="top-center" richColors />
+      <Toaster position="top-center" />
     </TooltipProvider>
   );
 }

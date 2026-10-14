@@ -18,17 +18,17 @@ import {
   ChevronRight,
   Filter,
   LayoutGrid,
-  List,
-  Shirt,
   Package,
+  EyeOff,
+  Eye,
   AlertTriangle,
-  ArrowUpDown,
   ExternalLink,
   Copy,
   PackageCheck,
   Tag,
   Layers3,
-  MoreHorizontal,
+  MoreVertical,
+  ArrowLeft,
   ArrowRight,
   UploadCloud,
 } from "lucide-react";
@@ -73,6 +73,10 @@ type Product = {
   inventory?: number;
   images?: Image[];
   variants?: Variant[];
+  // optional fields read from the existing API response (display only)
+  is_active?: boolean | number;
+  status?: string;
+  created_at?: string;
 };
 
 type Toast = {
@@ -103,15 +107,20 @@ const emptyForm = {
   variants: [] as Variant[],
 };
 
-/* shared UI tokens (presentation only) — KÖVENIK black + metallic gold */
+/* shared UI tokens (presentation only) — KOVENIK forest green + gold */
 const inputCls =
-  "w-full min-h-11 rounded-xl border border-[#C9A24B]/25 bg-[#0A0908] px-3.5 py-2.5 text-sm text-[#F4EEDD] outline-none transition duration-200 [color-scheme:dark] placeholder:text-[#6b6455] hover:border-[#C9A24B]/50 focus:border-[#E3C673] focus:ring-4 focus:ring-[#C9A24B]/15";
+  "w-full min-h-11 rounded-xl border border-[#B89A5A]/25 bg-[#07180D] px-3.5 py-2.5 text-sm text-[#F4F0E6] outline-none transition duration-200 [color-scheme:dark] placeholder:text-[#5E7463] hover:border-[#B89A5A]/50 focus:border-[#C8A96B] focus:ring-4 focus:ring-[#B89A5A]/15";
 const labelCls =
-  "mb-1.5 block text-[11px] font-medium uppercase tracking-[0.14em] text-[#B9B09C]";
+  "mb-1.5 block text-[11px] font-medium tracking-[0.08em] text-[#AEBDAF]";
 const goldBtn =
-  "bg-gradient-to-b from-[#E8D3A0] via-[#C9A24B] to-[#A9822F] text-[#0A0908] shadow-[0_0_18px_rgba(201,162,75,0.3)] hover:from-[#F1E0B4] hover:via-[#D6B05A] hover:to-[#B8903A]";
+  "bg-gradient-to-b from-[#C8A96B] to-[#B89A5A] text-[#07180D] shadow-[0_4px_16px_rgba(184,154,90,0.22)] hover:from-[#D6BB84] hover:to-[#C8A96B]";
 const panelCls =
-  "rounded-2xl border border-[#C9A24B]/35 bg-gradient-to-br from-[#12100D] via-[#0D0F0F] to-[#0A0908] shadow-[0_0_28px_rgba(201,162,75,0.06)]";
+  "rounded-xl border border-[#B89A5A]/20 bg-gradient-to-br from-[#12351F] via-[#0D2415] to-[#0A1D11] shadow-[0_8px_30px_-12px_rgba(0,0,0,0.6)]";
+const selectCls =
+  "h-11 w-full cursor-pointer appearance-none rounded-lg border border-[#B89A5A]/25 bg-[#0D2415] pl-3.5 pr-9 text-[13px] text-[#F4F0E6] outline-none transition duration-200 [color-scheme:dark] hover:border-[#B89A5A]/55 focus:border-[#C8A96B] focus:ring-4 focus:ring-[#B89A5A]/15";
+
+const tableGrid =
+  "grid-cols-[40px_minmax(240px,2.3fr)_minmax(90px,.9fr)_minmax(100px,.9fr)_minmax(64px,.6fr)_minmax(90px,.9fr)_minmax(110px,1fr)_92px]";
 
 export default function AdminProductsPage() {
   const [products, setProducts] = useState<Product[]>([]);
@@ -461,16 +470,16 @@ export default function AdminProductsPage() {
   };
 
   /* ---- UI-only state (no API impact) ---- */
-  const [viewMode, setViewMode] = useState<"list" | "grid">("list");
   const [tagFilter, setTagFilter] = useState("");
   const [statusFilter, setStatusFilter] = useState("");
   const [sortBy, setSortBy] = useState("default");
-  const [perPage, setPerPage] = useState(10);
+  const [perPage] = useState(10);
   const [page, setPage] = useState(1);
   const [selected, setSelected] = useState<string[]>([]);
   const [previewProduct, setPreviewProduct] = useState<Product | null>(null);
   const [previewImageIndex, setPreviewImageIndex] = useState(0);
   const [filtersOpen, setFiltersOpen] = useState(false); // mobile filter sheet visibility only
+  const [menuId, setMenuId] = useState<string | null>(null); // "more" menu visibility only
   const searchRef = useRef<HTMLInputElement>(null);
 
   // press "/" anywhere to jump to search
@@ -489,25 +498,35 @@ export default function AdminProductsPage() {
   const stockOf = (p: Product) => Number(p.inventory || 0);
   const priceOf = (p: Product) => Number(p.best_price || p.price || 0);
   const inr = (n: number) => n.toLocaleString("en-IN");
+  const isActive = (p: Product) =>
+    p.is_active !== false &&
+    p.is_active !== 0 &&
+    !["inactive", "draft", "archived"].includes(String(p.status || "").toLowerCase());
+  const createdOf = (p: Product) => {
+    if (!p.created_at) return "—";
+    const d = new Date(p.created_at);
+    return Number.isNaN(d.getTime())
+      ? "—"
+      : d.toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" });
+  };
+  const skuOf = (p: Product) => p.variants?.[0]?.sku || p.id;
 
   const totalCount = products.length;
-  const inStockCount = products.filter((p) => stockOf(p) > 0).length;
+  const activeCount = products.filter(isActive).length;
+  const inactiveCount = totalCount - activeCount;
   const lowCount = products.filter((p) => stockOf(p) > 0 && stockOf(p) <= 5).length;
   const outCount = products.filter((p) => stockOf(p) === 0).length;
-  const unitsOnHand = products.reduce((s, p) => s + stockOf(p), 0);
-  const stockValue = products.reduce((s, p) => s + priceOf(p) * stockOf(p), 0);
-  const maxStock = Math.max(1, ...products.map(stockOf));
 
   const stats = [
-    { label: "Total Products", value: totalCount, sub: "All products in store", icon: Shirt },
+    { label: "Total Products", value: totalCount, sub: "All products in store", icon: LayoutGrid },
+    { label: "Active Products", value: activeCount, sub: "Visible in store", icon: Package },
+    { label: "Inactive Products", value: inactiveCount, sub: "Hidden from store", icon: EyeOff },
     {
-      label: "In Stock",
-      value: inStockCount,
-      sub: lowCount > 0 ? `${lowCount} running low` : "Available products",
-      icon: Package,
+      label: "Low Stock",
+      value: lowCount,
+      sub: outCount > 0 ? `${outCount} out of stock` : "5 units or fewer",
+      icon: AlertTriangle,
     },
-    { label: "Out of Stock", value: outCount, sub: "Unavailable products", icon: AlertTriangle },
-    { label: "Categories", value: categories.length, sub: "Product categories", icon: Layers3 },
   ];
 
   const filtered = products
@@ -526,6 +545,8 @@ export default function AdminProductsPage() {
       if (tagFilter === "new_arrival" && !p.new_arrival) return false;
       if (tagFilter === "trending" && !p.trending) return false;
       if (tagFilter === "limited_edition" && !p.limited_edition) return false;
+      if (statusFilter === "active" && !isActive(p)) return false;
+      if (statusFilter === "inactive" && isActive(p)) return false;
       if (statusFilter === "in" && stockOf(p) <= 5) return false;
       if (statusFilter === "low" && !(stockOf(p) > 0 && stockOf(p) <= 5)) return false;
       if (statusFilter === "out" && stockOf(p) !== 0) return false;
@@ -536,6 +557,10 @@ export default function AdminProductsPage() {
       if (sortBy === "price_desc") return priceOf(b) - priceOf(a);
       if (sortBy === "stock_asc") return stockOf(a) - stockOf(b);
       if (sortBy === "name") return a.name.localeCompare(b.name);
+      if (sortBy === "newest")
+        return (
+          new Date(b.created_at || 0).getTime() - new Date(a.created_at || 0).getTime()
+        );
       return 0;
     });
 
@@ -565,6 +590,8 @@ export default function AdminProductsPage() {
     limited_edition: "Limited",
   };
   const statusLabels: Record<string, string> = {
+    active: "Active",
+    inactive: "Inactive",
     in: "In Stock",
     low: "Low Stock",
     out: "Out of Stock",
@@ -582,45 +609,6 @@ export default function AdminProductsPage() {
   if (tagFilter) chips.push({ label: tagLabels[tagFilter], clear: () => setTagFilter("") });
   if (statusFilter) chips.push({ label: statusLabels[statusFilter], clear: () => setStatusFilter("") });
 
-  const selectCls =
-    "h-10 w-full cursor-pointer appearance-none rounded-lg border border-[#C9A24B]/30 bg-[#0A0908] pl-3 pr-9 text-xs text-[#F4EEDD] outline-none transition duration-200 [color-scheme:dark] hover:border-[#C9A24B]/60 focus:border-[#E3C673] focus:ring-4 focus:ring-[#C9A24B]/15";
-
-  const tagsOf = (p: Product) => (
-    <>
-      {p.best_seller && <Badge label="Best Seller" tone="amber" />}
-      {p.new_arrival && <Badge label="New" tone="blue" />}
-      {p.trending && <Badge label="Trending" tone="pink" />}
-      {p.limited_edition && <Badge label="Limited" tone="violet" />}
-      {!p.best_seller && !p.new_arrival && !p.trending && !p.limited_edition && (
-        <span className="text-xs text-[#6b6455]">—</span>
-      )}
-    </>
-  );
-
-  const stockView = (p: Product) => {
-    const s = stockOf(p);
-    const low = s <= 5;
-    const pct = s === 0 ? 0 : Math.max(8, Math.round((s / maxStock) * 100));
-    return (
-      <div className="min-w-0">
-        <span
-          className={`inline-flex items-center gap-2 text-sm ${
-            low ? "text-red-300" : "text-emerald-300"
-          }`}
-        >
-          <span className={`h-2 w-2 rounded-full ${low ? "bg-red-400" : "bg-emerald-400"}`} />
-          {s === 0 ? "Out of stock" : `${s} in stock`}
-        </span>
-        <div className="mt-1.5 h-1 w-24 max-w-full overflow-hidden rounded-full bg-[#C9A24B]/15">
-          <div
-            className={`h-full rounded-full transition-all duration-700 ${low ? "bg-red-400" : "bg-emerald-400"}`}
-            style={{ width: `${pct}%` }}
-          />
-        </div>
-      </div>
-    );
-  };
-
   const priceView = (p: Product) => {
     const off =
       p.mrp && priceOf(p) && p.mrp > priceOf(p)
@@ -629,13 +617,13 @@ export default function AdminProductsPage() {
     return (
       <div>
         <div className="flex flex-wrap items-baseline gap-x-2">
-          <span className="text-base font-semibold tabular-nums text-[#F4EEDD]">₹{priceOf(p)}</span>
-          {p.mrp ? (
-            <span className="text-xs text-[#8F8878] line-through tabular-nums">₹{p.mrp}</span>
+          <span className="text-[15px] font-semibold tabular-nums text-[#F4F0E6]">₹{inr(priceOf(p))}</span>
+          {p.mrp && p.mrp > priceOf(p) ? (
+            <span className="text-[11px] text-[#7F9484] line-through tabular-nums">₹{inr(p.mrp)}</span>
           ) : null}
         </div>
         {off > 0 && (
-          <span className="mt-0.5 inline-block text-[11px] font-medium text-emerald-400">
+          <span className="mt-0.5 inline-block text-[11px] font-medium text-[#C8A96B]">
             {off}% off
           </span>
         )}
@@ -643,30 +631,22 @@ export default function AdminProductsPage() {
     );
   };
 
+  const stockClr = (stock: number) =>
+    stock === 0 ? "text-red-400" : stock <= 5 ? "text-[#E0A24A]" : "text-[#9FD3A8]";
+
   const thumb = (p: Product, cls: string) => (
-    <div className={`shrink-0 overflow-hidden rounded-xl border border-[#C9A24B]/35 bg-[#12100D] ${cls}`}>
+    <div className={`shrink-0 overflow-hidden rounded-lg border border-[#B89A5A]/30 bg-[#0D2415] ${cls}`}>
       {p.images?.[0]?.image_url ? (
         <img
           src={p.images[0].image_url}
           alt={p.name}
-          className="h-full w-full object-cover transition duration-500 group-hover:scale-110"
+          className="h-full w-full object-cover"
         />
       ) : (
-        <div className="flex h-full items-center justify-center text-[#6b6455]">
+        <div className="flex h-full items-center justify-center text-[#5E7463]">
           <ImageOff className="h-5 w-5" />
         </div>
       )}
-    </div>
-  );
-
-  const actions = (p: Product) => (
-    <div className="flex gap-2">
-      <IconAction label="Edit" onClick={() => openEdit(p)}>
-        <Pencil className="h-4 w-4" />
-      </IconAction>
-      <IconAction label="Delete" danger onClick={() => deleteProduct(p.id)}>
-        <Trash2 className="h-4 w-4" />
-      </IconAction>
     </div>
   );
 
@@ -679,17 +659,13 @@ export default function AdminProductsPage() {
   const previewStock = previewProduct ? stockOf(previewProduct) : 0;
   const previewPrice = previewProduct ? priceOf(previewProduct) : 0;
   const previewStatus =
-    previewStock === 0 ? "Out of stock" : previewStock <= 5 ? "Low Stock" : "Published";
-
-  const rowGrid =
-    "md:grid-cols-[32px_minmax(245px,2.35fr)_minmax(105px,1fr)_minmax(100px,.9fr)_minmax(125px,1.1fr)_minmax(135px,1.35fr)_88px]";
-
-  const bannerImgs = products.filter((p) => p.images?.[0]?.image_url).slice(0, 3);
-  const fan = [
-    "-rotate-6 group-hover/banner:-rotate-12 group-hover/banner:-translate-x-3",
-    "rotate-2 translate-x-[76px] translate-y-3 group-hover/banner:translate-x-[92px]",
-    "rotate-[10deg] translate-x-[152px] group-hover/banner:translate-x-[180px] group-hover/banner:rotate-[15deg]",
-  ];
+    previewProduct && !isActive(previewProduct)
+      ? "Inactive"
+      : previewStock === 0
+        ? "Out of stock"
+        : previewStock <= 5
+          ? "Low Stock"
+          : "Active";
 
   /* ---- presentation-only helpers ---- */
   const formSections = [
@@ -702,37 +678,101 @@ export default function AdminProductsPage() {
   const jumpTo = (id: string) =>
     document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" });
 
-  const statusBadge = (stock: number, small = false) => (
-    <span
-      className={`inline-flex items-center rounded-full border font-medium ${
-        small ? "px-2.5 py-1 text-[10px]" : "px-3 py-1.5 text-[10px]"
-      } ${
-        stock === 0
-          ? "border-red-400/40 bg-red-500/10 text-red-300"
-          : stock <= 5
-            ? "border-amber-400/40 bg-amber-500/10 text-amber-300"
-            : "border-emerald-400/40 bg-emerald-500/10 text-emerald-300"
-      }`}
-    >
-      {stock === 0 ? "Out of Stock" : stock <= 5 ? "Low Stock" : "In Stock"}
-    </span>
+  const statusBadge = (p: Product, small = false) => {
+    const active = isActive(p);
+    return (
+      <span
+        className={`inline-flex items-center gap-1.5 rounded-full border font-medium ${
+          small ? "px-2.5 py-1 text-[11px]" : "px-3 py-1 text-[11px]"
+        } ${
+          active
+            ? "border-[#B89A5A]/35 bg-[#1C5A34]/70 text-[#CFEBD3]"
+            : "border-[#9C5A4A]/50 bg-[#5A2A25]/60 text-[#F0B7AB]"
+        }`}
+      >
+        <span className={`h-1.5 w-1.5 rounded-full ${active ? "bg-[#7BD18F]" : "bg-[#E58C7B]"}`} />
+        {active ? "Active" : "Inactive"}
+      </span>
+    );
+  };
+
+  const moreMenu = (p: Product, up = false) => (
+    <div className="relative">
+      <button
+        type="button"
+        aria-label="More actions"
+        onClick={(e) => {
+          e.stopPropagation();
+          setMenuId(menuId === p.id ? null : p.id);
+        }}
+        className="flex h-10 w-9 items-center justify-center rounded-lg border border-[#B89A5A]/15 bg-[#0D2415] text-[#AEBDAF] outline-none transition hover:border-[#B89A5A]/45 hover:text-[#F4F0E6] focus-visible:ring-2 focus-visible:ring-[#C8A96B]"
+      >
+        <MoreVertical className="h-4 w-4" />
+      </button>
+
+      {menuId === p.id && (
+        <>
+          <button
+            type="button"
+            aria-label="Close menu"
+            onClick={() => setMenuId(null)}
+            className="fixed inset-0 z-30 cursor-default"
+          />
+          <div
+            className={`absolute right-0 z-40 w-44 overflow-hidden rounded-lg border border-[#B89A5A]/35 bg-[#0D2415] py-1 shadow-[0_16px_40px_-10px_rgba(0,0,0,0.9)] ${
+              up ? "bottom-full mb-1.5" : "top-full mt-1.5"
+            }`}
+          >
+            <button
+              type="button"
+              onClick={() => {
+                setMenuId(null);
+                openPreview(p);
+              }}
+              className="flex w-full items-center gap-2.5 px-3.5 py-2.5 text-left text-xs text-[#F4F0E6] transition hover:bg-[#B89A5A]/10"
+            >
+              <Eye className="h-3.5 w-3.5 text-[#C8A96B]" />
+              View details
+            </button>
+            <button
+              type="button"
+              onClick={() => {
+                setMenuId(null);
+                deleteProduct(p.id);
+              }}
+              className="flex w-full items-center gap-2.5 px-3.5 py-2.5 text-left text-xs text-red-300 transition hover:bg-red-500/10"
+            >
+              <Trash2 className="h-3.5 w-3.5" />
+              Delete product
+            </button>
+          </div>
+        </>
+      )}
+    </div>
   );
 
-  const tableGrid =
-    "grid-cols-[44px_minmax(260px,2.4fr)_minmax(110px,1fr)_minmax(120px,1fr)_minmax(80px,.7fr)_minmax(120px,1fr)_96px]";
+  const editBtn = (p: Product) => (
+    <button
+      type="button"
+      onClick={() => openEdit(p)}
+      aria-label={`Edit ${p.name}`}
+      title="Edit"
+      className="flex h-10 w-10 items-center justify-center rounded-lg border border-[#B89A5A]/55 bg-transparent text-[#C8A96B] outline-none transition hover:bg-[#B89A5A] hover:text-[#07180D] focus-visible:ring-2 focus-visible:ring-[#C8A96B]"
+    >
+      <Pencil className="h-4 w-4" />
+    </button>
+  );
 
   return (
-    <div className="kv-scope mx-auto w-full max-w-7xl overflow-x-hidden pb-10 text-[#F4EEDD]">
+    <div className="kv-scope mx-auto w-full max-w-7xl overflow-x-hidden pb-10 text-[#F4F0E6]">
       <style>{`
-        @keyframes kv-rise { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
         @keyframes kv-pop { from { opacity: 0; transform: translateY(14px) scale(.985); } to { opacity: 1; transform: none; } }
-        .kv-rise { animation: kv-rise .5s cubic-bezier(.2,.7,.2,1) both; }
         .kv-pop { animation: kv-pop .35s cubic-bezier(.2,.7,.2,1) both; }
-        @media (prefers-reduced-motion: reduce) { .kv-rise, .kv-pop { animation: none; } }
-        .kv-scope ::selection { background: rgba(201,162,75,.3); color: #fff; }
-        .kv-scope * { scrollbar-width: thin; scrollbar-color: #5a4a22 transparent; }
+        @media (prefers-reduced-motion: reduce) { .kv-pop { animation: none; } }
+        .kv-scope ::selection { background: rgba(184,154,90,.3); color: #fff; }
+        .kv-scope * { scrollbar-width: thin; scrollbar-color: #3b5a43 transparent; }
         .kv-scope *::-webkit-scrollbar { width: 7px; height: 7px; }
-        .kv-scope *::-webkit-scrollbar-thumb { background: #5a4a22; border-radius: 999px; }
+        .kv-scope *::-webkit-scrollbar-thumb { background: #3b5a43; border-radius: 999px; }
         .kv-scope *::-webkit-scrollbar-track { background: transparent; }
         .kv-scope button, .kv-scope a, .kv-scope input, .kv-scope select, .kv-scope textarea { -webkit-tap-highlight-color: transparent; }
         @media (max-width: 639px) {
@@ -743,217 +783,209 @@ export default function AdminProductsPage() {
       {/* PAGE HEADER */}
       <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
         <div>
-          <p className="text-[10px] font-semibold uppercase tracking-[0.3em] text-[#C9A24B]">
-            Product Studio
-          </p>
-          <h2 className="mt-1 font-serif text-3xl font-semibold leading-none tracking-tight text-[#F4EEDD] sm:text-4xl">
-            Products <span className="text-[#E3C673]">✦</span>
+          <h2 className="font-serif text-3xl font-semibold leading-tight tracking-tight text-[#F4F0E6] sm:text-4xl">
+            Product Management
           </h2>
-          <p className="mt-2 text-sm text-[#B9B09C]">
-            Manage all your products and stock
+          <p className="mt-1.5 text-sm text-[#AEBDAF]">
+            Manage your products, variants, inventory and more.
           </p>
         </div>
 
-        <div className="flex gap-2.5">
-          <button
-            type="button"
-            onClick={() => document.getElementById("ardenby-category-filter")?.focus()}
-            className="hidden h-11 items-center gap-2 rounded-xl border border-[#C9A24B]/50 bg-[#0D0F0F] px-4 text-xs font-semibold text-[#E8D3A0] outline-none transition hover:bg-[#C9A24B]/10 hover:shadow-[0_0_16px_rgba(201,162,75,0.2)] focus-visible:ring-2 focus-visible:ring-[#E3C673] sm:flex"
-          >
-            <Layers3 className="h-4 w-4" />
-            Categories
-          </button>
-
-          <button
-            type="button"
-            onClick={openAdd}
-            className={`flex h-11 w-full items-center justify-center gap-2 rounded-xl px-5 text-xs font-bold outline-none transition active:scale-[.98] focus-visible:ring-2 focus-visible:ring-[#F4EEDD] sm:w-auto ${goldBtn}`}
-          >
-            <Plus className="h-4 w-4" />
-            <span className="sm:hidden">Add Product</span>
-            <span className="hidden sm:inline">Add New Product</span>
-          </button>
-        </div>
+        <button
+          type="button"
+          onClick={openAdd}
+          className={`flex h-11 w-full items-center justify-center gap-2 rounded-lg px-5 text-[13px] font-semibold outline-none transition active:scale-[.98] focus-visible:ring-2 focus-visible:ring-[#F4F0E6] sm:w-auto ${goldBtn}`}
+        >
+          <Plus className="h-4 w-4" />
+          Add Product
+        </button>
       </div>
 
-      {/* KPI CARDS */}
+      {/* STAT CARDS */}
       <section className="mt-5 grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
         {stats.map((s) => {
           const Icon = s.icon;
           return (
             <div
               key={s.label}
-              className={`${panelCls} group relative flex items-center gap-3 overflow-hidden p-3.5 transition-all duration-300 hover:border-[#E3C673]/70 hover:shadow-[0_0_30px_rgba(201,162,75,0.18)] sm:gap-4 sm:p-4`}
+              className={`${panelCls} flex items-center gap-3 p-3.5 transition-colors duration-300 hover:border-[#C8A96B]/45 sm:gap-4 sm:p-4`}
             >
-              <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-[#C9A24B]/50 bg-[#C9A24B]/10 text-[#E3C673] sm:h-12 sm:w-12">
+              <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg border border-[#B89A5A]/40 bg-[#163D25] text-[#C8A96B] sm:h-12 sm:w-12">
                 <Icon className="h-5 w-5" />
               </span>
               <div className="min-w-0">
-                <p className="font-sans text-2xl font-bold leading-none tabular-nums text-[#F4EEDD]">
+                <p className="truncate text-[12px] font-medium text-[#F4F0E6]">{s.label}</p>
+                <p className="mt-0.5 font-serif text-3xl font-semibold leading-none tabular-nums text-[#F4F0E6]">
                   {loading && products.length === 0 ? "—" : s.value}
                 </p>
-                <p className="mt-1.5 truncate text-[11px] font-medium text-[#B9B09C]">
-                  {s.label}
-                </p>
-                <p className="hidden truncate text-[10px] text-[#8F8878] sm:block">
-                  {s.sub}
-                </p>
+                <p className="mt-1 hidden truncate text-[11px] text-[#AEBDAF] sm:block">{s.sub}</p>
               </div>
-              <svg
-                className="pointer-events-none absolute bottom-0 right-0 h-10 w-1/2 opacity-50"
-                viewBox="0 0 120 40"
-                preserveAspectRatio="none"
-                aria-hidden="true"
-              >
-                <path
-                  d="M0 38 C 40 36, 70 30, 95 18 S 115 4, 120 2"
-                  fill="none"
-                  stroke="#C9A24B"
-                  strokeWidth="1.2"
-                />
-              </svg>
             </div>
           );
         })}
       </section>
 
-      {/* TOOLBAR + LIST */}
-      <div className={`${panelCls} mt-5 overflow-hidden`}>
-        <div className="flex flex-col gap-3 border-b border-[#C9A24B]/20 px-3 py-3 sm:px-4 lg:flex-row lg:items-center lg:justify-between">
-          <div className="flex items-center gap-2">
-            <div className="relative hidden sm:block sm:w-[190px]">
-              <select
-                value={statusFilter}
-                onChange={(e) => {
-                  setStatusFilter(e.target.value);
-                  setPage(1);
-                }}
-                aria-label="Filter by stock status"
-                className={selectCls}
-              >
-                <option value="">All Products ({filtered.length})</option>
-                <option value="in">In Stock</option>
-                <option value="low">Low Stock</option>
-                <option value="out">Out of Stock</option>
-              </select>
-              <ChevronDown className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[#C9A24B]" />
-            </div>
+      {/* TOOLBAR */}
+      <div className="mt-5 flex gap-2 lg:hidden">
+        <div className="relative min-w-0 flex-1">
+          <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[#C8A96B]" />
+          <input
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") loadProducts();
+            }}
+            placeholder="Search products..."
+            className="h-11 w-full rounded-lg border border-[#B89A5A]/25 bg-[#0D2415] pl-9 pr-3 text-[13px] text-[#F4F0E6] outline-none transition placeholder:text-[#5E7463] hover:border-[#B89A5A]/55 focus:border-[#C8A96B] focus:ring-4 focus:ring-[#B89A5A]/15"
+          />
+        </div>
+        <button
+          type="button"
+          onClick={() => setFiltersOpen(true)}
+          aria-label="Open filters"
+          className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-lg ${goldBtn}`}
+        >
+          <Filter className="h-4 w-4" />
+        </button>
+      </div>
 
-            <span className="text-xs font-medium text-[#B9B09C] sm:hidden">
-              Products : {filtered.length}
-            </span>
-
-            {selected.length > 0 && (
-              <span className="rounded-full border border-[#C9A24B]/50 bg-[#C9A24B]/15 px-2.5 py-1 text-[10px] font-medium text-[#E8D3A0]">
-                {selected.length} selected
-              </span>
-            )}
-          </div>
-
-          <div className="flex w-full flex-col gap-2 sm:flex-row lg:w-auto">
-            <div className="flex min-w-0 flex-1 gap-2 sm:w-[270px] sm:flex-none lg:w-[300px]">
-              <div className="relative min-w-0 flex-1">
-                <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[#C9A24B]" />
-                <input
-                  ref={searchRef}
-                  value={search}
-                  onChange={(e) => setSearch(e.target.value)}
-                  onKeyDown={(e) => {
-                    if (e.key === "Enter") loadProducts();
-                  }}
-                  placeholder="Search products..."
-                  className="h-10 w-full rounded-lg border border-[#C9A24B]/30 bg-[#0A0908] pl-9 pr-9 text-xs text-[#F4EEDD] outline-none transition placeholder:text-[#6b6455] hover:border-[#C9A24B]/60 focus:border-[#E3C673] focus:ring-4 focus:ring-[#C9A24B]/15"
-                />
-                <kbd className="pointer-events-none absolute right-2.5 top-1/2 hidden h-6 w-6 -translate-y-1/2 items-center justify-center rounded border border-[#C9A24B]/30 text-[11px] text-[#8F8878] sm:flex">
-                  /
-                </kbd>
-              </div>
-
-              {/* mobile: opens filter sheet */}
-              <button
-                type="button"
-                onClick={() => setFiltersOpen(true)}
-                aria-label="Open filters"
-                className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg border border-[#C9A24B]/50 bg-[#C9A24B]/10 text-[#E3C673] transition hover:bg-[#C9A24B]/20 sm:hidden"
-              >
-                <Filter className="h-4 w-4" />
-              </button>
-            </div>
-
-            <div className="relative hidden sm:block sm:w-[175px]">
-              <select
-                id="ardenby-category-filter"
-                value={category}
-                onChange={(e) => {
-                  setCategory(e.target.value);
-                  setPage(1);
-                }}
-                className={selectCls}
-              >
-                <option value="">All Categories</option>
-                {categories.map((cat) => (
-                  <option key={cat.slug || cat.id} value={cat.slug}>
-                    {cat.name || cat.label}
-                  </option>
-                ))}
-              </select>
-              <ChevronDown className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[#C9A24B]" />
-            </div>
-
-            <button
-              type="button"
-              onClick={loadProducts}
-              className="hidden h-10 items-center justify-center gap-2 rounded-lg border border-[#C9A24B]/50 bg-[#C9A24B]/10 px-4 text-xs font-semibold text-[#E8D3A0] transition hover:bg-[#C9A24B]/20 hover:shadow-[0_0_14px_rgba(201,162,75,0.25)] sm:flex"
-            >
-              <Filter className="h-3.5 w-3.5" />
-              Filter
-            </button>
-          </div>
+      <div className="mt-5 hidden items-center gap-3 lg:flex">
+        <div className="relative min-w-0 flex-1">
+          <Search className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-[#C8A96B]" />
+          <input
+            ref={searchRef}
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") loadProducts();
+            }}
+            placeholder="Search products by name, SKU..."
+            className="h-11 w-full rounded-lg border border-[#B89A5A]/25 bg-[#0D2415] pl-10 pr-10 text-[13px] text-[#F4F0E6] outline-none transition placeholder:text-[#5E7463] hover:border-[#B89A5A]/55 focus:border-[#C8A96B] focus:ring-4 focus:ring-[#B89A5A]/15"
+          />
+          <kbd className="pointer-events-none absolute right-3 top-1/2 flex h-6 w-6 -translate-y-1/2 items-center justify-center rounded border border-[#B89A5A]/25 text-[11px] text-[#7F9484]">
+            /
+          </kbd>
         </div>
 
-        {/* active filter chips */}
-        {chips.length > 0 && (
-          <div className="flex flex-wrap gap-2 border-b border-[#C9A24B]/15 px-3 py-2.5 sm:px-4">
+        <div className="relative w-[170px] shrink-0">
+          <select
+            id="ardenby-category-filter"
+            value={category}
+            onChange={(e) => {
+              setCategory(e.target.value);
+              setPage(1);
+            }}
+            aria-label="Filter by category"
+            className={selectCls}
+          >
+            <option value="">All Categories</option>
+            {categories.map((cat) => (
+              <option key={cat.slug || cat.id} value={cat.slug}>
+                {cat.name || cat.label}
+              </option>
+            ))}
+          </select>
+          <ChevronDown className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[#C8A96B]" />
+        </div>
+
+        <div className="relative w-[150px] shrink-0">
+          <select
+            value={statusFilter}
+            onChange={(e) => {
+              setStatusFilter(e.target.value);
+              setPage(1);
+            }}
+            aria-label="Filter by status"
+            className={selectCls}
+          >
+            <option value="">All Status</option>
+            <option value="active">Active</option>
+            <option value="inactive">Inactive</option>
+            <option value="in">In Stock</option>
+            <option value="low">Low Stock</option>
+            <option value="out">Out of Stock</option>
+          </select>
+          <ChevronDown className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[#C8A96B]" />
+        </div>
+
+        <div className="relative w-[150px] shrink-0">
+          <select
+            value={sortBy}
+            onChange={(e) => {
+              setSortBy(e.target.value);
+              setPage(1);
+            }}
+            aria-label="Sort products"
+            className={selectCls}
+          >
+            <option value="default">Sort by</option>
+            <option value="newest">Newest first</option>
+            <option value="name">Name A–Z</option>
+            <option value="price_asc">Price: low to high</option>
+            <option value="price_desc">Price: high to low</option>
+            <option value="stock_asc">Stock: low to high</option>
+          </select>
+          <ChevronDown className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[#C8A96B]" />
+        </div>
+
+        <button
+          type="button"
+          onClick={loadProducts}
+          className={`flex h-11 shrink-0 items-center justify-center gap-2 rounded-lg px-5 text-[13px] font-semibold transition active:scale-[.98] ${goldBtn}`}
+        >
+          <Filter className="h-3.5 w-3.5" />
+          Filter
+        </button>
+      </div>
+
+      {/* LIST PANEL */}
+      <div className={`${panelCls} mt-4 overflow-hidden`}>
+        {/* active filter chips + selection */}
+        {(chips.length > 0 || selected.length > 0) && (
+          <div className="flex flex-wrap items-center gap-2 border-b border-[#B89A5A]/15 px-3 py-2.5 sm:px-4">
             {chips.map((chip) => (
               <button
                 key={chip.label}
                 type="button"
                 onClick={chip.clear}
-                className="inline-flex items-center gap-1.5 rounded-full border border-[#C9A24B]/40 bg-[#C9A24B]/10 px-3 py-1 text-[11px] text-[#E8D3A0] transition hover:bg-[#C9A24B]/20"
+                className="inline-flex items-center gap-1.5 rounded-full border border-[#B89A5A]/40 bg-[#B89A5A]/10 px-3 py-1 text-[11px] text-[#C8A96B] transition hover:bg-[#B89A5A]/20"
               >
                 {chip.label}
                 <X className="h-3 w-3" />
               </button>
             ))}
+            {selected.length > 0 && (
+              <span className="ml-auto text-[11px] text-[#AEBDAF]">{selected.length} selected</span>
+            )}
           </div>
         )}
 
         {/* loading / empty */}
         {loading && products.length === 0 && (
-          <div className="flex items-center justify-center gap-2 py-16 text-sm text-[#B9B09C]">
-            <Loader2 className="h-4 w-4 animate-spin text-[#C9A24B]" />
+          <div className="flex items-center justify-center gap-2 py-16 text-sm text-[#AEBDAF]">
+            <Loader2 className="h-4 w-4 animate-spin text-[#C8A96B]" />
             Loading products...
           </div>
         )}
 
         {!loading && filtered.length === 0 && (
           <div className="flex flex-col items-center justify-center gap-3 px-4 py-16 text-center">
-            <span className="flex h-14 w-14 items-center justify-center rounded-2xl border border-[#C9A24B]/40 bg-[#C9A24B]/10 text-[#E3C673]">
+            <span className="flex h-14 w-14 items-center justify-center rounded-xl border border-[#B89A5A]/35 bg-[#163D25] text-[#C8A96B]">
               <PackageOpen className="h-6 w-6" />
             </span>
-            <p className="text-sm font-medium text-[#F4EEDD]">No products found</p>
-            <p className="text-xs text-[#8F8878]">
+            <p className="text-sm font-medium text-[#F4F0E6]">No products found</p>
+            <p className="text-xs text-[#7F9484]">
               Try a different search or filter, or add a new product.
             </p>
           </div>
         )}
 
-        {/* DESKTOP TABLE */}
+        {/* DESKTOP / TABLET TABLE */}
         {filtered.length > 0 && (
           <div className="hidden overflow-x-auto md:block">
-            <div className="min-w-[860px]">
+            <div className="min-w-[960px]">
               <div
-                className={`grid ${tableGrid} items-center border-b border-[#C9A24B]/20 bg-[#C9A24B]/[0.04] px-4 py-3 text-[10px] font-semibold uppercase tracking-[0.14em] text-[#C9A24B] lg:px-5`}
+                className={`grid ${tableGrid} items-center border-b border-[#B89A5A]/20 bg-[#07180D]/50 px-4 py-3 text-[11px] font-semibold tracking-[0.12em] text-[#C8A96B] lg:px-5`}
               >
                 <div>
                   <input
@@ -961,18 +993,19 @@ export default function AdminProductsPage() {
                     checked={allSelected}
                     onChange={toggleAll}
                     aria-label="Select all products"
-                    className="h-4 w-4 accent-[#C9A24B]"
+                    className="h-4 w-4 accent-[#B89A5A]"
                   />
                 </div>
-                <span>Product</span>
-                <span>Price</span>
-                <span>Category</span>
-                <span>Stock</span>
-                <span>Status</span>
-                <span className="text-right">Actions</span>
+                <span>PRODUCT</span>
+                <span>CATEGORY</span>
+                <span>PRICE</span>
+                <span>STOCK</span>
+                <span>STATUS</span>
+                <span>CREATED AT</span>
+                <span className="text-right">ACTIONS</span>
               </div>
 
-              <div className="divide-y divide-[#C9A24B]/10">
+              <div className="divide-y divide-[#B89A5A]/10">
                 {pageItems.map((product, i) => {
                   const stock = stockOf(product);
                   const isSel = selected.includes(product.id);
@@ -980,9 +1013,8 @@ export default function AdminProductsPage() {
                   return (
                     <div
                       key={product.id}
-                      style={{ animationDelay: `${i * 25}ms` }}
-                      className={`kv-rise group grid min-h-[80px] ${tableGrid} items-center px-4 transition-colors hover:bg-[#C9A24B]/[0.06] lg:px-5 ${
-                        isSel ? "bg-[#C9A24B]/[0.09]" : "bg-transparent"
+                      className={`grid min-h-[76px] ${tableGrid} items-center px-4 transition-colors hover:bg-[#B89A5A]/[0.05] lg:px-5 ${
+                        isSel ? "bg-[#B89A5A]/[0.08]" : "bg-transparent"
                       }`}
                     >
                       <div>
@@ -991,51 +1023,51 @@ export default function AdminProductsPage() {
                           checked={isSel}
                           onChange={() => toggleOne(product.id)}
                           aria-label={`Select ${product.name}`}
-                          className="h-4 w-4 accent-[#C9A24B]"
+                          className="h-4 w-4 accent-[#B89A5A]"
                         />
                       </div>
 
                       <button
                         type="button"
                         onClick={() => openPreview(product)}
-                        className="flex min-w-0 items-center gap-3 text-left outline-none focus-visible:ring-1 focus-visible:ring-[#E3C673]"
+                        className="flex min-w-0 items-center gap-3 py-2 pr-3 text-left outline-none focus-visible:ring-1 focus-visible:ring-[#C8A96B]"
                       >
-                        {thumb(
-                          product,
-                          "h-[52px] w-[52px] lg:h-[56px] lg:w-[56px]"
-                        )}
+                        {thumb(product, "h-[52px] w-[52px]")}
                         <span className="min-w-0">
-                          <span className="block truncate text-[13px] font-semibold text-[#F4EEDD]">
+                          <span className="block truncate text-[13px] font-semibold text-[#F4F0E6]">
                             {product.name}
                           </span>
-                          <span className="mt-1 block truncate text-[10px] text-[#8F8878]">
-                            SKU: {product.variants?.[0]?.sku || product.id}
+                          <span className="mt-1 block truncate text-[11px] text-[#7F9484]">
+                            SKU: {skuOf(product)}
                           </span>
                         </span>
                       </button>
 
-                      <div>{priceView(product)}</div>
-
-                      <span className="truncate pr-4 text-xs text-[#B9B09C]">
+                      <span className="truncate pr-3 text-xs text-[#AEBDAF]">
                         {product.category_label || "Uncategorized"}
                       </span>
 
-                      <span
-                        className={`text-sm font-semibold tabular-nums ${
-                          stock === 0
-                            ? "text-red-400"
-                            : stock <= 5
-                              ? "text-amber-300"
-                              : "text-[#F4EEDD]"
-                        }`}
-                      >
-                        {stock}
-                      </span>
+                      <div>{priceView(product)}</div>
 
-                      <div>{statusBadge(stock)}</div>
+                      <div>
+                        <span className={`text-sm font-semibold tabular-nums ${stockClr(stock)}`}>
+                          {stock}
+                        </span>
+                        {stock > 0 && stock <= 5 && (
+                          <span className="block text-[10px] text-[#E0A24A]">Low</span>
+                        )}
+                        {stock === 0 && (
+                          <span className="block text-[10px] text-red-400">Out</span>
+                        )}
+                      </div>
 
-                      <div className="flex justify-end" onClick={(e) => e.stopPropagation()}>
-                        {actions(product)}
+                      <div>{statusBadge(product)}</div>
+
+                      <span className="text-xs tabular-nums text-[#AEBDAF]">{createdOf(product)}</span>
+
+                      <div className="flex justify-end gap-1.5">
+                        {editBtn(product)}
+                        {moreMenu(product, i >= pageItems.length - 2 && pageItems.length > 3)}
                       </div>
                     </div>
                   );
@@ -1055,25 +1087,18 @@ export default function AdminProductsPage() {
               return (
                 <div
                   key={product.id}
-                  className={`rounded-2xl border p-3.5 transition ${
+                  className={`rounded-xl border p-3.5 transition ${
                     isSel
-                      ? "border-[#E3C673]/70 bg-[#C9A24B]/[0.09]"
-                      : "border-[#C9A24B]/25 bg-gradient-to-br from-[#12100D] to-[#0A0908]"
+                      ? "border-[#C8A96B]/60 bg-[#B89A5A]/[0.08]"
+                      : "border-[#B89A5A]/20 bg-gradient-to-br from-[#12351F] to-[#0D2415]"
                   }`}
                 >
                   <div className="flex gap-3">
-                    <input
-                      type="checkbox"
-                      checked={isSel}
-                      onChange={() => toggleOne(product.id)}
-                      className="mt-1 h-4 w-4 shrink-0 accent-[#C9A24B]"
-                      aria-label={`Select ${product.name}`}
-                    />
-
                     <button
                       type="button"
                       onClick={() => openPreview(product)}
-                      className="h-[76px] w-[76px] shrink-0 overflow-hidden rounded-xl border border-[#C9A24B]/35 bg-[#12100D]"
+                      aria-label={`View ${product.name}`}
+                      className="h-[72px] w-[72px] shrink-0 overflow-hidden rounded-lg border border-[#B89A5A]/30 bg-[#0D2415]"
                     >
                       {product.images?.[0]?.image_url ? (
                         <img
@@ -1082,55 +1107,60 @@ export default function AdminProductsPage() {
                           className="h-full w-full object-cover"
                         />
                       ) : (
-                        <div className="flex h-full items-center justify-center text-[#6b6455]">
+                        <div className="flex h-full items-center justify-center text-[#5E7463]">
                           <ImageOff className="h-5 w-5" />
                         </div>
                       )}
                     </button>
 
                     <div className="min-w-0 flex-1">
-                      <button
-                        type="button"
-                        onClick={() => openPreview(product)}
-                        className="block w-full min-w-0 text-left"
-                      >
-                        <p className="line-clamp-2 text-[13px] font-semibold leading-5 text-[#F4EEDD]">
-                          {product.name}
-                        </p>
-                        <p className="mt-0.5 truncate text-[10px] text-[#8F8878]">
-                          SKU: {product.variants?.[0]?.sku || product.id}
-                        </p>
-                      </button>
-
-                      <div className="mt-2">{priceView(product)}</div>
+                      <div className="flex items-start justify-between gap-2">
+                        <button
+                          type="button"
+                          onClick={() => openPreview(product)}
+                          className="min-w-0 text-left"
+                        >
+                          <p className="line-clamp-2 text-[13px] font-semibold leading-5 text-[#F4F0E6]">
+                            {product.name}
+                          </p>
+                          <p className="mt-0.5 truncate text-[11px] text-[#7F9484]">
+                            SKU: {skuOf(product)}
+                          </p>
+                        </button>
+                        <div className="-mr-1 -mt-1 flex shrink-0 items-center gap-1">
+                          <input
+                            type="checkbox"
+                            checked={isSel}
+                            onChange={() => toggleOne(product.id)}
+                            aria-label={`Select ${product.name}`}
+                            className="h-4 w-4 accent-[#B89A5A]"
+                          />
+                          {moreMenu(product)}
+                        </div>
+                      </div>
                     </div>
                   </div>
 
-                  <div className="mt-3 grid grid-cols-[1fr_auto] items-center gap-3 border-t border-[#C9A24B]/15 pt-3">
-                    <p className="min-w-0 truncate text-xs font-medium text-[#B9B09C]">
+                  <div className="mt-3 grid grid-cols-2 items-center gap-x-3 gap-y-2.5 border-t border-[#B89A5A]/15 pt-3">
+                    <div>{priceView(product)}</div>
+                    <p className="text-right text-xs text-[#AEBDAF]">
+                      Stock:{" "}
+                      <span className={`font-semibold tabular-nums ${stockClr(stock)}`}>{stock}</span>
+                    </p>
+                    <p className="min-w-0 truncate text-xs text-[#AEBDAF]">
                       {product.category_label || "Uncategorized"}
                     </p>
-                    {statusBadge(stock, true)}
+                    <div className="flex justify-end">{statusBadge(product, true)}</div>
                   </div>
 
-                  <div className="mt-3 grid grid-cols-2 gap-2.5">
-                    <button
-                      type="button"
-                      onClick={() => openEdit(product)}
-                      className="flex h-10 items-center justify-center gap-2 rounded-xl border border-[#C9A24B]/50 bg-[#C9A24B]/10 text-xs font-semibold text-[#E8D3A0] transition active:scale-[.98] hover:bg-[#C9A24B]/20"
-                    >
-                      <Pencil className="h-3.5 w-3.5" />
-                      Edit
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => deleteProduct(product.id)}
-                      className="flex h-10 items-center justify-center gap-2 rounded-xl border border-red-400/40 bg-red-500/10 text-xs font-semibold text-red-300 transition active:scale-[.98] hover:bg-red-500/20"
-                    >
-                      <Trash2 className="h-3.5 w-3.5" />
-                      Delete
-                    </button>
-                  </div>
+                  <button
+                    type="button"
+                    onClick={() => openEdit(product)}
+                    className="mt-3 flex h-11 w-full items-center justify-center gap-2 rounded-lg border border-[#B89A5A]/55 text-[13px] font-semibold text-[#C8A96B] transition active:scale-[.98] hover:bg-[#B89A5A]/10"
+                  >
+                    <Pencil className="h-3.5 w-3.5" />
+                    Edit Product
+                  </button>
                 </div>
               );
             })}
@@ -1139,9 +1169,9 @@ export default function AdminProductsPage() {
 
         {/* PAGINATION */}
         {!loading && filtered.length > 0 && (
-          <div className="flex flex-col gap-3 border-t border-[#C9A24B]/20 px-4 py-3.5 sm:flex-row sm:items-center sm:justify-between">
-            <span className="text-[11px] text-[#8F8878]">
-              Showing {start + 1}–{Math.min(start + perPage, filtered.length)} of{" "}
+          <div className="flex flex-col gap-3 border-t border-[#B89A5A]/20 px-4 py-3.5 sm:flex-row sm:items-center sm:justify-between">
+            <span className="text-center text-[12px] text-[#AEBDAF] sm:text-left">
+              Showing {start + 1} to {Math.min(start + perPage, filtered.length)} of{" "}
               {filtered.length} products
             </span>
 
@@ -1150,10 +1180,10 @@ export default function AdminProductsPage() {
                 type="button"
                 onClick={() => setPage(Math.max(1, safePage - 1))}
                 disabled={safePage === 1}
-                className="flex h-8 w-8 items-center justify-center rounded-md border border-[#C9A24B]/50 bg-[#C9A24B]/10 text-[#E8D3A0] transition hover:bg-[#C9A24B]/20 disabled:cursor-not-allowed disabled:opacity-35"
+                className="flex h-9 w-9 items-center justify-center rounded-md border border-[#B89A5A]/30 bg-[#163D25] text-[#C8A96B] transition hover:border-[#C8A96B]/70 disabled:cursor-not-allowed disabled:opacity-35"
                 aria-label="Previous page"
               >
-                <ChevronLeft className="h-4 w-4" />
+                <ArrowLeft className="h-4 w-4" />
               </button>
 
               {Array.from({ length: Math.min(pageCount, 5) }, (_, i) => i + 1).map((n) => (
@@ -1161,10 +1191,10 @@ export default function AdminProductsPage() {
                   type="button"
                   key={n}
                   onClick={() => setPage(n)}
-                  className={`h-8 min-w-8 rounded-md px-2 text-[11px] font-semibold transition ${
+                  className={`h-9 min-w-9 rounded-md border px-2 text-xs font-semibold transition ${
                     n === safePage
-                      ? `${goldBtn}`
-                      : "text-[#B9B09C] hover:bg-[#C9A24B]/10"
+                      ? `border-transparent ${goldBtn}`
+                      : "border-[#B89A5A]/20 bg-[#163D25] text-[#F4F0E6] hover:border-[#C8A96B]/60"
                   }`}
                 >
                   {n}
@@ -1175,10 +1205,10 @@ export default function AdminProductsPage() {
                 type="button"
                 onClick={() => setPage(Math.min(pageCount, safePage + 1))}
                 disabled={safePage === pageCount}
-                className="flex h-8 w-8 items-center justify-center rounded-md border border-[#C9A24B]/50 bg-[#C9A24B]/10 text-[#E8D3A0] transition hover:bg-[#C9A24B]/20 disabled:cursor-not-allowed disabled:opacity-35"
+                className="flex h-9 w-9 items-center justify-center rounded-md border border-[#B89A5A]/30 bg-[#163D25] text-[#C8A96B] transition hover:border-[#C8A96B]/70 disabled:cursor-not-allowed disabled:opacity-35"
                 aria-label="Next page"
               >
-                <ChevronRight className="h-4 w-4" />
+                <ArrowRight className="h-4 w-4" />
               </button>
             </div>
           </div>
@@ -1187,18 +1217,18 @@ export default function AdminProductsPage() {
 
       {/* MOBILE FILTER SHEET (same filters, same handlers) */}
       {filtersOpen && (
-        <div className="fixed inset-0 z-[70] sm:hidden">
+        <div className="fixed inset-0 z-[70] lg:hidden">
           <button
             aria-label="Close filters"
             onClick={() => setFiltersOpen(false)}
             className="absolute inset-0 bg-black/80 backdrop-blur-sm"
           />
-          <div className="kv-pop absolute inset-x-0 bottom-0 rounded-t-3xl border border-b-0 border-[#C9A24B]/50 bg-gradient-to-b from-[#12100D] to-[#050505] p-5 pb-6 shadow-[0_-20px_60px_rgba(201,162,75,0.15)]">
+          <div className="kv-pop absolute inset-x-0 bottom-0 max-h-[90dvh] overflow-y-auto rounded-t-2xl border border-b-0 border-[#B89A5A]/40 bg-gradient-to-b from-[#12351F] to-[#07180D] p-5 pb-6">
             <div className="mb-4 flex items-center justify-between">
-              <h3 className="font-serif text-xl font-semibold text-[#F4EEDD]">Filters</h3>
+              <h3 className="font-serif text-xl font-semibold text-[#F4F0E6]">Filters</h3>
               <button
                 onClick={() => setFiltersOpen(false)}
-                className="rounded-full border border-[#C9A24B]/40 p-2 text-[#E8D3A0]"
+                className="rounded-full border border-[#B89A5A]/40 p-2 text-[#C8A96B]"
                 aria-label="Close filters"
               >
                 <X className="h-4 w-4" />
@@ -1222,13 +1252,15 @@ export default function AdminProductsPage() {
                   </option>
                 ))}
               </select>
-              <ChevronDown className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[#C9A24B]" />
+              <ChevronDown className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[#C8A96B]" />
             </div>
 
             <label className={`${labelCls} mt-4`}>Status</label>
             <div className="grid grid-cols-2 gap-2">
               {[
-                { v: "", l: "All" },
+                { v: "", l: "All Status" },
+                { v: "active", l: "Active" },
+                { v: "inactive", l: "Inactive" },
                 { v: "in", l: "In Stock" },
                 { v: "low", l: "Low Stock" },
                 { v: "out", l: "Out of Stock" },
@@ -1240,15 +1272,35 @@ export default function AdminProductsPage() {
                     setStatusFilter(opt.v);
                     setPage(1);
                   }}
-                  className={`h-11 rounded-xl border text-xs font-semibold transition ${
+                  className={`h-11 rounded-lg border text-xs font-semibold transition ${
                     statusFilter === opt.v
-                      ? "border-[#E3C673] bg-[#C9A24B]/20 text-[#F4EEDD] shadow-[0_0_14px_rgba(201,162,75,0.25)]"
-                      : "border-[#C9A24B]/25 bg-[#0A0908] text-[#B9B09C]"
+                      ? "border-[#C8A96B] bg-[#B89A5A]/20 text-[#F4F0E6]"
+                      : "border-[#B89A5A]/25 bg-[#0D2415] text-[#AEBDAF]"
                   }`}
                 >
                   {opt.l}
                 </button>
               ))}
+            </div>
+
+            <label className={`${labelCls} mt-4`}>Sort by</label>
+            <div className="relative">
+              <select
+                value={sortBy}
+                onChange={(e) => {
+                  setSortBy(e.target.value);
+                  setPage(1);
+                }}
+                className={inputCls + " appearance-none pr-9"}
+              >
+                <option value="default">Default</option>
+                <option value="newest">Newest first</option>
+                <option value="name">Name A–Z</option>
+                <option value="price_asc">Price: low to high</option>
+                <option value="price_desc">Price: high to low</option>
+                <option value="stock_asc">Stock: low to high</option>
+              </select>
+              <ChevronDown className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[#C8A96B]" />
             </div>
 
             <div className="mt-6 grid grid-cols-2 gap-3">
@@ -1258,9 +1310,10 @@ export default function AdminProductsPage() {
                   setCategory("");
                   setTagFilter("");
                   setStatusFilter("");
+                  setSortBy("default");
                   setPage(1);
                 }}
-                className="h-12 rounded-xl border border-[#C9A24B]/50 bg-[#0A0908] text-sm font-semibold text-[#E8D3A0] transition hover:bg-[#C9A24B]/10"
+                className="h-12 rounded-lg border border-[#B89A5A]/50 bg-[#0D2415] text-sm font-semibold text-[#C8A96B] transition hover:bg-[#B89A5A]/10"
               >
                 Reset
               </button>
@@ -1270,7 +1323,7 @@ export default function AdminProductsPage() {
                   loadProducts();
                   setFiltersOpen(false);
                 }}
-                className={`h-12 rounded-xl text-sm font-bold transition active:scale-[.98] ${goldBtn}`}
+                className={`h-12 rounded-lg text-sm font-bold transition active:scale-[.98] ${goldBtn}`}
               >
                 Apply Filters
               </button>
@@ -1280,14 +1333,13 @@ export default function AdminProductsPage() {
       )}
 
       {/* FLOATING SELECTION BAR */}
-
       {selected.length > 0 && (
-        <div className="fixed inset-x-3 bottom-3 z-40 flex items-center justify-between gap-3 rounded-2xl border border-[#C9A24B]/50 bg-[#0D0F0F] px-4 py-2.5 text-sm text-[#F4EEDD] shadow-[0_16px_40px_-10px_rgba(0,0,0,0.9),0_0_24px_rgba(201,162,75,0.2)] sm:left-1/2 sm:right-auto sm:inset-x-auto sm:-translate-x-1/2 sm:justify-center sm:rounded-full sm:pl-6 sm:pr-2.5">
+        <div className="fixed inset-x-3 bottom-20 z-40 flex items-center justify-between gap-3 rounded-xl border border-[#B89A5A]/50 bg-[#0D2415] px-4 py-2.5 text-sm text-[#F4F0E6] shadow-[0_16px_40px_-10px_rgba(0,0,0,0.9)] sm:bottom-3 sm:left-1/2 sm:right-auto sm:inset-x-auto sm:-translate-x-1/2 sm:justify-center sm:rounded-full sm:pl-6 sm:pr-2.5">
           <span className="tabular-nums">{selected.length} selected</span>
           {selectedOne && (
             <button
               onClick={() => openEdit(selectedOne)}
-              className="rounded-full border border-[#C9A24B]/50 bg-[#C9A24B]/10 px-4 py-1.5 text-[#E8D3A0] transition hover:bg-[#C9A24B]/25"
+              className="rounded-full border border-[#B89A5A]/50 bg-[#B89A5A]/10 px-4 py-1.5 text-[#C8A96B] transition hover:bg-[#B89A5A]/25"
             >
               Edit
             </button>
@@ -1311,20 +1363,21 @@ export default function AdminProductsPage() {
           />
 
           <aside
-            className="fixed inset-y-0 right-0 z-[60] flex w-full max-w-[430px] flex-col border-l border-[#C9A24B]/40 bg-gradient-to-b from-[#12100D] to-[#050505] shadow-[-24px_0_70px_-20px_rgba(0,0,0,.9)]"
+            className="fixed inset-y-0 right-0 z-[60] flex w-full max-w-[430px] flex-col border-l border-[#B89A5A]/35 bg-gradient-to-b from-[#0D2415] to-[#07180D] shadow-[-24px_0_70px_-20px_rgba(0,0,0,.9)]"
             aria-label="Product details"
           >
-            <div className="flex items-center justify-between border-b border-[#C9A24B]/20 px-5 py-4">
+            <div className="flex items-center justify-between border-b border-[#B89A5A]/20 px-5 py-4">
               <div>
-                <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-[#C9A24B]">
-                  Product details
+                <p className="font-serif text-lg font-semibold text-[#F4F0E6]">Product details</p>
+                <p className="mt-0.5 text-xs text-[#7F9484]">
+                  Catalog / {previewProduct.category_label || "Uncategorized"}
                 </p>
-                <p className="mt-0.5 text-xs text-[#8F8878]">Catalog / {previewProduct.category_label || "Uncategorized"}</p>
               </div>
 
               <button
                 onClick={() => setPreviewProduct(null)}
-                className="flex h-9 w-9 items-center justify-center rounded-full border border-[#C9A24B]/40 bg-[#0D0F0F] text-[#E8D3A0] transition hover:bg-[#C9A24B] hover:text-[#0A0908]"
+                aria-label="Close"
+                className="flex h-9 w-9 items-center justify-center rounded-full border border-[#B89A5A]/40 bg-[#12351F] text-[#C8A96B] transition hover:bg-[#B89A5A] hover:text-[#07180D]"
               >
                 <X className="h-4 w-4" />
               </button>
@@ -1332,7 +1385,7 @@ export default function AdminProductsPage() {
 
             <div className="min-h-0 flex-1 overflow-y-auto">
               <div className="p-5">
-                <div className="relative overflow-hidden rounded-2xl border border-[#C9A24B]/30 bg-[#0A0908]">
+                <div className="relative overflow-hidden rounded-xl border border-[#B89A5A]/25 bg-[#07180D]">
                   {previewImages.length ? (
                     <img
                       src={previewImages[previewImageIndex]?.image_url || previewImages[0].image_url}
@@ -1340,7 +1393,7 @@ export default function AdminProductsPage() {
                       className="aspect-[4/4.35] w-full object-cover"
                     />
                   ) : (
-                    <div className="flex aspect-[4/4.35] items-center justify-center text-[#6b6455]">
+                    <div className="flex aspect-[4/4.35] items-center justify-center text-[#5E7463]">
                       <ImageOff className="h-10 w-10" />
                     </div>
                   )}
@@ -1353,7 +1406,8 @@ export default function AdminProductsPage() {
                             i === 0 ? previewImages.length - 1 : i - 1
                           )
                         }
-                        className="absolute left-3 top-1/2 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full border border-[#C9A24B]/50 bg-black/70 text-[#E8D3A0] backdrop-blur"
+                        aria-label="Previous image"
+                        className="absolute left-3 top-1/2 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full border border-[#B89A5A]/50 bg-black/70 text-[#C8A96B] backdrop-blur"
                       >
                         <ChevronLeft className="h-4 w-4" />
                       </button>
@@ -1363,7 +1417,8 @@ export default function AdminProductsPage() {
                             i === previewImages.length - 1 ? 0 : i + 1
                           )
                         }
-                        className="absolute right-3 top-1/2 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full border border-[#C9A24B]/50 bg-black/70 text-[#E8D3A0] backdrop-blur"
+                        aria-label="Next image"
+                        className="absolute right-3 top-1/2 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full border border-[#B89A5A]/50 bg-black/70 text-[#C8A96B] backdrop-blur"
                       >
                         <ChevronRight className="h-4 w-4" />
                       </button>
@@ -1377,8 +1432,8 @@ export default function AdminProductsPage() {
                       <button
                         key={image.id || image.image_url}
                         onClick={() => setPreviewImageIndex(index)}
-                        className={`h-16 w-14 shrink-0 overflow-hidden rounded-xl border-2 bg-[#12100D] ${
-                          index === previewImageIndex ? "border-[#E3C673]" : "border-transparent"
+                        className={`h-16 w-14 shrink-0 overflow-hidden rounded-lg border-2 bg-[#0D2415] ${
+                          index === previewImageIndex ? "border-[#C8A96B]" : "border-transparent"
                         }`}
                       >
                         <img
@@ -1394,19 +1449,16 @@ export default function AdminProductsPage() {
                 <div className="mt-5">
                   <div className="flex items-start justify-between gap-3">
                     <div className="min-w-0">
-                      <h2 className="font-serif text-2xl font-semibold tracking-tight text-[#F4EEDD]">
+                      <h2 className="font-serif text-2xl font-semibold tracking-tight text-[#F4F0E6]">
                         {previewProduct.name}
                       </h2>
-                      <div className="mt-1 flex items-center gap-2 text-xs text-[#8F8878]">
-                        <span className="truncate">SKU: {previewProduct.variants?.[0]?.sku || previewProduct.id}</span>
+                      <div className="mt-1 flex items-center gap-2 text-xs text-[#7F9484]">
+                        <span className="truncate">SKU: {skuOf(previewProduct)}</span>
                         <button
-                          onClick={() =>
-                            navigator.clipboard?.writeText(
-                              previewProduct.variants?.[0]?.sku || previewProduct.id
-                            )
-                          }
-                          className="rounded p-1 transition hover:bg-[#C9A24B]/15"
+                          onClick={() => navigator.clipboard?.writeText(skuOf(previewProduct))}
+                          className="rounded p-1 transition hover:bg-[#B89A5A]/15"
                           title="Copy SKU"
+                          aria-label="Copy SKU"
                         >
                           <Copy className="h-3 w-3" />
                         </button>
@@ -1415,11 +1467,11 @@ export default function AdminProductsPage() {
 
                     <span
                       className={`shrink-0 rounded-full border px-3 py-1.5 text-[11px] font-semibold ${
-                        previewStatus === "Published"
-                          ? "border-emerald-400/40 bg-emerald-500/10 text-emerald-300"
+                        previewStatus === "Active"
+                          ? "border-[#B89A5A]/35 bg-[#1C5A34]/70 text-[#CFEBD3]"
                           : previewStatus === "Low Stock"
-                          ? "border-amber-400/40 bg-amber-500/10 text-amber-300"
-                          : "border-red-400/40 bg-red-500/10 text-red-300"
+                            ? "border-[#E0A24A]/40 bg-[#E0A24A]/10 text-[#E0A24A]"
+                            : "border-red-400/40 bg-red-500/10 text-red-300"
                       }`}
                     >
                       {previewStatus}
@@ -1427,48 +1479,48 @@ export default function AdminProductsPage() {
                   </div>
 
                   <div className="mt-3 flex items-end gap-2">
-                    <span className="text-[25px] font-semibold tabular-nums text-[#E3C673]">₹{inr(previewPrice)}</span>
+                    <span className="text-[25px] font-semibold tabular-nums text-[#C8A96B]">₹{inr(previewPrice)}</span>
                     {previewProduct.mrp && previewProduct.mrp > previewPrice && (
-                      <span className="pb-1 text-sm text-[#8F8878] line-through">
+                      <span className="pb-1 text-sm text-[#7F9484] line-through">
                         ₹{inr(previewProduct.mrp)}
                       </span>
                     )}
                   </div>
                 </div>
 
-                <div className="mt-6 divide-y divide-[#C9A24B]/15 rounded-2xl border border-[#C9A24B]/25 bg-[#0D0F0F]">
+                <div className="mt-6 divide-y divide-[#B89A5A]/15 rounded-xl border border-[#B89A5A]/20 bg-[#12351F]/50">
                   <div className="flex items-center justify-between gap-3 px-4 py-4">
                     <div className="flex items-center gap-3">
-                      <PackageCheck className="h-5 w-5 text-[#C9A24B]" />
+                      <PackageCheck className="h-5 w-5 text-[#C8A96B]" />
                       <div>
-                        <p className="text-sm font-medium text-[#F4EEDD]">Inventory</p>
-                        <p className="text-xs text-[#8F8878]">
+                        <p className="text-sm font-medium text-[#F4F0E6]">Inventory</p>
+                        <p className="text-xs text-[#7F9484]">
                           {previewStock === 0 ? "No units available" : `${previewStock} units available`}
                         </p>
                       </div>
                     </div>
                     <button
                       onClick={() => openEdit(previewProduct)}
-                      className="rounded-lg border border-[#C9A24B]/50 px-3 py-2 text-xs font-medium text-[#E8D3A0] transition hover:bg-[#C9A24B]/15"
+                      className="rounded-lg border border-[#B89A5A]/50 px-3 py-2 text-xs font-medium text-[#C8A96B] transition hover:bg-[#B89A5A]/15"
                     >
                       Manage
                     </button>
                   </div>
 
                   <div className="flex items-start gap-3 px-4 py-4">
-                    <Tag className="mt-0.5 h-5 w-5 text-[#C9A24B]" />
+                    <Tag className="mt-0.5 h-5 w-5 text-[#C8A96B]" />
                     <div>
-                      <p className="text-sm font-medium text-[#F4EEDD]">Category</p>
-                      <p className="mt-0.5 text-xs text-[#8F8878]">
+                      <p className="text-sm font-medium text-[#F4F0E6]">Category</p>
+                      <p className="mt-0.5 text-xs text-[#7F9484]">
                         {previewProduct.category_label || "Uncategorized"}
                       </p>
                     </div>
                   </div>
 
                   <div className="flex items-start gap-3 px-4 py-4">
-                    <Layers3 className="mt-0.5 h-5 w-5 text-[#C9A24B]" />
+                    <Layers3 className="mt-0.5 h-5 w-5 text-[#C8A96B]" />
                     <div className="min-w-0">
-                      <p className="text-sm font-medium text-[#F4EEDD]">Collections & tags</p>
+                      <p className="text-sm font-medium text-[#F4F0E6]">Collections & tags</p>
                       <div className="mt-2 flex flex-wrap gap-1.5">
                         {previewProduct.best_seller && <Badge label="Best Seller" tone="amber" />}
                         {previewProduct.new_arrival && <Badge label="New" tone="blue" />}
@@ -1478,7 +1530,7 @@ export default function AdminProductsPage() {
                           !previewProduct.new_arrival &&
                           !previewProduct.trending &&
                           !previewProduct.limited_edition && (
-                            <span className="text-xs text-[#6b6455]">No tags assigned</span>
+                            <span className="text-xs text-[#5E7463]">No tags assigned</span>
                           )}
                       </div>
                     </div>
@@ -1486,8 +1538,8 @@ export default function AdminProductsPage() {
 
                   <div className="px-4 py-4">
                     <div className="flex items-center justify-between">
-                      <p className="text-sm font-medium text-[#F4EEDD]">Variants</p>
-                      <span className="text-xs text-[#8F8878]">
+                      <p className="text-sm font-medium text-[#F4F0E6]">Variants</p>
+                      <span className="text-xs text-[#7F9484]">
                         {previewProduct.variants?.length || 0} variants
                       </span>
                     </div>
@@ -1496,12 +1548,12 @@ export default function AdminProductsPage() {
                       {(previewProduct.variants || []).slice(0, 8).map((variant, index) => (
                         <div
                           key={variant.id || index}
-                          className="min-w-[76px] rounded-xl border border-[#C9A24B]/30 bg-[#0A0908] px-3 py-2"
+                          className="min-w-[76px] rounded-lg border border-[#B89A5A]/25 bg-[#07180D] px-3 py-2"
                         >
-                          <p className="text-xs font-semibold text-[#F4EEDD]">
+                          <p className="text-xs font-semibold text-[#F4F0E6]">
                             {variant.size || "—"} · {variant.color || "—"}
                           </p>
-                          <p className="mt-0.5 text-[10px] text-[#8F8878]">
+                          <p className="mt-0.5 text-[10px] text-[#7F9484]">
                             {variant.inventory} stock
                           </p>
                         </div>
@@ -1512,10 +1564,8 @@ export default function AdminProductsPage() {
 
                 {previewProduct.description && (
                   <div className="mt-5">
-                    <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-[#C9A24B]">
-                      Description
-                    </p>
-                    <p className="mt-2 text-sm leading-6 text-[#B9B09C]">
+                    <p className="text-sm font-medium text-[#C8A96B]">Description</p>
+                    <p className="mt-2 text-sm leading-6 text-[#AEBDAF]">
                       {previewProduct.description}
                     </p>
                   </div>
@@ -1523,18 +1573,18 @@ export default function AdminProductsPage() {
               </div>
             </div>
 
-            <div className="border-t border-[#C9A24B]/20 bg-[#0A0908] p-4">
+            <div className="border-t border-[#B89A5A]/20 bg-[#07180D] p-4">
               <div className="grid grid-cols-2 gap-2.5">
                 <button
                   onClick={() => openEdit(previewProduct)}
-                  className={`flex h-11 items-center justify-center gap-2 rounded-xl text-sm font-bold transition ${goldBtn}`}
+                  className={`flex h-11 items-center justify-center gap-2 rounded-lg text-sm font-bold transition ${goldBtn}`}
                 >
                   <Pencil className="h-4 w-4" />
                   Edit Product
                 </button>
                 <button
                   onClick={() => setPreviewProduct(null)}
-                  className="flex h-11 items-center justify-center gap-2 rounded-xl border border-[#C9A24B]/50 bg-transparent text-sm font-medium text-[#E8D3A0] transition hover:bg-[#C9A24B]/10"
+                  className="flex h-11 items-center justify-center gap-2 rounded-lg border border-[#B89A5A]/50 bg-transparent text-sm font-medium text-[#C8A96B] transition hover:bg-[#B89A5A]/10"
                 >
                   <ExternalLink className="h-4 w-4" />
                   View Store
@@ -1546,45 +1596,39 @@ export default function AdminProductsPage() {
       )}
 
       {/* ADD / EDIT MODAL */}
-
       {modal && (
         <div className="fixed inset-0 z-[80] flex items-end justify-center bg-black/80 p-0 backdrop-blur-[3px] sm:items-center sm:p-4">
-          <div className="kv-pop flex h-[100dvh] w-full max-w-5xl flex-col overflow-hidden border border-[#C9A24B]/45 bg-gradient-to-br from-[#12100D] via-[#0A0908] to-[#050505] shadow-[0_30px_100px_-20px_rgba(0,0,0,0.95),0_0_40px_rgba(201,162,75,0.12)] sm:h-auto sm:max-h-[92vh] sm:rounded-3xl">
+          <div className="kv-pop flex h-[100dvh] w-full max-w-5xl flex-col overflow-hidden border border-[#B89A5A]/40 bg-gradient-to-br from-[#0D2415] via-[#0A1D11] to-[#07180D] shadow-[0_30px_100px_-20px_rgba(0,0,0,0.95)] sm:h-auto sm:max-h-[92vh] sm:rounded-2xl">
             {/* header */}
-            <div className="flex items-center justify-between gap-3 border-b border-[#C9A24B]/25 px-4 py-4 sm:px-6">
-              <div className="flex min-w-0 items-center gap-3">
-                <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-[#C9A24B]/50 bg-[#C9A24B]/10 font-serif text-lg text-[#E3C673]">
-                  ✦
-                </span>
-                <div className="min-w-0">
-                  <h2 className="truncate font-serif text-2xl font-semibold text-[#F4EEDD]">
-                    {editingId ? "Edit Product" : "Add New Product"}
-                  </h2>
-                  <p className="truncate text-xs text-[#8F8878]">
-                    {editingId
-                      ? "Update this product in your store"
-                      : "Create a new product for your store"}
-                  </p>
-                </div>
+            <div className="flex items-center justify-between gap-3 border-b border-[#B89A5A]/25 px-4 py-4 sm:px-6">
+              <div className="min-w-0">
+                <h2 className="truncate font-serif text-2xl font-semibold text-[#F4F0E6]">
+                  {editingId ? "Edit Product" : "Add New Product"}
+                </h2>
+                <p className="truncate text-xs text-[#7F9484]">
+                  {editingId
+                    ? "Update this product in your store"
+                    : "Create a new product for your store"}
+                </p>
               </div>
 
               <button
                 onClick={() => setModal(false)}
                 aria-label="Close"
-                className="shrink-0 rounded-full border border-[#C9A24B]/30 p-2 text-[#E8D3A0] transition hover:bg-[#C9A24B]/15 hover:text-white"
+                className="shrink-0 rounded-full border border-[#B89A5A]/30 p-2 text-[#C8A96B] transition hover:bg-[#B89A5A]/15 hover:text-white"
               >
                 <X className="h-5 w-5" />
               </button>
             </div>
 
             {/* mobile section chips */}
-            <div className="flex gap-2 overflow-x-auto border-b border-[#C9A24B]/15 px-4 py-2.5 md:hidden">
+            <div className="flex gap-2 overflow-x-auto border-b border-[#B89A5A]/15 px-4 py-2.5 md:hidden">
               {formSections.map((s) => (
                 <button
                   key={s.id}
                   type="button"
                   onClick={() => jumpTo(s.id)}
-                  className="shrink-0 rounded-full border border-[#C9A24B]/35 bg-[#C9A24B]/[0.07] px-3.5 py-1.5 text-[11px] font-medium text-[#E8D3A0] transition active:bg-[#C9A24B]/20"
+                  className="shrink-0 rounded-full border border-[#B89A5A]/35 bg-[#B89A5A]/[0.07] px-3.5 py-1.5 text-[11px] font-medium text-[#C8A96B] transition active:bg-[#B89A5A]/20"
                 >
                   {s.label}
                 </button>
@@ -1593,23 +1637,23 @@ export default function AdminProductsPage() {
 
             <div className="grid min-h-0 flex-1 md:grid-cols-[200px_1fr]">
               {/* desktop section rail */}
-              <nav className="hidden border-r border-[#C9A24B]/20 bg-[#0A0908]/60 p-3 md:block">
+              <nav className="hidden border-r border-[#B89A5A]/20 bg-[#07180D]/60 p-3 md:block">
                 <div className="space-y-1.5">
                   {formSections.map((s, i) => (
                     <button
                       key={s.id}
                       type="button"
                       onClick={() => jumpTo(s.id)}
-                      className="group flex w-full items-center gap-3 rounded-xl border border-transparent px-3 py-2.5 text-left transition hover:border-[#C9A24B]/35 hover:bg-[#C9A24B]/[0.07]"
+                      className="group flex w-full items-center gap-3 rounded-lg border border-transparent px-3 py-2.5 text-left transition hover:border-[#B89A5A]/35 hover:bg-[#B89A5A]/[0.07]"
                     >
-                      <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-md border border-[#C9A24B]/40 text-[10px] font-semibold text-[#E3C673]">
+                      <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-md border border-[#B89A5A]/40 text-[10px] font-semibold text-[#C8A96B]">
                         {i + 1}
                       </span>
                       <span className="min-w-0">
-                        <span className="block truncate text-xs font-medium text-[#F4EEDD]">
+                        <span className="block truncate text-xs font-medium text-[#F4F0E6]">
                           {s.label}
                         </span>
-                        <span className="block truncate text-[10px] text-[#8F8878]">
+                        <span className="block truncate text-[10px] text-[#7F9484]">
                           {s.hint}
                         </span>
                       </span>
@@ -1671,7 +1715,6 @@ export default function AdminProductsPage() {
                     />
 
                     {/* COVERAGE */}
-
                     <div>
                       <label className={labelCls}>Coverage</label>
 
@@ -1691,7 +1734,6 @@ export default function AdminProductsPage() {
                   </div>
 
                   {/* DESCRIPTION */}
-
                   <div className="mt-4">
                     <label className={labelCls}>Description</label>
 
@@ -1709,12 +1751,12 @@ export default function AdminProductsPage() {
 
                 {/* 2. IMAGES */}
                 <FormSection id="kv-images" n={2} title="Product Images">
-                  <label className="group flex cursor-pointer flex-col items-center justify-center gap-2 rounded-2xl border border-dashed border-[#C9A24B]/45 bg-[#0A0908] px-4 py-8 text-center transition hover:border-[#E3C673] hover:bg-[#C9A24B]/[0.05]">
-                    <UploadCloud className="h-8 w-8 text-[#C9A24B] transition group-hover:scale-110" />
-                    <span className="text-sm font-medium text-[#F4EEDD]">
+                  <label className="group flex cursor-pointer flex-col items-center justify-center gap-2 rounded-xl border border-dashed border-[#B89A5A]/45 bg-[#07180D] px-4 py-8 text-center transition hover:border-[#C8A96B] hover:bg-[#B89A5A]/[0.05]">
+                    <UploadCloud className="h-8 w-8 text-[#C8A96B] transition group-hover:scale-110" />
+                    <span className="text-sm font-medium text-[#F4F0E6]">
                       Click to upload images
                     </span>
-                    <span className="text-xs text-[#8F8878]">
+                    <span className="text-xs text-[#7F9484]">
                       Select multiple images at once, or open the picker again to add more.
                     </span>
                     <input
@@ -1729,7 +1771,7 @@ export default function AdminProductsPage() {
 
                   {files.length > 0 && (
                     <div className="mt-4 space-y-3">
-                      <p className="text-xs font-medium text-[#B9B09C]">
+                      <p className="text-xs font-medium text-[#AEBDAF]">
                         {files.length} image{files.length > 1 ? "s" : ""} selected
                       </p>
 
@@ -1737,7 +1779,7 @@ export default function AdminProductsPage() {
                         {files.map((file, index) => (
                           <div
                             key={`${file.name}-${file.size}-${file.lastModified}-${index}`}
-                            className="group relative overflow-hidden rounded-xl border border-[#C9A24B]/35 bg-[#12100D]"
+                            className="group relative overflow-hidden rounded-lg border border-[#B89A5A]/30 bg-[#0D2415]"
                           >
                             <img
                               src={URL.createObjectURL(file)}
@@ -1747,12 +1789,12 @@ export default function AdminProductsPage() {
                             <button
                               type="button"
                               onClick={() => removeImage(index)}
-                              className="absolute right-1.5 top-1.5 flex h-6 w-6 items-center justify-center rounded-full border border-[#C9A24B]/60 bg-black/80 text-[#E8D3A0] transition hover:bg-red-500 hover:text-white"
+                              className="absolute right-1.5 top-1.5 flex h-6 w-6 items-center justify-center rounded-full border border-[#B89A5A]/60 bg-black/80 text-[#C8A96B] transition hover:bg-red-500 hover:text-white"
                               aria-label={`Remove ${file.name}`}
                             >
                               <X className="h-3.5 w-3.5" />
                             </button>
-                            <p className="truncate bg-black/70 px-2 py-1 text-[10px] text-[#B9B09C]">
+                            <p className="truncate bg-black/70 px-2 py-1 text-[10px] text-[#AEBDAF]">
                               {file.name} · {(file.size / 1024 / 1024).toFixed(2)} MB
                             </p>
                           </div>
@@ -1800,12 +1842,11 @@ export default function AdminProductsPage() {
                   </div>
 
                   {/* VARIANTS */}
-
-                  <div className="mt-5 rounded-2xl border border-[#C9A24B]/25 bg-[#0D0F0F] p-3.5 sm:p-4">
+                  <div className="mt-5 rounded-xl border border-[#B89A5A]/25 bg-[#12351F]/40 p-3.5 sm:p-4">
                     <div className="mb-4 flex items-center justify-between gap-3">
                       <div>
-                        <h3 className="font-serif text-lg font-semibold text-[#F4EEDD]">Variants</h3>
-                        <p className="text-xs text-[#8F8878]">Size, color and stock</p>
+                        <h3 className="font-serif text-lg font-semibold text-[#F4F0E6]">Variants</h3>
+                        <p className="text-xs text-[#7F9484]">Size, color and stock</p>
                       </div>
 
                       <button
@@ -1820,7 +1861,7 @@ export default function AdminProductsPage() {
 
                     <div className="space-y-3">
                       {form.variants.length === 0 && (
-                        <p className="rounded-xl border border-dashed border-[#C9A24B]/25 px-3 py-4 text-center text-xs text-[#8F8878]">
+                        <p className="rounded-lg border border-dashed border-[#B89A5A]/25 px-3 py-4 text-center text-xs text-[#7F9484]">
                           No variants added yet.
                         </p>
                       )}
@@ -1828,7 +1869,7 @@ export default function AdminProductsPage() {
                       {form.variants.map((variant, index) => (
                         <div
                           key={variant.id || index}
-                          className="grid grid-cols-2 gap-2 rounded-xl border border-[#C9A24B]/15 p-2.5 md:grid-cols-[1fr_1fr_1fr_1fr_auto] md:border-0 md:p-0"
+                          className="grid grid-cols-2 gap-2 rounded-lg border border-[#B89A5A]/15 p-2.5 md:grid-cols-[1fr_1fr_1fr_1fr_auto] md:border-0 md:p-0"
                         >
                           <input
                             placeholder="Size"
@@ -1906,7 +1947,6 @@ export default function AdminProductsPage() {
                   </div>
 
                   {/* FLAGS */}
-
                   <div className="mt-5 grid grid-cols-2 gap-2 sm:flex sm:flex-wrap">
                     <Check
                       label="Best Seller"
@@ -1937,12 +1977,11 @@ export default function AdminProductsPage() {
             </div>
 
             {/* ACTIONS */}
-
-            <div className="flex justify-end gap-2.5 border-t border-[#C9A24B]/25 bg-[#0A0908] px-4 py-3.5 pb-[max(0.875rem,env(safe-area-inset-bottom))] sm:gap-3 sm:px-6">
+            <div className="flex justify-end gap-2.5 border-t border-[#B89A5A]/25 bg-[#07180D] px-4 py-3.5 pb-[max(0.875rem,env(safe-area-inset-bottom))] sm:gap-3 sm:px-6">
               <button
                 onClick={() => setModal(false)}
                 disabled={saving}
-                className="min-h-11 flex-1 rounded-xl border border-[#C9A24B]/50 bg-transparent px-5 py-2.5 text-sm font-semibold text-[#E8D3A0] transition hover:bg-[#C9A24B]/10 disabled:opacity-50 sm:flex-none sm:px-8"
+                className="min-h-11 flex-1 rounded-lg border border-[#B89A5A]/50 bg-transparent px-5 py-2.5 text-sm font-semibold text-[#C8A96B] transition hover:bg-[#B89A5A]/10 disabled:opacity-50 sm:flex-none sm:px-8"
               >
                 Cancel
               </button>
@@ -1950,7 +1989,7 @@ export default function AdminProductsPage() {
               <button
                 onClick={saveProduct}
                 disabled={saving}
-                className={`flex min-h-11 flex-1 items-center justify-center gap-2 rounded-xl px-5 py-2.5 text-sm font-bold transition active:scale-[0.98] disabled:opacity-60 sm:flex-none sm:px-8 ${goldBtn}`}
+                className={`flex min-h-11 flex-1 items-center justify-center gap-2 rounded-lg px-5 py-2.5 text-sm font-bold transition active:scale-[0.98] disabled:opacity-60 sm:flex-none sm:px-8 ${goldBtn}`}
               >
                 {saving && <Loader2 className="h-4 w-4 animate-spin" />}
                 {editingId ? "Save Changes" : "Create Product"}
@@ -1962,12 +2001,11 @@ export default function AdminProductsPage() {
       )}
 
       {/* TOASTS */}
-
-      <div className="pointer-events-none fixed inset-x-0 bottom-4 z-[100] flex flex-col items-center gap-2 px-4 sm:inset-x-auto sm:right-5 sm:items-end">
+      <div className="pointer-events-none fixed inset-x-0 bottom-20 z-[100] flex flex-col items-center gap-2 px-4 sm:inset-x-auto sm:bottom-4 sm:right-5 sm:items-end">
         {toasts.map((toast) => (
           <div
             key={toast.id}
-            className={`pointer-events-auto flex w-full max-w-sm items-start gap-2.5 rounded-2xl border bg-[#0D0F0F] p-3.5 shadow-[0_10px_40px_rgba(0,0,0,0.8)] transition ${
+            className={`pointer-events-auto flex w-full max-w-sm items-start gap-2.5 rounded-xl border bg-[#0D2415] p-3.5 shadow-[0_10px_40px_rgba(0,0,0,0.8)] transition ${
               toast.type === "success"
                 ? "border-emerald-400/40"
                 : "border-red-400/40"
@@ -1979,11 +2017,12 @@ export default function AdminProductsPage() {
               <XCircle className="mt-0.5 h-5 w-5 shrink-0 text-red-400" />
             )}
 
-            <p className="flex-1 text-sm text-[#F4EEDD]">{toast.message}</p>
+            <p className="flex-1 text-sm text-[#F4F0E6]">{toast.message}</p>
 
             <button
               onClick={() => dismissToast(toast.id)}
-              className="text-[#8F8878] transition hover:text-[#F4EEDD]"
+              aria-label="Dismiss"
+              className="text-[#7F9484] transition hover:text-[#F4F0E6]"
             >
               <X className="h-4 w-4" />
             </button>
@@ -2012,13 +2051,13 @@ function FormSection({
   return (
     <section
       id={id}
-      className="scroll-mt-2 border-b border-[#C9A24B]/15 pb-6 pt-1 first:pt-0 last:border-0 last:pb-2 [&:not(:first-child)]:mt-6"
+      className="scroll-mt-2 border-b border-[#B89A5A]/15 pb-6 pt-1 first:pt-0 last:border-0 last:pb-2 [&:not(:first-child)]:mt-6"
     >
       <div className="mb-4 flex items-center gap-3">
-        <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg border border-[#C9A24B]/45 bg-[#C9A24B]/10 text-[11px] font-semibold text-[#E3C673]">
+        <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-md border border-[#B89A5A]/45 bg-[#B89A5A]/10 text-[11px] font-semibold text-[#C8A96B]">
           {n}
         </span>
-        <h3 className="font-serif text-xl font-semibold text-[#F4EEDD]">{title}</h3>
+        <h3 className="font-serif text-xl font-semibold text-[#F4F0E6]">{title}</h3>
       </div>
       {children}
     </section>
@@ -2063,8 +2102,8 @@ function Check({
     <label
       className={`flex min-h-10 cursor-pointer items-center justify-center gap-2 rounded-full border px-4 py-2 text-xs font-semibold transition ${
         checked
-          ? "border-[#E3C673] bg-[#C9A24B]/20 text-[#F4EEDD] shadow-[0_0_14px_rgba(201,162,75,0.25)]"
-          : "border-[#C9A24B]/25 bg-[#0A0908] text-[#B9B09C] hover:border-[#C9A24B]/60 hover:text-[#E8D3A0]"
+          ? "border-[#C8A96B] bg-[#B89A5A]/20 text-[#F4F0E6]"
+          : "border-[#B89A5A]/25 bg-[#07180D] text-[#AEBDAF] hover:border-[#B89A5A]/60 hover:text-[#C8A96B]"
       }`}
     >
       <input
@@ -2085,11 +2124,12 @@ function Badge({
   label: string;
   tone: "amber" | "blue" | "pink" | "violet";
 }) {
+  // palette-safe tones (no blue/purple): gold, green, clay, sand
   const tones: Record<string, string> = {
-    amber: "border-[#C9A24B]/45 bg-[#C9A24B]/10 text-[#E8D3A0]",
-    blue: "border-sky-400/35 bg-sky-500/10 text-sky-300",
-    pink: "border-rose-400/35 bg-rose-500/10 text-rose-300",
-    violet: "border-violet-400/35 bg-violet-500/10 text-violet-300",
+    amber: "border-[#B89A5A]/45 bg-[#B89A5A]/10 text-[#C8A96B]",
+    blue: "border-emerald-300/30 bg-emerald-400/10 text-emerald-200",
+    pink: "border-[#C98B7A]/40 bg-[#C98B7A]/10 text-[#E5B3A5]",
+    violet: "border-[#AEBDAF]/30 bg-[#AEBDAF]/10 text-[#D5DFD6]",
   };
 
   return (
@@ -2098,37 +2138,5 @@ function Badge({
     >
       {label}
     </span>
-  );
-}
-
-function IconAction({
-  label,
-  onClick,
-  danger,
-  children,
-}: {
-  label: string;
-  onClick: () => void;
-  danger?: boolean;
-  children: React.ReactNode;
-}) {
-  return (
-    <div className="group/tip relative">
-      <button
-        onClick={onClick}
-        aria-label={label}
-        className={`flex h-10 w-10 items-center justify-center rounded-xl border outline-none transition duration-150 active:scale-90 focus-visible:ring-2 focus-visible:ring-[#E3C673] ${
-          danger
-            ? "border-red-400/40 bg-red-500/10 text-red-300 hover:bg-red-500 hover:text-white hover:shadow-[0_0_14px_rgba(248,113,113,0.35)]"
-            : "border-[#C9A24B]/50 bg-[#C9A24B]/10 text-[#E8D3A0] hover:bg-[#C9A24B] hover:text-[#0A0908] hover:shadow-[0_0_14px_rgba(201,162,75,0.4)]"
-        }`}
-      >
-        {children}
-      </button>
-
-      <span className="pointer-events-none absolute -top-8 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-md border border-[#C9A24B]/40 bg-[#0A0908] px-2 py-1 text-[10px] text-[#E8D3A0] opacity-0 transition group-hover/tip:opacity-100">
-        {label}
-      </span>
-    </div>
   );
 }
