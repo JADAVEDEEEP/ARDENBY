@@ -50,10 +50,14 @@ const socialLinks = [
   { label: "Youtube", Icon: Youtube, href: "#" },
 ];
 
-/* KOVENIK — deep forest green / ivory / subtle gold */
+/* KOVENIK — black / cream / metallic gold */
 const SERIF =
   "'Cormorant Garamond', 'Bodoni MT', Didot, 'Times New Roman', serif";
 const SANS = "Inter, 'Helvetica Neue', Arial, system-ui, sans-serif";
+
+/* Metallic gold sheen shared with the navbar and homepage. */
+const GOLD_GRAD =
+  "bg-[linear-gradient(135deg,#A67C28_0%,#F0DC9A_40%,#C9A24B_65%,#F7E9B5_100%)]";
 
 /* ================================================================
     FOOTER
@@ -94,7 +98,7 @@ export function Footer() {
 
   return (
     <footer
-      className="relative isolate w-full overflow-x-hidden overflow-y-visible bg-[#07180D] text-[#C8C6B9]"
+      className="relative isolate w-full overflow-x-hidden overflow-y-visible bg-[#0B0B0B] text-[#B9B3A5]"
       style={{ fontFamily: SANS }}
     >
       {/* Toast styling (e.g. "Added to Wishlist"). Visual only; timing and
@@ -106,9 +110,9 @@ export function Footer() {
         }
         [data-sonner-toast] {
           box-sizing: border-box !important;
-          background: #17351f !important;
-          color: #f4f0e6 !important;
-          border: 1px solid rgba(184, 154, 90, 0.35) !important;
+          background: #1C1C1C !important;
+          color: #F3ECDD !important;
+          border: 1px solid rgba(201,162,75, 0.35) !important;
           border-radius: 14px !important;
           padding: 14px 16px !important;
           font-family: Inter, 'Helvetica Neue', Arial, system-ui, sans-serif !important;
@@ -117,57 +121,57 @@ export function Footer() {
           max-width: calc(100vw - 32px) !important;
         }
         [data-sonner-toast] [data-title] {
-          color: #f4f0e6 !important;
+          color: #F3ECDD !important;
           font-weight: 500 !important;
         }
         [data-sonner-toast] [data-description] {
-          color: #c8c6b9 !important;
+          color: #B9B3A5 !important;
         }
         [data-sonner-toast] [data-icon] {
-          color: #b89a5a !important;
+          color: #C9A24B !important;
         }
         [data-sonner-toast] [data-button],
         [data-sonner-toast] [data-close-button] {
-          background: #07180d !important;
-          color: #f4f0e6 !important;
-          border: 1px solid rgba(184, 154, 90, 0.35) !important;
+          background: #0B0B0B !important;
+          color: #F3ECDD !important;
+          border: 1px solid rgba(201,162,75, 0.35) !important;
         }
         /* Theme variables sonner reads for its default / success / info toasts. */
         [data-sonner-toaster],
         [data-sonner-toaster][data-sonner-theme] {
-          --normal-bg: #17351f;
-          --normal-text: #f4f0e6;
-          --normal-border: rgba(184, 154, 90, 0.35);
-          --success-bg: #17351f;
-          --success-text: #f4f0e6;
-          --success-border: rgba(184, 154, 90, 0.35);
-          --info-bg: #17351f;
-          --info-text: #f4f0e6;
-          --info-border: rgba(184, 154, 90, 0.35);
+          --normal-bg: #1C1C1C;
+          --normal-text: #F3ECDD;
+          --normal-border: rgba(201,162,75, 0.35);
+          --success-bg: #1C1C1C;
+          --success-text: #F3ECDD;
+          --success-border: rgba(201,162,75, 0.35);
+          --info-bg: #1C1C1C;
+          --info-text: #F3ECDD;
+          --info-border: rgba(201,162,75, 0.35);
         }
         /* Same look with higher specificity, so a Toaster theme can't win. */
         [data-sonner-toaster] [data-sonner-toast][data-styled="true"] {
-          background: #17351f !important;
-          color: #f4f0e6 !important;
-          border: 1px solid rgba(184, 154, 90, 0.35) !important;
+          background: #1C1C1C !important;
+          color: #F3ECDD !important;
+          border: 1px solid rgba(201,162,75, 0.35) !important;
           border-radius: 14px !important;
           box-shadow: 0 12px 32px rgba(0, 0, 0, 0.45) !important;
         }
-        /* Keep top toasts below the sticky header (72px mobile, 84px desktop)
+        /* Keep top toasts below the sticky header (~107px mobile, ~122px desktop)
            so they never cover the logo or navigation. */
         [data-sonner-toaster][data-y-position="top"] {
-          top: 72px !important;
+          top: 112px !important;
         }
         @media (min-width: 1024px) {
           [data-sonner-toaster][data-y-position="top"] {
-            top: 84px !important;
+            top: 130px !important;
           }
         }
         /* Fallback if the wishlist toast comes from react-toastify. */
         .Toastify__toast {
-          background: #17351f !important;
-          color: #f4f0e6 !important;
-          border: 1px solid rgba(184, 154, 90, 0.35) !important;
+          background: #1C1C1C !important;
+          color: #F3ECDD !important;
+          border: 1px solid rgba(201,162,75, 0.35) !important;
           border-radius: 14px !important;
           box-shadow: 0 12px 32px rgba(0, 0, 0, 0.45) !important;
           max-width: calc(100vw - 32px);
@@ -183,22 +187,26 @@ export function Footer() {
       {/* ============================================================
           NEWSLETTER
       ============================================================ */}
-      <section className="border-t border-[#F4F0E6]/10 bg-[#0D2415]">
+      <div className={`h-px w-full ${GOLD_GRAD} opacity-70`} />
+      <section className="bg-[#141414]">
         <div className="mx-auto w-full max-w-[1440px] px-4 py-10 sm:px-8 sm:py-12 lg:px-12 lg:py-14">
           <div className="grid items-end gap-6 lg:grid-cols-[1.1fr_0.9fr] lg:gap-14">
             <div>
-              <p className="mb-4 text-[11px] font-medium uppercase tracking-[0.22em] text-[#B89A5A]">
+              <p className="mb-4 text-[11px] font-medium uppercase tracking-[0.22em] text-[#C9A24B]">
                 Kovenik newsletter
               </p>
 
               <h2
-                className="max-w-[760px] text-[clamp(30px,4.2vw,60px)] font-medium uppercase leading-[0.96] tracking-[-0.01em] text-[#F4F0E6]"
+                className="max-w-[760px] text-[clamp(30px,4.2vw,60px)] font-medium uppercase leading-[0.96] tracking-[-0.01em] text-[#F3ECDD]"
                 style={{ fontFamily: SERIF }}
               >
-                Stay in the inner circle.
+                Stay in the{" "}
+                <span className={`bg-clip-text text-transparent ${GOLD_GRAD}`}>
+                  inner circle.
+                </span>
               </h2>
 
-              <p className="mt-5 max-w-[540px] text-[14px] leading-[1.7] text-[#C8C6B9] sm:text-[15px]">
+              <p className="mt-5 max-w-[540px] text-[14px] leading-[1.7] text-[#B9B3A5] sm:text-[15px]">
                 Get first access to new drops, exclusive collections,
                 private releases and 10% off your first order.
               </p>
@@ -209,8 +217,8 @@ export function Footer() {
                 onSubmit={handleSubscribe}
                 className="group relative w-full min-w-0"
               >
-                <div className="flex min-h-[60px] w-full items-center overflow-hidden rounded-full border border-[#F4F0E6]/25 bg-[#07180D] transition-colors duration-300 focus-within:border-[#B89A5A] sm:min-h-[68px]">
-                  <div className="flex shrink-0 items-center pl-5 text-[#B89A5A] sm:pl-6">
+                <div className="flex min-h-[60px] w-full items-center overflow-hidden rounded-full border border-[#F3ECDD]/25 bg-[#0B0B0B] transition-colors duration-300 focus-within:border-[#C9A24B] sm:min-h-[68px]">
+                  <div className="flex shrink-0 items-center pl-5 text-[#C9A24B] sm:pl-6">
                     <Mail className="h-5 w-5" strokeWidth={1.4} />
                   </div>
 
@@ -220,13 +228,13 @@ export function Footer() {
                     onChange={(e) => setEmail(e.target.value)}
                     placeholder="Enter your email address"
                     aria-label="Email address"
-                    className="min-w-0 flex-1 bg-transparent px-3 text-[14px] text-[#F4F0E6] outline-none placeholder:text-[#C8C6B9]/50 sm:px-4 sm:text-[15px]"
+                    className="min-w-0 flex-1 bg-transparent px-3 text-[14px] text-[#F3ECDD] outline-none placeholder:text-[#B9B3A5]/50 sm:px-4 sm:text-[15px]"
                   />
 
                   <button
                     type="submit"
                     disabled={subscribed}
-                    className="mr-1.5 flex h-[48px] shrink-0 items-center gap-2 rounded-full bg-[#F4F0E6] px-5 text-[11px] font-semibold uppercase tracking-[0.16em] text-[#07180D] transition-colors duration-300 hover:bg-[#B89A5A] disabled:opacity-80 sm:mr-2 sm:h-[52px] sm:px-7"
+                    className={`mr-1.5 flex h-[48px] shrink-0 items-center gap-2 rounded-full ${GOLD_GRAD} px-5 text-[11px] font-bold uppercase tracking-[0.16em] text-[#0B0B0B] transition duration-300 hover:brightness-110 disabled:opacity-80 sm:mr-2 sm:h-[52px] sm:px-7`}
                   >
                     <span>{subscribed ? "Joined" : "Join"}</span>
                     <ArrowRight
@@ -236,7 +244,7 @@ export function Footer() {
                   </button>
                 </div>
 
-                <p className="mt-3 pl-2 text-[12px] leading-relaxed text-[#C8C6B9]/80">
+                <p className="mt-3 pl-2 text-[12px] leading-relaxed text-[#B9B3A5]/80">
                   By subscribing, you agree to receive KOVENIK updates,
                   product launches and offers.
                 </p>
@@ -255,25 +263,25 @@ export function Footer() {
           <div className="md:col-span-2">
             <Link href="/" className="group inline-block">
               <span
-                className="block text-[36px] font-medium uppercase leading-none tracking-[0.14em] text-[#F4F0E6] transition-opacity duration-300 group-hover:opacity-90 sm:text-[46px]"
+                className={`block bg-clip-text text-[36px] font-bold uppercase leading-none tracking-[0.14em] text-transparent transition-opacity duration-300 group-hover:opacity-90 sm:text-[46px] ${GOLD_GRAD}`}
                 style={{ fontFamily: SERIF }}
               >
                 Kovenik
               </span>
-              <span className="mt-3 block text-[10px] uppercase tracking-[0.32em] text-[#B89A5A]">
+              <span className="mt-3 block text-[10px] uppercase tracking-[0.32em] text-[#C9A24B]">
                 Wear Your Essence
               </span>
             </Link>
 
-            <p className="mt-5 max-w-[420px] text-[14px] leading-[1.7] text-[#C8C6B9] sm:text-[15px]">
+            <p className="mt-5 max-w-[420px] text-[14px] leading-[1.7] text-[#B9B3A5] sm:text-[15px]">
               Premium men&apos;s clothing crafted for the bold.
               High-density fabrics, relaxed cuts, and minimalist
               luxury aesthetics.
             </p>
 
-            <div className="mt-6 flex items-center gap-3 text-[11px] font-medium uppercase tracking-[0.2em] text-[#B89A5A]">
+            <div className="mt-6 flex items-center gap-3 text-[11px] font-medium uppercase tracking-[0.2em] text-[#C9A24B]">
               <span>Est. 2026</span>
-              <span className="h-px w-8 bg-[#B89A5A]/50" />
+              <span className="h-px w-8 bg-[#C9A24B]/50" />
               <span>India</span>
             </div>
 
@@ -283,7 +291,7 @@ export function Footer() {
                   key={label}
                   href={href}
                   aria-label={label}
-                  className="group flex h-11 w-11 items-center justify-center rounded-full border border-[#F4F0E6]/20 text-[#F4F0E6] transition-colors duration-300 hover:border-[#B89A5A] hover:bg-[#B89A5A] hover:text-[#07180D]"
+                  className="group flex h-11 w-11 items-center justify-center rounded-full border border-[#F3ECDD]/20 text-[#F3ECDD] transition-colors duration-300 hover:border-[#C9A24B] hover:bg-[#C9A24B] hover:text-[#0B0B0B]"
                 >
                   <Icon className="h-[18px] w-[18px]" strokeWidth={1.5} />
                 </a>
@@ -295,7 +303,7 @@ export function Footer() {
           {Object.entries(footerLinks).map(([title, links]) => (
             <div
               key={title}
-              className="border-b border-[#F4F0E6]/10 pb-6 last:border-b-0 md:border-none md:pb-0"
+              className="border-b border-[#F3ECDD]/10 pb-6 last:border-b-0 md:border-none md:pb-0"
             >
               <button
                 type="button"
@@ -303,12 +311,12 @@ export function Footer() {
                 aria-expanded={!!openSections[title]}
                 className="flex w-full items-center justify-between text-left md:pointer-events-none"
               >
-                <span className="text-[12px] font-semibold uppercase tracking-[0.2em] text-[#F4F0E6]">
+                <span className="text-[12px] font-semibold uppercase tracking-[0.2em] text-[#F3ECDD]">
                   {title}
                 </span>
 
                 <ChevronDown
-                  className={`h-4 w-4 text-[#B89A5A] transition-transform duration-300 md:hidden ${
+                  className={`h-4 w-4 text-[#C9A24B] transition-transform duration-300 md:hidden ${
                     openSections[title] ? "rotate-180" : ""
                   }`}
                 />
@@ -325,10 +333,10 @@ export function Footer() {
                   <li key={link.label}>
                     <Link
                       href={link.href}
-                      className="group inline-flex items-center gap-2 text-[14px] leading-relaxed text-[#C8C6B9] transition-colors duration-200 hover:text-[#F4F0E6]"
+                      className="group inline-flex items-center gap-2 text-[14px] leading-relaxed text-[#B9B3A5] transition-colors duration-200 hover:text-[#F3ECDD]"
                     >
                       <span>{link.label}</span>
-                      <ArrowUpRight className="h-3.5 w-3.5 text-[#B89A5A] opacity-0 transition-all duration-200 group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:opacity-100" />
+                      <ArrowUpRight className="h-3.5 w-3.5 text-[#C9A24B] opacity-0 transition-all duration-200 group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:opacity-100" />
                     </Link>
                   </li>
                 ))}
@@ -342,29 +350,29 @@ export function Footer() {
           BOTTOM BAR
       ============================================================ */}
       <div className="mx-auto w-full max-w-[1440px] px-4 sm:px-8 lg:px-12">
-        <div className="flex flex-col gap-3 border-t border-[#F4F0E6]/10 py-5 sm:flex-row sm:items-center sm:justify-between sm:py-6">
-          <p className="text-[12px] text-[#C8C6B9]/80">
+        <div className="flex flex-col gap-3 border-t border-[#F3ECDD]/10 py-5 sm:flex-row sm:items-center sm:justify-between sm:py-6">
+          <p className="text-[12px] text-[#B9B3A5]/80">
             © 2026 KOVENIK. All rights reserved.
           </p>
 
           <div className="flex flex-wrap gap-x-7 gap-y-3">
             <Link
               href="/privacy"
-              className="text-[12px] text-[#C8C6B9]/80 transition-colors hover:text-[#F4F0E6]"
+              className="text-[12px] text-[#B9B3A5]/80 transition-colors hover:text-[#F3ECDD]"
             >
               Privacy Policy
             </Link>
 
             <Link
               href="/terms"
-              className="text-[12px] text-[#C8C6B9]/80 transition-colors hover:text-[#F4F0E6]"
+              className="text-[12px] text-[#B9B3A5]/80 transition-colors hover:text-[#F3ECDD]"
             >
               Terms of Service
             </Link>
 
             <Link
               href="/admin"
-              className="text-[12px] text-[#C8C6B9]/80 transition-colors hover:text-[#F4F0E6]"
+              className="text-[12px] text-[#B9B3A5]/80 transition-colors hover:text-[#F3ECDD]"
             >
               Admin Portal
             </Link>
@@ -385,7 +393,7 @@ export function Footer() {
             fontFamily: SERIF,
             fontSize: "18vw",
             color: "transparent",
-            WebkitTextStroke: "1.5px rgba(244,240,230,0.28)",
+            WebkitTextStroke: "1.5px rgba(201,162,75,0.35)",
             letterSpacing: "-0.01em",
           }}
         >

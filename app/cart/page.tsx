@@ -513,6 +513,9 @@ export default function CartPage() {
 
   const [mounted, setMounted] = useState(false);
 
+  // Max quantity per cart line, learned from the server's stock validation.
+  const [stockLimits, setStockLimits] = useState<Record<string, number>>({});
+
 
 
 
@@ -575,18 +578,39 @@ export default function CartPage() {
 
 
 
+  const stockLimitKey = (item: CartItem) =>
+    `${item.productId}-${item.size}-${item.color}`;
+
+  const isAtStockLimit = (item: CartItem) => {
+    const limit = stockLimits[stockLimitKey(item)];
+    return limit !== undefined && item.quantity >= limit;
+  };
+
   const handleQuantityChange = async (item: CartItem, quantity: number) => {
+    const limitKey = stockLimitKey(item);
     try {
       await updateQuantity(item.productId, item.size, item.color, quantity);
+      // A successful increase past a remembered limit means stock changed.
+      setStockLimits((prev) =>
+        prev[limitKey] !== undefined && quantity > prev[limitKey]
+          ? Object.fromEntries(
+              Object.entries(prev).filter(([key]) => key !== limitKey)
+            )
+          : prev
+      );
     } catch (error) {
       const message =
         error instanceof Error ? error.message : 'Unable to update cart quantity.';
       const lowerMessage = message.toLowerCase();
 
       if (lowerMessage.includes('stock') || lowerMessage.includes('inventory')) {
-        toast.error('Not enough stock available for this quantity.');
+        // Stock limit reached: the quantity before the attempt is the maximum.
+        // Shown inline as OUT OF STOCK, no toast.
+        if (quantity > item.quantity) {
+          setStockLimits((prev) => ({ ...prev, [limitKey]: item.quantity }));
+        }
       } else {
-        toast.error(message);
+        toast.error(message, { position: 'top-right' });
       }
     }
   };
@@ -1351,7 +1375,7 @@ export default function CartPage() {
 
 
 
-                        <div className="flex items-center rounded-full border border-[#C9A24B] bg-[#0A0A0A]">
+                        <div className={`relative flex items-center rounded-full border border-[#C9A24B] bg-[#0A0A0A] ${isAtStockLimit(item) ? 'mb-4' : ''}`}>
 
 
 
@@ -1447,7 +1471,8 @@ export default function CartPage() {
 
 
 
-                            className="h-11 w-11 sm:h-10 sm:w-10 flex items-center justify-center text-[#C9A24B] hover:text-[#E6CF92] transition-colors active:scale-90"
+                            disabled={isAtStockLimit(item)}
+                            className="h-11 w-11 sm:h-10 sm:w-10 flex items-center justify-center text-[#C9A24B] hover:text-[#E6CF92] transition-colors active:scale-90 disabled:cursor-not-allowed disabled:opacity-35 disabled:hover:text-[#C9A24B] disabled:active:scale-100"
 
 
 
@@ -1472,6 +1497,14 @@ export default function CartPage() {
 
 
                           </button>
+                          {isAtStockLimit(item) && (
+                            <p
+                              role="alert"
+                              className="absolute left-2 top-full mt-1 whitespace-nowrap text-[10px] font-bold uppercase tracking-[0.18em] text-red-500"
+                            >
+                              Out of stock
+                            </p>
+                          )}
 
 
 
@@ -2107,7 +2140,7 @@ export default function CartPage() {
 
 
 
-                        { duration: 3500 }
+                        { duration: 3500, position: 'top-right' }
 
 
 

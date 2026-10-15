@@ -44,20 +44,20 @@ const PHOTO_STYLE = {
 
 const METAL_BG = `
   radial-gradient(circle at 50% -10%, rgba(212,175,55,.14), transparent 38%),
-  radial-gradient(circle at 10% 60%, rgba(32,92,62,.35), transparent 45%),
+  radial-gradient(circle at 10% 60%, rgba(201,162,75,.08), transparent 45%),
   radial-gradient(circle at 92% 75%, rgba(212,175,55,.07), transparent 35%),
-  linear-gradient(135deg, #03130d 0%, #082519 48%, #031009 100%)
+  linear-gradient(135deg, #0B0B0B 0%, #161616 48%, #0B0B0B 100%)
 `;
 
 const CARD_BG = `
-  linear-gradient(160deg, rgba(14,48,34,.96) 0%, rgba(5,24,16,.97) 55%, rgba(3,16,10,.98) 100%)
+  linear-gradient(160deg, rgba(28,28,28,.96) 0%, rgba(16,16,16,.97) 55%, rgba(11,11,11,.98) 100%)
 `;
 
 const INPUT_CLASS =
-  'h-[50px] w-full rounded-[6px] border border-[#8f7a3e]/60 bg-[#04150e]/80 px-11 text-[14px] text-[#F5F3EE] outline-none transition focus:border-[#D4AF37] focus:ring-4 focus:ring-[#D4AF37]/15 placeholder:text-[#8a9a8f]';
+  'h-[50px] w-full rounded-[6px] border border-[#8f7a3e]/60 bg-[#101010]/80 px-11 text-[14px] text-[#F5F3EE] outline-none transition focus:border-[#D4AF37] focus:ring-4 focus:ring-[#D4AF37]/15 placeholder:text-[#8C8576]';
 
 const GOLD_BUTTON_CLASS =
-  'flex h-[52px] w-full items-center justify-center gap-3 rounded-[6px] bg-gradient-to-b from-[#E6CB7A] via-[#C9A344] to-[#9A7424] px-6 text-[13px] font-bold tracking-[0.12em] text-[#0A1A12] shadow-[inset_0_1px_0_rgba(255,255,255,.45),0_10px_28px_rgba(212,175,55,.2)] transition duration-300 hover:from-[#F0D98E] hover:via-[#D6B24F] hover:to-[#A98027] hover:shadow-[inset_0_1px_0_rgba(255,255,255,.55),0_14px_34px_rgba(212,175,55,.32)] disabled:cursor-not-allowed disabled:opacity-50';
+  'flex h-[52px] w-full items-center justify-center gap-3 rounded-[6px] bg-gradient-to-b from-[#E6CB7A] via-[#C9A344] to-[#9A7424] px-6 text-[13px] font-bold tracking-[0.12em] text-[#0B0B0B] shadow-[inset_0_1px_0_rgba(255,255,255,.45),0_10px_28px_rgba(212,175,55,.2)] transition duration-300 hover:from-[#F0D98E] hover:via-[#D6B24F] hover:to-[#A98027] hover:shadow-[inset_0_1px_0_rgba(255,255,255,.55),0_14px_34px_rgba(212,175,55,.32)] disabled:cursor-not-allowed disabled:opacity-50';
 
 const LABEL_CLASS =
   'mb-1.5 block text-[10px] font-bold uppercase tracking-[0.2em] text-[#E4DED5]';
@@ -162,7 +162,7 @@ export function NavbarAuthModal({
   return (
     <AnimatePresence>
       {isOpen && (
-        <div className="fixed inset-0 z-[9999] h-screen overflow-hidden bg-[#031009] text-[#F5F3EE]">
+        <div className="fixed inset-0 z-[9999] h-screen overflow-hidden bg-[#0B0B0B] text-[#F5F3EE]">
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -189,14 +189,14 @@ export function NavbarAuthModal({
             </button>
 
             <main className="relative z-10 flex min-h-screen items-center justify-center p-0 lg:p-8">
-              <div className="relative grid w-full max-w-[1180px] overflow-hidden border-[#8f7a3e]/60 bg-[#04150e] shadow-[0_30px_90px_rgba(0,0,0,.7),0_0_60px_rgba(212,175,55,.07)] lg:min-h-[640px] lg:grid-cols-[1.05fr_0.95fr] lg:border">
+              <div className="relative grid w-full max-w-[1180px] overflow-hidden border-[#8f7a3e]/60 bg-[#101010] shadow-[0_30px_90px_rgba(0,0,0,.7),0_0_60px_rgba(212,175,55,.07)] lg:min-h-[640px] lg:grid-cols-[1.05fr_0.95fr] lg:border">
                 {/* Photo / brand panel */}
                 <div
                   className="relative flex min-h-[250px] flex-col justify-between overflow-hidden lg:min-h-full lg:p-12"
                   style={PHOTO_STYLE}
                 >
-                  <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-[#031009]/70 via-[#05261a]/35 to-[#031009] lg:bg-gradient-to-tr lg:from-[#031009]/90 lg:via-[#05261a]/30 lg:to-[#031009]/50" />
-                  <div className="pointer-events-none absolute inset-0 bg-[#0b3a26]/25 mix-blend-multiply" />
+                  <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-[#0B0B0B]/70 via-[#1C1C1C]/35 to-[#0B0B0B] lg:bg-gradient-to-tr lg:from-[#0B0B0B]/90 lg:via-[#1C1C1C]/30 lg:to-[#0B0B0B]/50" />
+                  <div className="pointer-events-none absolute inset-0 bg-[#1C1C1C]/25 mix-blend-multiply" />
 
                   <Link
                     href="/"
@@ -218,7 +218,7 @@ export function NavbarAuthModal({
                       Wear Your
                       <span className="block text-[#D4AF37]">Essence.</span>
                     </h2>
-                    <p className="mt-5 max-w-[300px] text-[13px] leading-6 text-[#cfd6cf]">
+                    <p className="mt-5 max-w-[300px] text-[13px] leading-6 text-[#D6D0C7]">
                       Your wardrobe, your identity, your signature. Enter the KOVENIK world and continue your style journey.
                     </p>
 
@@ -241,7 +241,7 @@ export function NavbarAuthModal({
                         EST. KOVENIK
                       </span>
                     </div>
-                    <p className="text-[9px] uppercase tracking-[0.25em] text-[#a8b0a6]">
+                    <p className="text-[9px] uppercase tracking-[0.25em] text-[#A39D8F]">
                       Crafted for the ones who stand apart.
                     </p>
                   </div>
@@ -344,7 +344,7 @@ export function NavbarAuthModal({
                             </label>
 
                             <div className="flex items-center justify-between">
-                              <label className="flex cursor-pointer items-center gap-2 text-[12px] text-[#b9c2b8]">
+                              <label className="flex cursor-pointer items-center gap-2 text-[12px] text-[#B9B3A5]">
                                 <input
                                   type="checkbox"
                                   checked={rememberMe}
@@ -367,7 +367,7 @@ export function NavbarAuthModal({
                             <button type="submit" disabled={isLoading} className={GOLD_BUTTON_CLASS}>
                               {isLoading ? (
                                 <>
-                                  <span className="h-4 w-4 animate-spin rounded-full border-2 border-[#0A1A12]/20 border-t-[#0A1A12]" />
+                                  <span className="h-4 w-4 animate-spin rounded-full border-2 border-[#0B0B0B]/20 border-t-[#0B0B0B]" />
                                   PLEASE WAIT...
                                 </>
                               ) : (
@@ -381,14 +381,14 @@ export function NavbarAuthModal({
 
                           <div className="mx-auto my-5 flex max-w-[460px] items-center gap-4">
                             <div className="h-px flex-1 bg-[#8f7a3e]/50" />
-                            <span className="text-[9px] font-bold uppercase tracking-[0.3em] text-[#b9c2b8]">
+                            <span className="text-[9px] font-bold uppercase tracking-[0.3em] text-[#B9B3A5]">
                               OR
                             </span>
                             <div className="h-px flex-1 bg-[#8f7a3e]/50" />
                           </div>
 
                           <div className="group relative mx-auto h-[50px] w-full max-w-[460px]">
-                            <div className="pointer-events-none absolute inset-0 flex items-center justify-center gap-3 rounded-[6px] border border-[#8f7a3e]/70 bg-[#04150e]/80 text-[13px] font-medium text-[#F5F3EE] transition group-hover:border-[#D4AF37] group-hover:bg-[#0a2418]">
+                            <div className="pointer-events-none absolute inset-0 flex items-center justify-center gap-3 rounded-[6px] border border-[#8f7a3e]/70 bg-[#101010]/80 text-[13px] font-medium text-[#F5F3EE] transition group-hover:border-[#D4AF37] group-hover:bg-[#1C1C1C]">
                               <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true">
                                 <path fill="#4285F4" d="M21.35 12.27c0-.72-.06-1.42-.18-2.09H12v3.95h5.22a4.46 4.46 0 0 1-1.94 2.93v2.43h3.14c1.84-1.69 2.93-4.18 2.93-7.22Z"/>
                                 <path fill="#34A853" d="M12 21.72c2.63 0 4.84-.87 6.45-2.35l-3.14-2.43c-.87.58-1.98.93-3.31.93-2.54 0-4.69-1.72-5.46-4.03H3.3v2.51A9.74 9.74 0 0 0 12 21.72Z"/>
@@ -408,7 +408,7 @@ export function NavbarAuthModal({
                           </div>
 
                           <div className="mx-auto mt-6 max-w-[460px] border-t border-[#8f7a3e]/30 pt-4 text-center">
-                            <p className="text-[8px] uppercase tracking-[0.25em] text-[#8a9a8f]">
+                            <p className="text-[8px] uppercase tracking-[0.25em] text-[#8C8576]">
                               KOVENIK · WEAR YOUR ESSENCE
                             </p>
                           </div>
@@ -425,7 +425,7 @@ export function NavbarAuthModal({
                           transition={{ duration: 0.25 }}
                         >
                           <div className="mb-8 text-center">
-                            <div className="mx-auto mb-5 flex h-12 w-12 items-center justify-center rounded-full border border-[#8f7a3e]/70 bg-[#04150e]">
+                            <div className="mx-auto mb-5 flex h-12 w-12 items-center justify-center rounded-full border border-[#8f7a3e]/70 bg-[#101010]">
                               <Mail className="h-5 w-5 text-[#D4AF37]" strokeWidth={1.4} />
                             </div>
 
@@ -440,7 +440,7 @@ export function NavbarAuthModal({
                               Verify Your Email
                             </h1>
 
-                            <p className="mt-4 text-[13px] leading-5 text-[#b9c2b8]">
+                            <p className="mt-4 text-[13px] leading-5 text-[#B9B3A5]">
                               Enter the six-digit code sent to
                             </p>
 
@@ -477,13 +477,13 @@ export function NavbarAuthModal({
                                   value={digit}
                                   onChange={(e) => handleOtpChange(e.target.value, index)}
                                   onKeyDown={(e) => handleOtpKeyDown(e, index)}
-                                  className="h-12 w-11 rounded-[6px] border border-[#8f7a3e]/60 bg-[#04150e]/80 text-center text-lg font-bold text-[#F5F3EE] outline-none transition focus:border-[#D4AF37] focus:ring-4 focus:ring-[#D4AF37]/15 sm:h-[54px] sm:w-[52px]"
+                                  className="h-12 w-11 rounded-[6px] border border-[#8f7a3e]/60 bg-[#101010]/80 text-center text-lg font-bold text-[#F5F3EE] outline-none transition focus:border-[#D4AF37] focus:ring-4 focus:ring-[#D4AF37]/15 sm:h-[54px] sm:w-[52px]"
                                   aria-label={`OTP digit ${index + 1}`}
                                 />
                               ))}
                             </div>
 
-                            <div className="flex items-center justify-between text-[12px] text-[#b9c2b8]">
+                            <div className="flex items-center justify-between text-[12px] text-[#B9B3A5]">
                               {canResend ? (
                                 <button
                                   type="button"
@@ -524,7 +524,7 @@ export function NavbarAuthModal({
                             >
                               {isLoading ? (
                                 <>
-                                  <span className="h-4 w-4 animate-spin rounded-full border-2 border-[#0A1A12]/20 border-t-[#0A1A12]" />
+                                  <span className="h-4 w-4 animate-spin rounded-full border-2 border-[#0B0B0B]/20 border-t-[#0B0B0B]" />
                                   VERIFYING...
                                 </>
                               ) : (
@@ -548,7 +548,7 @@ export function NavbarAuthModal({
                           transition={{ duration: 0.25 }}
                         >
                           <div className="mb-8 text-center">
-                            <div className="mx-auto mb-5 flex h-12 w-12 items-center justify-center rounded-full border border-[#8f7a3e]/70 bg-[#04150e]">
+                            <div className="mx-auto mb-5 flex h-12 w-12 items-center justify-center rounded-full border border-[#8f7a3e]/70 bg-[#101010]">
                               <Lock className="h-5 w-5 text-[#D4AF37]" strokeWidth={1.4} />
                             </div>
 
@@ -563,7 +563,7 @@ export function NavbarAuthModal({
                               Create New Password
                             </h1>
 
-                            <p className="mt-4 text-[13px] leading-5 text-[#b9c2b8]">
+                            <p className="mt-4 text-[13px] leading-5 text-[#B9B3A5]">
                               Create a new password for your KOVENIK account.
                             </p>
                           </div>
@@ -619,7 +619,7 @@ export function NavbarAuthModal({
                             >
                               {isLoading ? (
                                 <>
-                                  <span className="h-4 w-4 animate-spin rounded-full border-2 border-[#0A1A12]/20 border-t-[#0A1A12]" />
+                                  <span className="h-4 w-4 animate-spin rounded-full border-2 border-[#0B0B0B]/20 border-t-[#0B0B0B]" />
                                   RESETTING...
                                 </>
                               ) : (
@@ -640,7 +640,7 @@ export function NavbarAuthModal({
                                 setOtpPurpose('login');
                                 setStep('LOGIN');
                               }}
-                              className="w-full text-center text-[12px] text-[#b9c2b8] hover:text-[#F5F3EE]"
+                              className="w-full text-center text-[12px] text-[#B9B3A5] hover:text-[#F5F3EE]"
                             >
                               ← Back to login
                             </button>

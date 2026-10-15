@@ -200,14 +200,14 @@ function normalizeProduct(input: unknown): ProductData {
 /* Shared class strings                                                       */
 /* -------------------------------------------------------------------------- */
 
-// Brushed emerald metal: dark edges, bright reflective band through the middle.
-const EMERALD_METAL =
-  'bg-[linear-gradient(100deg,#0d3a22_0%,#1f7a47_28%,#74cf98_50%,#1f7a47_72%,#0d3a22_100%)]';
+// Brushed metallic gold: dark edges, bright reflective band through the middle.
+const GOLD_METAL =
+  'bg-[linear-gradient(135deg,#A67C28_0%,#F0DC9A_40%,#C9A24B_65%,#F7E9B5_100%)]';
 
 const FADE_CSS = `
 @keyframes kvFade{from{opacity:0}to{opacity:1}}
 .kv-fade{animation:kvFade .35s ease both}
-body:has([data-kovenik-product]){background:#0c2217}
+body:has([data-kovenik-product]){background:#0B0B0B}
 @media (prefers-reduced-motion:reduce){.kv-fade{animation:none}}
 `;
 
@@ -573,16 +573,16 @@ export default function ProductPage() {
 
   if (loading) {
     return (
-      <main className="min-h-screen bg-[#0c2217] px-4 py-12">
+      <main className="min-h-screen bg-[#0B0B0B] px-4 py-12">
         <div className="mx-auto max-w-[1500px] animate-pulse">
-          <div className="h-4 w-48 bg-[#123022]" />
+          <div className="h-4 w-48 bg-[#1A1A1A]" />
           <div className="mt-6 grid gap-8 lg:grid-cols-[1.15fr_0.72fr]">
-            <div className="aspect-[4/5] bg-[#0a1c13]" />
+            <div className="aspect-[4/5] bg-[#121212]" />
             <div className="space-y-4">
-              <div className="h-4 w-24 bg-[#123022]" />
-              <div className="h-12 w-3/4 bg-[#123022]" />
-              <div className="h-8 w-32 bg-[#123022]" />
-              <div className="h-24 bg-[#123022]" />
+              <div className="h-4 w-24 bg-[#1A1A1A]" />
+              <div className="h-12 w-3/4 bg-[#1A1A1A]" />
+              <div className="h-8 w-32 bg-[#1A1A1A]" />
+              <div className="h-24 bg-[#1A1A1A]" />
             </div>
           </div>
         </div>
@@ -592,14 +592,14 @@ export default function ProductPage() {
 
   if (!product) {
     return (
-      <main className="flex min-h-screen items-center justify-center bg-[#0c2217] px-6 text-center">
+      <main className="flex min-h-screen items-center justify-center bg-[#0B0B0B] px-6 text-center">
         <div>
           <p className="font-serif text-2xl tracking-[0.12em] text-[#d9b45f]">KOVENIK</p>
-          <h1 className="mt-3 text-3xl text-[#f2f5f3]">Product not found</h1>
-          <p className="mt-2 text-sm text-[#a8b5ad]">This piece may have been removed or the link is incorrect.</p>
+          <h1 className="mt-3 text-3xl text-[#F3ECDD]">Product not found</h1>
+          <p className="mt-2 text-sm text-[#A89F8C]">This piece may have been removed or the link is incorrect.</p>
           <Link
             href="/shop"
-            className={`mt-6 inline-flex border border-[#74cf98]/60 px-6 py-3 text-xs font-bold uppercase tracking-[0.14em] text-white ${EMERALD_METAL}`}
+            className={`mt-6 inline-flex border border-[#C9A24B]/60 px-6 py-3 text-xs font-bold uppercase tracking-[0.14em] text-[#0B0B0B] ${GOLD_METAL}`}
           >
             Back to shop
           </Link>
@@ -643,10 +643,10 @@ export default function ProductPage() {
           headline: 'In stock',
           detail: '',
           quantity: selectedVariantInventory,
-          box: 'border-[#2b5a41] bg-[#133827]',
-          text: 'text-[#6fd39a]',
-          sub: 'text-[#9fc9b0]',
-          dot: 'bg-[#46c586]',
+          box: 'border-[#3A342A] bg-[#1F1A0F]',
+          text: 'text-[#F0DC9A]',
+          sub: 'text-[#C9B17A]',
+          dot: 'bg-[#C9A24B]',
           short: `In stock (${selectedVariantInventory})`,
         };
       case 'low':
@@ -704,10 +704,10 @@ export default function ProductPage() {
           headline: `Select ${missing} to check availability`,
           detail: '',
           quantity: null,
-          box: needSelection ? 'border-[#74cf98] bg-[#133827]' : 'border-[#1f4231] bg-[#0a1c13]',
-          text: needSelection ? 'text-[#9fe0bb]' : 'text-[#c3cec8]',
-          sub: 'text-[#a8b5ad]',
-          dot: 'bg-[#74847a]',
+          box: needSelection ? 'border-[#C9A24B] bg-[#1F1A0F]' : 'border-[#2A2620] bg-[#121212]',
+          text: needSelection ? 'text-[#F0DC9A]' : 'text-[#D9D2C3]',
+          sub: 'text-[#A89F8C]',
+          dot: 'bg-[#7A7160]',
           short: 'Select variant',
         };
       }
@@ -998,14 +998,14 @@ export default function ProductPage() {
             <p>{product.description || 'No specific description provided for this style.'}</p>
             {product.fabricDetails && (
               <p className="mt-3">
-                <strong className="font-semibold text-[#f2f5f3]">Fabric details:</strong> {product.fabricDetails}
+                <strong className="font-semibold text-[#F3ECDD]">Fabric details:</strong> {product.fabricDetails}
               </p>
             )}
             {specRows.length > 0 && (
-              <dl className="mt-4 grid max-w-md grid-cols-[auto_1fr] gap-x-6 gap-y-2 border-t border-[#1f4231] pt-4">
+              <dl className="mt-4 grid max-w-md grid-cols-[auto_1fr] gap-x-6 gap-y-2 border-t border-[#2A2620] pt-4">
                 {specRows.map(([term, value]) => (
                   <div key={term} className="contents">
-                    <dt className="font-semibold text-[#74cf98]">{term}</dt>
+                    <dt className="font-semibold text-[#C9A24B]">{term}</dt>
                     <dd>{value}</dd>
                   </div>
                 ))}
@@ -1020,14 +1020,14 @@ export default function ProductPage() {
           <>
             {sizes.length > 0 ? (
               <p>
-                <strong className="font-semibold text-[#f2f5f3]">Available sizes:</strong> {sizes.join(', ')}
+                <strong className="font-semibold text-[#F3ECDD]">Available sizes:</strong> {sizes.join(', ')}
               </p>
             ) : (
               <p>Size information is not available for this product.</p>
             )}
             {product.fit && (
               <p className="mt-3">
-                <strong className="font-semibold text-[#f2f5f3]">Fit:</strong> {product.fit}
+                <strong className="font-semibold text-[#F3ECDD]">Fit:</strong> {product.fit}
               </p>
             )}
           </>
@@ -1053,28 +1053,28 @@ export default function ProductPage() {
     <main
       data-kovenik-product
       style={{ fontFamily: 'Inter, Manrope, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif' }}
-      className="min-h-screen bg-[#0c2217] pb-24 text-[#f2f5f3] lg:pb-0"
+      className="min-h-screen bg-[#0B0B0B] pb-24 text-[#F3ECDD] lg:pb-0"
     >
       <style>{FADE_CSS}</style>
 
       {/* BREADCRUMB */}
-      <div className="border-b border-[#1a3828]">
+      <div className="border-b border-[#2A2620]">
         <nav
           aria-label="Breadcrumb"
-          className="mx-auto flex max-w-[1500px] items-center gap-2 overflow-x-auto whitespace-nowrap px-4 py-3.5 text-sm text-[#a8b5ad] sm:px-6 lg:px-10"
+          className="mx-auto flex max-w-[1500px] items-center gap-2 overflow-x-auto whitespace-nowrap px-4 py-3.5 text-sm text-[#A89F8C] sm:px-6 lg:px-10"
         >
-          <Link href="/" className="transition-colors hover:text-[#74cf98]">Home</Link>
-          <ChevronRight className="h-3 w-3 shrink-0 text-[#4a5a51]" />
-          <Link href="/shop" className="transition-colors hover:text-[#74cf98]">Shop</Link>
-          <ChevronRight className="h-3 w-3 shrink-0 text-[#4a5a51]" />
+          <Link href="/" className="transition-colors hover:text-[#C9A24B]">Home</Link>
+          <ChevronRight className="h-3 w-3 shrink-0 text-[#5A5040]" />
+          <Link href="/shop" className="transition-colors hover:text-[#C9A24B]">Shop</Link>
+          <ChevronRight className="h-3 w-3 shrink-0 text-[#5A5040]" />
           <Link
             href={`/shop?category=${encodeURIComponent(product.category_slug ?? product.category ?? '')}`}
-            className="transition-colors hover:text-[#74cf98]"
+            className="transition-colors hover:text-[#C9A24B]"
           >
             {product.categoryLabel || product.category || 'Products'}
           </Link>
-          <ChevronRight className="h-3 w-3 shrink-0 text-[#4a5a51]" />
-          <span className="truncate text-[#f2f5f3]">{product.name}</span>
+          <ChevronRight className="h-3 w-3 shrink-0 text-[#5A5040]" />
+          <span className="truncate text-[#F3ECDD]">{product.name}</span>
         </nav>
       </div>
 
@@ -1092,14 +1092,14 @@ export default function ProductPage() {
                     aria-label={`View image ${index + 1}`}
                     aria-current={desktopImage === index}
                     onClick={() => setDesktopImage(index)}
-                    className={`relative aspect-[4/5] shrink-0 overflow-hidden border bg-[#0a1c13] transition-all focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#74cf98] ${desktopImage === index ? 'border-[#46c586] shadow-[0_0_0_1px_rgba(70,197,134,.35)]' : 'border-[#1f4231] hover:border-[#2b5a41]'}`}
+                    className={`relative aspect-[4/5] shrink-0 overflow-hidden border bg-[#121212] transition-all focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#C9A24B] ${desktopImage === index ? 'border-[#C9A24B] shadow-[0_0_0_1px_rgba(201,162,75,.35)]' : 'border-[#2A2620] hover:border-[#3A342A]'}`}
                   >
                     <img src={image} alt={`${product.name} ${index + 1}`} className="h-full w-full object-cover" />
                   </button>
                 ))}
               </div>
 
-              <div className="relative w-full overflow-hidden border border-[#1f4231] bg-[#0a1c13] shadow-[0_24px_70px_rgba(0,0,0,.55)]">
+              <div className="relative w-full overflow-hidden border border-[#2A2620] bg-[#121212] shadow-[0_24px_70px_rgba(0,0,0,.55)]">
                 {images[desktopImage] ? (
                   <img
                     key={desktopImage}
@@ -1108,14 +1108,14 @@ export default function ProductPage() {
                     className="kv-fade block h-auto w-full"
                   />
                 ) : (
-                  <div className="flex aspect-[4/5] items-center justify-center text-base text-[#74847a]">No image available</div>
+                  <div className="flex aspect-[4/5] items-center justify-center text-base text-[#7A7160]">No image available</div>
                 )}
                 {images.length > 0 && (
                   <button
                     type="button"
                     aria-label="Open product image fullscreen"
                     onClick={() => openLightbox(desktopImage)}
-                    className="absolute bottom-4 right-4 flex h-11 w-11 items-center justify-center rounded-full border border-[#46c586]/60 bg-[#0c2217]/80 text-[#74cf98] backdrop-blur-sm transition hover:bg-[#133827]"
+                    className="absolute bottom-4 right-4 flex h-11 w-11 items-center justify-center rounded-full border border-[#C9A24B]/60 bg-[#0B0B0B]/80 text-[#C9A24B] backdrop-blur-sm transition hover:bg-[#1F1A0F]"
                   >
                     <Maximize2 className="h-4 w-4" />
                   </button>
@@ -1126,7 +1126,7 @@ export default function ProductPage() {
             {/* Mobile gallery */}
             <div className="lg:hidden">
               <div
-                className="relative overflow-hidden border border-[#1f4231] bg-[#0a1c13]"
+                className="relative overflow-hidden border border-[#2A2620] bg-[#121212]"
                 onTouchStart={handleTouchStart}
                 onTouchEnd={handleTouchEnd}
               >
@@ -1146,21 +1146,21 @@ export default function ProductPage() {
                         draggable={false}
                       />
                     </button>
-                    <span className="pointer-events-none absolute bottom-3 right-3 z-10 flex h-10 w-10 items-center justify-center rounded-full border border-[#46c586]/60 bg-[#0c2217]/80 text-[#74cf98]">
+                    <span className="pointer-events-none absolute bottom-3 right-3 z-10 flex h-10 w-10 items-center justify-center rounded-full border border-[#C9A24B]/60 bg-[#0B0B0B]/80 text-[#C9A24B]">
                       <Maximize2 className="h-4 w-4" />
                     </span>
                     {images.length > 1 && (
                       <>
-                        <button type="button" aria-label="Previous image" onClick={(e) => { e.stopPropagation(); goToMobileImage(-1); }} className="absolute left-2 top-1/2 z-20 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-[#46c586]/50 bg-[#0c2217]/80 text-[#74cf98]"><ChevronLeft className="h-5 w-5" /></button>
-                        <button type="button" aria-label="Next image" onClick={(e) => { e.stopPropagation(); goToMobileImage(1); }} className="absolute right-2 top-1/2 z-20 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-[#46c586]/50 bg-[#0c2217]/80 text-[#74cf98]"><ChevronRight className="h-5 w-5" /></button>
-                        <span className="pointer-events-none absolute bottom-3 left-3 z-10 rounded-full border border-[#1f4231] bg-[#0c2217]/85 px-3 py-1 text-xs font-semibold text-[#f2f5f3]">
+                        <button type="button" aria-label="Previous image" onClick={(e) => { e.stopPropagation(); goToMobileImage(-1); }} className="absolute left-2 top-1/2 z-20 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-[#C9A24B]/50 bg-[#0B0B0B]/80 text-[#C9A24B]"><ChevronLeft className="h-5 w-5" /></button>
+                        <button type="button" aria-label="Next image" onClick={(e) => { e.stopPropagation(); goToMobileImage(1); }} className="absolute right-2 top-1/2 z-20 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-[#C9A24B]/50 bg-[#0B0B0B]/80 text-[#C9A24B]"><ChevronRight className="h-5 w-5" /></button>
+                        <span className="pointer-events-none absolute bottom-3 left-3 z-10 rounded-full border border-[#2A2620] bg-[#0B0B0B]/85 px-3 py-1 text-xs font-semibold text-[#F3ECDD]">
                           {mobileImage + 1}/{images.length}
                         </span>
                       </>
                     )}
                   </div>
                 ) : (
-                  <div className="flex aspect-[4/5] items-center justify-center text-sm text-[#74847a]">No image available</div>
+                  <div className="flex aspect-[4/5] items-center justify-center text-sm text-[#7A7160]">No image available</div>
                 )}
               </div>
               {images.length > 1 && (
@@ -1171,7 +1171,7 @@ export default function ProductPage() {
                       type="button"
                       aria-label={`View image ${index + 1}`}
                       onClick={() => setMobileImage(index)}
-                      className={`h-[72px] w-14 shrink-0 overflow-hidden border ${mobileImage === index ? 'border-[#46c586] shadow-[0_0_0_1px_rgba(70,197,134,.35)]' : 'border-[#1f4231]'}`}
+                      className={`h-[72px] w-14 shrink-0 overflow-hidden border ${mobileImage === index ? 'border-[#C9A24B] shadow-[0_0_0_1px_rgba(201,162,75,.35)]' : 'border-[#2A2620]'}`}
                     >
                       <img src={image} alt="" className="h-full w-full object-cover" />
                     </button>
@@ -1196,47 +1196,47 @@ export default function ProductPage() {
               </div>
             )}
 
-            <h1 className="text-[1.65rem] font-semibold leading-[1.25] tracking-tight text-[#f2f5f3] sm:text-[1.9rem] xl:text-[2.15rem]">
+            <h1 className="text-[1.65rem] font-semibold leading-[1.25] tracking-tight text-[#F3ECDD] sm:text-[1.9rem] xl:text-[2.15rem]">
               {product.name}
             </h1>
             {(product.categoryLabel || product.category) && (
-              <p className="mt-1.5 text-base text-[#a8b5ad]">{product.categoryLabel || product.category}</p>
+              <p className="mt-1.5 text-base text-[#A89F8C]">{product.categoryLabel || product.category}</p>
             )}
 
             {hasRating && (
               <div className="mt-3 flex flex-wrap items-center gap-2">
                 <div className="flex items-center gap-0.5 text-[#e6c776]" aria-hidden="true">
                   {[0, 1, 2, 3, 4].map((i) => (
-                    <Star key={i} className={`h-5 w-5 ${i < Math.round(rating) ? 'fill-current' : 'text-[#3a4640]'}`} />
+                    <Star key={i} className={`h-5 w-5 ${i < Math.round(rating) ? 'fill-current' : 'text-[#3A342A]'}`} />
                   ))}
                 </div>
-                <span className="text-base text-[#c3cec8]">
-                  <span className="font-semibold text-[#f2f5f3]">{rating.toFixed(1)}</span> ({reviewCount} reviews)
+                <span className="text-base text-[#D9D2C3]">
+                  <span className="font-semibold text-[#F3ECDD]">{rating.toFixed(1)}</span> ({reviewCount} reviews)
                 </span>
               </div>
             )}
 
             <div className="mt-4 flex flex-wrap items-end gap-x-3 gap-y-2">
-              <span className="text-[1.9rem] font-semibold tracking-tight text-[#f2f5f3] sm:text-[2.25rem]">{formatINR(price)}</span>
+              <span className="text-[1.9rem] font-semibold tracking-tight text-[#F3ECDD] sm:text-[2.25rem]">{formatINR(price)}</span>
               {mrp !== undefined && mrp > price && (
-                <span className="pb-1 text-lg text-[#8a998f] line-through">{formatINR(mrp)}</span>
+                <span className="pb-1 text-lg text-[#8A8170] line-through">{formatINR(mrp)}</span>
               )}
               {discount > 0 && (
-                <span className="mb-1 border border-[#46c586]/70 bg-[#133827] px-3 py-1 text-sm font-bold text-[#6fd39a]">
+                <span className="mb-1 border border-[#C9A24B]/70 bg-[#1F1A0F] px-3 py-1 text-sm font-bold text-[#F0DC9A]">
                   {discount}% OFF
                 </span>
               )}
             </div>
-            <p className="mt-1.5 text-sm text-[#a8b5ad]">Inclusive of all taxes</p>
+            <p className="mt-1.5 text-sm text-[#A89F8C]">Inclusive of all taxes</p>
 
             {featureChips.length > 0 && (
               <div className="mt-5 flex flex-wrap gap-2">
                 {featureChips.map(({ Icon, label }) => (
                   <span
                     key={label}
-                    className="inline-flex items-center gap-2 border border-[#1f4231] bg-[#0a1c13] px-3.5 py-2.5 text-[15px] text-[#e3e9e5]"
+                    className="inline-flex items-center gap-2 border border-[#2A2620] bg-[#121212] px-3.5 py-2.5 text-[15px] text-[#E8E0CE]"
                   >
-                    <Icon className="h-5 w-5 text-[#74cf98]" /> {label}
+                    <Icon className="h-5 w-5 text-[#C9A24B]" /> {label}
                   </span>
                 ))}
               </div>
@@ -1247,13 +1247,13 @@ export default function ProductPage() {
                 <div className="flex flex-wrap items-center justify-between gap-x-3 gap-y-1">
                   <div className="flex items-center gap-2.5">
                     <span className="bg-[#d9b45f] px-2.5 py-1 text-xs font-bold text-black">Best offer</span>
-                    <span className="text-lg text-[#f2f5f3]">
+                    <span className="text-lg text-[#F3ECDD]">
                       Get it at <span className="font-bold text-[#e6c776]">{formatINR(bestPrice)}</span>
                     </span>
                   </div>
                   <span className="text-sm font-semibold text-[#e6c776]">Apply at checkout</span>
                 </div>
-                <p className="mt-2 text-base leading-7 text-[#b4c0b8]">
+                <p className="mt-2 text-base leading-7 text-[#B8AF9B]">
                   Applicable on select items, purchases &amp; checkout promos.
                 </p>
               </div>
@@ -1263,8 +1263,8 @@ export default function ProductPage() {
             <div ref={selectorsRef} className="mt-6 scroll-mt-24">
               {colors.length > 0 && (
                 <div>
-                  <p className="text-base text-[#a8b5ad]">
-                    Color: <span className="font-semibold text-[#f2f5f3]">{selectedColorLabel}</span>
+                  <p className="text-base text-[#A89F8C]">
+                    Color: <span className="font-semibold text-[#F3ECDD]">{selectedColorLabel}</span>
                   </p>
                   <div className="mt-3 flex flex-wrap gap-3" role="group" aria-label="Select color">
                     {colors.map((color) => {
@@ -1280,10 +1280,10 @@ export default function ProductPage() {
                           aria-label={String(color)}
                           aria-pressed={active}
                           onClick={() => chooseColor(String(color))}
-                          className={`relative flex h-14 w-14 items-center justify-center border transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#74cf98] ${active ? 'border-[#46c586] shadow-[0_0_16px_rgba(70,197,134,.3)]' : 'border-[#1f4231] hover:border-[#2b5a41]'} ${soldOut && !active ? 'opacity-45' : ''}`}
+                          className={`relative flex h-14 w-14 items-center justify-center border transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#C9A24B] ${active ? 'border-[#C9A24B] shadow-[0_0_16px_rgba(201,162,75,.3)]' : 'border-[#2A2620] hover:border-[#3A342A]'} ${soldOut && !active ? 'opacity-45' : ''}`}
                         >
                           <span className="h-9 w-9 rounded-full border border-white/20" style={{ backgroundColor: paint }} />
-                          {soldOut && <span aria-hidden="true" className="absolute h-px w-10 rotate-45 bg-[#f2f5f3]/70" />}
+                          {soldOut && <span aria-hidden="true" className="absolute h-px w-10 rotate-45 bg-[#F3ECDD]/70" />}
                         </button>
                       ) : (
                         <button
@@ -1291,10 +1291,10 @@ export default function ProductPage() {
                           type="button"
                           aria-pressed={active}
                           onClick={() => chooseColor(String(color))}
-                          className={`h-12 border px-4 text-base font-medium transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#74cf98] ${
+                          className={`h-12 border px-4 text-base font-medium transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#C9A24B] ${
                             active
-                              ? 'border-[#46c586] bg-[#133827] text-[#9fe0bb] shadow-[0_0_16px_rgba(70,197,134,.25)]'
-                              : `border-[#1f4231] bg-[#0a1c13] text-[#e3e9e5] hover:border-[#2b5a41] ${soldOut ? 'opacity-55 line-through' : ''}`
+                              ? 'border-[#C9A24B] bg-[#1F1A0F] text-[#F0DC9A] shadow-[0_0_16px_rgba(201,162,75,.25)]'
+                              : `border-[#2A2620] bg-[#121212] text-[#E8E0CE] hover:border-[#3A342A] ${soldOut ? 'opacity-55 line-through' : ''}`
                           }`}
                         >
                           {color}
@@ -1308,13 +1308,13 @@ export default function ProductPage() {
               {sizes.length > 0 && (
                 <div className={colors.length > 0 ? 'mt-6' : ''}>
                   <div className="flex items-center justify-between gap-3">
-                    <p className="text-base text-[#a8b5ad]">
-                      Size: <span className="font-semibold text-[#f2f5f3]">{selectedSize ?? 'Choose your size'}</span>
+                    <p className="text-base text-[#A89F8C]">
+                      Size: <span className="font-semibold text-[#F3ECDD]">{selectedSize ?? 'Choose your size'}</span>
                     </p>
                     <button
                       type="button"
                       onClick={openSizeGuide}
-                      className="inline-flex items-center gap-2 text-base text-[#a8b5ad] underline underline-offset-4 transition hover:text-[#74cf98]"
+                      className="inline-flex items-center gap-2 text-base text-[#A89F8C] underline underline-offset-4 transition hover:text-[#C9A24B]"
                     >
                       <Ruler className="h-4 w-4" /> Size guide
                     </button>
@@ -1329,10 +1329,10 @@ export default function ProductPage() {
                           type="button"
                           aria-pressed={active}
                           onClick={() => chooseSize(String(size))}
-                          className={`h-[52px] min-w-[60px] border px-4 text-base font-medium transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#74cf98] ${
+                          className={`h-[52px] min-w-[60px] border px-4 text-base font-medium transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#C9A24B] ${
                             active
-                              ? 'border-[#46c586] bg-[#133827] text-[#9fe0bb] shadow-[0_0_16px_rgba(70,197,134,.25)]'
-                              : `border-[#1f4231] bg-[#0a1c13] text-[#e3e9e5] hover:border-[#2b5a41] ${soldOut ? 'opacity-55 line-through' : ''}`
+                              ? 'border-[#C9A24B] bg-[#1F1A0F] text-[#F0DC9A] shadow-[0_0_16px_rgba(201,162,75,.25)]'
+                              : `border-[#2A2620] bg-[#121212] text-[#E8E0CE] hover:border-[#3A342A] ${soldOut ? 'opacity-55 line-through' : ''}`
                           }`}
                         >
                           {size}
@@ -1355,7 +1355,7 @@ export default function ProductPage() {
                 onClick={handleAddToCart}
                 disabled={stockBlocked || cartBusy}
                 aria-busy={cartBusy}
-                className={`relative flex h-14 min-w-0 flex-1 items-center justify-center gap-3 overflow-hidden border border-[#74cf98]/60 text-[15px] font-semibold uppercase tracking-[0.12em] text-white shadow-[0_0_24px_rgba(47,143,85,.28),0_6px_24px_rgba(0,0,0,.5)] transition-all [text-shadow:0_1px_2px_rgba(0,0,0,.6)] hover:brightness-110 active:scale-[.99] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#74cf98] disabled:cursor-not-allowed disabled:opacity-45 disabled:hover:brightness-100 ${EMERALD_METAL}`}
+                className={`relative flex h-14 min-w-0 flex-1 items-center justify-center gap-3 overflow-hidden border border-[#C9A24B]/60 text-[15px] font-semibold uppercase tracking-[0.12em] text-[#0B0B0B] shadow-[0_0_24px_rgba(201,162,75,.28),0_6px_24px_rgba(0,0,0,.5)] transition-all [text-shadow:0_1px_0_rgba(255,255,255,.25)] hover:brightness-110 active:scale-[.99] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#C9A24B] disabled:cursor-not-allowed disabled:opacity-45 disabled:hover:brightness-100 ${GOLD_METAL}`}
               >
                 <span aria-hidden="true" className="pointer-events-none absolute inset-x-0 top-0 h-px bg-white/50" />
                 <ShoppingBag className="h-5 w-5" />
@@ -1367,7 +1367,7 @@ export default function ProductPage() {
                 aria-pressed={isWishlisted}
                 onClick={handleWishlistToggle}
                 disabled={wishlistBusy}
-                className={`flex h-14 w-14 shrink-0 items-center justify-center border border-[#1f4231] bg-[#0a1c13] text-[#74cf98] transition hover:border-[#2b5a41] ${isWishlisted ? 'border-[#46c586] shadow-[0_0_16px_rgba(70,197,134,.25)]' : ''} ${wishlistBusy ? 'opacity-60' : ''}`}
+                className={`flex h-14 w-14 shrink-0 items-center justify-center border border-[#2A2620] bg-[#121212] text-[#C9A24B] transition hover:border-[#3A342A] ${isWishlisted ? 'border-[#C9A24B] shadow-[0_0_16px_rgba(201,162,75,.25)]' : ''} ${wishlistBusy ? 'opacity-60' : ''}`}
               >
                 <Heart className={`h-5 w-5 ${isWishlisted ? 'fill-current' : ''}`} />
               </button>
@@ -1381,26 +1381,26 @@ export default function ProductPage() {
                 { Icon: RotateCcw, label: 'Easy returns', sub: '7 days hassle free' },
               ].map(({ Icon, label, sub }) => (
                 <div key={label} className="flex items-center gap-3">
-                  <Icon className="h-8 w-8 shrink-0 text-[#a8b5ad]" strokeWidth={1.4} />
+                  <Icon className="h-8 w-8 shrink-0 text-[#A89F8C]" strokeWidth={1.4} />
                   <span className="min-w-0">
-                    <span className="block text-[15px] font-medium leading-5 text-[#f2f5f3]">{label}</span>
-                    {sub && <span className="mt-0.5 block text-sm leading-5 text-[#a8b5ad]">{sub}</span>}
+                    <span className="block text-[15px] font-medium leading-5 text-[#F3ECDD]">{label}</span>
+                    {sub && <span className="mt-0.5 block text-sm leading-5 text-[#A89F8C]">{sub}</span>}
                   </span>
                 </div>
               ))}
             </div>
 
             {displaySku && (
-              <div className="mt-5 inline-flex max-w-full items-center gap-2 text-sm text-[#a8b5ad]">
+              <div className="mt-5 inline-flex max-w-full items-center gap-2 text-sm text-[#A89F8C]">
                 <span>SKU</span>
-                <span className="truncate font-semibold tracking-wide text-[#a8b5ad]">{displaySku}</span>
+                <span className="truncate font-semibold tracking-wide text-[#A89F8C]">{displaySku}</span>
                 <button
                   type="button"
                   aria-label={skuCopied ? 'SKU copied' : 'Copy SKU'}
                   onClick={copySku}
-                  className="shrink-0 transition hover:text-[#74cf98]"
+                  className="shrink-0 transition hover:text-[#C9A24B]"
                 >
-                  {skuCopied ? <Check className="h-3.5 w-3.5 text-[#6fd39a]" /> : <Copy className="h-3.5 w-3.5" />}
+                  {skuCopied ? <Check className="h-3.5 w-3.5 text-[#F0DC9A]" /> : <Copy className="h-3.5 w-3.5" />}
                 </button>
               </div>
             )}
@@ -1410,7 +1410,7 @@ export default function ProductPage() {
 
       {/* KEY HIGHLIGHTS STRIP */}
       <section className="mx-auto w-full max-w-[1500px] px-4 sm:px-6 lg:px-10">
-        <div className="grid grid-cols-2 gap-px border border-[#1f4231] bg-[#1f4231] lg:auto-cols-fr lg:grid-flow-col">
+        <div className="grid grid-cols-2 gap-px border border-[#2A2620] bg-[#2A2620] lg:auto-cols-fr lg:grid-flow-col">
           {[
             product.fabric ? { Icon: Layers, label: 'Fabric', value: product.fabric, tone: '' } : null,
             product.fit ? { Icon: Ruler, label: 'Fit', value: product.fit, tone: '' } : null,
@@ -1430,12 +1430,12 @@ export default function ProductPage() {
             .map(({ Icon, label, value, tone }) => (
               <div
                 key={label}
-                className="flex items-center gap-3 bg-[#0a1c13] px-4 py-4 odd:last:col-span-2 sm:gap-4 sm:px-6 sm:py-5 lg:odd:last:col-span-1"
+                className="flex items-center gap-3 bg-[#121212] px-4 py-4 odd:last:col-span-2 sm:gap-4 sm:px-6 sm:py-5 lg:odd:last:col-span-1"
               >
-                <Icon className="h-8 w-8 shrink-0 text-[#46c586]" strokeWidth={1.3} />
+                <Icon className="h-8 w-8 shrink-0 text-[#C9A24B]" strokeWidth={1.3} />
                 <span className="min-w-0">
-                  <span className="block text-sm text-[#a8b5ad]">{label}</span>
-                  <span className={`block truncate text-base font-medium ${tone || 'text-[#f2f5f3]'}`}>{value}</span>
+                  <span className="block text-sm text-[#A89F8C]">{label}</span>
+                  <span className={`block truncate text-base font-medium ${tone || 'text-[#F3ECDD]'}`}>{value}</span>
                 </span>
               </div>
             ))}
@@ -1444,7 +1444,7 @@ export default function ProductPage() {
 
       {/* DETAILS TABS */}
       <section id="kovenik-details" className="mx-auto w-full max-w-[1500px] scroll-mt-6 px-4 py-8 sm:px-6 lg:px-10 lg:py-10">
-        <div role="tablist" aria-label="Product details" className="flex gap-7 overflow-x-auto border-b border-[#1f4231]">
+        <div role="tablist" aria-label="Product details" className="flex gap-7 overflow-x-auto border-b border-[#2A2620]">
           {tabs.map(({ key, label }) => {
             const active = activeTab === key;
             return (
@@ -1456,7 +1456,7 @@ export default function ProductPage() {
                 aria-selected={active}
                 aria-controls={`panel-${key}`}
                 onClick={() => setActiveTab(key)}
-                className={`-mb-px shrink-0 whitespace-nowrap border-b-2 pb-3 text-[17px] transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#74cf98] ${active ? 'border-[#46c586] font-semibold text-[#f2f5f3]' : 'border-transparent text-[#a8b5ad] hover:text-[#f2f5f3]'}`}
+                className={`-mb-px shrink-0 whitespace-nowrap border-b-2 pb-3 text-[17px] transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#C9A24B] ${active ? 'border-[#C9A24B] font-semibold text-[#F3ECDD]' : 'border-transparent text-[#A89F8C] hover:text-[#F3ECDD]'}`}
               >
                 {label}
               </button>
@@ -1469,7 +1469,7 @@ export default function ProductPage() {
             id={`panel-${activeTab}`}
             role="tabpanel"
             aria-labelledby={`tab-${activeTab}`}
-            className="max-w-[70ch] text-base leading-[1.65] text-[#d5ded8]"
+            className="max-w-[70ch] text-base leading-[1.65] text-[#D9D2C3]"
           >
             {renderTabBody(activeTab)}
           </div>
@@ -1482,7 +1482,7 @@ export default function ProductPage() {
                   type="button"
                   aria-label={`Open image ${index + 2} fullscreen`}
                   onClick={() => openLightbox(index + 1)}
-                  className="aspect-[4/5] overflow-hidden border border-[#1f4231] bg-[#0a1c13] transition hover:border-[#2b5a41]"
+                  className="aspect-[4/5] overflow-hidden border border-[#2A2620] bg-[#121212] transition hover:border-[#3A342A]"
                 >
                   <img src={image} alt="" className="h-full w-full object-cover" loading="lazy" />
                 </button>
@@ -1494,13 +1494,13 @@ export default function ProductPage() {
 
       {/* RELATED PRODUCTS */}
       {related.length > 0 && (
-        <section className="border-t border-[#1a3828] bg-[#0a1c13]">
+        <section className="border-t border-[#2A2620] bg-[#121212]">
           <div className="mx-auto w-full max-w-[1500px] px-4 py-12 sm:px-6 lg:px-10 lg:py-16">
             <div className="flex items-end justify-between">
-              <h2 className="text-xl font-semibold leading-none text-[#f2f5f3] sm:text-2xl">You may also like</h2>
+              <h2 className="text-xl font-semibold leading-none text-[#F3ECDD] sm:text-2xl">You may also like</h2>
               <Link
                 href={`/shop?category=${encodeURIComponent(product.category_slug ?? product.category ?? '')}`}
-                className="hidden items-center gap-2 text-sm font-semibold text-[#74cf98] transition-colors hover:text-white sm:flex"
+                className="hidden items-center gap-2 text-sm font-semibold text-[#C9A24B] transition-colors hover:text-white sm:flex"
               >
                 View all <ArrowLeft className="h-4 w-4 rotate-180" />
               </Link>
@@ -1519,8 +1519,8 @@ export default function ProductPage() {
 
                 return (
                   <Link key={item.id || item.slug} href={`/product/${item.slug}`} className="group block h-full min-w-0">
-                    <article className="flex h-full flex-col overflow-hidden border border-[#1f4231] bg-[#0c2217] transition-all duration-300 hover:border-[#d9b45f]/60 hover:shadow-[0_12px_32px_rgba(0,0,0,.45)]">
-                      <div className="relative aspect-[4/5] w-full shrink-0 overflow-hidden bg-[#0a1c13]">
+                    <article className="flex h-full flex-col overflow-hidden border border-[#2A2620] bg-[#0B0B0B] transition-all duration-300 hover:border-[#d9b45f]/60 hover:shadow-[0_12px_32px_rgba(0,0,0,.45)]">
+                      <div className="relative aspect-[4/5] w-full shrink-0 overflow-hidden bg-[#121212]">
                         {itemImages[0] ? (
                           <img
                             src={itemImages[0]}
@@ -1529,12 +1529,12 @@ export default function ProductPage() {
                             loading={index > 0 ? 'lazy' : 'eager'}
                           />
                         ) : (
-                          <div className="flex h-full w-full items-center justify-center px-2 text-center text-xs text-[#74847a]">No image available</div>
+                          <div className="flex h-full w-full items-center justify-center px-2 text-center text-xs text-[#7A7160]">No image available</div>
                         )}
 
                         <div className="absolute left-2 top-2 flex flex-col items-start gap-1.5 sm:left-3 sm:top-3">
                           {itemDiscount > 0 && (
-                            <span className="border border-[#46c586]/70 bg-[#133827] px-2 py-0.5 text-[11px] font-bold leading-4 text-[#6fd39a]">
+                            <span className="border border-[#C9A24B]/70 bg-[#1F1A0F] px-2 py-0.5 text-[11px] font-bold leading-4 text-[#F0DC9A]">
                               -{itemDiscount}%
                             </span>
                           )}
@@ -1554,7 +1554,7 @@ export default function ProductPage() {
                             event.stopPropagation();
                             toggleRelatedWishlist(item);
                           }}
-                          className={`absolute right-2 top-2 z-10 flex h-8 w-8 items-center justify-center rounded-full border bg-[#0c2217]/85 text-[#74cf98] backdrop-blur-sm transition hover:border-[#d9b45f] hover:text-[#e6c776] sm:right-3 sm:top-3 sm:h-9 sm:w-9 ${itemWishlisted ? 'border-[#d9b45f] text-[#e6c776]' : 'border-[#1f4231]'}`}
+                          className={`absolute right-2 top-2 z-10 flex h-8 w-8 items-center justify-center rounded-full border bg-[#0B0B0B]/85 text-[#C9A24B] backdrop-blur-sm transition hover:border-[#d9b45f] hover:text-[#e6c776] sm:right-3 sm:top-3 sm:h-9 sm:w-9 ${itemWishlisted ? 'border-[#d9b45f] text-[#e6c776]' : 'border-[#2A2620]'}`}
                         >
                           <Heart className={`h-4 w-4 ${itemWishlisted ? 'fill-current' : ''}`} />
                         </button>
@@ -1598,22 +1598,22 @@ export default function ProductPage() {
 
       {/* MOBILE STICKY BAR: appears only after the in-flow Add to Cart scrolls away */}
       {!addInView && (
-        <div className="fixed inset-x-0 bottom-0 z-40 border-t border-[#1f4231] bg-[#0c2217]/95 p-2.5 pb-[calc(.625rem+env(safe-area-inset-bottom))] shadow-[0_-10px_40px_rgba(0,0,0,.6)] backdrop-blur-xl lg:hidden">
+        <div className="fixed inset-x-0 bottom-0 z-40 border-t border-[#2A2620] bg-[#0B0B0B]/95 p-2.5 pb-[calc(.625rem+env(safe-area-inset-bottom))] shadow-[0_-10px_40px_rgba(0,0,0,.6)] backdrop-blur-xl lg:hidden">
           <div className="mx-auto flex max-w-xl items-center gap-3">
             <div className="flex min-w-0 flex-1 flex-wrap items-center gap-x-2 gap-y-1">
               <span className="text-xl font-semibold leading-none text-white">{formatINR(price)}</span>
               {mrp !== undefined && mrp > price && (
-                <span className="text-xs text-[#74847a] line-through">{formatINR(mrp)}</span>
+                <span className="text-xs text-[#7A7160] line-through">{formatINR(mrp)}</span>
               )}
               {discount > 0 && (
-                <span className="border border-[#46c586]/70 bg-[#133827] px-1.5 py-0.5 text-[11px] font-bold text-[#6fd39a]">{discount}% OFF</span>
+                <span className="border border-[#C9A24B]/70 bg-[#1F1A0F] px-1.5 py-0.5 text-[11px] font-bold text-[#F0DC9A]">{discount}% OFF</span>
               )}
             </div>
             <button
               type="button"
               onClick={handleAddToCart}
               disabled={stockBlocked || cartBusy}
-              className={`h-12 flex-1 border border-[#74cf98]/60 text-xs font-bold uppercase tracking-[0.16em] text-white shadow-[0_0_20px_rgba(47,143,85,.3)] [text-shadow:0_1px_2px_rgba(0,0,0,.6)] transition-all active:scale-[.99] disabled:cursor-not-allowed disabled:opacity-45 ${EMERALD_METAL}`}
+              className={`h-12 flex-1 border border-[#C9A24B]/60 text-xs font-bold uppercase tracking-[0.16em] text-[#0B0B0B] shadow-[0_0_20px_rgba(201,162,75,.3)] [text-shadow:0_1px_0_rgba(255,255,255,.25)] transition-all active:scale-[.99] disabled:cursor-not-allowed disabled:opacity-45 ${GOLD_METAL}`}
             >
               {cartBusy ? 'Adding…' : 'Add to Cart'}
             </button>
@@ -1639,21 +1639,21 @@ export default function ProductPage() {
           aria-live="polite"
         >
           <div
-            className={`relative flex items-start gap-3 border bg-[#0c2217] px-4 py-3.5 text-[#f2f5f3] shadow-[0_18px_50px_rgba(0,0,0,.6)] ${notice.tone === 'error' ? 'border-red-500/60' : 'border-[#46c586]/70'}`}
+            className={`relative flex items-start gap-3 border bg-[#0B0B0B] px-4 py-3.5 text-[#F3ECDD] shadow-[0_18px_50px_rgba(0,0,0,.6)] ${notice.tone === 'error' ? 'border-red-500/60' : 'border-[#C9A24B]/70'}`}
           >
-            <span className={`mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center ${notice.tone === 'error' ? 'text-red-300' : 'text-[#74cf98]'}`}>
+            <span className={`mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center ${notice.tone === 'error' ? 'text-red-300' : 'text-[#C9A24B]'}`}>
               {notice.icon === 'heart' ? <Heart className="h-[18px] w-[18px] fill-current" /> : <ShoppingBag className="h-[18px] w-[18px]" />}
             </span>
 
             <div className="min-w-0 flex-1 pr-5">
               <p className="text-sm font-semibold leading-5">{notice.title}</p>
-              {notice.body && <p className="mt-0.5 text-[13px] leading-5 text-[#a8b5ad]">{notice.body}</p>}
+              {notice.body && <p className="mt-0.5 text-[13px] leading-5 text-[#A89F8C]">{notice.body}</p>}
             </div>
 
             <button
               type="button"
               onClick={() => setNotice(null)}
-              className="absolute right-3 top-3 text-[#74847a] transition hover:text-white"
+              className="absolute right-3 top-3 text-[#7A7160] transition hover:text-white"
               aria-label="Close notification"
             >
               <X className="h-4 w-4" />
@@ -1672,16 +1672,16 @@ export default function ProductPage() {
           onTouchStart={handleLightboxTouchStart}
           onTouchEnd={handleLightboxTouchEnd}
         >
-          <button type="button" onClick={() => setLightboxOpen(false)} className="absolute left-4 top-[calc(1rem+env(safe-area-inset-top))] z-20 flex h-11 w-11 items-center justify-center border border-[#46c586]/60 bg-[#0c2217]/90 text-[#74cf98] backdrop-blur" aria-label="Close image viewer">
+          <button type="button" onClick={() => setLightboxOpen(false)} className="absolute left-4 top-[calc(1rem+env(safe-area-inset-top))] z-20 flex h-11 w-11 items-center justify-center border border-[#C9A24B]/60 bg-[#0B0B0B]/90 text-[#C9A24B] backdrop-blur" aria-label="Close image viewer">
             <X className="h-5 w-5" />
           </button>
 
-          <div className="absolute right-4 top-[calc(1rem+env(safe-area-inset-top))] z-20 border border-[#1f4231] bg-[#0c2217]/90 px-3 py-1.5 text-xs font-semibold text-[#c3cec8]">
+          <div className="absolute right-4 top-[calc(1rem+env(safe-area-inset-top))] z-20 border border-[#2A2620] bg-[#0B0B0B]/90 px-3 py-1.5 text-xs font-semibold text-[#D9D2C3]">
             {lightboxImage + 1} / {images.length}
           </div>
 
           {images.length > 1 && (
-            <button type="button" onClick={() => goToLightboxImage(-1)} className="absolute left-3 top-1/2 z-20 flex h-10 w-10 -translate-y-1/2 items-center justify-center border border-[#2b5a41] bg-[#0c2217]/85 text-[#74cf98]" aria-label="Previous image"><ChevronLeft className="h-5 w-5" /></button>
+            <button type="button" onClick={() => goToLightboxImage(-1)} className="absolute left-3 top-1/2 z-20 flex h-10 w-10 -translate-y-1/2 items-center justify-center border border-[#3A342A] bg-[#0B0B0B]/85 text-[#C9A24B]" aria-label="Previous image"><ChevronLeft className="h-5 w-5" /></button>
           )}
 
           <div className="flex h-dvh w-full items-center justify-center p-0">
@@ -1694,7 +1694,7 @@ export default function ProductPage() {
           </div>
 
           {images.length > 1 && (
-            <button type="button" onClick={() => goToLightboxImage(1)} className="absolute right-3 top-1/2 z-20 flex h-10 w-10 -translate-y-1/2 items-center justify-center border border-[#2b5a41] bg-[#0c2217]/85 text-[#74cf98]" aria-label="Next image"><ChevronRight className="h-5 w-5" /></button>
+            <button type="button" onClick={() => goToLightboxImage(1)} className="absolute right-3 top-1/2 z-20 flex h-10 w-10 -translate-y-1/2 items-center justify-center border border-[#3A342A] bg-[#0B0B0B]/85 text-[#C9A24B]" aria-label="Next image"><ChevronRight className="h-5 w-5" /></button>
           )}
         </div>
       )}

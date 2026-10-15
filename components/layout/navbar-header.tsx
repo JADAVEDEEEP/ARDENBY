@@ -36,16 +36,20 @@ type NavbarHeaderProps = {
 };
 
 /* ---------------------------------------------------------------------------
- *  KOVENIK — deep forest green / ivory / subtle gold
+ *  KOVENIK — black / cream / metallic gold
  * ------------------------------------------------------------------------- */
 
-const G900 = '#07180D';
-const G800 = '#0D2415';
-const G700 = '#17351F';
-const IVORY = '#F4F0E6';
-const MIST = '#C8C6B9';
-const GOLD = '#B89A5A';
-const LINE = 'rgba(244,240,230,0.14)';
+const G900 = '#0B0B0B';
+const G800 = '#141414';
+const G700 = '#1C1C1C';
+const IVORY = '#F3ECDD';
+const MIST = '#B9B3A5';
+const GOLD = '#C9A24B';
+const LINE = 'rgba(243,236,221,0.14)';
+
+/* Metallic gold sheen, reused for the logo, ribbon and primary pills. */
+const GOLD_GRAD =
+  'bg-[linear-gradient(135deg,#A67C28_0%,#F0DC9A_40%,#C9A24B_65%,#F7E9B5_100%)]';
 
 const SERIF =
   "'Cormorant Garamond', 'Bodoni MT', Didot, 'Times New Roman', serif";
@@ -57,17 +61,17 @@ const LOGO_STYLE = {
 };
 
 const ICON_BTN =
-  'group relative flex h-9 w-9 items-center justify-center rounded-full border border-[#F4F0E6]/20 text-[#F4F0E6] transition-colors duration-300 hover:border-[#B89A5A] hover:text-[#B89A5A]';
+  'group relative flex h-9 w-9 items-center justify-center rounded-full border border-[#F3ECDD]/20 text-[#F3ECDD] transition-colors duration-300 hover:border-[#C9A24B] hover:text-[#C9A24B]';
 
 const BADGE =
-  'absolute -right-1.5 -top-1.5 z-20 flex h-[20px] min-w-[20px] items-center justify-center rounded-full bg-[#B89A5A] px-1 text-[10px] font-semibold leading-none text-[#07180D]';
+  'absolute -right-1.5 -top-1.5 z-20 flex h-[20px] min-w-[20px] items-center justify-center rounded-full bg-[#C9A24B] px-1 text-[10px] font-semibold leading-none text-[#0B0B0B]';
 
 /* Desktop utility icons: small, unstyled, like the reference. */
 const DESK_ICON =
-  'group relative flex h-6 w-6 items-center justify-center text-[#F4F0E6] transition-colors duration-300 hover:text-[#B89A5A]';
+  'group relative flex h-9 w-9 items-center justify-center text-[#F3ECDD] transition-colors duration-300 hover:text-[#C9A24B]';
 
 const BADGE_SM =
-  'absolute -right-1 -top-0.5 z-20 flex h-[14px] min-w-[14px] items-center justify-center rounded-full bg-[#B89A5A] px-[3px] text-[8px] font-semibold leading-none text-[#07180D]';
+  'absolute right-0 top-0 z-20 flex h-[14px] min-w-[14px] items-center justify-center rounded-full bg-[#C9A24B] px-[3px] text-[8px] font-semibold leading-none text-[#0B0B0B]';
 
 export function NavbarHeader({
   setMobileOpen,
@@ -146,198 +150,164 @@ export function NavbarHeader({
 
   return (
     <>
-      {/* The header uses the hero's top colour so navbar and hero read as one green area. */}
-     <style jsx global>{`
-  /* Same top colour as the hero's vertical gradient, so bar and hero read as one. */
-  .kv-hero-blend {
-    background-color: #1f4d2d;
-  }
-`}</style>
+      {/* Brand ribbon: scrolls away, the sticky header sits below it. */}
+      <div
+        className={`w-full ${GOLD_GRAD} px-4 py-1.5 text-center text-[10px] font-semibold uppercase tracking-[0.2em] text-[#0B0B0B] sm:text-[11px]`}
+        style={{ fontFamily: SANS }}
+      >
+        Premium men&apos;s clothing crafted for the bold
+      </div>
+
       <header
-       className="kv-hero-blend sticky top-0 z-[100] w-full max-w-[100vw] overflow-x-clip border-0"
+        className="sticky top-0 z-[100] w-full max-w-[100vw] border-b border-[#F3ECDD]/10 bg-[#0B0B0B]/95 backdrop-blur-md"
         style={{ color: IVORY, fontFamily: SANS }}
+        onMouseLeave={closeMega}
       >
-        {/* ===================== DESKTOP: ONE COMPACT ROW ===================== */}
-       
-<div className="hidden w-full lg:block">
- <div className="relative mx-auto flex h-[72px] w-full max-w-[1700px] items-center px-8 xl:px-12">
+        {/* ===================== DESKTOP ===================== */}
+        <div className="hidden w-full lg:block">
+          {/* Row 1: logo / search / utilities */}
+          <div className="mx-auto grid h-[76px] w-full max-w-[1500px] grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-8 px-8 xl:gap-12 xl:px-12">
+            <Link href="/" className="group relative shrink-0">
+              <span
+                className={`block bg-clip-text text-[28px] font-bold uppercase leading-none tracking-[0.16em] text-transparent transition-opacity duration-300 group-hover:opacity-90 ${GOLD_GRAD}`}
+                style={{ fontFamily: SERIF }}
+              >
+                Kovenik
+              </span>
+              <span
+                className="absolute -bottom-2 left-0 h-px w-0 transition-all duration-500 group-hover:w-full"
+                style={{ backgroundColor: GOLD }}
+              />
+            </Link>
 
-    {/* LOGO */}
-    <Link
-      href="/"
-      className="group relative shrink-0"
-    >
-      <span
-       className="block text-[25px] font-bold uppercase leading-none tracking-[0.15em] transition-opacity duration-300 group-hover:opacity-90"
-        style={LOGO_STYLE}
-      >
-        Kovenik
-      </span>
+            <form
+              onSubmit={handleSearchSubmit}
+              role="search"
+              className="mx-auto flex h-11 w-full max-w-[640px] items-center gap-3 rounded-full border border-[#F3ECDD]/15 bg-[#161616] px-5 transition-colors duration-300 focus-within:border-[#C9A24B]"
+            >
+              <Search
+                className="h-[18px] w-[18px] shrink-0"
+                strokeWidth={1.4}
+                style={{ color: GOLD }}
+              />
+              <input
+                type="text"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder="Search Kovenik"
+                aria-label="Search Kovenik"
+                className="min-w-0 flex-1 bg-transparent text-[13px] outline-none placeholder:text-[#F3ECDD]/40"
+                style={{ color: IVORY }}
+              />
+            </form>
 
-      <span
-        className="absolute -bottom-2 left-0 h-px w-0 transition-all duration-500 group-hover:w-full"
-        style={{ backgroundColor: GOLD }}
-      />
-    </Link>
+            <div className="flex items-center gap-2">
+              <button
+                type="button"
+                onClick={handleOpenProfile}
+                aria-label={user ? 'My profile' : 'Login'}
+                className={DESK_ICON}
+              >
+                <User className="h-5 w-5" strokeWidth={1.4} />
+              </button>
 
+              <Link href="/wishlist" aria-label="Wishlist" className={DESK_ICON}>
+                <Heart className="h-5 w-5" strokeWidth={1.4} />
+                {mounted && wishlistCount > 0 && (
+                  <span className={BADGE_SM}>{wishlistCount}</span>
+                )}
+              </Link>
 
-    {/* CENTER NAVIGATION */}
-  <nav className="absolute right-[310px] flex items-center gap-9 xl:gap-11">
+              <motion.button
+                type="button"
+                onClick={openCart}
+                aria-label="Shopping cart"
+                whileTap={{ scale: 0.94 }}
+                className={DESK_ICON}
+              >
+                <ShoppingCart className="h-5 w-5" strokeWidth={1.4} />
+                {mounted && cartCount > 0 && (
+                  <span className={BADGE_SM}>{cartCount}</span>
+                )}
+              </motion.button>
 
-      <Link
-        href="/"
-        className="group relative flex h-[72px] items-center"
-        style={{ color: IVORY }}
-      >
-        <span className="whitespace-nowrap text-[11px] font-medium uppercase tracking-[0.15em] transition-colors duration-300 group-hover:text-[#B89A5A]">
-          Home
-        </span>
+              <button
+                type="button"
+                onClick={openNavigation}
+                aria-label="Open menu"
+                className={DESK_ICON}
+              >
+                <Menu className="h-5 w-5" strokeWidth={1.4} />
+              </button>
+            </div>
+          </div>
 
-        <span
-          className="absolute bottom-[20px] left-0 h-px w-full origin-center scale-x-0 transition-transform duration-300 group-hover:scale-x-100"
-          style={{ backgroundColor: GOLD }}
-        />
-      </Link>
+          {/* Row 2: real category navigation */}
+          <nav
+            aria-label="Primary"
+            className="border-t border-[#F3ECDD]/10"
+          >
+            <div className="mx-auto flex h-[46px] w-full max-w-[1500px] items-center justify-center gap-7 px-8 xl:gap-10 xl:px-12">
+              <Link
+                href="/"
+                onMouseEnter={closeMega}
+                className="group relative flex h-full items-center"
+              >
+                <span className="whitespace-nowrap text-[11px] font-semibold uppercase tracking-[0.16em] transition-colors duration-300 group-hover:text-[#C9A24B]">
+                  Home
+                </span>
+                <span className="absolute bottom-0 left-0 h-[2px] w-full origin-center scale-x-0 bg-[#C9A24B] transition-transform duration-300 group-hover:scale-x-100" />
+              </Link>
 
+              <Link
+                href="/shop"
+                onMouseEnter={closeMega}
+                className="group relative flex h-full items-center"
+              >
+                <span className="whitespace-nowrap text-[11px] font-semibold uppercase tracking-[0.16em] transition-colors duration-300 group-hover:text-[#C9A24B]">
+                  Shop
+                </span>
+                <span className="absolute bottom-0 left-0 h-[2px] w-full origin-center scale-x-0 bg-[#C9A24B] transition-transform duration-300 group-hover:scale-x-100" />
+              </Link>
 
-      <Link
-        href="/shop"
-        className="group relative flex h-[72px] items-center"
-        style={{ color: IVORY }}
-      >
-        <span className="whitespace-nowrap text-[11px] font-medium uppercase tracking-[0.15em] opacity-60 transition-colors duration-300 group-hover:opacity-100 group-hover:text-[#B89A5A]">
-          Shop
-        </span>
+              {navbarItems.map((item) => {
+                const active = megaOpen && activeMegaCategory === item.slug;
+                return (
+                  <Link
+                    key={item.slug}
+                    href={`/shop?category=${item.slug}`}
+                    onMouseEnter={() => openCategory(item.slug)}
+                    onFocus={() => openCategory(item.slug)}
+                    className="group relative flex h-full items-center"
+                  >
+                    <span
+                      className="whitespace-nowrap text-[11px] font-medium uppercase tracking-[0.16em] transition-colors duration-300 group-hover:text-[#C9A24B]"
+                      style={{ color: active ? GOLD : MIST }}
+                    >
+                      {item.label}
+                    </span>
+                    <span
+                      className="absolute bottom-0 left-0 h-[2px] w-full origin-center bg-[#C9A24B] transition-transform duration-300 group-hover:scale-x-100"
+                      style={{ transform: active ? 'scaleX(1)' : 'scaleX(0)' }}
+                    />
+                  </Link>
+                );
+              })}
 
-        <span
-         className="whitespace-nowrap text-[11px] font-medium uppercase tracking-[0.15em] opacity-60 transition-colors duration-300 group-hover:opacity-100 group-hover:text-[#B89A5A]"
-          style={{ backgroundColor: GOLD }}
-        />
-      </Link>
+              <Link
+                href="/about"
+                onMouseEnter={closeMega}
+                className="group relative flex h-full items-center"
+              >
+                <span className="whitespace-nowrap text-[11px] font-semibold uppercase tracking-[0.16em] transition-colors duration-300 group-hover:text-[#C9A24B]">
+                  About
+                </span>
+                <span className="absolute bottom-0 left-0 h-[2px] w-full origin-center scale-x-0 bg-[#C9A24B] transition-transform duration-300 group-hover:scale-x-100" />
+              </Link>
+            </div>
+          </nav>
+        </div>
 
-
-      <Link
-        href="/shop"
-        className="group relative flex h-[72px] items-center"
-        style={{ color: IVORY }}
-      >
-        <span className="whitespace-nowrap text-[11px] font-medium uppercase tracking-[0.15em] opacity-60 transition-colors duration-300 group-hover:opacity-100 group-hover:text-[#B89A5A]">
-          Product
-        </span>
-
-        <span
-          className="absolute bottom-[20px] left-0 h-px w-full origin-center scale-x-0 transition-transform duration-300 group-hover:scale-x-100"
-          style={{ backgroundColor: GOLD }}
-        />
-      </Link>
-
-
-      <Link
-        href="/about"
-        className="group relative flex h-[72px] items-center"
-        style={{ color: IVORY }}
-      >
-        <span className="whitespace-nowrap text-[11px] font-medium uppercase tracking-[0.15em] opacity-60 transition-colors duration-300 group-hover:opacity-100 group-hover:text-[#B89A5A]">
-          About
-        </span>
-
-        <span
-          className="absolute bottom-[20px] left-0 h-px w-full origin-center scale-x-0 transition-transform duration-300 group-hover:scale-x-100"
-          style={{ backgroundColor: GOLD }}
-        />
-      </Link>
-
-    </nav>
-
-
-    {/* RIGHT SIDE ICONS */}
-    <div className="ml-auto flex items-center gap-3">
-
-      {/* SEARCH */}
-      <button
-        type="button"
-        onClick={() => setSearchOpen(true)}
-        aria-label="Search"
-        className="group relative flex h-8 w-8 items-center justify-center text-[#F4F0E6] transition-colors duration-300 hover:text-[#B89A5A]"
-      >
-        <Search
-          className="h-[18px] w-[18px]"
-          strokeWidth={1.3}
-        />
-      </button>
-
-
-      {/* ACCOUNT */}
-      <button
-        type="button"
-        onClick={handleOpenProfile}
-        aria-label={user ? 'My profile' : 'Login'}
-        className="group relative flex h-8 w-8 items-center justify-center text-[#F4F0E6] transition-colors duration-300 hover:text-[#B89A5A]"
-      >
-        <User
-          className="h-[18px] w-[18px]"
-          strokeWidth={1.3}
-        />
-      </button>
-
-
-      {/* WISHLIST */}
-      <Link
-        href="/wishlist"
-        aria-label="Wishlist"
-        className="group relative flex h-8 w-8 items-center justify-center text-[#F4F0E6] transition-colors duration-300 hover:text-[#B89A5A]"
-      >
-        <Heart
-          className="h-[18px] w-[18px]"
-          strokeWidth={1.3}
-        />
-
-        {mounted && wishlistCount > 0 && (
-          <span className={BADGE_SM}>
-            {wishlistCount}
-          </span>
-        )}
-      </Link>
-
-
-      {/* CART */}
-      <motion.button
-        type="button"
-        onClick={openCart}
-        aria-label="Shopping cart"
-        whileTap={{ scale: 0.94 }}
-        className="group relative flex h-8 w-8 items-center justify-center text-[#F4F0E6] transition-colors duration-300 hover:text-[#B89A5A]"
-      >
-        <ShoppingCart
-          className="h-[18px] w-[18px]"
-          strokeWidth={1.3}
-        />
-
-        {mounted && cartCount > 0 && (
-          <span className={BADGE_SM}>
-            {cartCount}
-          </span>
-        )}
-      </motion.button>
-
-
-      {/* MENU */}
-      <button
-        type="button"
-        onClick={openNavigation}
-        aria-label="Open menu"
-        className="group flex h-8 w-8 items-center justify-center text-[#F4F0E6] transition-colors duration-300 hover:text-[#B89A5A]"
-      >
-        <Menu
-          className="h-[18px] w-[18px]"
-          strokeWidth={1.3}
-        />
-      </button>
-
-    </div>
-
-  </div>
-</div>
         {/* ===================== MEGA MENU ===================== */}
         <AnimatePresence mode="wait">
           {megaOpen && activeMegaMenu && (
@@ -347,7 +317,7 @@ export function NavbarHeader({
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -8 }}
               transition={{ duration: 0.2 }}
-              className="absolute left-0 right-0 top-full z-[90] hidden w-full max-w-[100vw] overflow-x-hidden border-b lg:block"
+              className="absolute left-0 right-0 top-full z-[90] hidden w-full max-w-[100vw] overflow-x-hidden border-b border-t lg:block"
               style={{
                 backgroundColor: G800,
                 borderColor: LINE,
@@ -384,7 +354,7 @@ export function NavbarHeader({
 
                   <Link
                     href={`/shop?category=${activeMegaMenu.slug}`}
-                    className="group flex items-center gap-2 rounded-full border border-[#F4F0E6]/25 px-5 py-2.5 text-[11px] font-medium uppercase tracking-[0.16em] transition-colors hover:border-[#B89A5A] hover:text-[#B89A5A]"
+                    className="group flex items-center gap-2 rounded-full border border-[#F3ECDD]/25 px-5 py-2.5 text-[11px] font-medium uppercase tracking-[0.16em] transition-colors hover:border-[#C9A24B] hover:text-[#C9A24B]"
                     style={{ color: IVORY }}
                   >
                     View collection
@@ -428,7 +398,7 @@ export function NavbarHeader({
 
                         <div className="pt-3">
                           <p
-                            className="line-clamp-2 text-[14px] font-medium leading-[1.3rem] transition-colors group-hover:text-[#B89A5A]"
+                            className="line-clamp-2 text-[14px] font-medium leading-[1.3rem] transition-colors group-hover:text-[#C9A24B]"
                             style={{ color: IVORY }}
                           >
                             {p.name}
@@ -458,53 +428,78 @@ export function NavbarHeader({
         </AnimatePresence>
 
         {/* ===================== MOBILE HEADER ===================== */}
-        <div
-          className="relative flex h-[60px] w-full items-center justify-between px-4 lg:hidden"
-        >
-          <button
-            type="button"
-            onClick={openNavigation}
-            aria-label="Open menu"
-            className={ICON_BTN}
-          >
-            <Menu className="h-[18px] w-[18px]" strokeWidth={1.3} />
-          </button>
-
-          <Link
-            href="/"
-            className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"
-          >
-            <span
-              className="text-[27px] font-medium uppercase leading-none tracking-[0.14em]"
-              style={LOGO_STYLE}
-            >
-              Kovenik
-            </span>
-          </Link>
-
-          <div className="flex items-center gap-2">
+        <div className="lg:hidden">
+          <div className="relative flex h-[58px] w-full items-center justify-between px-4">
             <button
               type="button"
-              onClick={() => setSearchOpen(true)}
-              aria-label="Search"
+              onClick={openNavigation}
+              aria-label="Open menu"
               className={ICON_BTN}
             >
-              <Search className="h-[17px] w-[17px]" strokeWidth={1.3} />
+              <Menu className="h-[18px] w-[18px]" strokeWidth={1.3} />
             </button>
 
-            <motion.button
-              type="button"
-              onClick={openCart}
-              aria-label="Shopping cart"
-              whileTap={{ scale: 0.92 }}
-              className={ICON_BTN}
+            <Link
+              href="/"
+              className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"
             >
-              <ShoppingCart className="h-[18px] w-[18px]" strokeWidth={1.3} />
-              {mounted && cartCount > 0 && (
-                <span className={BADGE}>{cartCount}</span>
-              )}
-            </motion.button>
+              <span
+                className={`block bg-clip-text text-[24px] font-bold uppercase leading-none tracking-[0.14em] text-transparent ${GOLD_GRAD}`}
+                style={{ fontFamily: SERIF }}
+              >
+                Kovenik
+              </span>
+            </Link>
+
+            <div className="flex items-center gap-2">
+              <button
+                type="button"
+                onClick={() => setSearchOpen(true)}
+                aria-label="Search"
+                className={ICON_BTN}
+              >
+                <Search className="h-[17px] w-[17px]" strokeWidth={1.3} />
+              </button>
+
+              <motion.button
+                type="button"
+                onClick={openCart}
+                aria-label="Shopping cart"
+                whileTap={{ scale: 0.92 }}
+                className={ICON_BTN}
+              >
+                <ShoppingCart className="h-[18px] w-[18px]" strokeWidth={1.3} />
+                {mounted && cartCount > 0 && (
+                  <span className={BADGE}>{cartCount}</span>
+                )}
+              </motion.button>
+            </div>
           </div>
+
+          {/* Category strip (scrolls sideways, like the reference apps) */}
+          <nav
+            aria-label="Categories"
+            className="no-scrollbar flex items-center gap-2 overflow-x-auto border-t border-[#F3ECDD]/10 px-4 py-2.5"
+          >
+            <Link
+              href="/shop"
+              className={`shrink-0 rounded-full ${GOLD_GRAD} px-4 py-1.5 text-[11px] font-bold uppercase tracking-[0.12em] text-[#0B0B0B]`}
+            >
+              Shop
+            </Link>
+            {topNavItems
+              .filter((item) => item.slug !== 'all-products')
+              .map((item) => (
+                <Link
+                  key={item.slug}
+                  href={`/shop?category=${item.slug}`}
+                  className="shrink-0 rounded-full border border-[#F3ECDD]/20 px-4 py-1.5 text-[11px] font-medium uppercase tracking-[0.12em] transition-colors hover:border-[#C9A24B] hover:text-[#C9A24B]"
+                  style={{ color: IVORY }}
+                >
+                  {item.label}
+                </Link>
+              ))}
+          </nav>
         </div>
       </header>
 
@@ -568,7 +563,7 @@ export function NavbarHeader({
                       closeNavigation();
                       handleOpenProfile();
                     }}
-                    className="hidden h-10 items-center justify-center rounded-full border border-[#F4F0E6]/25 px-5 text-[11px] font-medium uppercase tracking-[0.14em] transition-colors hover:border-[#B89A5A] hover:text-[#B89A5A] sm:flex"
+                    className="hidden h-10 items-center justify-center rounded-full border border-[#F3ECDD]/25 px-5 text-[11px] font-medium uppercase tracking-[0.14em] transition-colors hover:border-[#C9A24B] hover:text-[#C9A24B] sm:flex"
                     style={{ color: IVORY }}
                   >
                     {user ? 'My Account' : 'Login / Register'}
@@ -652,7 +647,7 @@ export function NavbarHeader({
                         <Link
                           href={`/shop?category=${selectedMenu?.slug ?? ''}`}
                           onClick={closeNavigation}
-                          className="flex shrink-0 items-center gap-1.5 text-[11px] font-medium uppercase tracking-[0.14em] transition-colors hover:text-[#B89A5A]"
+                          className="flex shrink-0 items-center gap-1.5 text-[11px] font-medium uppercase tracking-[0.14em] transition-colors hover:text-[#C9A24B]"
                           style={{ color: IVORY }}
                         >
                           View
@@ -814,13 +809,13 @@ export function NavbarHeader({
                         style={{ borderColor: LINE }}
                       >
                         <span
-                          className="flex-1 text-[13px] font-medium uppercase tracking-[0.1em] transition-colors group-hover:text-[#B89A5A]"
+                          className="flex-1 text-[13px] font-medium uppercase tracking-[0.1em] transition-colors group-hover:text-[#C9A24B]"
                           style={{ color: IVORY }}
                         >
                           {item.label}
                         </span>
                         <ChevronRight
-                          className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1 group-hover:text-[#B89A5A]"
+                          className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1 group-hover:text-[#C9A24B]"
                           strokeWidth={1.2}
                           style={{ color: MIST }}
                         />
@@ -837,7 +832,7 @@ export function NavbarHeader({
                       closeNavigation();
                       handleOpenProfile();
                     }}
-                    className="group flex min-h-[56px] w-full items-center gap-3 border-b text-left transition-colors hover:text-[#B89A5A]"
+                    className="group flex min-h-[56px] w-full items-center gap-3 border-b text-left transition-colors hover:text-[#C9A24B]"
                     style={{ borderColor: LINE, color: IVORY }}
                   >
                     <User className="h-[18px] w-[18px]" strokeWidth={1.25} />
@@ -849,7 +844,7 @@ export function NavbarHeader({
                   <Link
                     href="/wishlist"
                     onClick={closeNavigation}
-                    className="group flex min-h-[56px] items-center gap-3 border-b transition-colors hover:text-[#B89A5A]"
+                    className="group flex min-h-[56px] items-center gap-3 border-b transition-colors hover:text-[#C9A24B]"
                     style={{ borderColor: LINE, color: IVORY }}
                   >
                     <Heart className="h-[18px] w-[18px]" strokeWidth={1.25} />
@@ -872,7 +867,7 @@ export function NavbarHeader({
                       closeNavigation();
                       openCart();
                     }}
-                    className="group flex min-h-[56px] w-full items-center gap-3 text-left transition-colors hover:text-[#B89A5A]"
+                    className="group flex min-h-[56px] w-full items-center gap-3 text-left transition-colors hover:text-[#C9A24B]"
                     style={{ color: IVORY }}
                   >
                     <ShoppingCart className="h-[18px] w-[18px]" strokeWidth={1.25} />
@@ -924,7 +919,7 @@ export function NavbarHeader({
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             className="fixed inset-0 z-[500] flex items-start justify-center px-5 pt-[15vh]"
-            style={{ backgroundColor: 'rgba(7,24,13,0.97)', fontFamily: SANS }}
+            style={{ backgroundColor: 'rgba(11,11,11,0.97)', fontFamily: SANS }}
           >
             <motion.div
               initial={{ y: -24, opacity: 0 }}
@@ -969,7 +964,7 @@ export function NavbarHeader({
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
                     placeholder="Search Kovenik"
-                    className="w-full bg-transparent text-[30px] font-light outline-none placeholder:text-[#F4F0E6]/30 sm:text-[44px]"
+                    className="w-full bg-transparent text-[30px] font-light outline-none placeholder:text-[#F3ECDD]/30 sm:text-[44px]"
                     style={{ color: IVORY, fontFamily: SERIF }}
                   />
                 </div>

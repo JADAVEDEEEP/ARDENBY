@@ -243,13 +243,12 @@ const collectionOptions: { key: CollectionKey; label: string }[] = [
 ];
 
 /* ------------------------------------------------------------------
-   Design tokens (Tailwind arbitrary values below)
-   page      #031A13   panel    #05221A   panel-2 #072C21   line  #164E3E
-   emerald   #064E3B   dark     #022C22   bright  #34C48B   (counts / links)
-   gold      #C6A75E   gold-hi  #E7D3A0   text    #F3F0E6   muted #9FB3A8
-   Metallic emerald (primary): from-[#0B6B50] via-[#064E3B] to-[#022C22]
+   Design tokens (matches the KOVENIK navbar: black / cream / metallic gold)
+   page   #0B0B0B   panel  #121212   panel-2 #1A1A1A   line  #2A2620
+   gold   #C9A24B   gold-hi #F0DC9A  text    #F3ECDD   muted #A89F8C
+   Metallic gold (primary): same sheen as the navbar logo / ribbon
 ------------------------------------------------------------------- */
-const emeraldGradient = 'bg-gradient-to-b from-[#0B6B50] via-[#064E3B] to-[#022C22]';
+const emeraldGradient = 'bg-[linear-gradient(135deg,#A67C28_0%,#F0DC9A_40%,#C9A24B_65%,#F7E9B5_100%)]';
 
 function DynamicFilterSection({
   title,
@@ -263,18 +262,18 @@ function DynamicFilterSection({
   const [isOpen, setIsOpen] = useState(defaultOpen);
 
   return (
-    <div className="border-t border-[#164E3E] py-3.5">
+    <div className="border-t border-[#2A2620] py-3.5">
       <button
         type="button"
         aria-expanded={isOpen}
         onClick={() => setIsOpen(!isOpen)}
-        className="group flex min-h-[28px] w-full items-center justify-between text-left text-[15px] font-semibold text-[#E7D3A0]"
+        className="group flex min-h-[28px] w-full items-center justify-between text-left text-[15px] font-semibold text-[#F0DC9A]"
       >
         <span>{title}</span>
         {isOpen ? (
-          <ChevronUp className="h-4 w-4 text-[#9FB3A8] transition-colors group-hover:text-[#C6A75E]" />
+          <ChevronUp className="h-4 w-4 text-[#A89F8C] transition-colors group-hover:text-[#C9A24B]" />
         ) : (
-          <ChevronDown className="h-4 w-4 text-[#9FB3A8] transition-colors group-hover:text-[#C6A75E]" />
+          <ChevronDown className="h-4 w-4 text-[#A89F8C] transition-colors group-hover:text-[#C9A24B]" />
         )}
       </button>
       <AnimatePresence initial={false}>
@@ -320,16 +319,16 @@ function CheckRow({
         className={cn(
           'flex h-[18px] w-[18px] shrink-0 items-center justify-center rounded-[3px] border transition-colors',
           checked
-            ? 'border-[#C6A75E] bg-[#C6A75E]'
-            : 'border-[#3F6A5A] bg-transparent group-hover:border-[#C6A75E]'
+            ? 'border-[#C9A24B] bg-[#C9A24B]'
+            : 'border-[#5A5040] bg-transparent group-hover:border-[#C9A24B]'
         )}
       >
-        {checked && <Check className="h-3 w-3 stroke-[3] text-[#031A13]" />}
+        {checked && <Check className="h-3 w-3 stroke-[3] text-[#0B0B0B]" />}
       </span>
-      <span className="text-[14px] text-[#D5DDD6] transition-colors group-hover:text-white">
+      <span className="text-[14px] text-[#D9D2C3] transition-colors group-hover:text-white">
         {label}
         {typeof count === 'number' && (
-          <span className="ml-1 text-[13px] text-[#9FB3A8]">({count})</span>
+          <span className="ml-1 text-[13px] text-[#A89F8C]">({count})</span>
         )}
       </span>
     </button>
@@ -547,13 +546,6 @@ export function ShopClient() {
     Boolean(categoryParam) &&
     categoryParam !== 'all-products' &&
     categoriesLoading;
-
-  // Keep the active category chip visible in the horizontally scrolling row.
-  useEffect(() => {
-    document
-      .querySelectorAll('[data-active-pill="true"]')
-      .forEach((el) => el.scrollIntoView({ inline: 'center', block: 'nearest' }));
-  }, [categoryParam, categoriesLoading]);
 
   useEffect(() => {
     let cancelled = false;
@@ -811,8 +803,8 @@ export function ShopClient() {
       'min-h-[36px] border px-3.5 py-1.5 text-[13px] transition-all duration-200',
       round,
       active
-        ? 'border-[#C6A75E] bg-[#C6A75E]/10 font-semibold text-[#E7D3A0]'
-        : 'border-[#2C5A4A] bg-transparent text-[#D5DDD6] hover:border-[#C6A75E] hover:text-white'
+        ? 'border-[#C9A24B] bg-[#C9A24B]/10 font-semibold text-[#F0DC9A]'
+        : 'border-[#3A342A] bg-transparent text-[#D9D2C3] hover:border-[#C9A24B] hover:text-white'
     );
 
   const categoryLinkRow = (checked: boolean, label: string, count: number | undefined, href: string, key?: string) => (
@@ -825,16 +817,16 @@ export function ShopClient() {
         className={cn(
           'flex h-[18px] w-[18px] shrink-0 items-center justify-center rounded-[3px] border transition-colors',
           checked
-            ? 'border-[#C6A75E] bg-[#C6A75E]'
-            : 'border-[#3F6A5A] group-hover:border-[#C6A75E]'
+            ? 'border-[#C9A24B] bg-[#C9A24B]'
+            : 'border-[#5A5040] group-hover:border-[#C9A24B]'
         )}
       >
-        {checked && <Check className="h-3 w-3 stroke-[3] text-[#031A13]" />}
+        {checked && <Check className="h-3 w-3 stroke-[3] text-[#0B0B0B]" />}
       </span>
-      <span className="text-[14px] text-[#D5DDD6] group-hover:text-white">
+      <span className="text-[14px] text-[#D9D2C3] group-hover:text-white">
         {label}
         {typeof count === 'number' && (
-          <span className="ml-1 text-[13px] text-[#9FB3A8]">({count})</span>
+          <span className="ml-1 text-[13px] text-[#A89F8C]">({count})</span>
         )}
       </span>
     </Link>
@@ -879,11 +871,11 @@ export function ShopClient() {
             min={0}
             max={PRICE_MAX}
             step={100}
-            className="mb-4 [&_[class*='bg-primary']]:bg-[#C6A75E] [&_[class*='bg-secondary']]:bg-[#1D4A3C] [&_[role=slider]]:h-4 [&_[role=slider]]:w-4 [&_[role=slider]]:border-[#E7D3A0] [&_[role=slider]]:bg-[#C6A75E]"
+            className="mb-4 [&_[class*='bg-primary']]:bg-[#C9A24B] [&_[class*='bg-secondary']]:bg-[#332E24] [&_[role=slider]]:h-4 [&_[role=slider]]:w-4 [&_[role=slider]]:border-[#F0DC9A] [&_[role=slider]]:bg-[#C9A24B]"
           />
           <div className="flex items-center gap-2">
-            <label className="flex h-10 min-w-0 flex-1 items-center gap-1 rounded-[3px] border border-[#2C5A4A] bg-[#031A13] px-2.5 text-[14px] text-[#F3F0E6] focus-within:border-[#C6A75E]">
-              <span className="text-[#9FB3A8]">₹</span>
+            <label className="flex h-10 min-w-0 flex-1 items-center gap-1 rounded-[3px] border border-[#3A342A] bg-[#0B0B0B] px-2.5 text-[14px] text-[#F3ECDD] focus-within:border-[#C9A24B]">
+              <span className="text-[#A89F8C]">₹</span>
               <input
                 type="number"
                 inputMode="numeric"
@@ -895,8 +887,8 @@ export function ShopClient() {
                 className="w-full min-w-0 bg-transparent outline-none [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none"
               />
             </label>
-            <label className="flex h-10 min-w-0 flex-1 items-center gap-1 rounded-[3px] border border-[#2C5A4A] bg-[#031A13] px-2.5 text-[14px] text-[#F3F0E6] focus-within:border-[#C6A75E]">
-              <span className="text-[#9FB3A8]">₹</span>
+            <label className="flex h-10 min-w-0 flex-1 items-center gap-1 rounded-[3px] border border-[#3A342A] bg-[#0B0B0B] px-2.5 text-[14px] text-[#F3ECDD] focus-within:border-[#C9A24B]">
+              <span className="text-[#A89F8C]">₹</span>
               <input
                 type="number"
                 inputMode="numeric"
@@ -924,8 +916,8 @@ export function ShopClient() {
               className={cn(
                 'h-9 min-w-[48px] rounded-[3px] border px-3 text-[13px] font-medium transition-all duration-200',
                 selectedSizes.includes(s)
-                  ? 'border-[#C6A75E] bg-[#C6A75E]/10 font-semibold text-[#E7D3A0]'
-                  : 'border-[#2C5A4A] bg-transparent text-[#D5DDD6] hover:border-[#C6A75E]'
+                  ? 'border-[#C9A24B] bg-[#C9A24B]/10 font-semibold text-[#F0DC9A]'
+                  : 'border-[#3A342A] bg-transparent text-[#D9D2C3] hover:border-[#C9A24B]'
               )}
             >
               {s}
@@ -948,7 +940,7 @@ export function ShopClient() {
               className={cn(
                 'relative flex h-7 w-7 items-center justify-center rounded-full border border-white/25 transition-transform duration-200',
                 selectedColors.includes(c.name)
-                  ? 'scale-110 ring-2 ring-[#C6A75E] ring-offset-2 ring-offset-[#05221A]'
+                  ? 'scale-110 ring-2 ring-[#C9A24B] ring-offset-2 ring-offset-[#121212]'
                   : 'hover:scale-110'
               )}
               style={{ backgroundColor: c.hex }}
@@ -1063,11 +1055,11 @@ export function ShopClient() {
       className={cn(
         'group flex items-center gap-3 rounded-[6px] border p-1 pr-3 transition-colors',
         active
-          ? 'border-[#C6A75E]/70 bg-gradient-to-b from-[#0B6B50] via-[#064E3B] to-[#022C22]'
-          : 'border-transparent hover:border-[#164E3E] hover:bg-[#072C21]'
+          ? 'border-[#C9A24B]/70 bg-gradient-to-b from-[#2B2416] via-[#1C1810] to-[#121212]'
+          : 'border-transparent hover:border-[#2A2620] hover:bg-[#1A1A1A]'
       )}
     >
-      <span className="flex h-[46px] w-[46px] shrink-0 items-center justify-center overflow-hidden rounded-[5px] border border-[#164E3E] bg-[#072C21] text-[16px] font-semibold text-[#E7D3A0]">
+      <span className="flex h-[46px] w-[46px] shrink-0 items-center justify-center overflow-hidden rounded-[5px] border border-[#2A2620] bg-[#1A1A1A] text-[16px] font-semibold text-[#F0DC9A]">
         {img ? (
           // eslint-disable-next-line @next/next/no-img-element
           <img src={img} alt="" className="h-full w-full object-cover" />
@@ -1075,9 +1067,9 @@ export function ShopClient() {
           label.charAt(0)
         )}
       </span>
-      <span className="min-w-0 flex-1 truncate text-[14px] text-[#F3F0E6]">{label}</span>
+      <span className="min-w-0 flex-1 truncate text-[14px] text-[#F3ECDD]">{label}</span>
       {typeof count === 'number' && (
-        <span className={cn('text-[13px]', active ? 'text-[#E7D3A0]' : 'text-[#34C48B]')}>
+        <span className={cn('text-[13px]', active ? 'text-[#F0DC9A]' : 'text-[#C9A24B]')}>
           {count}
         </span>
       )}
@@ -1091,17 +1083,17 @@ export function ShopClient() {
         value={sort}
         onChange={(e) => setSort(e.target.value)}
         className={cn(
-          'cursor-pointer appearance-none rounded-[3px] border border-[#2C5A4A] bg-[#05221A] text-[#F3F0E6] outline-none transition hover:border-[#C6A75E] focus:border-[#C6A75E]',
+          'cursor-pointer appearance-none rounded-[3px] border border-[#3A342A] bg-[#121212] text-[#F3ECDD] outline-none transition hover:border-[#C9A24B] focus:border-[#C9A24B]',
           compact ? 'h-10 w-full pl-3 pr-8 text-[13px]' : 'h-10 min-w-[210px] pl-3 pr-9 text-[14px]'
         )}
       >
         {sortOptions.map((opt) => (
-          <option key={opt.value} value={opt.value} className="bg-[#05221A] text-white">
+          <option key={opt.value} value={opt.value} className="bg-[#121212] text-white">
             {compact ? opt.label : `Sort by: ${opt.label}`}
           </option>
         ))}
       </select>
-      <ChevronDown className="pointer-events-none absolute right-2.5 top-1/2 h-4 w-4 -translate-y-1/2 text-[#F3F0E6]" />
+      <ChevronDown className="pointer-events-none absolute right-2.5 top-1/2 h-4 w-4 -translate-y-1/2 text-[#F3ECDD]" />
     </div>
   );
 
@@ -1149,113 +1141,64 @@ export function ShopClient() {
       href: `/${all.slice(0, i + 1).join('/')}`,
     }));
 
-  // Category cards (shared by mobile + desktop)
-  const cardCategories: any[] = shopCategories.some((c: any) => c.slug === 'all-products')
-    ? shopCategories
-    : [{ slug: 'all-products', name: 'All' }, ...shopCategories];
-
-  const categoryCards = cardCategories.length > 1 && (
-    <div className="-mx-3 flex snap-x snap-proximity scroll-px-3 gap-2 overflow-x-auto px-3 pb-2 pt-0.5 [scrollbar-width:none] sm:-mx-5 sm:scroll-px-5 sm:px-5 lg:mx-0 lg:scroll-px-0 lg:gap-3 lg:px-0 [&::-webkit-scrollbar]:hidden">
-      {cardCategories.map((c: any) => {
-        const active =
-          categoryParam === c.slug ||
-          (c.slug === 'all-products' && (!categoryParam || categoryParam === 'all-products'));
-        const img = getCategoryImage(c);
-        return (
-          <Link
-            key={c.slug}
-            href={`/shop?category=${encodeURIComponent(c.slug)}`}
-            data-active-pill={active ? 'true' : undefined}
-            aria-current={active ? 'page' : undefined}
-            title={c.name}
-            className={cn(
-              'group flex w-[76px] shrink-0 snap-start flex-col items-center gap-1 rounded-[8px] border p-1 pb-1.5 transition-colors lg:w-[112px] xl:w-[124px]',
-              active
-                ? 'border-[#C6A75E] bg-[#072C21] shadow-[0_0_0_1px_#C6A75E]'
-                : 'border-[#164E3E] bg-[#05221A] hover:border-[#C6A75E]/60'
-            )}
-          >
-            <span
-              className={cn(
-                'flex h-[64px] w-full items-center justify-center overflow-hidden rounded-[6px] bg-[#072C21] text-[18px] font-semibold text-[#E7D3A0] lg:h-[96px] xl:h-[104px]',
-                !active && 'opacity-80 group-hover:opacity-100'
-              )}
-            >
-              {img ? (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img src={img} alt={c.name} className="h-full w-full object-cover" />
-              ) : (
-                String(c.name || '?').charAt(0)
-              )}
-            </span>
-            <span
-              className={cn(
-                'w-full truncate text-center text-[12px] lg:text-[13px]',
-                active ? 'font-semibold text-[#E7D3A0]' : 'text-[#D5DDD6]'
-              )}
-            >
-              {c.name}
-            </span>
-          </Link>
-        );
-      })}
-    </div>
-  );
-
   const chipClass =
-    'inline-flex min-h-[32px] items-center gap-1.5 rounded-[3px] border border-[#C6A75E]/50 bg-[#C6A75E]/10 px-2.5 py-1 text-[12px] text-[#E7D3A0] transition hover:border-[#C6A75E]';
+    'inline-flex min-h-[32px] items-center gap-1.5 rounded-[3px] border border-[#C9A24B]/50 bg-[#C9A24B]/10 px-2.5 py-1 text-[12px] text-[#F0DC9A] transition hover:border-[#C9A24B]';
 
   return (
-    <div className="min-h-screen w-full overflow-x-hidden bg-[#0B2B1B] text-[#F3F0E6]">
+    <div className="relative min-h-screen w-full overflow-x-hidden bg-[#0B0B0B] text-[#F3ECDD]">
+      {/* Subtle metallic-gold ambience */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_70%_320px_at_50%_0%,rgba(201,162,75,0.14),transparent_70%),radial-gradient(ellipse_50%_400px_at_100%_55%,rgba(201,162,75,0.06),transparent_70%),linear-gradient(180deg,#141210_0%,#0B0B0B_38%,#0E0D0B_100%)]"
+      />
       {/* Breadcrumb */}
       <nav
         aria-label="Breadcrumb"
-        className="mx-auto flex w-full max-w-[1920px] flex-wrap items-center gap-2 px-3 pt-4 text-[13px] text-[#D5DDD6] sm:px-5 lg:px-6 xl:px-8"
+        className="relative mx-auto flex w-full max-w-[1920px] flex-wrap items-center gap-2 px-3 pt-4 text-[13px] text-[#D9D2C3] sm:px-5 lg:px-6 xl:px-8"
       >
-        <Link href="/" className="transition hover:text-[#E7D3A0]">Home</Link>
+        <Link href="/" className="transition hover:text-[#F0DC9A]">Home</Link>
         {routeCrumbs.map((crumb) => (
           <span key={crumb.href} className="flex items-center gap-2">
-            <ChevronRight className="h-3.5 w-3.5 text-[#9FB3A8]" />
-            <Link href={crumb.href} className="transition hover:text-[#E7D3A0]">
+            <ChevronRight className="h-3.5 w-3.5 text-[#A89F8C]" />
+            <Link href={crumb.href} className="transition hover:text-[#F0DC9A]">
               {crumb.label}
             </Link>
           </span>
         ))}
         {categoryName.trim() && (
           <span className="flex items-center gap-2">
-            <ChevronRight className="h-3.5 w-3.5 text-[#9FB3A8]" />
-            <span aria-current="page" className="text-[#E7D3A0]">{categoryName}</span>
+            <ChevronRight className="h-3.5 w-3.5 text-[#A89F8C]" />
+            <span aria-current="page" className="text-[#F0DC9A]">{categoryName}</span>
           </span>
         )}
       </nav>
 
       {/* Mobile product count + category cards */}
-      <div className="px-3 pt-3 sm:px-5 lg:hidden">
+      <div className="relative px-3 pt-3 sm:px-5 lg:hidden">
         <h1 className="sr-only">{categoryName}</h1>
         <div className="flex justify-end">
-          <span className="text-[13px] text-[#E7D3A0]" aria-live="polite">
+          <span className="text-[13px] text-[#F0DC9A]" aria-live="polite">
             {filtered.length} {filtered.length === 1 ? 'Product' : 'Products'}
           </span>
         </div>
-        <div className="mt-2">{categoryCards}</div>
       </div>
 
       {/* ============================================================
           MOBILE TOOLBAR: Filters + Sort
           ============================================================ */}
-      <div className="px-3 pt-3 sm:px-5 lg:hidden">
+      <div className="relative px-3 pt-3 sm:px-5 lg:hidden">
         <div className="flex items-center gap-2">
           <Sheet open={mobileFiltersOpen} onOpenChange={setMobileFiltersOpen}>
             <SheetTrigger asChild>
               <Button
                 variant="outline"
                 size="sm"
-                className="h-10 flex-1 justify-center rounded-[3px] border-[#C6A75E]/60 bg-[#05221A] px-3 text-[13px] font-medium text-[#F3F0E6] hover:bg-[#072C21] hover:text-[#E7D3A0]"
+                className="h-10 flex-1 justify-center rounded-[3px] border-[#C9A24B]/60 bg-[#121212] px-3 text-[13px] font-medium text-[#F3ECDD] hover:bg-[#1A1A1A] hover:text-[#F0DC9A]"
               >
-                <SlidersHorizontal className="mr-2 h-4 w-4 text-[#C6A75E]" />
+                <SlidersHorizontal className="mr-2 h-4 w-4 text-[#C9A24B]" />
                 Filter
                 {activeFilterCount > 0 && (
-                  <span className="ml-2 flex h-5 min-w-5 items-center justify-center rounded-full bg-[#C6A75E] px-1 text-[11px] font-bold text-[#031A13]">
+                  <span className="ml-2 flex h-5 min-w-5 items-center justify-center rounded-full bg-[#C9A24B] px-1 text-[11px] font-bold text-[#0B0B0B]">
                     {activeFilterCount}
                   </span>
                 )}
@@ -1264,15 +1207,15 @@ export function ShopClient() {
 
             <SheetContent
               side="bottom"
-              className="flex h-[90vh] max-h-[90vh] flex-col gap-0 rounded-t-2xl border-t border-[#164E3E] bg-[#05221A] p-0 text-[#F3F0E6]"
+              className="flex h-[90vh] max-h-[90vh] flex-col gap-0 rounded-t-2xl border-t border-[#2A2620] bg-[#121212] p-0 text-[#F3ECDD]"
             >
-              <SheetHeader className="shrink-0 border-b border-[#164E3E] px-5 py-3 text-left">
+              <SheetHeader className="shrink-0 border-b border-[#2A2620] px-5 py-3 text-left">
                 <div className="flex items-center justify-between pr-8">
-                  <SheetTitle className="flex items-center gap-2 text-[14px] font-semibold uppercase tracking-[0.18em] text-[#F3F0E6]">
-                    <SlidersHorizontal className="h-4 w-4 text-[#C6A75E]" />
+                  <SheetTitle className="flex items-center gap-2 text-[14px] font-semibold uppercase tracking-[0.18em] text-[#F3ECDD]">
+                    <SlidersHorizontal className="h-4 w-4 text-[#C9A24B]" />
                     Filters
                     {activeFilterCount > 0 && (
-                      <span className="inline-flex h-5 min-w-5 items-center justify-center rounded-full bg-[#C6A75E] px-1 text-[11px] font-bold normal-case tracking-normal text-[#031A13]">
+                      <span className="inline-flex h-5 min-w-5 items-center justify-center rounded-full bg-[#C9A24B] px-1 text-[11px] font-bold normal-case tracking-normal text-[#0B0B0B]">
                         {activeFilterCount}
                       </span>
                     )}
@@ -1281,7 +1224,7 @@ export function ShopClient() {
                     <button
                       type="button"
                       onClick={clearAll}
-                      className="flex min-h-[44px] items-center gap-1.5 text-[14px] font-medium text-[#34C48B]"
+                      className="flex min-h-[44px] items-center gap-1.5 text-[14px] font-medium text-[#C9A24B]"
                     >
                       Clear All
                       <RotateCcw className="h-3.5 w-3.5" />
@@ -1294,13 +1237,13 @@ export function ShopClient() {
                 {filterContent}
               </div>
 
-              <div className="grid shrink-0 grid-cols-2 gap-3 border-t border-[#164E3E] bg-[#05221A] px-5 py-3 pb-[max(0.75rem,env(safe-area-inset-bottom))]">
+              <div className="grid shrink-0 grid-cols-2 gap-3 border-t border-[#2A2620] bg-[#121212] px-5 py-3 pb-[max(0.75rem,env(safe-area-inset-bottom))]">
                 <Button
                   type="button"
                   variant="outline"
                   onClick={clearAll}
                   disabled={activeFilterCount === 0}
-                  className="h-11 rounded-[3px] border-[#2C5A4A] bg-transparent text-[13px] font-semibold tracking-wide text-[#F3F0E6] hover:bg-[#072C21] hover:text-white disabled:opacity-40"
+                  className="h-11 rounded-[3px] border-[#3A342A] bg-transparent text-[13px] font-semibold tracking-wide text-[#F3ECDD] hover:bg-[#1A1A1A] hover:text-white disabled:opacity-40"
                 >
                   Clear All
                 </Button>
@@ -1308,7 +1251,7 @@ export function ShopClient() {
                   type="button"
                   onClick={() => setMobileFiltersOpen(false)}
                   className={cn(
-                    'h-11 rounded-[3px] border border-[#C6A75E]/70 text-[13px] font-semibold tracking-wide text-white hover:brightness-110',
+                    'h-11 rounded-[3px] border border-[#C9A24B]/70 text-[13px] font-semibold tracking-wide text-[#0B0B0B] hover:brightness-110',
                     emeraldGradient
                   )}
                 >
@@ -1326,11 +1269,11 @@ export function ShopClient() {
       {/* ============================================================
           SIDEBAR + PRODUCT AREA
           ============================================================ */}
-      <div className="mx-auto flex w-full max-w-[1920px] items-start gap-5 px-3 py-4 sm:px-5 lg:px-6 lg:py-6 xl:px-8">
+      <div className="relative mx-auto flex w-full max-w-[1920px] items-start gap-5 px-3 py-4 sm:px-5 lg:gap-8 lg:px-6 lg:py-8 xl:px-8">
         {/* Desktop sidebar */}
-        <aside className="hidden w-[240px] shrink-0 flex-col gap-4 lg:flex xl:w-[270px]">
+        <aside className="hidden w-[240px] shrink-0 flex-col gap-5 lg:flex xl:w-[270px]">
           {shopCategories.length > 0 && (
-            <div className="rounded-[6px] border border-[#C6A75E]/30 bg-[#05221A] px-3.5 pb-3">
+            <div className="rounded-[6px] border border-[#C9A24B]/25 bg-gradient-to-b from-[#181613] to-[#101010] px-3.5 pb-3 shadow-[0_10px_30px_-18px_rgba(0,0,0,0.9)]">
               <DynamicFilterSection title="Categories">
                 <div className="flex flex-col gap-1.5">
                   {desktopCategoryRow(
@@ -1355,14 +1298,14 @@ export function ShopClient() {
             </div>
           )}
 
-          <div className="rounded-[6px] border border-[#C6A75E]/30 bg-[#05221A] px-3.5 pb-3">
+          <div className="rounded-[6px] border border-[#C9A24B]/25 bg-gradient-to-b from-[#181613] to-[#101010] px-3.5 pb-3 shadow-[0_10px_30px_-18px_rgba(0,0,0,0.9)]">
             <div className="flex items-center justify-between pb-1 pt-4">
-              <h2 className="text-[15px] font-semibold text-[#E7D3A0]">Filters</h2>
+              <h2 className="text-[15px] font-semibold text-[#F0DC9A]">Filters</h2>
               <button
                 type="button"
                 onClick={clearAll}
                 disabled={activeFilterCount === 0}
-                className="text-[13px] font-medium text-[#F3F0E6] underline-offset-4 transition hover:text-[#E7D3A0] hover:underline disabled:opacity-50"
+                className="text-[13px] font-medium text-[#F3ECDD] underline-offset-4 transition hover:text-[#F0DC9A] hover:underline disabled:opacity-50"
               >
                 Clear All
               </button>
@@ -1375,10 +1318,8 @@ export function ShopClient() {
         <main className="min-w-0 flex-1">
           {/* Desktop category cards + toolbar */}
           <h1 className="sr-only">{categoryName}</h1>
-          <div className="mb-4 hidden lg:block">{categoryCards}</div>
-
           <div className="mb-4 hidden items-center justify-end gap-3 lg:flex">
-            <span className="mr-auto text-[14px] text-[#E7D3A0]" aria-live="polite">
+            <span className="mr-auto text-[14px] text-[#F0DC9A]" aria-live="polite">
               {filtered.length} {filtered.length === 1 ? 'Product' : 'Products'}
             </span>
             <button
@@ -1389,8 +1330,8 @@ export function ShopClient() {
               className={cn(
                 'inline-flex h-10 w-10 items-center justify-center rounded-[3px] border transition',
                 viewMode === 'grid'
-                  ? 'border-[#C6A75E] bg-[#C6A75E]/10 text-[#C6A75E]'
-                  : 'border-[#2C5A4A] text-[#D5DDD6] hover:border-[#C6A75E]'
+                  ? 'border-[#C9A24B] bg-[#C9A24B]/10 text-[#C9A24B]'
+                  : 'border-[#3A342A] text-[#D9D2C3] hover:border-[#C9A24B]'
               )}
             >
               <LayoutGrid className="h-4 w-4" />
@@ -1403,8 +1344,8 @@ export function ShopClient() {
               className={cn(
                 'inline-flex h-10 w-10 items-center justify-center rounded-[3px] border transition',
                 viewMode === 'list'
-                  ? 'border-[#C6A75E] bg-[#C6A75E]/10 text-[#C6A75E]'
-                  : 'border-[#2C5A4A] text-[#D5DDD6] hover:border-[#C6A75E]'
+                  ? 'border-[#C9A24B] bg-[#C9A24B]/10 text-[#C9A24B]'
+                  : 'border-[#3A342A] text-[#D9D2C3] hover:border-[#C9A24B]'
               )}
             >
               <List className="h-4 w-4" />
@@ -1424,13 +1365,13 @@ export function ShopClient() {
                   className={chipClass}
                 >
                   {chip.label}
-                  <X className="h-3.5 w-3.5 text-[#9FB3A8]" />
+                  <X className="h-3.5 w-3.5 text-[#A89F8C]" />
                 </button>
               ))}
               <button
                 type="button"
                 onClick={clearAll}
-                className="ml-auto min-h-[32px] text-[12px] font-semibold text-[#34C48B] lg:hidden"
+                className="ml-auto min-h-[32px] text-[12px] font-semibold text-[#C9A24B] lg:hidden"
               >
                 Clear All
               </button>
@@ -1441,20 +1382,20 @@ export function ShopClient() {
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              className="flex min-h-[380px] flex-col items-center justify-center rounded-[4px] border border-dashed border-[#2C5A4A] bg-[#05221A] px-6 text-center"
+              className="flex min-h-[380px] flex-col items-center justify-center rounded-[4px] border border-dashed border-[#3A342A] bg-[#121212] px-6 text-center"
             >
-              <Grid className="mb-4 h-9 w-9 stroke-[1] text-[#C6A75E]" />
+              <Grid className="mb-4 h-9 w-9 stroke-[1] text-[#C9A24B]" />
 
-              <p className="font-serif text-2xl text-[#F3F0E6]">No products found</p>
+              <p className="font-serif text-2xl text-[#F3ECDD]">No products found</p>
 
-              <p className="mb-6 mt-2 max-w-xs text-sm text-[#9FB3A8]">
+              <p className="mb-6 mt-2 max-w-xs text-sm text-[#A89F8C]">
                 We couldn&apos;t find any items matching your selected criteria.
               </p>
 
               <Button
                 onClick={clearAll}
                 className={cn(
-                  'rounded-[3px] border border-[#C6A75E]/70 px-7 text-[12px] font-semibold uppercase tracking-[0.12em] text-white hover:brightness-110',
+                  'rounded-[3px] border border-[#C9A24B]/70 px-7 text-[12px] font-semibold uppercase tracking-[0.12em] text-[#0B0B0B] hover:brightness-110',
                   emeraldGradient
                 )}
               >
@@ -1466,7 +1407,7 @@ export function ShopClient() {
               {Array.from({ length: 8 }).map((_, i) => (
                 <div
                   key={i}
-                  className="aspect-[0.8] animate-pulse rounded-[4px] border border-[#164E3E] bg-[#05221A]"
+                  className="aspect-[0.8] animate-pulse rounded-[4px] border border-[#2A2620] bg-[#121212]"
                 />
               ))}
             </div>
@@ -1474,7 +1415,7 @@ export function ShopClient() {
             <motion.div
               layout
               className={cn(
-                'grid items-start gap-x-3 gap-y-5 lg:gap-x-4 lg:gap-y-6',
+                'grid items-start gap-x-3 gap-y-6 sm:gap-x-4 lg:gap-x-5 lg:gap-y-8',
                 viewMode === 'grid'
                   ? 'grid-cols-2 md:grid-cols-3 xl:grid-cols-4'
                   : 'grid-cols-2 lg:grid-cols-2 xl:grid-cols-3'
@@ -1490,11 +1431,11 @@ export function ShopClient() {
 
           {/* Pagination */}
           {totalPages > 1 && (
-            <div className="mt-10 flex flex-wrap items-center justify-center gap-2 border-t border-[#164E3E] pt-6">
+            <div className="mt-10 flex flex-wrap items-center justify-center gap-2 border-t border-[#2A2620] pt-6">
               <Button
                 variant="outline"
                 size="sm"
-                className="h-10 rounded-[3px] border-[#2C5A4A] bg-transparent px-4 text-[13px] font-medium text-[#F3F0E6] hover:border-[#C6A75E] hover:bg-[#072C21] hover:text-[#E7D3A0] disabled:opacity-40"
+                className="h-10 rounded-[3px] border-[#3A342A] bg-transparent px-4 text-[13px] font-medium text-[#F3ECDD] hover:border-[#C9A24B] hover:bg-[#1A1A1A] hover:text-[#F0DC9A] disabled:opacity-40"
                 onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
                 disabled={currentPage === 1}
               >
@@ -1511,8 +1452,8 @@ export function ShopClient() {
                     className={cn(
                       'flex h-10 w-10 items-center justify-center rounded-[3px] text-[13px] font-semibold transition-all',
                       currentPage === i + 1
-                        ? 'border border-[#C6A75E] bg-[#C6A75E]/10 text-[#E7D3A0]'
-                        : 'text-[#9FB3A8] hover:bg-[#072C21] hover:text-[#E7D3A0]'
+                        ? 'border border-[#C9A24B] bg-[#C9A24B]/10 text-[#F0DC9A]'
+                        : 'text-[#A89F8C] hover:bg-[#1A1A1A] hover:text-[#F0DC9A]'
                     )}
                   >
                     {i + 1}
@@ -1523,7 +1464,7 @@ export function ShopClient() {
               <Button
                 variant="outline"
                 size="sm"
-                className="h-10 rounded-[3px] border-[#2C5A4A] bg-transparent px-4 text-[13px] font-medium text-[#F3F0E6] hover:border-[#C6A75E] hover:bg-[#072C21] hover:text-[#E7D3A0] disabled:opacity-40"
+                className="h-10 rounded-[3px] border-[#3A342A] bg-transparent px-4 text-[13px] font-medium text-[#F3ECDD] hover:border-[#C9A24B] hover:bg-[#1A1A1A] hover:text-[#F0DC9A] disabled:opacity-40"
                 onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
                 disabled={currentPage === totalPages}
               >
@@ -1534,7 +1475,7 @@ export function ShopClient() {
 
           {/* range hint (desktop) */}
           {filtered.length > 0 && (
-            <p className="mt-4 hidden text-center text-[13px] text-[#9FB3A8] lg:block">
+            <p className="mt-4 hidden text-center text-[13px] text-[#A89F8C] lg:block">
               Showing {rangeStart}–{rangeEnd} of {filtered.length}
             </p>
           )}

@@ -415,6 +415,13 @@ export const useCartStore = create<CartState>()((set, get) => ({
 
     set({ items: [], couponCode: null });
 
+    // A cleared cart (e.g. after placing an order) must not leak its coupon into the next one.
+    try {
+      localStorage.removeItem('kovenik_applied_coupon');
+    } catch {
+      // ignore storage failures
+    }
+
     if (!token) {
       clearGuestCartStorage();
       return;

@@ -6,7 +6,7 @@ import { Heart, Trash2, ArrowRight, SlidersHorizontal, ChevronDown } from 'lucid
 import { useWishlistStore } from '@/store/wishlist-store';
 import { formatINR } from '@/lib/format';
 
-/* KOVENIK palette: deep green #06130E / #0B1F17, black #050805,
+/* KOVENIK palette: charcoal #0A0A0A / #111111, black #050505,
    gold #C9A24B, champagne #E6CF92, ivory #F3EBDD */
 const GOLD_SURFACE =
   'bg-[linear-gradient(135deg,#B8903A_0%,#E6CF92_48%,#C9A24B_100%)] text-[#0A0A0A]';
@@ -24,7 +24,7 @@ const SORT_OPTIONS: { value: SortKey; label: string }[] = [
 ];
 
 /* Decorative colour swatches (wishlist items carry no colour data). */
-const SWATCHES = ['#050805', '#1E3A2B', '#F3EBDD'];
+const SWATCHES = ['#050505', '#2A2A2A', '#F3EBDD'];
 
 /* Category label is derived from the product name when recognisable. */
 function categoryOf(name: string): string | null {
@@ -57,9 +57,9 @@ export default function WishlistPage() {
   }, [items, sort]);
 
   return (
-    <div className="min-h-screen bg-[radial-gradient(ellipse_at_top,#0E2A1E_0%,#07150F_45%,#030705_100%)] text-[#F3EBDD] pb-14 lg:pb-20">
+    <div className="min-h-screen bg-[radial-gradient(ellipse_at_top,#1A1A1A_0%,#0C0C0C_45%,#030303_100%)] text-[#F3EBDD] pb-14 lg:pb-20">
       {/* Hero */}
-      <section className="relative overflow-hidden border-b border-[#C9A24B]/30 bg-[linear-gradient(120deg,#0B1F17_0%,#10301F_55%,#06130E_100%)]">
+      <section className="relative overflow-hidden border-b border-[#C9A24B]/30 bg-[linear-gradient(120deg,#111111_0%,#1A1A1A_55%,#0A0A0A_100%)]">
         <div className="pointer-events-none absolute inset-0 opacity-30 bg-[radial-gradient(circle_at_85%_30%,rgba(201,162,75,0.35),transparent_45%)]" />
         <div className="relative max-w-[1280px] mx-auto px-4 sm:px-8 lg:px-12 py-8 lg:py-14">
           <nav
@@ -97,7 +97,7 @@ export default function WishlistPage() {
       <div className="max-w-[1280px] mx-auto px-4 sm:px-8 lg:px-12 mt-6 lg:mt-8">
         {items.length === 0 ? (
           /* Empty state */
-          <div className="flex flex-col items-center text-center py-20 sm:py-28 rounded-2xl border border-[#C9A24B]/40 bg-[#07150F]/80">
+          <div className="flex flex-col items-center text-center py-20 sm:py-28 rounded-2xl border border-[#C9A24B]/40 bg-[#0C0C0C]/80">
             <div className="w-16 h-16 rounded-full border border-[#C9A24B]/60 flex items-center justify-center mb-6">
               <Heart className="h-7 w-7 text-[#C9A24B] stroke-[1.5]" />
             </div>
@@ -114,7 +114,7 @@ export default function WishlistPage() {
             </Link>
           </div>
         ) : (
-          <section className="rounded-2xl border border-[#C9A24B]/50 bg-[#06130E]/80 p-3 sm:p-6 shadow-[0_0_40px_rgba(201,162,75,0.06)]">
+          <section className="rounded-2xl border border-[#C9A24B]/50 bg-[#0A0A0A]/80 p-3 sm:p-6 shadow-[0_0_40px_rgba(201,162,75,0.06)]">
             {/* Toolbar */}
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-4 sm:mb-6">
               <div className="flex items-center gap-4">
@@ -129,7 +129,7 @@ export default function WishlistPage() {
                 </button>
               </div>
 
-              <label className="relative flex items-center gap-3 rounded-lg border border-[#C9A24B]/50 bg-[#050805]/70 px-4 py-2 sm:w-[260px] cursor-pointer">
+              <label className="relative flex items-center gap-3 rounded-lg border border-[#C9A24B]/50 bg-[#050505]/70 px-4 py-2 sm:w-[260px] cursor-pointer">
                 <SlidersHorizontal className="h-5 w-5 text-[#C9A24B] stroke-[1.5] shrink-0" />
                 <span className="flex flex-col leading-tight flex-1">
                   <span className="text-[10px] text-[#F3EBDD]/60">Sort by</span>
@@ -145,7 +145,7 @@ export default function WishlistPage() {
                   className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
                 >
                   {SORT_OPTIONS.map((o) => (
-                    <option key={o.value} value={o.value} className="bg-[#06130E] text-[#F3EBDD]">
+                    <option key={o.value} value={o.value} className="bg-[#0A0A0A] text-[#F3EBDD]">
                       {o.label}
                     </option>
                   ))}
@@ -162,10 +162,10 @@ export default function WishlistPage() {
                 return (
                   <div
                     key={item.productId}
-                    className="group relative rounded-xl border border-[#C9A24B]/40 bg-[#07150F] overflow-hidden hover:border-[#E6CF92]/80 hover:shadow-[0_0_28px_rgba(201,162,75,0.12)] transition-all duration-300"
+                    className="group relative rounded-xl border border-[#C9A24B]/40 bg-[#0C0C0C] overflow-hidden hover:border-[#E6CF92]/80 hover:shadow-[0_0_28px_rgba(201,162,75,0.12)] transition-all duration-300"
                   >
                     <Link href={`/product/${item.slug}`} className="block">
-                      <div className="aspect-[4/5] overflow-hidden bg-[#050805] border-b border-[#C9A24B]/30">
+                      <div className="aspect-[4/5] overflow-hidden bg-[#050505] border-b border-[#C9A24B]/30">
                         {/* eslint-disable-next-line @next/next/no-img-element */}
                         <img
                           src={item.image}
@@ -209,7 +209,7 @@ export default function WishlistPage() {
                     {/* Wishlist heart (saved) */}
                     <span
                       aria-hidden="true"
-                      className="absolute top-3 right-3 h-9 w-9 flex items-center justify-center rounded-full bg-[#050805]/70 backdrop-blur border border-[#C9A24B]/40 pointer-events-none"
+                      className="absolute top-3 right-3 h-9 w-9 flex items-center justify-center rounded-full bg-[#050505]/70 backdrop-blur border border-[#C9A24B]/40 pointer-events-none"
                     >
                       <Heart className="h-5 w-5 fill-red-500 text-red-500" />
                     </span>
@@ -219,7 +219,7 @@ export default function WishlistPage() {
                       <button
                         aria-label={`Remove ${item.name}`}
                         onClick={() => remove(item.productId)}
-                        className="pointer-events-auto absolute bottom-3 right-3 h-10 w-10 flex items-center justify-center rounded-full bg-[#050805]/80 backdrop-blur border border-[#C9A24B]/50 text-[#F3EBDD]/80 hover:text-[#E6CF92] hover:border-[#E6CF92] transition-colors"
+                        className="pointer-events-auto absolute bottom-3 right-3 h-10 w-10 flex items-center justify-center rounded-full bg-[#050505]/80 backdrop-blur border border-[#C9A24B]/50 text-[#F3EBDD]/80 hover:text-[#E6CF92] hover:border-[#E6CF92] transition-colors"
                       >
                         <Trash2 className="h-4 w-4 stroke-[1.5]" />
                       </button>
