@@ -2,7 +2,7 @@
 
 import { useState, useMemo, useEffect } from 'react';
 import Link from 'next/link';
-import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+import { usePathname, useSearchParams } from 'next/navigation';
 import {
   SlidersHorizontal,
   X,
@@ -339,7 +339,6 @@ function CheckRow({
 /* Shop-grid product card: edge-to-edge image, name + prices, Wishlist + Add to Cart only.
    Everything else (sizes, colours, rating, stock detail) lives on the product page. */
 function ShopProductCard({ product }: { product: any }) {
-  const router = useRouter();
   const wishlist = useWishlistStore();
   const addItem = useCartStore((s) => s.addItem);
   const isWishlisted = wishlist.has(product.id);
@@ -373,20 +372,16 @@ function ShopProductCard({ product }: { product: any }) {
   };
 
   const handleAddToCart = () => {
-    // One purchasable option can be added directly; otherwise the shopper picks size/colour on the product page.
-    if (purchasable.length !== 1) {
-      router.push(productHref);
-      return;
-    }
+    // Always add directly (first purchasable option); never navigate to the product page.
     const v = purchasable[0];
     addItem({
       productId: product.id,
-      variantId: v.id,
+      variantId: v?.id,
       slug: product.slug,
       name: product.name,
       image: product.images?.[0],
-      size: v.size,
-      color: v.color,
+      size: v?.size,
+      color: v?.color,
       price,
       mrp: product.mrp,
     });
