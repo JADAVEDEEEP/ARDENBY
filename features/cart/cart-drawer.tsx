@@ -178,7 +178,7 @@ function writeStoredCoupon(value: StoredCoupon | null) {
       localStorage.removeItem(COUPON_STORAGE_KEY);
 
     }
-
+      window.dispatchEvent(new Event('kovenik:coupon-change'));
   } catch {
 
     // storage unavailable - ignore 

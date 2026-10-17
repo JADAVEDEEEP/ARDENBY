@@ -1425,18 +1425,38 @@ export default function CheckoutPage() {
     };
   }, []);
 
+ 
   useEffect(() => {
-    const syncCoupon = () => setStoredCoupon(readStoredCoupon());
+    const syncCoupon = () => {
+      setStoredCoupon(readStoredCoupon());
+    };
+
     syncCoupon();
 
-    // Keep the checkout summary up to date if the coupon changes in another tab.
+    // Same-tab navigation and coupon changes
     window.addEventListener('storage', syncCoupon);
+    window.addEventListener('kovenik:coupon-change', syncCoupon);
     window.addEventListener('focus', syncCoupon);
+    window.addEventListener('pageshow', syncCoupon);
+
+    // Recheck when checkout becomes visible
+    const onVisibilityChange = () => {
+      if (document.visibilityState === 'visible') {
+        syncCoupon();
+      }
+    };
+
+    document.addEventListener('visibilitychange', onVisibilityChange);
+
     return () => {
       window.removeEventListener('storage', syncCoupon);
       window.removeEventListener('focus', syncCoupon);
+      window.removeEventListener('pageshow', syncCoupon);
+      document.removeEventListener('visibilitychange', onVisibilityChange);
+      window.removeEventListener('kovenik:coupon-change', syncCoupon);
     };
   }, []);
+
 
   const [placed, setPlaced] = useState(false);
   const [selectedPayment, setSelectedPayment] =

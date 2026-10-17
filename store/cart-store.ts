@@ -41,9 +41,18 @@ function getCartItemKey(
 ): string {
   return `${productId}-${size}-${color}`;
 }
-
+const serverCartItemIds = new Map<string, string>();
 // Serialize quantity updates per product variant to prevent overlapping PUT requests.
 const quantityUpdateQueues = new Map<string, Promise<void>>();
+
+export async function waitForPendingCartUpdates() {
+  await Promise.all(
+    Array.from(quantityUpdateQueues.values()).map((promise) =>
+      promise.catch(() => undefined)
+    )
+  );
+}
+
 const quantityUpdateVersions = new Map<string, number>();
 const confirmedQuantities = new Map<string, number>();
 
@@ -157,7 +166,21 @@ function normalizeServerCartItem(serverItem: any): CartItem | null {
       serverItem?.original_price ??
       productPrice
   );
+const serverItemId =
+  serverItem?.id ??
+  serverItem?.cart_item_id ??
+  serverItem?.cartItemId;
 
+if (serverItemId) {
+  serverCartItemIds.set(
+    getCartItemKey(
+      String(productId),
+      size as ProductSize,
+      color as ProductColor
+    ),
+    String(serverItemId)
+  );
+}
   return {
     productId: String(productId),
     variantId: String(variantId),
@@ -349,39 +372,49 @@ export const useCartStore = create<CartState>()((set, get) => ({
     const previousUpdate =
       quantityUpdateQueues.get(queueKey) ?? Promise.resolve();
 
+      
+
     const updatePromise: Promise<void> = previousUpdate
       .catch(() => undefined)
-      .then(async () => {
-        const response = await cartApiRequest('/api/cart', {
-          method: 'GET',
-        });
 
-        const serverItems = extractCartItems(response);
-        const serverItem = serverItems.find(
-          (item: any) =>
-            String(item?.product_id ?? item?.productId) === String(productId) &&
-            String(item?.variant_id ?? item?.variantId) ===
-              String(previousItem.variantId)
-        );
+.then(async () => {
+  let serverItemId = serverCartItemIds.get(queueKey);
 
-        const serverItemId =
-          serverItem?.id ??
-          serverItem?.cart_item_id ??
-          serverItem?.cartItemId;
+  // Fallback: ID cache mein nahi hai toh ek baar cart fetch karo.
+  if (!serverItemId) {
+    const response = await cartApiRequest('/api/cart', {
+      method: 'GET',
+    });
 
-        if (!serverItemId) {
-          throw new Error('Cart item ID not found for quantity update.');
-        }
+    const serverItem = extractCartItems(response).find(
+      (item: any) =>
+        String(item?.product_id ?? item?.productId) ===
+          String(productId) &&
+        String(item?.variant_id ?? item?.variantId) ===
+          String(previousItem.variantId)
+    );
 
-        await cartApiRequest(`/api/cart/items/${serverItemId}`, {
-          method: 'PUT',
-          body: JSON.stringify({ quantity: nextQuantity }),
-        });
+    const foundId =
+      serverItem?.id ??
+      serverItem?.cart_item_id ??
+      serverItem?.cartItemId;
 
-        confirmedQuantities.set(queueKey, nextQuantity);
-      });
+    if (!foundId) {
+      throw new Error('Cart item ID not found.');
+    }
 
-    quantityUpdateQueues.set(queueKey, updatePromise);
+    serverItemId = String(foundId);
+    serverCartItemIds.set(queueKey, serverItemId);
+  }
+
+  // Backend stock validation remains enabled.
+  await cartApiRequest(`/api/cart/items/${serverItemId}`, {
+    method: 'PUT',
+    body: JSON.stringify({ quantity: nextQuantity }),
+  });
+
+  confirmedQuantities.set(queueKey, nextQuantity);
+});
 
     try {
       await updatePromise;
