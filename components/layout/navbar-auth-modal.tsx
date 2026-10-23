@@ -43,10 +43,10 @@ const PHOTO_STYLE = {
 } as const;
 
 const METAL_BG = `
-  radial-gradient(circle at 50% -10%, rgba(212,175,55,.14), transparent 38%),
-  radial-gradient(circle at 10% 60%, rgba(201,162,75,.08), transparent 45%),
-  radial-gradient(circle at 92% 75%, rgba(212,175,55,.07), transparent 35%),
-  linear-gradient(135deg, #0B0B0B 0%, #161616 48%, #0B0B0B 100%)
+  radial-gradient(circle at 50% -10%, rgba(255,255,255,.10), transparent 38%),
+  radial-gradient(circle at 10% 60%, rgba(255,255,255,.05), transparent 45%),
+  radial-gradient(circle at 92% 75%, rgba(255,255,255,.04), transparent 35%),
+  linear-gradient(135deg, #050506 0%, #16181b 48%, #050506 100%)
 `;
 
 const CARD_BG = `
@@ -54,7 +54,7 @@ const CARD_BG = `
 `;
 
 const INPUT_CLASS =
-  'h-[50px] w-full rounded-[6px] border border-[#8f7a3e]/60 bg-[#101010]/80 px-11 text-[14px] text-[#F5F3EE] outline-none transition focus:border-[#D4AF37] focus:ring-4 focus:ring-[#D4AF37]/15 placeholder:text-[#8C8576]';
+  'h-[50px] w-full rounded-[6px] border border-white/20 bg-[#0b0c0e]/80 px-11 text-[14px] text-[#F5F3EE] outline-none transition focus:border-white/60 focus:ring-4 focus:ring-white/15 placeholder:text-[#8C8576]';
 
 const GOLD_BUTTON_CLASS =
   'flex h-[52px] w-full items-center justify-center gap-3 rounded-[6px] bg-gradient-to-b from-[#E6CB7A] via-[#C9A344] to-[#9A7424] px-6 text-[13px] font-bold tracking-[0.12em] text-[#0B0B0B] shadow-[inset_0_1px_0_rgba(255,255,255,.45),0_10px_28px_rgba(212,175,55,.2)] transition duration-300 hover:from-[#F0D98E] hover:via-[#D6B24F] hover:to-[#A98027] hover:shadow-[inset_0_1px_0_rgba(255,255,255,.55),0_14px_34px_rgba(212,175,55,.32)] disabled:cursor-not-allowed disabled:opacity-50';
@@ -162,7 +162,7 @@ export function NavbarAuthModal({
   return (
     <AnimatePresence>
       {isOpen && (
-        <div className="fixed inset-0 z-[9999] h-screen overflow-hidden bg-[#0B0B0B] text-[#F5F3EE]">
+        <div className="chrome-scope fixed inset-0 z-[9999] h-screen overflow-hidden bg-[#050506] text-[#F5F3EE]">
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -182,14 +182,14 @@ export function NavbarAuthModal({
             <button
               type="button"
               onClick={() => setIsOpen(false)}
-              className="fixed right-4 top-4 z-50 flex h-11 w-11 items-center justify-center rounded-full border border-[#8f7a3e]/70 bg-black/40 text-[#E6CB7A] backdrop-blur-md transition hover:border-[#D4AF37] hover:bg-[#D4AF37]/10 hover:text-[#F5F3EE] sm:right-6 sm:top-6"
+              className="fixed right-4 top-4 z-50 flex h-11 w-11 items-center justify-center rounded-full border border-white/20 bg-black/40 text-[#E6CB7A] backdrop-blur-md transition hover:border-white/60 hover:bg-[#D4AF37]/10 hover:text-[#F5F3EE] sm:right-6 sm:top-6"
               aria-label="Close"
             >
               <X className="h-4 w-4" strokeWidth={1.5} />
             </button>
 
             <main className="relative z-10 flex min-h-screen items-center justify-center p-0 lg:p-8">
-              <div className="relative grid w-full max-w-[1180px] overflow-hidden border-[#8f7a3e]/60 bg-[#101010] shadow-[0_30px_90px_rgba(0,0,0,.7),0_0_60px_rgba(212,175,55,.07)] lg:min-h-[640px] lg:grid-cols-[1.05fr_0.95fr] lg:border">
+              <div className="relative grid w-full max-w-[1180px] overflow-hidden border-white/20 bg-[#0b0c0e] shadow-[0_30px_90px_rgba(0,0,0,.7),0_0_60px_rgba(255,255,255,.04)] lg:min-h-[640px] lg:grid-cols-[1.05fr_0.95fr] lg:border">
                 {/* Photo / brand panel */}
                 <div
                   className="relative flex min-h-[250px] flex-col justify-between overflow-hidden lg:min-h-full lg:p-12"
@@ -249,7 +249,7 @@ export function NavbarAuthModal({
 
                 {/* Form panel */}
                 <div
-                  className="relative -mt-8 rounded-t-[22px] border-t border-[#8f7a3e]/60 px-6 pb-8 pt-8 sm:px-12 lg:mt-0 lg:flex lg:flex-col lg:justify-center lg:rounded-none lg:border-l lg:border-t-0 lg:px-14 lg:py-12"
+                  className="relative -mt-8 rounded-t-[22px] border-t border-white/20 px-6 pb-8 pt-8 sm:px-12 lg:mt-0 lg:flex lg:flex-col lg:justify-center lg:rounded-none lg:border-l lg:border-t-0 lg:px-14 lg:py-12"
                   style={{ backgroundImage: CARD_BG }}
                 >
                   <div className="pointer-events-none absolute left-0 top-0 h-px w-full bg-gradient-to-r from-transparent via-[#D4AF37] to-transparent opacity-80" />
@@ -380,15 +380,15 @@ export function NavbarAuthModal({
                           </form>
 
                           <div className="mx-auto my-5 flex max-w-[460px] items-center gap-4">
-                            <div className="h-px flex-1 bg-[#8f7a3e]/50" />
+                            <div className="h-px flex-1 bg-white/20" />
                             <span className="text-[9px] font-bold uppercase tracking-[0.3em] text-[#B9B3A5]">
                               OR
                             </span>
-                            <div className="h-px flex-1 bg-[#8f7a3e]/50" />
+                            <div className="h-px flex-1 bg-white/20" />
                           </div>
 
                           <div className="group relative mx-auto h-[50px] w-full max-w-[460px]">
-                            <div className="pointer-events-none absolute inset-0 flex items-center justify-center gap-3 rounded-[6px] border border-[#8f7a3e]/70 bg-[#101010]/80 text-[13px] font-medium text-[#F5F3EE] transition group-hover:border-[#D4AF37] group-hover:bg-[#1C1C1C]">
+                            <div className="pointer-events-none absolute inset-0 flex items-center justify-center gap-3 rounded-[6px] border border-white/20 bg-[#0b0c0e]/80 text-[13px] font-medium text-[#F5F3EE] transition group-hover:border-white/60 group-hover:bg-[#1C1C1C]">
                               <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true">
                                 <path fill="#4285F4" d="M21.35 12.27c0-.72-.06-1.42-.18-2.09H12v3.95h5.22a4.46 4.46 0 0 1-1.94 2.93v2.43h3.14c1.84-1.69 2.93-4.18 2.93-7.22Z"/>
                                 <path fill="#34A853" d="M12 21.72c2.63 0 4.84-.87 6.45-2.35l-3.14-2.43c-.87.58-1.98.93-3.31.93-2.54 0-4.69-1.72-5.46-4.03H3.3v2.51A9.74 9.74 0 0 0 12 21.72Z"/>
@@ -407,7 +407,7 @@ export function NavbarAuthModal({
                             />
                           </div>
 
-                          <div className="mx-auto mt-6 max-w-[460px] border-t border-[#8f7a3e]/30 pt-4 text-center">
+                          <div className="mx-auto mt-6 max-w-[460px] border-t border-white/20 pt-4 text-center">
                             <p className="text-[8px] uppercase tracking-[0.25em] text-[#8C8576]">
                               KOVENIK · WEAR YOUR ESSENCE
                             </p>
@@ -425,7 +425,7 @@ export function NavbarAuthModal({
                           transition={{ duration: 0.25 }}
                         >
                           <div className="mb-8 text-center">
-                            <div className="mx-auto mb-5 flex h-12 w-12 items-center justify-center rounded-full border border-[#8f7a3e]/70 bg-[#101010]">
+                            <div className="mx-auto mb-5 flex h-12 w-12 items-center justify-center rounded-full border border-white/20 bg-[#0b0c0e]">
                               <Mail className="h-5 w-5 text-[#D4AF37]" strokeWidth={1.4} />
                             </div>
 
@@ -477,7 +477,7 @@ export function NavbarAuthModal({
                                   value={digit}
                                   onChange={(e) => handleOtpChange(e.target.value, index)}
                                   onKeyDown={(e) => handleOtpKeyDown(e, index)}
-                                  className="h-12 w-11 rounded-[6px] border border-[#8f7a3e]/60 bg-[#101010]/80 text-center text-lg font-bold text-[#F5F3EE] outline-none transition focus:border-[#D4AF37] focus:ring-4 focus:ring-[#D4AF37]/15 sm:h-[54px] sm:w-[52px]"
+                                  className="h-12 w-11 rounded-[6px] border border-white/20 bg-[#0b0c0e]/80 text-center text-lg font-bold text-[#F5F3EE] outline-none transition focus:border-white/60 focus:ring-4 focus:ring-white/15 sm:h-[54px] sm:w-[52px]"
                                   aria-label={`OTP digit ${index + 1}`}
                                 />
                               ))}
@@ -548,7 +548,7 @@ export function NavbarAuthModal({
                           transition={{ duration: 0.25 }}
                         >
                           <div className="mb-8 text-center">
-                            <div className="mx-auto mb-5 flex h-12 w-12 items-center justify-center rounded-full border border-[#8f7a3e]/70 bg-[#101010]">
+                            <div className="mx-auto mb-5 flex h-12 w-12 items-center justify-center rounded-full border border-white/20 bg-[#0b0c0e]">
                               <Lock className="h-5 w-5 text-[#D4AF37]" strokeWidth={1.4} />
                             </div>
 

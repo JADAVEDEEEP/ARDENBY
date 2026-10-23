@@ -24,13 +24,13 @@ import {
   X,
 } from 'lucide-react';
 
+import { AdminUser } from '@/components/admin/admin-auth';
 import {
-  AdminUser,
-  clearAdminToken,
-  getAdminToken,
-  getCurrentAdmin,
-  isAdminRole,
-} from '@/components/admin/admin-auth';
+  AccessDenied,
+  AdminChecking,
+  AdminUnreachable,
+} from '@/components/admin/access-screens';
+import { useAdminAccess } from '@/components/admin/use-admin-access';
 import { cn } from '@/lib/utils';
 
 type NavItem = {
@@ -51,7 +51,7 @@ const adminLinks: NavItem[] = [
   { href: '/admin/products', label: 'Products', icon: Boxes },
   { href: '/admin/categories', label: 'Categories', icon: FolderTree },
   { href: '/admin/customers', label: 'Customers', icon: Users, soon: true },
-  { href: '/admin/inventory', label: 'Inventory', icon: Warehouse, soon: true },
+  { href: '/admin/inventory', label: 'Inventory', icon: Warehouse },
   { href: '/admin/reviews', label: 'Reviews', icon: Star, soon: true },
   { href: '/admin/coupons', label: 'Coupons', icon: BadgePercent },
   { href: '/admin/settings', label: 'Settings', icon: Settings, soon: true },
@@ -90,7 +90,7 @@ function Avatar({ user, className }: { user: AdminUser | null; className?: strin
   return (
     <span
       className={cn(
-        'flex shrink-0 items-center justify-center rounded-full border border-[#B89A5A]/60 bg-[#12351F] font-serif text-sm text-[#C8A96B]',
+        'flex shrink-0 items-center justify-center rounded-full border border-[#B89A5A]/60 bg-[#2A2824] font-serif text-sm text-[#C8A96B]',
         className
       )}
     >
@@ -117,7 +117,7 @@ function NavList({ pathname }: { pathname: string }) {
             <Icon
               className={cn(
                 'h-[18px] w-[18px] shrink-0 transition-colors',
-                active ? 'text-[#C8A96B]' : 'text-[#8FA394] group-hover:text-[#C8A96B]'
+                active ? 'text-[#C8A96B]' : 'text-[#A19B8C] group-hover:text-[#C8A96B]'
               )}
             />
             <span className="tracking-wide md:hidden lg:inline">{item.label}</span>
@@ -138,7 +138,7 @@ function NavList({ pathname }: { pathname: string }) {
               key={item.href}
               title={`${item.label} — coming soon`}
               aria-disabled="true"
-              className={cn(base, 'cursor-not-allowed text-[#6F8576]/70')}
+              className={cn(base, 'cursor-not-allowed text-[#827D71]/70')}
             >
               {inner}
             </span>
@@ -155,8 +155,8 @@ function NavList({ pathname }: { pathname: string }) {
               base,
               'focus-visible:ring-1 focus-visible:ring-[#C8A96B]',
               active
-                ? 'bg-[#1A4528]/70 text-[#F4F0E6]'
-                : 'text-[#B9C4BB] hover:bg-[#12351F]/70 hover:text-[#F4F0E6]'
+                ? 'bg-[#373530]/70 text-[#F4F0E6]'
+                : 'text-[#C8C0AD] hover:bg-[#2A2824]/70 hover:text-[#F4F0E6]'
             )}
           >
             {inner}
@@ -200,7 +200,7 @@ function ProfileMenu({
         onClick={() => setOpen((v) => !v)}
         aria-haspopup="menu"
         aria-expanded={open}
-        className="flex items-center gap-2.5 rounded-full py-1 pl-1 pr-2 outline-none transition hover:bg-[#12351F]/70 focus-visible:ring-1 focus-visible:ring-[#C8A96B]"
+        className="flex items-center gap-2.5 rounded-full py-1 pl-1 pr-2 outline-none transition hover:bg-[#2A2824]/70 focus-visible:ring-1 focus-visible:ring-[#C8A96B]"
       >
         <Avatar user={user} className="h-9 w-9" />
         {!compactName && (
@@ -221,19 +221,19 @@ function ProfileMenu({
       {open && (
         <div
           role="menu"
-          className="absolute right-0 z-50 mt-2 w-60 overflow-hidden rounded-xl border border-[#B89A5A]/30 bg-[#0D2415] shadow-[0_20px_50px_rgba(0,0,0,0.5)]"
+          className="absolute right-0 z-50 mt-2 w-60 overflow-hidden rounded-xl border border-[#B89A5A]/30 bg-[#1C1B18] shadow-[0_20px_50px_rgba(0,0,0,0.5)]"
         >
           <div className="border-b border-[#B89A5A]/20 px-4 py-3">
             <p className="truncate text-sm font-semibold text-[#F4F0E6]">
               {user?.fullName || 'Admin'}
             </p>
-            <p className="truncate text-xs text-[#8FA394]">{user?.email || ''}</p>
+            <p className="truncate text-xs text-[#A19B8C]">{user?.email || ''}</p>
           </div>
           <button
             type="button"
             role="menuitem"
             onClick={onLogout}
-            className="flex w-full items-center gap-2.5 px-4 py-3 text-left text-sm text-[#EAE4D5] transition hover:bg-[#12351F]"
+            className="flex w-full items-center gap-2.5 px-4 py-3 text-left text-sm text-[#EAE4D5] transition hover:bg-[#2A2824]"
           >
             <LogOut className="h-4 w-4 text-[#B89A5A]" />
             Log out
@@ -269,11 +269,11 @@ function NotificationBell() {
         <Bell className="h-[18px] w-[18px]" />
       </button>
       {open && (
-        <div className="absolute right-0 z-50 mt-2 w-72 max-w-[calc(100vw-2rem)] rounded-xl border border-[#B89A5A]/30 bg-[#0D2415] p-4 shadow-[0_20px_50px_rgba(0,0,0,0.5)]">
+        <div className="absolute right-0 z-50 mt-2 w-72 max-w-[calc(100vw-2rem)] rounded-xl border border-[#B89A5A]/30 bg-[#1C1B18] p-4 shadow-[0_20px_50px_rgba(0,0,0,0.5)]">
           <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#B89A5A]">
             Notifications
           </p>
-          <p className="mt-3 text-sm text-[#B9C4BB]">You&apos;re all caught up.</p>
+          <p className="mt-3 text-sm text-[#C8C0AD]">You&apos;re all caught up.</p>
         </div>
       )}
     </div>
@@ -302,7 +302,7 @@ function CommandSearch() {
         value={query}
         onChange={(e) => setQuery(e.target.value)}
         placeholder="Search anything… (e.g. orders, products)"
-        className="h-10 w-full rounded-lg border border-[#B89A5A]/25 bg-[#0D2415]/80 pl-10 pr-3 text-sm text-[#F4F0E6] placeholder:text-[#6F8576] outline-none transition focus:border-[#B89A5A]/70"
+        className="h-10 w-full rounded-lg border border-[#B89A5A]/25 bg-[#1C1B18]/80 pl-10 pr-3 text-sm text-[#F4F0E6] placeholder:text-[#827D71] outline-none transition focus:border-[#B89A5A]/70"
       />
     </form>
   );
@@ -310,63 +310,20 @@ function CommandSearch() {
 
 function Frame({ children }: { children: ReactNode }) {
   return (
-    <main className="min-h-screen bg-[#07180D] text-[#F4F0E6]">{children}</main>
+    <main className="min-h-screen bg-[#131210] text-[#F4F0E6]">{children}</main>
   );
 }
 
 export function AdminShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
-  const router = useRouter();
 
-  const [user, setUser] = useState<AdminUser | null>(null);
-  const [status, setStatus] = useState<'checking' | 'allowed' | 'blocked'>('checking');
   const [drawerOpen, setDrawerOpen] = useState(false);
 
   const isLoginRoute = pathname === '/admin/login';
 
-  useEffect(() => {
-    if (isLoginRoute) {
-      setStatus('allowed');
-      return;
-    }
-
-    let cancelled = false;
-
-    async function verifyAdmin() {
-      const token = getAdminToken();
-
-      if (!token) {
-        router.replace('/admin/login');
-        return;
-      }
-
-      try {
-        const currentUser = await getCurrentAdmin();
-
-        if (!isAdminRole(currentUser.role)) {
-          clearAdminToken();
-          router.replace('/admin/login');
-          return;
-        }
-
-        if (!cancelled) {
-          setUser(currentUser);
-          setStatus('allowed');
-        }
-      } catch {
-        clearAdminToken();
-        router.replace('/admin/login');
-      }
-    }
-
-    setStatus('checking');
-    void verifyAdmin();
-
-    return () => {
-      cancelled = true;
-    };
-  }, [isLoginRoute, pathname, router]);
-
+  // Verifies the stored session with the server before anything is shown. The
+  // API enforces the role again on every request; this only picks the screen.
+  const { status, user, retry, signOut } = useAdminAccess('admin', !isLoginRoute);
   useEffect(() => {
     setDrawerOpen(false);
   }, [pathname]);
@@ -388,25 +345,19 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
     return <>{children}</>;
   }
 
-  if (status !== 'allowed') {
-    return (
-      <Frame>
-        <div className="flex min-h-screen items-center justify-center">
-          <div className="text-center">
-            <Wordmark />
-            <p className="mt-6 text-sm text-[#8FA394]">Checking admin access…</p>
-          </div>
-        </div>
-      </Frame>
-    );
+  if (status === 'denied') {
+    return <AccessDenied onSwitchAccount={signOut} />;
   }
 
-  const handleLogout = () => {
-    clearAdminToken();
-    setUser(null);
-    router.replace('/admin/login');
-  };
+  if (status === 'retry') {
+    return <AdminUnreachable onRetry={retry} />;
+  }
 
+  if (status !== 'allowed') {
+    return <AdminChecking />;
+  }
+
+  const handleLogout = signOut;
   const today = new Date().toLocaleDateString('en-IN', {
     day: 'numeric',
     month: 'short',
@@ -419,7 +370,7 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
     <Frame>
       <div className="min-h-screen md:grid md:grid-cols-[76px_minmax(0,1fr)] lg:grid-cols-[264px_minmax(0,1fr)]">
         {/* Desktop / tablet sidebar */}
-        <aside className="sticky top-0 hidden h-screen flex-col border-r border-[#B89A5A]/20 bg-gradient-to-b from-[#07180D] to-[#0D2415] md:flex">
+        <aside className="sticky top-0 hidden h-screen flex-col border-r border-[#B89A5A]/20 bg-gradient-to-b from-[#131210] to-[#1C1B18] md:flex">
           <Link
             href="/admin"
             aria-label="KOVENIK Admin home"
@@ -442,14 +393,14 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
                 <p className="truncate text-[13px] font-medium text-[#F4F0E6]">
                   {user?.fullName || 'Admin'}
                 </p>
-                <p className="truncate text-[11px] text-[#8FA394]">{user?.email || 'Administrator'}</p>
+                <p className="truncate text-[11px] text-[#A19B8C]">{user?.email || 'Administrator'}</p>
               </div>
               <button
                 type="button"
                 onClick={handleLogout}
                 aria-label="Log out"
                 title="Log out"
-                className="hidden rounded-md p-1.5 text-[#B89A5A] outline-none transition hover:bg-[#12351F] hover:text-[#C8A96B] focus-visible:ring-1 focus-visible:ring-[#C8A96B] lg:block"
+                className="hidden rounded-md p-1.5 text-[#B89A5A] outline-none transition hover:bg-[#2A2824] hover:text-[#C8A96B] focus-visible:ring-1 focus-visible:ring-[#C8A96B] lg:block"
               >
                 <LogOut className="h-4 w-4" />
               </button>
@@ -460,12 +411,12 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
         {/* Main column */}
         <div className="flex min-w-0 flex-col">
           {/* Mobile header */}
-          <header className="sticky top-0 z-40 flex h-16 items-center justify-between border-b border-[#B89A5A]/20 bg-[#07180D]/95 px-4 backdrop-blur md:hidden">
+          <header className="sticky top-0 z-40 flex h-16 items-center justify-between border-b border-[#B89A5A]/20 bg-[#131210]/95 px-4 backdrop-blur md:hidden">
             <button
               type="button"
               onClick={() => setDrawerOpen(true)}
               aria-label="Open menu"
-              className="flex h-10 w-10 items-center justify-center rounded-lg text-[#EAE4D5] outline-none transition hover:bg-[#12351F] focus-visible:ring-1 focus-visible:ring-[#C8A96B]"
+              className="flex h-10 w-10 items-center justify-center rounded-lg text-[#EAE4D5] outline-none transition hover:bg-[#2A2824] focus-visible:ring-1 focus-visible:ring-[#C8A96B]"
             >
               <Menu className="h-6 w-6" />
             </button>
@@ -479,7 +430,7 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
           </header>
 
           {/* Desktop / tablet header */}
-          <header className="sticky top-0 z-40 hidden h-[72px] items-center justify-between gap-6 border-b border-[#B89A5A]/20 bg-[#07180D]/90 px-6 backdrop-blur md:flex lg:px-8">
+          <header className="sticky top-0 z-40 hidden h-[72px] items-center justify-between gap-6 border-b border-[#B89A5A]/20 bg-[#131210]/90 px-6 backdrop-blur md:flex lg:px-8">
             <CommandSearch />
             <div className="flex items-center gap-3">
               <span className="hidden items-center gap-2 rounded-lg border border-[#B89A5A]/25 px-3 py-2 text-xs text-[#EAE4D5] xl:flex">
@@ -491,7 +442,7 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
             </div>
           </header>
 
-          <div className="min-w-0 flex-1 bg-[radial-gradient(ellipse_at_top_right,rgba(26,69,40,0.55),transparent_60%)] px-4 pb-28 pt-5 sm:px-6 md:pb-10 md:pt-8 lg:px-8">
+          <div className="min-w-0 flex-1 bg-[radial-gradient(ellipse_at_top_right,rgba(30,28,24,0.55),transparent_60%)] px-4 pb-28 pt-5 sm:px-6 md:pb-10 md:pt-8 lg:px-8">
             <div className="mx-auto w-full max-w-[1400px]">{children}</div>
           </div>
         </div>
@@ -500,7 +451,7 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
       {/* Mobile bottom navigation */}
       <nav
         aria-label="Quick navigation"
-        className="fixed inset-x-0 bottom-0 z-40 flex border-t border-[#B89A5A]/25 bg-[#07180D]/95 pb-[env(safe-area-inset-bottom)] backdrop-blur md:hidden"
+        className="fixed inset-x-0 bottom-0 z-40 flex border-t border-[#B89A5A]/25 bg-[#131210]/95 pb-[env(safe-area-inset-bottom)] backdrop-blur md:hidden"
       >
         {bottomItems.map((item) => {
           const Icon = item.icon;
@@ -512,7 +463,7 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
               aria-current={active ? 'page' : undefined}
               className={cn(
                 'flex flex-1 flex-col items-center gap-1 py-2.5 text-[11px] font-medium transition-colors',
-                active ? 'text-[#C8A96B]' : 'text-[#8FA394]'
+                active ? 'text-[#C8A96B]' : 'text-[#A19B8C]'
               )}
             >
               <Icon className="h-5 w-5" />
@@ -523,7 +474,7 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
         <button
           type="button"
           onClick={() => setDrawerOpen(true)}
-          className="flex flex-1 flex-col items-center gap-1 py-2.5 text-[11px] font-medium text-[#8FA394]"
+          className="flex flex-1 flex-col items-center gap-1 py-2.5 text-[11px] font-medium text-[#A19B8C]"
         >
           <Menu className="h-5 w-5" />
           More
@@ -550,7 +501,7 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
           aria-modal="true"
           aria-label="Navigation menu"
           className={cn(
-            'absolute inset-y-0 left-0 flex h-full w-[300px] max-w-[85vw] flex-col border-r border-[#B89A5A]/30 bg-gradient-to-b from-[#0D2415] to-[#07180D] shadow-2xl transition-transform duration-300 ease-out',
+            'absolute inset-y-0 left-0 flex h-full w-[300px] max-w-[85vw] flex-col border-r border-[#B89A5A]/30 bg-gradient-to-b from-[#1C1B18] to-[#131210] shadow-2xl transition-transform duration-300 ease-out',
             drawerOpen ? 'translate-x-0' : '-translate-x-full'
           )}
         >
@@ -560,7 +511,7 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
               type="button"
               onClick={() => setDrawerOpen(false)}
               aria-label="Close menu"
-              className="flex h-10 w-10 items-center justify-center rounded-lg border border-[#B89A5A]/30 text-[#C8A96B] outline-none transition hover:bg-[#12351F] focus-visible:ring-1 focus-visible:ring-[#C8A96B]"
+              className="flex h-10 w-10 items-center justify-center rounded-lg border border-[#B89A5A]/30 text-[#C8A96B] outline-none transition hover:bg-[#2A2824] focus-visible:ring-1 focus-visible:ring-[#C8A96B]"
             >
               <X className="h-5 w-5" />
             </button>
@@ -577,13 +528,13 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
                 <p className="truncate text-sm font-medium text-[#F4F0E6]">
                   {user?.fullName || 'Admin'}
                 </p>
-                <p className="truncate text-xs text-[#8FA394]">{user?.email || 'Administrator'}</p>
+                <p className="truncate text-xs text-[#A19B8C]">{user?.email || 'Administrator'}</p>
               </div>
             </div>
             <button
               type="button"
               onClick={handleLogout}
-              className="flex h-10 w-full items-center justify-center gap-2 rounded-lg border border-[#B89A5A]/40 text-sm font-medium text-[#C8A96B] transition hover:bg-[#B89A5A] hover:text-[#07180D]"
+              className="flex h-10 w-full items-center justify-center gap-2 rounded-lg border border-[#B89A5A]/40 text-sm font-medium text-[#C8A96B] transition hover:bg-[#B89A5A] hover:text-[#131210]"
             >
               <LogOut className="h-4 w-4" />
               Log out

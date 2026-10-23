@@ -16,7 +16,7 @@ export function ProfileContent({ profile }: { profile: ProfileState }) {
   return (
     <section className="min-w-0">
       {profile.sectionLoading && (
-        <div className="mb-4 flex items-center gap-2 text-[10px] uppercase tracking-[0.2em] text-[#8A8176]">
+        <div className="mb-4 flex items-center gap-2 text-[10px] uppercase tracking-[0.2em] text-[#9296A0]">
           <Loader2 className="h-3.5 w-3.5 animate-spin" />
           Updating account
         </div>

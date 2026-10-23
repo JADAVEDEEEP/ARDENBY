@@ -1,4 +1,4 @@
-import { products } from '@/lib/data';
+import type { Product } from '@/types';
 
 export const topNavItems = [
   {
@@ -45,10 +45,10 @@ export const topNavItems = [
 
 /* =========================================================
    DYNAMIC MEGA MENU
-   Products are automatically picked from existing data
+   Featured products come from the database (see useHomeProducts)
 ========================================================= */
 
-export const megaMenu = topNavItems.map((category) => {
+export const buildMegaMenu = (products: Product[]) => topNavItems.map((category) => {
   const featured =
     category.slug === 'all-products'
       ? products.slice(0, 8)

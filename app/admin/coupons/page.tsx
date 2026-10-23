@@ -221,10 +221,10 @@ export default function CouponManagementPage() {
   }
 
   const inputClass =
-    'mt-2 w-full rounded-lg border border-emerald-900 bg-[#06170f] px-4 py-3 text-sm outline-none placeholder:text-emerald-100/30 focus:border-emerald-400';
+    'mt-2 w-full rounded-lg border border-neutral-900 bg-[#12110F] px-4 py-3 text-sm outline-none placeholder:text-stone-100/30 focus:border-emerald-400';
 
   return (
-    <main className="min-h-screen bg-[#020d08] text-[#edf7ef]">
+    <main className="min-h-screen bg-[#090908] text-[#FDF3DB]">
       <div className="mx-auto max-w-[1600px] space-y-6 p-4 md:p-8">
         {/* Header + stats */}
         <div className="flex flex-col gap-5 xl:flex-row xl:items-center xl:justify-between">
@@ -233,23 +233,23 @@ export default function CouponManagementPage() {
               ％
             </div>
             <h1 className="text-3xl font-bold tracking-tight">Coupons</h1>
-            <p className="mt-1 text-sm text-emerald-100/60">
+            <p className="mt-1 text-sm text-stone-100/60">
               Create and manage discount coupons for your store.
             </p>
           </div>
 
           <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
             {[
-              ['Total Coupons', stats.total, 'border-emerald-800', 'text-emerald-300'],
-              ['Active', stats.active, 'border-emerald-600/70', 'text-emerald-300'],
+              ['Total Coupons', stats.total, 'border-neutral-800', 'text-emerald-300'],
+              ['Active', stats.active, 'border-stone-600/70', 'text-emerald-300'],
               ['Inactive', stats.inactive, 'border-yellow-800/70', 'text-yellow-300'],
               ['Expired', stats.expired, 'border-red-900/80', 'text-red-300'],
             ].map(([label, value, border, color]) => (
               <div
                 key={String(label)}
-                className={`min-w-[125px] rounded-xl border ${border} bg-[#04170f] p-4`}
+                className={`min-w-[125px] rounded-xl border ${border} bg-[#11100E] p-4`}
               >
-                <div className="text-xs text-emerald-50/60">{label}</div>
+                <div className="text-xs text-stone-50/60">{label}</div>
                 <div className={`mt-1 text-2xl font-bold ${color}`}>{value}</div>
               </div>
             ))}
@@ -262,7 +262,7 @@ export default function CouponManagementPage() {
             role="status"
             className={`flex items-start justify-between gap-4 rounded-lg border px-4 py-3 text-sm ${
               notice.type === 'success'
-                ? 'border-emerald-500/50 bg-emerald-900/30 text-emerald-200'
+                ? 'border-emerald-500/50 bg-neutral-900/30 text-emerald-200'
                 : 'border-red-500/50 bg-red-950/40 text-red-200'
             }`}
           >
@@ -276,11 +276,11 @@ export default function CouponManagementPage() {
         {/* Form */}
         <form
           onSubmit={submitCoupon}
-          className="overflow-hidden rounded-2xl border border-emerald-600/70 bg-gradient-to-br from-[#0a2918] via-[#04170f] to-[#03120c] shadow-[0_0_40px_rgba(16,185,129,.08)]"
+          className="overflow-hidden rounded-2xl border border-stone-600/70 bg-gradient-to-br from-[#1F1E1B] via-[#11100E] to-[#0E0D0C] shadow-[0_0_40px_rgba(16,185,129,.08)]"
         >
-          <div className="border-b border-emerald-800/60 bg-gradient-to-r from-emerald-500/10 to-transparent px-5 py-5 md:px-7">
+          <div className="border-b border-neutral-800/60 bg-gradient-to-r from-emerald-500/10 to-transparent px-5 py-5 md:px-7">
             <h2 className="text-xl font-bold">{editingId ? 'Edit Coupon' : 'Create New Coupon'}</h2>
-            <p className="mt-1 text-sm text-emerald-100/60">Add a discount coupon to your store</p>
+            <p className="mt-1 text-sm text-stone-100/60">Add a discount coupon to your store</p>
           </div>
 
           <div className="grid gap-5 p-5 md:grid-cols-2 xl:grid-cols-3 md:p-7">
@@ -293,7 +293,7 @@ export default function CouponManagementPage() {
                 placeholder="e.g. DIWALI20"
                 className={inputClass}
               />
-              <span className="mt-1 block text-xs text-emerald-100/45">
+              <span className="mt-1 block text-xs text-stone-100/45">
                 Will be converted to uppercase
               </span>
             </label>
@@ -348,7 +348,7 @@ export default function CouponManagementPage() {
                 placeholder="0"
                 className={inputClass}
               />
-              <span className="mt-1 block text-xs text-emerald-100/45">
+              <span className="mt-1 block text-xs text-stone-100/45">
                 0 for no minimum order
               </span>
             </label>
@@ -364,7 +364,7 @@ export default function CouponManagementPage() {
                 placeholder="Leave empty for no limit"
                 className={inputClass}
               />
-              <span className="mt-1 block text-xs text-emerald-100/45">
+              <span className="mt-1 block text-xs text-stone-100/45">
                 Primarily for percentage coupons
               </span>
             </label>
@@ -398,7 +398,7 @@ export default function CouponManagementPage() {
               </button>
               <div>
                 <div className="text-sm font-semibold">{form.active ? 'Active' : 'Inactive'}</div>
-                <div className="text-xs text-emerald-100/50">Inactive coupons cannot be used</div>
+                <div className="text-xs text-stone-100/50">Inactive coupons cannot be used</div>
               </div>
             </div>
 
@@ -406,14 +406,14 @@ export default function CouponManagementPage() {
               <button
                 type="button"
                 onClick={resetForm}
-                className="rounded-lg border border-emerald-700 px-5 py-3 text-sm font-semibold text-emerald-100 hover:bg-emerald-900/50"
+                className="rounded-lg border border-stone-700 px-5 py-3 text-sm font-semibold text-stone-100 hover:bg-neutral-900/50"
               >
                 ↻ Reset
               </button>
               <button
                 disabled={saving}
                 type="submit"
-                className="rounded-lg bg-gradient-to-r from-[#f0c85e] to-[#ffe9a1] px-6 py-3 text-sm font-bold text-[#17200e] shadow-[0_0_20px_rgba(240,200,94,.14)] hover:brightness-105 disabled:cursor-not-allowed disabled:opacity-60"
+                className="rounded-lg bg-gradient-to-r from-[#f0c85e] to-[#ffe9a1] px-6 py-3 text-sm font-bold text-[#1C1B18] shadow-[0_0_20px_rgba(240,200,94,.14)] hover:brightness-105 disabled:cursor-not-allowed disabled:opacity-60"
               >
                 {saving ? 'Saving…' : editingId ? '✓ Update Coupon' : '+ Create Coupon'}
               </button>
@@ -422,11 +422,11 @@ export default function CouponManagementPage() {
         </form>
 
         {/* Coupons list */}
-        <section className="overflow-hidden rounded-2xl border border-emerald-800/80 bg-[#03140d]">
-          <div className="flex flex-col gap-4 border-b border-emerald-900/70 p-5 md:flex-row md:items-center md:justify-between">
+        <section className="overflow-hidden rounded-2xl border border-neutral-800/80 bg-[#0F0E0D]">
+          <div className="flex flex-col gap-4 border-b border-neutral-900/70 p-5 md:flex-row md:items-center md:justify-between">
             <div>
               <h2 className="text-xl font-bold text-[#f5d77b]">Coupons List</h2>
-              <p className="mt-1 text-sm text-emerald-100/55">View, edit and manage all coupons</p>
+              <p className="mt-1 text-sm text-stone-100/55">View, edit and manage all coupons</p>
             </div>
 
             <div className="flex flex-col gap-2 sm:flex-row">
@@ -434,12 +434,12 @@ export default function CouponManagementPage() {
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
                 placeholder="Search code or description…"
-                className="min-w-0 rounded-lg border border-emerald-900 bg-[#06170f] px-4 py-2.5 text-sm outline-none placeholder:text-emerald-100/35 focus:border-emerald-400 sm:w-64"
+                className="min-w-0 rounded-lg border border-neutral-900 bg-[#12110F] px-4 py-2.5 text-sm outline-none placeholder:text-stone-100/35 focus:border-emerald-400 sm:w-64"
               />
               <select
                 value={statusFilter}
                 onChange={(e) => setStatusFilter(e.target.value)}
-                className="rounded-lg border border-emerald-900 bg-[#06170f] px-3 py-2.5 text-sm outline-none focus:border-emerald-400"
+                className="rounded-lg border border-neutral-900 bg-[#12110F] px-3 py-2.5 text-sm outline-none focus:border-emerald-400"
               >
                 <option value="all">All Status</option>
                 <option value="active">Active</option>
@@ -451,7 +451,7 @@ export default function CouponManagementPage() {
 
           <div className="overflow-x-auto">
             <table className="w-full min-w-[1050px] border-collapse text-left text-sm">
-              <thead className="bg-emerald-950/80 text-[11px] uppercase tracking-wider text-emerald-100/65">
+              <thead className="bg-neutral-950/80 text-[11px] uppercase tracking-wider text-stone-100/65">
                 <tr>
                   {[
                     '#',
@@ -476,13 +476,13 @@ export default function CouponManagementPage() {
               <tbody className="divide-y divide-emerald-950">
                 {loading ? (
                   <tr>
-                    <td colSpan={11} className="px-4 py-12 text-center text-emerald-100/50">
+                    <td colSpan={11} className="px-4 py-12 text-center text-stone-100/50">
                       Loading coupons…
                     </td>
                   </tr>
                 ) : filteredCoupons.length === 0 ? (
                   <tr>
-                    <td colSpan={11} className="px-4 py-12 text-center text-emerald-100/50">
+                    <td colSpan={11} className="px-4 py-12 text-center text-stone-100/50">
                       No coupons found. Create your first coupon above.
                     </td>
                   </tr>
@@ -490,17 +490,17 @@ export default function CouponManagementPage() {
                   filteredCoupons.map((coupon, index) => {
                     const expired = new Date(coupon.expiry).getTime() < Date.now();
                     return (
-                      <tr key={coupon.id} className="transition hover:bg-emerald-900/20">
-                        <td className="px-4 py-3 text-emerald-100/55">{index + 1}</td>
+                      <tr key={coupon.id} className="transition hover:bg-neutral-900/20">
+                        <td className="px-4 py-3 text-stone-100/55">{index + 1}</td>
                         <td className="px-4 py-3 font-bold tracking-wide">{coupon.code}</td>
-                        <td className="max-w-56 truncate px-4 py-3 text-emerald-100/65">
+                        <td className="max-w-56 truncate px-4 py-3 text-stone-100/65">
                           {coupon.description || '—'}
                         </td>
                         <td className="px-4 py-3">
                           <span
                             className={`rounded-md border px-2 py-1 text-xs ${
                               coupon.discount_type === 'percentage'
-                                ? 'border-emerald-600 bg-emerald-900/50 text-emerald-200'
+                                ? 'border-stone-600 bg-neutral-900/50 text-emerald-200'
                                 : 'border-yellow-700 bg-yellow-900/30 text-yellow-200'
                             }`}
                           >
@@ -523,14 +523,14 @@ export default function CouponManagementPage() {
                               expired
                                 ? 'border-slate-600 bg-slate-800 text-slate-200'
                                 : isActive(coupon)
-                                  ? 'border-emerald-600 bg-emerald-900/50 text-emerald-200'
+                                  ? 'border-stone-600 bg-neutral-900/50 text-emerald-200'
                                   : 'border-red-700 bg-red-950/50 text-red-200'
                             }`}
                           >
                             {expired ? 'Expired' : isActive(coupon) ? 'Active' : 'Inactive'}
                           </span>
                         </td>
-                        <td className="px-4 py-3 text-emerald-100/55">
+                        <td className="px-4 py-3 text-stone-100/55">
                           {formatDate(coupon.created_at)}
                         </td>
                         <td className="px-4 py-3">

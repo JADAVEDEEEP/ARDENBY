@@ -1,8 +1,9 @@
 'use client';
 
 import Link from 'next/link';
+import { usePathname, useSearchParams } from 'next/navigation';
 import type { FormEvent } from 'react';
-import { useEffect, useState } from 'react';
+import { Suspense, useEffect, useMemo, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 
 import {
@@ -18,7 +19,9 @@ import {
 } from 'lucide-react';
 
 import type { UserProfile } from './navbar';
-import { megaMenu, topNavItems } from './navbar-data';
+import { buildMegaMenu, topNavItems } from './navbar-data';
+import { useHomeProducts } from '@/hooks/use-home-products';
+import { KovenikLogo } from './kovenik-logo';
 
 type NavbarHeaderProps = {
   setMobileOpen: (open: boolean) => void;
@@ -36,42 +39,51 @@ type NavbarHeaderProps = {
 };
 
 /* ---------------------------------------------------------------------------
- *  KOVENIK — black / cream / metallic gold
+ *  KOVENIK chrome theme: near-black / silver glass / tiny gold accents
  * ------------------------------------------------------------------------- */
 
-const G900 = '#0B0B0B';
-const G800 = '#141414';
-const G700 = '#1C1C1C';
-const IVORY = '#F3ECDD';
-const MIST = '#B9B3A5';
-const GOLD = '#C9A24B';
-const LINE = 'rgba(243,236,221,0.14)';
+const G900 = '#050506';
+const G800 = '#0b0c0e';
+const G700 = '#16181b';
+const IVORY = '#eef0f2';
+const MIST = '#b4b9c0'; // secondary text on dark, 8:1+ contrast
+const NAV_IDLE = '#d6d9de';
+const GOLD = '#c9a24a';
+const LINE = 'rgba(255,255,255,0.12)';
 
-/* Metallic gold sheen, reused for the logo, ribbon and primary pills. */
-const GOLD_GRAD =
-  'bg-[linear-gradient(135deg,#A67C28_0%,#F0DC9A_40%,#C9A24B_65%,#F7E9B5_100%)]';
-
-const SERIF =
-  "'Cormorant Garamond', 'Bodoni MT', Didot, 'Times New Roman', serif";
-const SANS = "Inter, 'Helvetica Neue', Arial, system-ui, sans-serif";
+const SERIF = 'var(--font-bodoni), Didot, "Bodoni MT", serif';
+const SANS = 'var(--font-archivo), Inter, Arial, system-ui, sans-serif';
 
 const LOGO_STYLE = {
-  color: IVORY,
   fontFamily: SERIF,
 };
 
+/* Glass round icon button (desktop + mobile). */
 const ICON_BTN =
-  'group relative flex h-9 w-9 items-center justify-center rounded-full border border-[#F3ECDD]/20 text-[#F3ECDD] transition-colors duration-300 hover:border-[#C9A24B] hover:text-[#C9A24B]';
+  'chrome-focus group relative flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-white/[0.14] bg-white/[0.05] text-[#e8eaed] transition duration-300 hover:border-white/50 hover:bg-white/[0.1] hover:text-white';
 
 const BADGE =
-  'absolute -right-1.5 -top-1.5 z-20 flex h-[20px] min-w-[20px] items-center justify-center rounded-full bg-[#C9A24B] px-1 text-[10px] font-semibold leading-none text-[#0B0B0B]';
+  'absolute -right-1 -top-1 z-20 flex h-[18px] min-w-[18px] items-center justify-center rounded-full bg-[#c9a24a] px-1 text-[10px] font-bold leading-none text-[#17120a]';
 
-/* Desktop utility icons: small, unstyled, like the reference. */
-const DESK_ICON =
-  'group relative flex h-9 w-9 items-center justify-center text-[#F3ECDD] transition-colors duration-300 hover:text-[#C9A24B]';
+const NAV_LINK =
+  'chrome-focus group relative flex h-full items-center whitespace-nowrap text-[11px] font-semibold uppercase tracking-[0.16em] transition-colors duration-300 hover:!text-white';
 
-const BADGE_SM =
-  'absolute right-0 top-0 z-20 flex h-[14px] min-w-[14px] items-center justify-center rounded-full bg-[#C9A24B] px-[3px] text-[8px] font-semibold leading-none text-[#0B0B0B]';
+/* Reports the `?category=` param. Isolated in its own Suspense boundary so
+ * useSearchParams never forces the rest of the app into client rendering. */
+function CategoryReporter({ onChange }: { onChange: (slug: string | null) => void }) {
+  const params = useSearchParams();
+  const category = params.get('category');
+
+  useEffect(() => {
+    onChange(category);
+  }, [category, onChange]);
+
+  return null;
+}
+
+function Wordmark({ className }: { className?: string }) {
+  return <KovenikLogo layout="horizontal" className={className} />;
+}
 
 export function NavbarHeader({
   setMobileOpen,
@@ -87,11 +99,14 @@ export function NavbarHeader({
   openCart,
   closeCart,
 }: NavbarHeaderProps) {
+  const pathname = usePathname() ?? "";
+  const isHome = pathname === '/';
+
+  const [activeCategory, setActiveCategory] = useState<string | null>(null);
   const [activeMegaCategory, setActiveMegaCategory] =
     useState<string | null>(null);
 
   const [menuOpen, setMenuOpen] = useState(false);
-  const [searchOpen, setSearchOpen] = useState(false);
   const [mobileExpandedCategory, setMobileExpandedCategory] =
     useState<string | null>(null);
 
@@ -102,7 +117,7 @@ export function NavbarHeader({
     setMounted(true);
   }, []);
 
-  // Desktop navbar shows six items: Plus Size and All Products are removed here.
+  // Desktop navbar: Plus Size and All Products are removed here.
   const navbarItems = topNavItems.filter((item) => {
     const label = String(item.label).trim().toLowerCase();
     const slug = String(item.slug).trim().toLowerCase();
@@ -115,8 +130,16 @@ export function NavbarHeader({
     );
   });
 
+  const { products: liveProducts } = useHomeProducts();
+  const megaMenu = useMemo(() => buildMegaMenu(liveProducts), [liveProducts]);
+
   const activeMegaMenu =
     megaMenu.find((item) => item.slug === activeMegaCategory) ?? null;
+
+  const onShop = pathname === '/shop';
+  const isActiveHome = isHome;
+  const isActiveShop = onShop && !activeCategory;
+  const isActiveAbout = pathname.startsWith('/about');
 
   const openNavigation = () => {
     closeCart?.();
@@ -148,73 +171,77 @@ export function NavbarHeader({
     );
   };
 
+  /* Underline + colour for a nav item. Active = gold underline. */
+  const navLabelStyle = (active: boolean) => ({
+    color: active ? '#ffffff' : NAV_IDLE,
+  });
+  const underlineStyle = (active: boolean) => ({
+    transform: active ? 'scaleX(1)' : 'scaleX(0)',
+  });
+
+  const searchForm = (
+    <form
+      onSubmit={handleSearchSubmit}
+      role="search"
+      className="flex h-11 w-full items-center gap-3 rounded-full border border-white/[0.14] bg-white/[0.06] px-5 transition-colors duration-300 focus-within:border-white/50"
+    >
+      <Search
+        className="h-[18px] w-[18px] shrink-0 text-[#c9a24a]"
+        strokeWidth={1.8}
+      />
+      <input
+        type="text"
+        value={searchQuery}
+        onChange={(e) => setSearchQuery(e.target.value)}
+        placeholder="Search Kovenik"
+        aria-label="Search Kovenik"
+        className="min-w-0 flex-1 bg-transparent text-[13px] text-[#eef0f2] outline-none placeholder:text-[#9aa0a8]"
+      />
+    </form>
+  );
+
   return (
     <>
-      {/* Brand ribbon: scrolls away, the sticky header sits below it. */}
-      <div
-        className={`w-full ${GOLD_GRAD} px-4 py-1.5 text-center text-[10px] font-semibold uppercase tracking-[0.2em] text-[#0B0B0B] sm:text-[11px]`}
-        style={{ fontFamily: SANS }}
-      >
-        Premium men&apos;s clothing crafted for the bold
-      </div>
+      <Suspense fallback={null}>
+        <CategoryReporter onChange={setActiveCategory} />
+      </Suspense>
 
       <header
-        className="sticky top-0 z-[100] w-full max-w-[100vw] border-b border-[#F3ECDD]/10 bg-[#0B0B0B]/95 backdrop-blur-md"
-        style={{ color: IVORY, fontFamily: SANS }}
+        className="chrome-scope sticky top-0 z-[100] w-full max-w-[100vw] border-b border-white/[0.08]"
+        style={{
+          color: IVORY,
+          fontFamily: SANS,
+          // Translucent glass only where a dark page sits behind it (home).
+          backgroundColor: isHome ? 'rgba(9,10,11,0.72)' : '#090a0b',
+          backdropFilter: 'blur(18px)',
+          WebkitBackdropFilter: 'blur(18px)',
+        }}
         onMouseLeave={closeMega}
       >
         {/* ===================== DESKTOP ===================== */}
         <div className="hidden w-full lg:block">
           {/* Row 1: logo / search / utilities */}
           <div className="mx-auto grid h-[76px] w-full max-w-[1500px] grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-8 px-8 xl:gap-12 xl:px-12">
-            <Link href="/" className="group relative shrink-0">
-              <span
-                className={`block bg-clip-text text-[28px] font-bold uppercase leading-none tracking-[0.16em] text-transparent transition-opacity duration-300 group-hover:opacity-90 ${GOLD_GRAD}`}
-                style={{ fontFamily: SERIF }}
-              >
-                Kovenik
-              </span>
-              <span
-                className="absolute -bottom-2 left-0 h-px w-0 transition-all duration-500 group-hover:w-full"
-                style={{ backgroundColor: GOLD }}
-              />
+            <Link href="/" aria-label="Kovenik home" className="chrome-focus group relative shrink-0">
+              <Wordmark className="h-[60px] w-auto" />
             </Link>
 
-            <form
-              onSubmit={handleSearchSubmit}
-              role="search"
-              className="mx-auto flex h-11 w-full max-w-[640px] items-center gap-3 rounded-full border border-[#F3ECDD]/15 bg-[#161616] px-5 transition-colors duration-300 focus-within:border-[#C9A24B]"
-            >
-              <Search
-                className="h-[18px] w-[18px] shrink-0"
-                strokeWidth={1.4}
-                style={{ color: GOLD }}
-              />
-              <input
-                type="text"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Search Kovenik"
-                aria-label="Search Kovenik"
-                className="min-w-0 flex-1 bg-transparent text-[13px] outline-none placeholder:text-[#F3ECDD]/40"
-                style={{ color: IVORY }}
-              />
-            </form>
+            <div className="mx-auto w-full max-w-[560px]">{searchForm}</div>
 
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2.5">
               <button
                 type="button"
                 onClick={handleOpenProfile}
                 aria-label={user ? 'My profile' : 'Login'}
-                className={DESK_ICON}
+                className={ICON_BTN}
               >
-                <User className="h-5 w-5" strokeWidth={1.4} />
+                <User className="h-[18px] w-[18px]" strokeWidth={1.6} />
               </button>
 
-              <Link href="/wishlist" aria-label="Wishlist" className={DESK_ICON}>
-                <Heart className="h-5 w-5" strokeWidth={1.4} />
+              <Link href="/wishlist" aria-label="Wishlist" className={ICON_BTN}>
+                <Heart className="h-[18px] w-[18px]" strokeWidth={1.6} />
                 {mounted && wishlistCount > 0 && (
-                  <span className={BADGE_SM}>{wishlistCount}</span>
+                  <span className={BADGE}>{wishlistCount}</span>
                 )}
               </Link>
 
@@ -223,11 +250,11 @@ export function NavbarHeader({
                 onClick={openCart}
                 aria-label="Shopping cart"
                 whileTap={{ scale: 0.94 }}
-                className={DESK_ICON}
+                className={ICON_BTN}
               >
-                <ShoppingCart className="h-5 w-5" strokeWidth={1.4} />
+                <ShoppingCart className="h-[18px] w-[18px]" strokeWidth={1.6} />
                 {mounted && cartCount > 0 && (
-                  <span className={BADGE_SM}>{cartCount}</span>
+                  <span className={BADGE}>{cartCount}</span>
                 )}
               </motion.button>
 
@@ -235,60 +262,62 @@ export function NavbarHeader({
                 type="button"
                 onClick={openNavigation}
                 aria-label="Open menu"
-                className={DESK_ICON}
+                className={ICON_BTN}
               >
-                <Menu className="h-5 w-5" strokeWidth={1.4} />
+                <Menu className="h-[18px] w-[18px]" strokeWidth={1.6} />
               </button>
             </div>
           </div>
 
           {/* Row 2: real category navigation */}
-          <nav
-            aria-label="Primary"
-            className="border-t border-[#F3ECDD]/10"
-          >
+          <nav aria-label="Primary" className="border-t border-white/[0.08]">
             <div className="mx-auto flex h-[46px] w-full max-w-[1500px] items-center justify-center gap-7 px-8 xl:gap-10 xl:px-12">
               <Link
                 href="/"
                 onMouseEnter={closeMega}
-                className="group relative flex h-full items-center"
+                aria-current={isActiveHome ? 'page' : undefined}
+                className={NAV_LINK}
+                style={navLabelStyle(isActiveHome)}
               >
-                <span className="whitespace-nowrap text-[11px] font-semibold uppercase tracking-[0.16em] transition-colors duration-300 group-hover:text-[#C9A24B]">
-                  Home
-                </span>
-                <span className="absolute bottom-0 left-0 h-[2px] w-full origin-center scale-x-0 bg-[#C9A24B] transition-transform duration-300 group-hover:scale-x-100" />
+                Home
+                <span
+                  className="absolute bottom-0 left-0 h-[2px] w-full origin-center bg-[#c9a24a] transition-transform duration-300 group-hover:!scale-x-100"
+                  style={underlineStyle(isActiveHome)}
+                />
               </Link>
 
               <Link
                 href="/shop"
                 onMouseEnter={closeMega}
-                className="group relative flex h-full items-center"
+                aria-current={isActiveShop ? 'page' : undefined}
+                className={NAV_LINK}
+                style={navLabelStyle(isActiveShop)}
               >
-                <span className="whitespace-nowrap text-[11px] font-semibold uppercase tracking-[0.16em] transition-colors duration-300 group-hover:text-[#C9A24B]">
-                  Shop
-                </span>
-                <span className="absolute bottom-0 left-0 h-[2px] w-full origin-center scale-x-0 bg-[#C9A24B] transition-transform duration-300 group-hover:scale-x-100" />
+                Shop
+                <span
+                  className="absolute bottom-0 left-0 h-[2px] w-full origin-center bg-[#c9a24a] transition-transform duration-300 group-hover:!scale-x-100"
+                  style={underlineStyle(isActiveShop)}
+                />
               </Link>
 
               {navbarItems.map((item) => {
-                const active = megaOpen && activeMegaCategory === item.slug;
+                const hovered = megaOpen && activeMegaCategory === item.slug;
+                const current = onShop && activeCategory === item.slug;
+                const active = hovered || current;
                 return (
                   <Link
                     key={item.slug}
                     href={`/shop?category=${item.slug}`}
                     onMouseEnter={() => openCategory(item.slug)}
                     onFocus={() => openCategory(item.slug)}
-                    className="group relative flex h-full items-center"
+                    aria-current={current ? 'page' : undefined}
+                    className={NAV_LINK}
+                    style={navLabelStyle(active)}
                   >
+                    {item.label}
                     <span
-                      className="whitespace-nowrap text-[11px] font-medium uppercase tracking-[0.16em] transition-colors duration-300 group-hover:text-[#C9A24B]"
-                      style={{ color: active ? GOLD : MIST }}
-                    >
-                      {item.label}
-                    </span>
-                    <span
-                      className="absolute bottom-0 left-0 h-[2px] w-full origin-center bg-[#C9A24B] transition-transform duration-300 group-hover:scale-x-100"
-                      style={{ transform: active ? 'scaleX(1)' : 'scaleX(0)' }}
+                      className="absolute bottom-0 left-0 h-[2px] w-full origin-center bg-[#c9a24a] transition-transform duration-300 group-hover:!scale-x-100"
+                      style={underlineStyle(active)}
                     />
                   </Link>
                 );
@@ -297,12 +326,15 @@ export function NavbarHeader({
               <Link
                 href="/about"
                 onMouseEnter={closeMega}
-                className="group relative flex h-full items-center"
+                aria-current={isActiveAbout ? 'page' : undefined}
+                className={NAV_LINK}
+                style={navLabelStyle(isActiveAbout)}
               >
-                <span className="whitespace-nowrap text-[11px] font-semibold uppercase tracking-[0.16em] transition-colors duration-300 group-hover:text-[#C9A24B]">
-                  About
-                </span>
-                <span className="absolute bottom-0 left-0 h-[2px] w-full origin-center scale-x-0 bg-[#C9A24B] transition-transform duration-300 group-hover:scale-x-100" />
+                About
+                <span
+                  className="absolute bottom-0 left-0 h-[2px] w-full origin-center bg-[#c9a24a] transition-transform duration-300 group-hover:!scale-x-100"
+                  style={underlineStyle(isActiveAbout)}
+                />
               </Link>
             </div>
           </nav>
@@ -334,8 +366,8 @@ export function NavbarHeader({
                   <div>
                     <Link href={`/shop?category=${activeMegaMenu.slug}`}>
                       <h3
-                        className="text-[26px] font-medium uppercase leading-none tracking-[0.02em]"
-                        style={{ color: IVORY, fontFamily: SERIF }}
+                        className="chrome-text text-[26px] font-medium uppercase leading-none tracking-[0.04em]"
+                        style={{ fontFamily: SERIF }}
                       >
                         {activeMegaMenu.title}
                       </h3>
@@ -354,7 +386,7 @@ export function NavbarHeader({
 
                   <Link
                     href={`/shop?category=${activeMegaMenu.slug}`}
-                    className="group flex items-center gap-2 rounded-full border border-[#F3ECDD]/25 px-5 py-2.5 text-[11px] font-medium uppercase tracking-[0.16em] transition-colors hover:border-[#C9A24B] hover:text-[#C9A24B]"
+                    className="chrome-focus group flex min-h-[44px] items-center gap-2 rounded-full border border-white/30 px-5 text-[11px] font-medium uppercase tracking-[0.16em] transition-colors hover:border-white/70 hover:bg-white/10"
                     style={{ color: IVORY }}
                   >
                     View collection
@@ -377,12 +409,13 @@ export function NavbarHeader({
                       <Link
                         key={p.id}
                         href={`/product/${p.slug}`}
-                        className="group min-w-0"
+                        className="chrome-focus group min-w-0"
                       >
                         <div
-                          className="relative h-[160px] w-full min-w-0 overflow-hidden rounded-xl xl:h-[180px]"
+                          className="relative h-[160px] w-full min-w-0 overflow-hidden rounded-xl border border-white/10 xl:h-[180px]"
                           style={{ backgroundColor: G700 }}
                         >
+                          {/* eslint-disable-next-line @next/next/no-img-element */}
                           <img
                             src={p.images[0]}
                             alt={p.name}
@@ -398,7 +431,7 @@ export function NavbarHeader({
 
                         <div className="pt-3">
                           <p
-                            className="line-clamp-2 text-[14px] font-medium leading-[1.3rem] transition-colors group-hover:text-[#C9A24B]"
+                            className="line-clamp-2 text-[14px] font-medium leading-[1.3rem] transition-colors group-hover:text-white"
                             style={{ color: IVORY }}
                           >
                             {p.name}
@@ -429,37 +462,31 @@ export function NavbarHeader({
 
         {/* ===================== MOBILE HEADER ===================== */}
         <div className="lg:hidden">
-          <div className="relative flex h-[58px] w-full items-center justify-between px-4">
+          <div className="relative flex h-[60px] w-full items-center px-4">
             <button
               type="button"
               onClick={openNavigation}
               aria-label="Open menu"
               className={ICON_BTN}
             >
-              <Menu className="h-[18px] w-[18px]" strokeWidth={1.3} />
+              <Menu className="h-[18px] w-[18px]" strokeWidth={1.6} />
             </button>
 
             <Link
               href="/"
-              className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"
+              aria-label="Kovenik home"
+              className="chrome-focus flex h-full min-w-0 flex-1 items-center justify-center px-2"
             >
-              <span
-                className={`block bg-clip-text text-[24px] font-bold uppercase leading-none tracking-[0.14em] text-transparent ${GOLD_GRAD}`}
-                style={{ fontFamily: SERIF }}
-              >
-                Kovenik
-              </span>
+              <Wordmark className="h-[42px] w-auto max-w-full" />
             </Link>
 
             <div className="flex items-center gap-2">
-              <button
-                type="button"
-                onClick={() => setSearchOpen(true)}
-                aria-label="Search"
-                className={ICON_BTN}
-              >
-                <Search className="h-[17px] w-[17px]" strokeWidth={1.3} />
-              </button>
+              <Link href="/wishlist" aria-label="Wishlist" className={ICON_BTN}>
+                <Heart className="h-[18px] w-[18px]" strokeWidth={1.6} />
+                {mounted && wishlistCount > 0 && (
+                  <span className={BADGE}>{wishlistCount}</span>
+                )}
+              </Link>
 
               <motion.button
                 type="button"
@@ -468,7 +495,7 @@ export function NavbarHeader({
                 whileTap={{ scale: 0.92 }}
                 className={ICON_BTN}
               >
-                <ShoppingCart className="h-[18px] w-[18px]" strokeWidth={1.3} />
+                <ShoppingCart className="h-[18px] w-[18px]" strokeWidth={1.6} />
                 {mounted && cartCount > 0 && (
                   <span className={BADGE}>{cartCount}</span>
                 )}
@@ -476,29 +503,49 @@ export function NavbarHeader({
             </div>
           </div>
 
-          {/* Category strip (scrolls sideways, like the reference apps) */}
+          {/* Full-width search + account */}
+          <div className="flex items-center gap-2 px-4 pb-2.5">
+            <div className="min-w-0 flex-1">{searchForm}</div>
+            <button
+              type="button"
+              onClick={handleOpenProfile}
+              aria-label={user ? 'My profile' : 'Login'}
+              className={ICON_BTN}
+            >
+              <User className="h-[18px] w-[18px]" strokeWidth={1.6} />
+            </button>
+          </div>
+
+          {/* Horizontally scrollable nav row */}
           <nav
             aria-label="Categories"
-            className="no-scrollbar flex items-center gap-2 overflow-x-auto border-t border-[#F3ECDD]/10 px-4 py-2.5"
+            className="no-scrollbar flex items-center gap-1 overflow-x-auto border-t border-white/10 px-4"
           >
-            <Link
-              href="/shop"
-              className={`shrink-0 rounded-full ${GOLD_GRAD} px-4 py-1.5 text-[11px] font-bold uppercase tracking-[0.12em] text-[#0B0B0B]`}
-            >
-              Shop
-            </Link>
-            {topNavItems
-              .filter((item) => item.slug !== 'all-products')
-              .map((item) => (
-                <Link
-                  key={item.slug}
-                  href={`/shop?category=${item.slug}`}
-                  className="shrink-0 rounded-full border border-[#F3ECDD]/20 px-4 py-1.5 text-[11px] font-medium uppercase tracking-[0.12em] transition-colors hover:border-[#C9A24B] hover:text-[#C9A24B]"
-                  style={{ color: IVORY }}
-                >
-                  {item.label}
-                </Link>
-              ))}
+            {[
+              { label: 'Home', href: '/', active: isActiveHome },
+              { label: 'Shop', href: '/shop', active: isActiveShop },
+              ...topNavItems
+                .filter((item) => item.slug !== 'all-products')
+                .map((item) => ({
+                  label: item.label,
+                  href: `/shop?category=${item.slug}`,
+                  active: onShop && activeCategory === item.slug,
+                })),
+            ].map((link) => (
+              <Link
+                key={link.href}
+                href={link.href}
+                aria-current={link.active ? 'page' : undefined}
+                className="chrome-focus relative flex h-11 shrink-0 items-center whitespace-nowrap px-3 text-[11px] font-semibold uppercase tracking-[0.14em] transition-colors hover:text-white"
+                style={navLabelStyle(link.active)}
+              >
+                {link.label}
+                <span
+                  className="absolute bottom-0 left-3 right-3 h-[2px] bg-[#c9a24a] transition-transform duration-300"
+                  style={underlineStyle(link.active)}
+                />
+              </Link>
+            ))}
           </nav>
         </div>
       </header>
@@ -524,7 +571,7 @@ export function NavbarHeader({
               animate={{ x: 0 }}
               exit={{ x: '-100%' }}
               transition={{ duration: 0.36, ease: [0.22, 1, 0.36, 1] }}
-              className="fixed left-0 top-0 z-[9910] flex h-[100dvh] w-[92vw] max-w-[560px] flex-col overflow-hidden border-r shadow-[18px_0_60px_rgba(0,0,0,0.6)] lg:w-[40vw] lg:min-w-[520px] lg:max-w-[580px]"
+              className="chrome-scope fixed left-0 top-0 z-[9910] flex h-[100dvh] w-[92vw] max-w-[560px] flex-col overflow-hidden border-r shadow-[18px_0_60px_rgba(0,0,0,0.6)] lg:w-[40vw] lg:min-w-[520px] lg:max-w-[580px]"
               style={{
                 backgroundColor: G900,
                 color: IVORY,
@@ -542,12 +589,7 @@ export function NavbarHeader({
                   onClick={closeNavigation}
                   className="group flex flex-col"
                 >
-                  <span
-                    className="text-[28px] font-medium uppercase leading-none tracking-[0.14em] lg:text-[32px]"
-                    style={LOGO_STYLE}
-                  >
-                    Kovenik
-                  </span>
+                  <KovenikLogo layout="horizontal" className="h-[46px] w-auto" />
                   <span
                     className="mt-1.5 text-[9px] uppercase tracking-[0.32em]"
                     style={{ color: GOLD }}
@@ -563,7 +605,7 @@ export function NavbarHeader({
                       closeNavigation();
                       handleOpenProfile();
                     }}
-                    className="hidden h-10 items-center justify-center rounded-full border border-[#F3ECDD]/25 px-5 text-[11px] font-medium uppercase tracking-[0.14em] transition-colors hover:border-[#C9A24B] hover:text-[#C9A24B] sm:flex"
+                    className="hidden h-10 items-center justify-center rounded-full border border-white/25 px-5 text-[11px] font-medium uppercase tracking-[0.14em] transition-colors hover:border-white/70 hover:text-white sm:flex"
                     style={{ color: IVORY }}
                   >
                     {user ? 'My Account' : 'Login / Register'}
@@ -598,7 +640,7 @@ export function NavbarHeader({
                           type="button"
                           onClick={() => toggleMobileCategory(item.slug)}
                           className="relative flex h-[58px] shrink-0 items-center justify-center px-5 text-[12px] font-medium uppercase tracking-[0.12em] transition-colors duration-200 lg:px-7"
-                          style={{ color: active ? GOLD : IVORY }}
+                          style={{ color: active ? '#ffffff' : MIST }}
                         >
                           {item.label}
                           <span
@@ -647,7 +689,7 @@ export function NavbarHeader({
                         <Link
                           href={`/shop?category=${selectedMenu?.slug ?? ''}`}
                           onClick={closeNavigation}
-                          className="flex shrink-0 items-center gap-1.5 text-[11px] font-medium uppercase tracking-[0.14em] transition-colors hover:text-[#C9A24B]"
+                          className="flex shrink-0 items-center gap-1.5 text-[11px] font-medium uppercase tracking-[0.14em] transition-colors hover:text-white"
                           style={{ color: IVORY }}
                         >
                           View
@@ -809,13 +851,13 @@ export function NavbarHeader({
                         style={{ borderColor: LINE }}
                       >
                         <span
-                          className="flex-1 text-[13px] font-medium uppercase tracking-[0.1em] transition-colors group-hover:text-[#C9A24B]"
+                          className="flex-1 text-[13px] font-medium uppercase tracking-[0.1em] transition-colors group-hover:text-white"
                           style={{ color: IVORY }}
                         >
                           {item.label}
                         </span>
                         <ChevronRight
-                          className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1 group-hover:text-[#C9A24B]"
+                          className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1 group-hover:text-white"
                           strokeWidth={1.2}
                           style={{ color: MIST }}
                         />
@@ -832,7 +874,7 @@ export function NavbarHeader({
                       closeNavigation();
                       handleOpenProfile();
                     }}
-                    className="group flex min-h-[56px] w-full items-center gap-3 border-b text-left transition-colors hover:text-[#C9A24B]"
+                    className="group flex min-h-[56px] w-full items-center gap-3 border-b text-left transition-colors hover:text-white"
                     style={{ borderColor: LINE, color: IVORY }}
                   >
                     <User className="h-[18px] w-[18px]" strokeWidth={1.25} />
@@ -844,7 +886,7 @@ export function NavbarHeader({
                   <Link
                     href="/wishlist"
                     onClick={closeNavigation}
-                    className="group flex min-h-[56px] items-center gap-3 border-b transition-colors hover:text-[#C9A24B]"
+                    className="group flex min-h-[56px] items-center gap-3 border-b transition-colors hover:text-white"
                     style={{ borderColor: LINE, color: IVORY }}
                   >
                     <Heart className="h-[18px] w-[18px]" strokeWidth={1.25} />
@@ -867,7 +909,7 @@ export function NavbarHeader({
                       closeNavigation();
                       openCart();
                     }}
-                    className="group flex min-h-[56px] w-full items-center gap-3 text-left transition-colors hover:text-[#C9A24B]"
+                    className="group flex min-h-[56px] w-full items-center gap-3 text-left transition-colors hover:text-white"
                     style={{ color: IVORY }}
                   >
                     <ShoppingCart className="h-[18px] w-[18px]" strokeWidth={1.25} />
@@ -906,75 +948,6 @@ export function NavbarHeader({
               </div>
             </motion.aside>
           </>
-        )}
-      </AnimatePresence>
-
-      {/* ====================================================================
-          SEARCH OVERLAY
-      ==================================================================== */}
-      <AnimatePresence>
-        {searchOpen && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[500] flex items-start justify-center px-5 pt-[15vh]"
-            style={{ backgroundColor: 'rgba(11,11,11,0.97)', fontFamily: SANS }}
-          >
-            <motion.div
-              initial={{ y: -24, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              exit={{ y: -24, opacity: 0 }}
-              className="w-full max-w-[1000px]"
-            >
-              <div className="mb-8 flex items-center justify-between">
-                <span
-                  className="text-[12px] font-medium uppercase tracking-[0.26em]"
-                  style={{ color: GOLD }}
-                >
-                  Search Kovenik
-                </span>
-                <button
-                  type="button"
-                  onClick={() => setSearchOpen(false)}
-                  aria-label="Close search"
-                  className={ICON_BTN}
-                >
-                  <X className="h-5 w-5" strokeWidth={1.3} />
-                </button>
-              </div>
-
-              <form
-                onSubmit={(e) => {
-                  handleSearchSubmit(e);
-                  setSearchOpen(false);
-                }}
-                className="border-b pb-5"
-                style={{ borderColor: GOLD }}
-              >
-                <div className="flex items-center gap-5">
-                  <Search
-                    className="h-7 w-7 shrink-0"
-                    strokeWidth={1.1}
-                    style={{ color: GOLD }}
-                  />
-                  <input
-                    autoFocus
-                    type="text"
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    placeholder="Search Kovenik"
-                    className="w-full bg-transparent text-[30px] font-light outline-none placeholder:text-[#F3ECDD]/30 sm:text-[44px]"
-                    style={{ color: IVORY, fontFamily: SERIF }}
-                  />
-                </div>
-              </form>
-
-              <p className="mt-5 text-[12px]" style={{ color: MIST }}>
-                Search products, collections and essentials
-              </p>
-            </motion.div>
-          </motion.div>
         )}
       </AnimatePresence>
     </>

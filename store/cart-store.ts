@@ -1,14 +1,21 @@
 import { create } from 'zustand';
 
+import { toast } from 'sonner';
+
 import type { CartItem, ProductColor, ProductSize } from '@/types';
 import { apiUrl } from '@/lib/api-url';
+import { couponRuleFromResponse } from '@/lib/pricing';
 
 interface CartState {
   items: CartItem[];
   isOpen: boolean;
   couponCode: string | null;
 
-  addItem: (item: Omit<CartItem, 'quantity'>, quantity?: number) => void;
+  /** Resolves true when the item was added; false when stock/auth rules rejected it. */
+  addItem: (
+    item: Omit<CartItem, 'quantity'>,
+    quantity?: number
+  ) => Promise<boolean>;
   removeItem: (productId: string, size: ProductSize, color: ProductColor) => void;
   updateQuantity: (
     productId: string,
@@ -25,9 +32,52 @@ interface CartState {
   removeCoupon: () => void;
   loadUserCart: () => Promise<void>;
   loadGuestCart: () => void;
+  /** Logout / no-token state: guest items only, never a coupon. */
+  switchToGuest: () => void;
 }
 
 const GUEST_CART_KEY = 'ardenby-cart-guest';
+
+// Shared with CartDrawer and checkout: the applied coupon of the signed-in user.
+export const COUPON_STORAGE_KEY = 'kovenik_applied_coupon';
+export const COUPON_CHANGE_EVENT = 'kovenik:coupon-change';
+
+const STOCK_ERROR_MESSAGE = 'Insufficient variant inventory.';
+
+class CartApiError extends Error {
+  status: number;
+
+  constructor(message: string, status: number) {
+    super(message);
+    this.status = status;
+  }
+}
+
+export function clearStoredCoupon(): void {
+  if (typeof window === 'undefined') return;
+
+  try {
+    localStorage.removeItem(COUPON_STORAGE_KEY);
+    window.dispatchEvent(new Event(COUPON_CHANGE_EVENT));
+  } catch {
+    // Ignore localStorage failures.
+  }
+}
+
+function writeStoredCouponRule(value: {
+  code: string;
+  discount: number;
+  rule?: unknown;
+}): void {
+  if (typeof window === 'undefined') return;
+
+  try {
+    localStorage.setItem(COUPON_STORAGE_KEY, JSON.stringify(value));
+    window.dispatchEvent(new Event(COUPON_CHANGE_EVENT));
+  } catch {
+    // Ignore localStorage failures.
+  }
+}
 
 function getToken(): string | null {
   if (typeof window === 'undefined') return null;
@@ -55,6 +105,64 @@ export async function waitForPendingCartUpdates() {
 
 const quantityUpdateVersions = new Map<string, number>();
 const confirmedQuantities = new Map<string, number>();
+
+// Per-account caches must never survive a logout or an account switch.
+let activeCartToken: string | null = null;
+
+function resetAccountCaches(): void {
+  serverCartItemIds.clear();
+  quantityUpdateQueues.clear();
+  quantityUpdateVersions.clear();
+  confirmedQuantities.clear();
+}
+
+// Guest stock checks are serialized so rapid clicks cannot oversell a variant.
+let guestStockQueue: Promise<unknown> = Promise.resolve();
+
+function runGuestStockTask<T>(task: () => Promise<T>): Promise<T> {
+  const next = guestStockQueue.then(task, task);
+  guestStockQueue = next.catch(() => undefined);
+  return next;
+}
+
+// Same variant-level rule the server applies to signed-in carts, exposed to guests.
+async function assertGuestVariantStock(
+  productId: string,
+  variantId: string | undefined,
+  totalQuantity: number
+): Promise<void> {
+  if (!variantId) return;
+
+  let response: Response;
+  try {
+    response = await fetch(apiUrl('/api/cart/stock-check'), {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        items: [
+          {
+            product_id: productId,
+            variant_id: variantId,
+            quantity: totalQuantity,
+          },
+        ],
+      }),
+    });
+  } catch {
+    // Offline: the order API re-validates stock, so don't block browsing.
+    return;
+  }
+
+  const data = await response.json().catch(() => ({}));
+
+  if (!response.ok) {
+    throw new Error(data?.message || 'Unable to verify stock.');
+  }
+
+  if (data?.ok === false) {
+    throw new Error(STOCK_ERROR_MESSAGE);
+  }
+}
 
 function readGuestCart(): CartItem[] {
   if (typeof window === 'undefined') return [];
@@ -109,12 +217,71 @@ async function cartApiRequest<T = any>(
   const data = await response.json().catch(() => ({}));
 
   if (!response.ok) {
-    throw new Error(
-      data?.message || data?.error || 'Unable to update cart.'
+    throw new CartApiError(
+      data?.message || data?.error || 'Unable to update cart.',
+      response.status
     );
   }
 
   return data as T;
+}
+
+// Persists (or clears, with null) the signed-in user's coupon on their server
+// cart so the order is priced from the same coupon the UI shows.
+export async function syncCouponToServer(code: string | null): Promise<void> {
+  await cartApiRequest('/api/cart/coupon', {
+    method: 'PATCH',
+    body: JSON.stringify({ coupon_code: code }),
+  });
+}
+
+// Rebuilds the local coupon state from the account's server cart. The server
+// is the source of truth, so a coupon can never leak between accounts.
+async function restoreCouponFromServer(
+  rawCode: unknown,
+  items: CartItem[],
+  token: string
+): Promise<void> {
+  const code = typeof rawCode === 'string' ? rawCode.trim().toUpperCase() : '';
+
+  if (!code || items.length === 0) {
+    clearStoredCoupon();
+    useCartStore.setState({ couponCode: null });
+    return;
+  }
+
+  try {
+    const data = await cartApiRequest('/api/coupons/validate', {
+      method: 'POST',
+      body: JSON.stringify({ code, subtotal: getCartSubtotal(items) }),
+    });
+
+    if (getToken() !== token) return;
+
+    const rule = couponRuleFromResponse(data);
+    const legacyDiscount = Number(data?.discount);
+
+    writeStoredCouponRule({
+      code,
+      discount: rule || !Number.isFinite(legacyDiscount) ? 0 : legacyDiscount,
+      rule: rule ?? undefined,
+    });
+    useCartStore.setState({ couponCode: code });
+  } catch (error) {
+    if (getToken() !== token) return;
+
+    if (error instanceof CartApiError && error.status < 500 && error.status !== 401) {
+      // The coupon no longer applies: drop it everywhere.
+      clearStoredCoupon();
+      useCartStore.setState({ couponCode: null });
+      void syncCouponToServer(null).catch(() => undefined);
+      return;
+    }
+
+    // Network/server trouble: keep the code, the drawer re-validates later.
+    writeStoredCouponRule({ code, discount: 0 });
+    useCartStore.setState({ couponCode: code });
+  }
 }
 
 function extractCartItems(response: any): any[] {
@@ -200,12 +367,87 @@ if (serverItemId) {
   };
 }
 
-async function fetchServerCart(): Promise<CartItem[]> {
+async function fetchServerCart(): Promise<{
+  items: CartItem[];
+  couponCode: unknown;
+}> {
   const response = await cartApiRequest('/api/cart', { method: 'GET' });
 
-  return extractCartItems(response)
-    .map(normalizeServerCartItem)
-    .filter((item): item is CartItem => item !== null);
+  return {
+    items: extractCartItems(response)
+      .map(normalizeServerCartItem)
+      .filter((item): item is CartItem => item !== null),
+    couponCode:
+      response?.cart?.coupon_code ??
+      response?.data?.cart?.coupon_code ??
+      response?.coupon_code ??
+      response?.couponCode ??
+      null,
+  };
+}
+
+let guestMergeInFlight: Promise<void> | null = null;
+
+// Moves what a visitor put in their guest cart into the account's server cart at
+// sign-in. The server enforces variant stock; the guest copy is cleared first so
+// the same lines can never be merged twice (second tab, repeated effect).
+async function mergeGuestCartIntoAccount(token: string): Promise<void> {
+  if (guestMergeInFlight) return guestMergeInFlight;
+
+  const guestItems = readGuestCart().filter((item) => item?.variantId);
+  if (guestItems.length === 0) return;
+
+  guestMergeInFlight = (async () => {
+    clearGuestCartStorage();
+
+    const retry: CartItem[] = [];
+    let rejected = 0;
+
+    for (const item of guestItems) {
+      if (getToken() !== token) {
+        retry.push(item);
+        continue;
+      }
+
+      try {
+        await cartApiRequest('/api/cart/items', {
+          method: 'POST',
+          body: JSON.stringify({
+            product_id: item.productId,
+            variant_id: item.variantId,
+            quantity: item.quantity,
+          }),
+        });
+      } catch (error) {
+        const notAllowed =
+          error instanceof CartApiError &&
+          (error.status === 401 || error.status === 403);
+
+        if (error instanceof CartApiError && error.status < 500 && !notAllowed) {
+          // Out of stock / unavailable: not retryable.
+          rejected += 1;
+        } else {
+          // Network/server trouble, or an account that has no cart (e.g. admin):
+          // keep the bag for a later sign-in.
+          retry.push(item);
+        }
+      }
+    }
+
+    if (retry.length > 0) writeGuestCart(retry);
+
+    if (rejected > 0) {
+      toast.message(
+        rejected === 1
+          ? 'One item from your guest bag could not be added because of limited stock.'
+          : `${rejected} items from your guest bag could not be added because of limited stock.`
+      );
+    }
+  })().finally(() => {
+    guestMergeInFlight = null;
+  });
+
+  return guestMergeInFlight;
 }
 
 export const useCartStore = create<CartState>()((set, get) => ({
@@ -213,53 +455,68 @@ export const useCartStore = create<CartState>()((set, get) => ({
   isOpen: false,
   couponCode: null,
 
-  addItem: (item, quantity = 1) => {
+  addItem: async (item, quantity = 1) => {
     const token = getToken();
 
     if (!token) {
-      set((state) => {
-        const existing = state.items.find(
-          (i) =>
-            i.productId === item.productId &&
-            i.size === item.size &&
-            i.color === item.color
-        );
+      return runGuestStockTask(async () => {
+        const isSameLine = (i: CartItem) =>
+          i.productId === item.productId &&
+          i.size === item.size &&
+          i.color === item.color;
 
-        const nextItems = existing
-          ? state.items.map((i) =>
-              i.productId === item.productId &&
-              i.size === item.size &&
-              i.color === item.color
-                ? { ...i, quantity: i.quantity + quantity }
-                : i
+        const existing = get().items.find(isSameLine);
+
+        try {
+          await assertGuestVariantStock(
+            item.productId,
+            item.variantId,
+            (existing?.quantity ?? 0) + quantity
+          );
+        } catch (error) {
+          toast.error(
+            error instanceof Error ? error.message : 'Unable to add item.'
+          );
+          return false;
+        }
+
+        // Guests never hold a coupon, whatever was left in storage.
+        const nextItems = get().items.find(isSameLine)
+          ? get().items.map((i) =>
+              isSameLine(i) ? { ...i, quantity: i.quantity + quantity } : i
             )
-          : [...state.items, { ...item, quantity }];
+          : [...get().items, { ...item, quantity }];
 
         writeGuestCart(nextItems);
-        return { items: nextItems, isOpen: true };
+        set({ items: nextItems, couponCode: null });
+        return true;
       });
-      return;
     }
 
-    if (!item.variantId) return;
+    if (!item.variantId) return false;
 
-    void (async () => {
-      try {
-        await cartApiRequest('/api/cart/items', {
-          method: 'POST',
-          body: JSON.stringify({
-            product_id: item.productId,
-            variant_id: item.variantId,
-            quantity,
-          }),
-        });
+    try {
+      await cartApiRequest('/api/cart/items', {
+        method: 'POST',
+        body: JSON.stringify({
+          product_id: item.productId,
+          variant_id: item.variantId,
+          quantity,
+        }),
+      });
 
-        const serverItems = await fetchServerCart();
-        set({ items: serverItems, isOpen: true });
-      } catch (error) {
-        console.error('Failed to add cart item:', error);
-      }
-    })();
+      const { items: serverItems } = await fetchServerCart();
+      if (getToken() !== token) return false;
+
+      set({ items: serverItems });
+      return true;
+    } catch (error) {
+      console.error('Failed to add cart item:', error);
+      toast.error(
+        error instanceof Error ? error.message : 'Unable to add item.'
+      );
+      return false;
+    }
   },
 
   removeItem: (productId, size, color) => {
@@ -335,15 +592,27 @@ export const useCartStore = create<CartState>()((set, get) => ({
     if (!previousItem) return;
 
     if (!token) {
-      const nextItems = get().items.map((item) =>
-        item.productId === productId &&
-        item.size === size &&
-        item.color === color
-          ? { ...item, quantity: nextQuantity }
-          : item
-      );
-      set({ items: nextItems });
-      writeGuestCart(nextItems);
+      await runGuestStockTask(async () => {
+        // Only increases can exceed stock; the server rule is the same one
+        // signed-in carts hit on PUT /api/cart/items/:id.
+        if (nextQuantity > previousItem.quantity) {
+          await assertGuestVariantStock(
+            productId,
+            previousItem.variantId,
+            nextQuantity
+          );
+        }
+
+        const nextItems = get().items.map((item) =>
+          item.productId === productId &&
+          item.size === size &&
+          item.color === color
+            ? { ...item, quantity: nextQuantity }
+            : item
+        );
+        set({ items: nextItems });
+        writeGuestCart(nextItems);
+      });
       return;
     }
 
@@ -449,11 +718,7 @@ export const useCartStore = create<CartState>()((set, get) => ({
     set({ items: [], couponCode: null });
 
     // A cleared cart (e.g. after placing an order) must not leak its coupon into the next one.
-    try {
-      localStorage.removeItem('kovenik_applied_coupon');
-    } catch {
-      // ignore storage failures
-    }
+    clearStoredCoupon();
 
     if (!token) {
       clearGuestCartStorage();
@@ -473,15 +738,33 @@ export const useCartStore = create<CartState>()((set, get) => ({
   closeCart: () => set({ isOpen: false }),
   toggleCart: () => set((state) => ({ isOpen: !state.isOpen })),
 
-  applyCoupon: (code) => set({ couponCode: code }),
+  // A guest cart can never hold a coupon.
+  applyCoupon: (code) => {
+    if (!getToken()) return;
+    set({ couponCode: code });
+  },
   removeCoupon: () => set({ couponCode: null }),
 
   loadUserCart: async () => {
-    if (!getToken()) return;
+    const token = getToken();
+    if (!token) return;
+
+    // New account (or first load): drop every cache that belongs to the old one.
+    if (activeCartToken !== token) {
+      resetAccountCaches();
+      activeCartToken = token;
+    }
 
     try {
-      const serverItems = await fetchServerCart();
+      await mergeGuestCartIntoAccount(token);
+
+      const { items: serverItems, couponCode } = await fetchServerCart();
+
+      // Logged out / switched account while the request was in flight.
+      if (getToken() !== token) return;
+
       set({ items: serverItems });
+      await restoreCouponFromServer(couponCode, serverItems, token);
     } catch (error) {
       console.error('Failed to load user cart:', error);
     }
@@ -489,11 +772,15 @@ export const useCartStore = create<CartState>()((set, get) => ({
 
   loadGuestCart: () => {
     if (getToken()) return;
-    set({
-      items: readGuestCart(),
-      isOpen: false,
-      couponCode: null,
-    });
+    get().switchToGuest();
+    set({ isOpen: false });
+  },
+
+  switchToGuest: () => {
+    activeCartToken = null;
+    resetAccountCaches();
+    clearStoredCoupon();
+    set({ items: readGuestCart(), couponCode: null });
   },
 }));
 

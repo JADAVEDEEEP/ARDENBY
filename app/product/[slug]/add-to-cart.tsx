@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { Check, ShoppingBag } from 'lucide-react';
 import type { Product, ProductColor, ProductSize } from '@/types';
 import { useCartStore } from '@/store/cart-store';
@@ -11,8 +12,11 @@ export function AddToCart({ product }: { product: Product }) {
   const [color, setColor] = useState<ProductColor>(product.colors[0]);
 
   const addItem = useCartStore((state) => state.addItem);
+  const router = useRouter();
+  const [status, setStatus] = useState<'idle' | 'adding' | 'added'>('idle');
 
- const handleAddToCart = () => {
+ const handleAddToCart = async () => {
+  if (status !== 'idle') return;
   const selectedVariant =
     product.variants?.find(
       (variant) =>
@@ -31,7 +35,8 @@ export function AddToCart({ product }: { product: Product }) {
     return;
   }
 
-  addItem({
+  setStatus('adding');
+  const added = await addItem({
     productId: product.id,
     variantId: selectedVariant.id,
     slug: product.slug,
@@ -43,7 +48,13 @@ export function AddToCart({ product }: { product: Product }) {
     mrp: product.mrp,
   });
 
-  toast.success('Added to cart', { description: product.name });
+  if (!added) {
+    setStatus('idle');
+    return;
+  }
+
+  setStatus('added');
+  router.push('/cart');
 };
 
   return (
@@ -158,6 +169,8 @@ export function AddToCart({ product }: { product: Product }) {
       <button
         type="button"
         onClick={handleAddToCart}
+        disabled={status !== 'idle'}
+        aria-busy={status === 'adding'}
         className="
           group relative flex w-full items-center justify-center gap-3
           overflow-hidden rounded-none
@@ -181,7 +194,9 @@ export function AddToCart({ product }: { product: Product }) {
           strokeWidth={1.7}
         />
 
-        <span className="relative">Add to Cart</span>
+        <span className="relative">
+          {status === 'adding' ? 'Adding…' : status === 'added' ? 'Added' : 'Add to Cart'}
+        </span>
       </button>
 
       {/* SMALL TRUST MESSAGE */}

@@ -80,6 +80,10 @@ export interface Product {
   variants: ProductVariant[];
 
   images: string[];
+  /** Optional dedicated back view (used by the 360 quick view). */
+  backImage?: string;
+  /** Optional 24-36 frame turntable sequence for the 360 quick view. */
+  frames360?: string[];
   fabricImage: string;
 
   price: number;

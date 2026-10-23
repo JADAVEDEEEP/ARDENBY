@@ -1,18 +1,19 @@
 "use client";
 
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import {
   Instagram,
   Twitter,
   Facebook,
   Youtube,
   ArrowUpRight,
-  ChevronDown,
   ArrowRight,
   Mail,
 } from "lucide-react";
-import { useState } from "react";
-import { toast } from "sonner";
+
+import { KovenikLogo } from "./kovenik-logo";
+import { useNewsletterSubscribe } from "@/hooks/use-newsletter-subscribe";
 
 /* ================================================================
     FOOTER CONTENT
@@ -50,55 +51,24 @@ const socialLinks = [
   { label: "Youtube", Icon: Youtube, href: "#" },
 ];
 
-/* KOVENIK — black / cream / metallic gold */
-const SERIF =
-  "'Cormorant Garamond', 'Bodoni MT', Didot, 'Times New Roman', serif";
-const SANS = "Inter, 'Helvetica Neue', Arial, system-ui, sans-serif";
-
-/* Metallic gold sheen shared with the navbar and homepage. */
-const GOLD_GRAD =
-  "bg-[linear-gradient(135deg,#A67C28_0%,#F0DC9A_40%,#C9A24B_65%,#F7E9B5_100%)]";
+const SERIF = "var(--font-bodoni), Didot, 'Bodoni MT', serif";
+const SANS = "var(--font-archivo), Inter, Arial, system-ui, sans-serif";
 
 /* ================================================================
     FOOTER
 ================================================================ */
 
 export function Footer() {
-  const [email, setEmail] = useState("");
-  const [openSections, setOpenSections] = useState<
-    Record<string, boolean>
-  >({});
-  const [subscribed, setSubscribed] = useState(false);
+  const pathname = usePathname() ?? "";
+  const isHome = pathname === "/";
 
-  /* NEWSLETTER */
-  const handleSubscribe = (e: React.FormEvent) => {
-    e.preventDefault();
-
-    if (!email.trim()) {
-      toast.error("Please enter your email address.");
-      return;
-    }
-
-    setSubscribed(true);
-
-    toast.success(
-      "Welcome to the Kovenik Fam! Check your inbox for 10% off."
-    );
-
-    setEmail("");
-  };
-
-  /* ACCORDION */
-  const toggleAccordion = (title: string) => {
-    setOpenSections((prev) => ({
-      ...prev,
-      [title]: !prev[title],
-    }));
-  };
+  // Same submit + toast logic as the homepage Newsletter section.
+  const { email, setEmail, subscribed, handleSubscribe } =
+    useNewsletterSubscribe();
 
   return (
     <footer
-      className="relative isolate w-full overflow-x-hidden overflow-y-visible bg-[#0B0B0B] text-[#B9B3A5]"
+      className="chrome-scope relative isolate w-full overflow-x-hidden overflow-y-visible bg-[#050506] text-[#a2a7af]"
       style={{ fontFamily: SANS }}
     >
       {/* Toast styling (e.g. "Added to Wishlist"). Visual only; timing and
@@ -110,68 +80,69 @@ export function Footer() {
         }
         [data-sonner-toast] {
           box-sizing: border-box !important;
-          background: #1C1C1C !important;
-          color: #F3ECDD !important;
-          border: 1px solid rgba(201,162,75, 0.35) !important;
+          background: #16181b !important;
+          color: #eef0f2 !important;
+          border: 1px solid rgba(255, 255, 255, 0.22) !important;
           border-radius: 14px !important;
           padding: 14px 16px !important;
-          font-family: Inter, 'Helvetica Neue', Arial, system-ui, sans-serif !important;
+          font-family: var(--font-archivo), Inter, Arial, system-ui, sans-serif !important;
           font-size: 13px !important;
           box-shadow: 0 12px 32px rgba(0, 0, 0, 0.45) !important;
           max-width: calc(100vw - 32px) !important;
         }
         [data-sonner-toast] [data-title] {
-          color: #F3ECDD !important;
+          color: #eef0f2 !important;
           font-weight: 500 !important;
         }
         [data-sonner-toast] [data-description] {
-          color: #B9B3A5 !important;
+          color: #a2a7af !important;
         }
         [data-sonner-toast] [data-icon] {
-          color: #C9A24B !important;
+          color: #dfe3e8 !important;
         }
         [data-sonner-toast] [data-button],
         [data-sonner-toast] [data-close-button] {
-          background: #0B0B0B !important;
-          color: #F3ECDD !important;
-          border: 1px solid rgba(201,162,75, 0.35) !important;
+          background: #050506 !important;
+          color: #eef0f2 !important;
+          border: 1px solid rgba(255, 255, 255, 0.22) !important;
         }
         /* Theme variables sonner reads for its default / success / info toasts. */
         [data-sonner-toaster],
         [data-sonner-toaster][data-sonner-theme] {
-          --normal-bg: #1C1C1C;
-          --normal-text: #F3ECDD;
-          --normal-border: rgba(201,162,75, 0.35);
-          --success-bg: #1C1C1C;
-          --success-text: #F3ECDD;
-          --success-border: rgba(201,162,75, 0.35);
-          --info-bg: #1C1C1C;
-          --info-text: #F3ECDD;
-          --info-border: rgba(201,162,75, 0.35);
+          --normal-bg: #16181b;
+          --normal-text: #eef0f2;
+          --normal-border: rgba(255, 255, 255, 0.22);
+          --success-bg: #16181b;
+          --success-text: #eef0f2;
+          --success-border: rgba(255, 255, 255, 0.22);
+          --info-bg: #16181b;
+          --info-text: #eef0f2;
+          --info-border: rgba(255, 255, 255, 0.22);
         }
         /* Same look with higher specificity, so a Toaster theme can't win. */
         [data-sonner-toaster] [data-sonner-toast][data-styled="true"] {
-          background: #1C1C1C !important;
-          color: #F3ECDD !important;
-          border: 1px solid rgba(201,162,75, 0.35) !important;
+          background: #16181b !important;
+          color: #eef0f2 !important;
+          border: 1px solid rgba(255, 255, 255, 0.22) !important;
           border-radius: 14px !important;
           box-shadow: 0 12px 32px rgba(0, 0, 0, 0.45) !important;
         }
-        /* Keep top toasts below the sticky header (~107px mobile, ~122px desktop)
-           so they never cover the logo or navigation. */
+        /* Keep top toasts below the sticky header (~165px mobile with the
+           search + nav rows, ~125px desktop) so they never cover the logo
+           or navigation. */
         [data-sonner-toaster][data-y-position="top"] {
-          top: 112px !important;
+          top: 172px !important;
         }
         @media (min-width: 1024px) {
           [data-sonner-toaster][data-y-position="top"] {
-            top: 130px !important;
+            top: 132px !important;
           }
         }
         /* Fallback if the wishlist toast comes from react-toastify. */
         .Toastify__toast {
-          background: #1C1C1C !important;
-          color: #F3ECDD !important;
-          border: 1px solid rgba(201,162,75, 0.35) !important;
+          background: #16181b !important;
+          color: #eef0f2 !important;
+          border: 1px solid rgba(255, 255, 255, 0.22) !important;
           border-radius: 14px !important;
           box-shadow: 0 12px 32px rgba(0, 0, 0, 0.45) !important;
           max-width: calc(100vw - 32px);
@@ -184,43 +155,42 @@ export function Footer() {
         }
       `}</style>
 
+      <div className="h-px w-full bg-gradient-to-r from-transparent via-white/40 to-transparent" />
+
       {/* ============================================================
-          NEWSLETTER
+          NEWSLETTER (hidden on "/", where the homepage has its own)
       ============================================================ */}
-      <div className={`h-px w-full ${GOLD_GRAD} opacity-70`} />
-      <section className="bg-[#141414]">
-        <div className="mx-auto w-full max-w-[1440px] px-4 py-10 sm:px-8 sm:py-12 lg:px-12 lg:py-14">
-          <div className="grid items-end gap-6 lg:grid-cols-[1.1fr_0.9fr] lg:gap-14">
-            <div>
-              <p className="mb-4 text-[11px] font-medium uppercase tracking-[0.22em] text-[#C9A24B]">
-                Kovenik newsletter
-              </p>
+      {!isHome && (
+        <section className="border-b border-white/10 bg-[#0b0c0e]">
+          <div className="mx-auto w-full max-w-[1440px] px-4 py-10 sm:px-8 sm:py-12 lg:px-12 lg:py-14">
+            <div className="grid items-end gap-6 lg:grid-cols-[1.1fr_0.9fr] lg:gap-14">
+              <div>
+                <p className="mb-4 text-[11px] font-semibold uppercase tracking-[0.26em] text-[#c9a24a]">
+                  Kovenik newsletter
+                </p>
 
-              <h2
-                className="max-w-[760px] text-[clamp(30px,4.2vw,60px)] font-medium uppercase leading-[0.96] tracking-[-0.01em] text-[#F3ECDD]"
-                style={{ fontFamily: SERIF }}
-              >
-                Stay in the{" "}
-                <span className={`bg-clip-text text-transparent ${GOLD_GRAD}`}>
-                  inner circle.
-                </span>
-              </h2>
+                <h2
+                  className="chrome-text max-w-[760px] text-[clamp(30px,4.2vw,56px)] font-medium uppercase leading-[0.98]"
+                  style={{ fontFamily: SERIF }}
+                >
+                  Stay in the inner circle.
+                </h2>
 
-              <p className="mt-5 max-w-[540px] text-[14px] leading-[1.7] text-[#B9B3A5] sm:text-[15px]">
-                Get first access to new drops, exclusive collections,
-                private releases and 10% off your first order.
-              </p>
-            </div>
+                <p className="mt-5 max-w-[540px] text-[14px] leading-[1.7] text-[#c4c8cf] sm:text-[15px]">
+                  Get first access to new drops, exclusive collections,
+                  private releases and 10% off your first order.
+                </p>
+              </div>
 
-            <div className="w-full">
               <form
                 onSubmit={handleSubscribe}
                 className="group relative w-full min-w-0"
               >
-                <div className="flex min-h-[60px] w-full items-center overflow-hidden rounded-full border border-[#F3ECDD]/25 bg-[#0B0B0B] transition-colors duration-300 focus-within:border-[#C9A24B] sm:min-h-[68px]">
-                  <div className="flex shrink-0 items-center pl-5 text-[#C9A24B] sm:pl-6">
-                    <Mail className="h-5 w-5" strokeWidth={1.4} />
-                  </div>
+                <div className="flex min-h-[60px] w-full items-center overflow-hidden rounded-full border border-white/20 bg-black/40 transition-colors duration-300 focus-within:border-white/60 sm:min-h-[68px]">
+                  <Mail
+                    className="ml-5 h-5 w-5 shrink-0 text-[#a2a7af] sm:ml-6"
+                    strokeWidth={1.4}
+                  />
 
                   <input
                     type="email"
@@ -228,13 +198,13 @@ export function Footer() {
                     onChange={(e) => setEmail(e.target.value)}
                     placeholder="Enter your email address"
                     aria-label="Email address"
-                    className="min-w-0 flex-1 bg-transparent px-3 text-[14px] text-[#F3ECDD] outline-none placeholder:text-[#B9B3A5]/50 sm:px-4 sm:text-[15px]"
+                    className="min-w-0 flex-1 bg-transparent px-3 text-[14px] text-[#eef0f2] outline-none placeholder:text-[#a2a7af] sm:px-4 sm:text-[15px]"
                   />
 
                   <button
                     type="submit"
                     disabled={subscribed}
-                    className={`mr-1.5 flex h-[48px] shrink-0 items-center gap-2 rounded-full ${GOLD_GRAD} px-5 text-[11px] font-bold uppercase tracking-[0.16em] text-[#0B0B0B] transition duration-300 hover:brightness-110 disabled:opacity-80 sm:mr-2 sm:h-[52px] sm:px-7`}
+                    className="gold-fill gold-sheen mr-1.5 flex h-[48px] shrink-0 items-center gap-2 rounded-full px-5 text-[11px] font-bold uppercase tracking-[0.16em] transition duration-300 hover:brightness-110 disabled:opacity-80 sm:mr-2 sm:h-[52px] sm:px-7"
                   >
                     <span>{subscribed ? "Joined" : "Join"}</span>
                     <ArrowRight
@@ -244,44 +214,41 @@ export function Footer() {
                   </button>
                 </div>
 
-                <p className="mt-3 pl-2 text-[12px] leading-relaxed text-[#B9B3A5]/80">
+                <p className="mt-3 pl-2 text-[12px] leading-relaxed text-[#a2a7af]">
                   By subscribing, you agree to receive KOVENIK updates,
                   product launches and offers.
                 </p>
               </form>
             </div>
           </div>
-        </div>
-      </section>
+        </section>
+      )}
 
       {/* ============================================================
           MAIN FOOTER CONTENT
       ============================================================ */}
       <section className="mx-auto w-full max-w-[1440px] px-4 py-10 sm:px-8 sm:py-12 lg:px-12 lg:py-14">
-        <div className="grid gap-8 md:grid-cols-5 md:gap-12 lg:gap-14">
+        <div className="grid grid-cols-2 gap-x-6 gap-y-10 md:grid-cols-5 md:gap-12 lg:gap-14">
           {/* BRAND */}
-          <div className="md:col-span-2">
-            <Link href="/" className="group inline-block">
-              <span
-                className={`block bg-clip-text text-[36px] font-bold uppercase leading-none tracking-[0.14em] text-transparent transition-opacity duration-300 group-hover:opacity-90 sm:text-[46px] ${GOLD_GRAD}`}
-                style={{ fontFamily: SERIF }}
-              >
-                Kovenik
-              </span>
-              <span className="mt-3 block text-[10px] uppercase tracking-[0.32em] text-[#C9A24B]">
-                Wear Your Essence
-              </span>
+          <div className="col-span-2">
+            <Link
+              href="/"
+              aria-label="Kovenik home"
+              className="chrome-focus group inline-block"
+            >
+              <KovenikLogo layout="stacked" className="h-auto w-[260px] max-w-full sm:w-[290px] lg:w-[330px]" />
+              <span className="sr-only">Wear Your Essence</span>
             </Link>
 
-            <p className="mt-5 max-w-[420px] text-[14px] leading-[1.7] text-[#B9B3A5] sm:text-[15px]">
+            <p className="mt-5 max-w-[420px] text-[14px] leading-[1.7] text-[#a2a7af] sm:text-[15px]">
               Premium men&apos;s clothing crafted for the bold.
               High-density fabrics, relaxed cuts, and minimalist
               luxury aesthetics.
             </p>
 
-            <div className="mt-6 flex items-center gap-3 text-[11px] font-medium uppercase tracking-[0.2em] text-[#C9A24B]">
+            <div className="mt-6 flex items-center gap-3 text-[11px] font-medium uppercase tracking-[0.2em] text-[#c4c8cf]">
               <span>Est. 2026</span>
-              <span className="h-px w-8 bg-[#C9A24B]/50" />
+              <span className="h-px w-8 bg-white/30" />
               <span>India</span>
             </div>
 
@@ -291,7 +258,7 @@ export function Footer() {
                   key={label}
                   href={href}
                   aria-label={label}
-                  className="group flex h-11 w-11 items-center justify-center rounded-full border border-[#F3ECDD]/20 text-[#F3ECDD] transition-colors duration-300 hover:border-[#C9A24B] hover:bg-[#C9A24B] hover:text-[#0B0B0B]"
+                  className="chrome-focus chrome-glass group flex h-11 w-11 items-center justify-center rounded-full text-[#eef0f2] transition-colors duration-300 hover:border-white/60 hover:bg-white hover:text-black"
                 >
                   <Icon className="h-[18px] w-[18px]" strokeWidth={1.5} />
                 </a>
@@ -299,50 +266,39 @@ export function Footer() {
             </div>
           </div>
 
-          {/* LINK COLUMNS */}
-          {Object.entries(footerLinks).map(([title, links]) => (
-            <div
-              key={title}
-              className="border-b border-[#F3ECDD]/10 pb-6 last:border-b-0 md:border-none md:pb-0"
-            >
-              <button
-                type="button"
-                onClick={() => toggleAccordion(title)}
-                aria-expanded={!!openSections[title]}
-                className="flex w-full items-center justify-between text-left md:pointer-events-none"
-              >
-                <span className="text-[12px] font-semibold uppercase tracking-[0.2em] text-[#F3ECDD]">
+          {/* LINK COLUMNS: Categories left, Company + Support stacked right on mobile */}
+          {(() => {
+            const renderNav = ([title, links]: [string, { label: string; href: string }[]]) => (
+              <nav key={title} aria-label={title} className="min-w-0">
+                <h3 className="text-[12px] font-semibold uppercase tracking-[0.2em] text-[#eef0f2]">
                   {title}
-                </span>
+                </h3>
 
-                <ChevronDown
-                  className={`h-4 w-4 text-[#C9A24B] transition-transform duration-300 md:hidden ${
-                    openSections[title] ? "rotate-180" : ""
-                  }`}
-                />
-              </button>
-
-              <ul
-                className={`mt-5 space-y-3.5 overflow-hidden transition-all duration-300 md:max-h-none md:opacity-100 ${
-                  openSections[title]
-                    ? "max-h-80 opacity-100"
-                    : "max-h-0 opacity-0 md:max-h-none"
-                }`}
-              >
-                {links.map((link) => (
-                  <li key={link.label}>
-                    <Link
-                      href={link.href}
-                      className="group inline-flex items-center gap-2 text-[14px] leading-relaxed text-[#B9B3A5] transition-colors duration-200 hover:text-[#F3ECDD]"
-                    >
-                      <span>{link.label}</span>
-                      <ArrowUpRight className="h-3.5 w-3.5 text-[#C9A24B] opacity-0 transition-all duration-200 group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:opacity-100" />
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          ))}
+                <ul className="mt-4 space-y-0.5 md:mt-5 md:space-y-1">
+                  {links.map((link) => (
+                    <li key={link.label}>
+                      <Link
+                        href={link.href}
+                        className="chrome-focus group inline-flex min-h-[36px] items-center gap-2 text-[14px] leading-snug text-[#a2a7af] transition-colors duration-200 hover:text-white md:leading-relaxed"
+                      >
+                        <span>{link.label}</span>
+                        <ArrowUpRight className="h-3.5 w-3.5 text-[#c9a24a] opacity-0 transition-all duration-200 group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:opacity-100" />
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </nav>
+            );
+            const [first, ...rest] = Object.entries(footerLinks);
+            return (
+              <>
+                {renderNav(first)}
+                <div className="flex min-w-0 flex-col gap-8 md:contents">
+                  {rest.map(renderNav)}
+                </div>
+              </>
+            );
+          })()}
         </div>
       </section>
 
@@ -350,51 +306,42 @@ export function Footer() {
           BOTTOM BAR
       ============================================================ */}
       <div className="mx-auto w-full max-w-[1440px] px-4 sm:px-8 lg:px-12">
-        <div className="flex flex-col gap-3 border-t border-[#F3ECDD]/10 py-5 sm:flex-row sm:items-center sm:justify-between sm:py-6">
-          <p className="text-[12px] text-[#B9B3A5]/80">
+        <div className="flex flex-col gap-3 border-t border-white/10 py-5 sm:flex-row sm:items-center sm:justify-between sm:py-6">
+          <p className="text-[12px] text-[#a2a7af]">
             © 2026 KOVENIK. All rights reserved.
           </p>
 
-          <div className="flex flex-wrap gap-x-7 gap-y-3">
-            <Link
-              href="/privacy"
-              className="text-[12px] text-[#B9B3A5]/80 transition-colors hover:text-[#F3ECDD]"
-            >
-              Privacy Policy
-            </Link>
-
-            <Link
-              href="/terms"
-              className="text-[12px] text-[#B9B3A5]/80 transition-colors hover:text-[#F3ECDD]"
-            >
-              Terms of Service
-            </Link>
-
-            <Link
-              href="/admin"
-              className="text-[12px] text-[#B9B3A5]/80 transition-colors hover:text-[#F3ECDD]"
-            >
-              Admin Portal
-            </Link>
+          <div className="flex flex-wrap gap-x-7 gap-y-1">
+            {[
+              { label: "Privacy Policy", href: "/privacy" },
+              { label: "Terms of Service", href: "/terms" },
+              { label: "Admin Portal", href: "/admin" },
+            ].map((link) => (
+              <Link
+                key={link.href}
+                href={link.href}
+                className="chrome-focus inline-flex min-h-[36px] items-center text-[12px] text-[#a2a7af] transition-colors hover:text-white"
+              >
+                {link.label}
+              </Link>
+            ))}
           </div>
         </div>
       </div>
 
       {/* ============================================================
-          FINAL SIGNATURE — outlined wordmark, cropped at the page edge
+          FINAL SIGNATURE — giant outlined wordmark, cropped at the edge
       ============================================================ */}
       <div
         aria-hidden="true"
         className="pointer-events-none h-[13vw] select-none overflow-hidden px-2"
       >
         <p
-          className="whitespace-nowrap text-center uppercase leading-[0.8]"
+          className="chrome-outline whitespace-nowrap text-center font-semibold uppercase leading-[0.8]"
           style={{
             fontFamily: SERIF,
             fontSize: "18vw",
-            color: "transparent",
-            WebkitTextStroke: "1.5px rgba(201,162,75,0.35)",
-            letterSpacing: "-0.01em",
+            letterSpacing: "0.04em",
           }}
         >
           Kovenik

@@ -2,7 +2,7 @@
 
 
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 
 import Link from 'next/link';
 
@@ -61,6 +61,7 @@ import { NavbarHeader } from '@/components/layout/navbar-header';
 import { NavbarMobileDrawer } from '@/components/layout/navbar-mobile-drawer';
 
 import { NavbarAuthModal } from '@/components/layout/navbar-auth-modal';
+import { consumeReturnTo } from '@/lib/auth-redirect';
 
 
 
@@ -228,37 +229,10 @@ function loadGuestCart(): any[] {
 }
 
 async function loadAuthenticatedCart() {
-  const token = getToken();
-  if (!token) return;
-  try {
-    const response = await apiRequest<any>('/api/cart', { method: 'GET' });
-    const rawItems = response?.items || response?.data?.items || response?.cart?.items || response?.data?.cart?.items || [];
-    const serverItems = Array.isArray(rawItems)
-      ? rawItems.map((item: any) => {
-          const productId = String(item?.product_id || item?.productId || item?.product?.id || '');
-          const variantId = String(item?.variant_id || item?.variantId || item?.variant?.id || '');
-          const size = item?.size || item?.size_snapshot || item?.variant?.size;
-          const color = item?.color || item?.color_snapshot || item?.variant?.color;
-          const quantity = Number(item?.quantity || 1);
-          const price = Number(item?.price_snapshot ?? item?.price ?? item?.product?.price ?? 0);
-          const mrp = Number(item?.mrp_snapshot ?? item?.mrp ?? item?.product?.mrp ?? price);
-          const image = item?.image_snapshot || item?.image || item?.product?.images?.[0] || '';
-const name =
-  item?.product_name_snapshot ||
-  item?.name_snapshot ||
-  item?.product_name ||
-  item?.name ||
-  item?.product?.name ||
-  'Product';
-          const slug = item?.slug_snapshot || item?.slug || item?.product?.slug || '';
-          if (!productId || !variantId || !size || !color) return null;
-          return { productId, variantId, slug, name, image, size, color, quantity: Math.max(1, quantity), price, mrp };
-        }).filter(Boolean)
-      : [];
-    useCartStore.setState({ items: serverItems as any, couponCode: response?.coupon_code || response?.couponCode || null });
-  } catch (error) {
-    console.error('Failed to load authenticated cart:', error);
-  }
+  if (!getToken()) return;
+  // The store loads the account's own server cart and restores that account's
+  // coupon (and ignores the response if the user logged out mid-request).
+  await useCartStore.getState().loadUserCart();
 }
 
 declare global {
@@ -323,7 +297,7 @@ export function Navbar() {
 
 
 
-  const pathname = usePathname();
+  const pathname = usePathname() ?? "";
 
   const router = useRouter();
 
@@ -331,7 +305,7 @@ export function Navbar() {
 
   const cartItems = useCartStore((s) => s.items);
 
-  const openCart = useCartStore((s) => s.openCart);
+  const openCart = useCallback(() => router.push('/cart'), [router]);
 
   const closeCart = useCartStore((s) => s.closeCart);
 
@@ -440,10 +414,8 @@ export function Navbar() {
       if (!cancelled) {
         setUser(null);
         clearWishlistLocal();
-        useCartStore.setState({
-          items: loadGuestCart() as any,
-          couponCode: null,
-        });
+        // Guest items only: no coupon, no previous account's cart caches.
+        useCartStore.getState().switchToGuest();
       }
       return;
     }
@@ -512,7 +484,8 @@ export function Navbar() {
 
 
 
-      // Always load the current authenticated user's backend cart. No guest merge.
+      // Load the current authenticated user's backend cart; the cart store first
+      // merges any guest bag into it (once) so nothing added before sign-in is lost.
       await loadAuthenticatedCart();
 
       // Wishlist API is customer-only.
@@ -538,6 +511,8 @@ export function Navbar() {
         setUser(null);
 
         clearWishlistLocal();
+
+        useCartStore.getState().switchToGuest();
 
       }
 
@@ -814,15 +789,12 @@ export function Navbar() {
 
       if (token) {
 
-        saveGuestCart(useCartStore.getState().items);
+        if (!getToken()) saveGuestCart(useCartStore.getState().items); // never overwrite the guest cart with an account cart
         saveToken(token);
 
         window.dispatchEvent(new Event('ardenby-auth-changed'));
-
         setIsOpen(false);
-
-        router.push('/');
-
+        router.push(consumeReturnTo() || '/');
         return;
 
       }
@@ -1158,7 +1130,7 @@ export function Navbar() {
 
 
 
-      saveGuestCart(useCartStore.getState().items);
+      if (!getToken()) saveGuestCart(useCartStore.getState().items); // never overwrite the guest cart with an account cart
       saveToken(token);
 
 
@@ -1206,8 +1178,7 @@ export function Navbar() {
       setIsOpen(false);
 
       setOtp(Array(6).fill(''));
-
-      router.push('/');
+      router.push(consumeReturnTo() || '/');
 
     } catch (err: any) {
 
@@ -1427,7 +1398,7 @@ export function Navbar() {
 
 
 
-      saveGuestCart(useCartStore.getState().items);
+      if (!getToken()) saveGuestCart(useCartStore.getState().items); // never overwrite the guest cart with an account cart
       saveToken(token);
 
 
@@ -1467,11 +1438,8 @@ export function Navbar() {
       window.dispatchEvent(new Event('ardenby-auth-changed'));
 
       setIsOpen(false);
-
-      router.push('/');
-
+      router.push(consumeReturnTo() || '/');
     } catch (err: any) {
-
       clearToken();
 
       setUser(null);
@@ -1645,12 +1613,9 @@ export function Navbar() {
 const handleLogout = () => {
   clearToken();
 
-  // Keep the authenticated user's cart on the server.
-  // Show only the separate guest cart after logout.
-  useCartStore.setState({
-    items: loadGuestCart() as any,
-    couponCode: null,
-  });
+  // Keep the authenticated user's cart (and its coupon) on the server.
+  // Show only the separate guest cart after logout, without the coupon.
+  useCartStore.getState().switchToGuest();
 
   clearWishlistLocal();
 
@@ -1713,6 +1678,15 @@ const handleLogout = () => {
   };
 
 
+
+  // Lets other UI (e.g. the homepage mobile shop bar) open the same account /
+  // login flow as the navbar profile button.
+  useEffect(() => {
+    const open = () => handleOpenProfile();
+    window.addEventListener('kovenik:open-account', open);
+    return () => window.removeEventListener('kovenik:open-account', open);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user]);
 
   useEffect(() => {
 

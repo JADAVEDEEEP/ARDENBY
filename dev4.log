@@ -1,0 +1,15 @@
+  ▲ Next.js 13.5.1
+  - Local:        http://localhost:3111
+  - Environments: .env
+
+ ✓ Ready in 6.7s
+ X Failed to find font override values for font `Bodoni Moda`
+(node:14444) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+ ○ compiling /page ...
+ X Failed to find font override values for font `Bodoni Moda`
+
+warn - The class `ease-[cubic-bezier(0.16,1,0.3,1)]` is ambiguous and matches multiple utilities.
+warn - If this is content and not a class, replace it with `ease-&lsqb;cubic-bezier(0.16,1,0.3,1)&rsqb;` to silence this warning.
+ ✓ Compiled /page in 32.6s (1665 modules)
+ ✓ Compiled in 6.8s (820 modules)

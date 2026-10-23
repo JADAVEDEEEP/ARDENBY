@@ -25,9 +25,11 @@ export async function profileRequest<T = any>(
   const data = await response.json().catch(() => ({}));
 
   if (!response.ok) {
-    throw new Error(
+    const error: Error & { status?: number } = new Error(
       data?.message || data?.error || 'Something went wrong'
     );
+    error.status = response.status;
+    throw error;
   }
 
   return data;

@@ -173,7 +173,7 @@ export function Navbar() {
   const router = useRouter();
 
   const cartItems = useCartStore((s) => s.items);
-  const openCart = useCartStore((s) => s.openCart);
+  const openCart = () => router.push('/cart');
   const cartCount = getCartCount(cartItems);
 
   const wishlistCount = useWishlistStore((s) => s.items.length);

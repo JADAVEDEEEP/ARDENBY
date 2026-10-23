@@ -1,6 +1,6 @@
 'use client';
 
-import { FormEvent, useState } from 'react';
+import { FormEvent, useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
 
@@ -11,12 +11,14 @@ import {
   AuthResponse,
   clearAdminToken,
   getCurrentAdmin,
+  getAdminToken,
   isAdminRole,
-  isSuperAdminRole,
+  isSessionRejected,
   readToken,
   saveAdminToken,
+  startAdminSession,
 } from '@/components/admin/admin-auth';
-
+import { adminDestination } from '@/lib/auth-redirect';
 type LoginStep = 'LOGIN' | 'OTP';
 
 export default function AdminLoginPage() {
@@ -30,6 +32,45 @@ export default function AdminLoginPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
 
+  // The page the admin originally asked for (?next=...), validated as an
+  // admin-area path; anything else falls back to the role's dashboard.
+  const requestedPage = () =>
+    typeof window !== 'undefined'
+      ? new URLSearchParams(window.location.search).get('next')
+      : null;
+
+  // Opening /admin/login while already signed in as an admin goes straight on.
+  useEffect(() => {
+    const token = getAdminToken();
+    if (!token) return;
+    let cancelled = false;
+
+    (async () => {
+      try {
+        const user = await getCurrentAdmin();
+
+        if (cancelled) return;
+
+        if (isAdminRole(user.role)) {
+          // Make sure the server-side session cookie exists before moving on.
+          if (!(await startAdminSession(token))) return;
+          if (cancelled) return;
+          router.replace(adminDestination(user.role, requestedPage()));
+        } else {
+          clearAdminToken();
+        }
+      } catch (err) {
+        // Only a rejected session is discarded; a network error keeps it.
+        if (isSessionRejected(err)) clearAdminToken();
+      }
+    })();
+
+    return () => {
+      cancelled = true;
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   const redirectByRole = async (token: string) => {
     saveAdminToken(token);
 
@@ -40,7 +81,12 @@ export default function AdminLoginPage() {
       throw new Error('This login is only for Admin and Super Admin users.');
     }
 
-    router.replace(isSuperAdminRole(user.role) ? '/superadmin' : '/admin');
+    if (!(await startAdminSession(token))) {
+      clearAdminToken();
+      throw new Error('Could not start the admin session. Please try again.');
+    }
+
+    router.replace(adminDestination(user.role, requestedPage()));
   };
 
   const handleLogin = async (event: FormEvent<HTMLFormElement>) => {
@@ -126,14 +172,14 @@ export default function AdminLoginPage() {
   };
 
   return (
-  <main className="fixed inset-0 h-dvh w-screen overflow-hidden bg-[#07180D] text-[#F4F0E6]">
+  <main className="fixed inset-0 h-dvh w-screen overflow-hidden bg-[#131210] text-[#F4F0E6]">
     <div className="grid h-full w-full grid-cols-1 lg:grid-cols-2">
 
       {/* ================= LEFT BRAND PANEL ================= */}
-      <section className="relative hidden h-full overflow-hidden bg-[#07180D] lg:block">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_25%_20%,rgba(200,169,107,0.12),transparent_32%),radial-gradient(circle_at_75%_80%,rgba(18,53,31,0.9),transparent_42%)]" />
+      <section className="relative hidden h-full overflow-hidden bg-[#131210] lg:block">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_25%_20%,rgba(200,169,107,0.12),transparent_32%),radial-gradient(circle_at_75%_80%,rgba(20,19,17,0.9),transparent_42%)]" />
 
-        <div className="absolute inset-0 bg-gradient-to-br from-[#12351F]/80 via-[#07180D] to-[#07180D]" />
+        <div className="absolute inset-0 bg-gradient-to-br from-[#2A2824]/80 via-[#131210] to-[#131210]" />
 
         <div className="absolute left-12 top-12 z-10">
           <p className="font-serif text-4xl tracking-[0.3em] text-[#F4F0E6]">
@@ -164,7 +210,7 @@ export default function AdminLoginPage() {
               <span className="text-[#C8A96B]">KOVENIK</span> experience.
             </h2>
 
-            <p className="mt-6 max-w-md text-sm leading-7 text-[#B9C7BA]">
+            <p className="mt-6 max-w-md text-sm leading-7 text-[#C9C1AE]">
               Secure access to your products, orders, customers and store
               operations.
             </p>
@@ -179,14 +225,14 @@ export default function AdminLoginPage() {
         </div>
 
         <div className="absolute bottom-10 left-12 z-10">
-          <p className="text-[9px] uppercase tracking-[0.35em] text-[#718173]">
+          <p className="text-[9px] uppercase tracking-[0.35em] text-[#807B6F]">
             KOVENIK · Private Administration
           </p>
         </div>
       </section>
 
       {/* ================= RIGHT LOGIN PANEL ================= */}
-      <section className="relative flex h-full w-full items-center justify-center overflow-y-auto bg-[#0A2114] px-5 py-3 sm:px-8 lg:px-10">
+      <section className="relative flex h-full w-full items-center justify-center overflow-y-auto bg-[#1A1917] px-5 py-3 sm:px-8 lg:px-10">
 
         {/* Background lighting */}
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_50%_18%,rgba(200,169,107,0.12),transparent_28%),linear-gradient(180deg,#0D2415_0%,#07180D_100%)]" />
@@ -228,7 +274,7 @@ export default function AdminLoginPage() {
                 : "Verify Your Identity"}
             </h2>
 
-            <p className="mx-auto mt-2 max-w-[350px] text-[12px] leading-6 text-[#9EAE9F]">
+            <p className="mx-auto mt-2 max-w-[350px] text-[12px] leading-6 text-[#AFA897]">
               {step === "LOGIN"
                 ? "Sign in with your Admin or Super Admin account."
                 : `Enter the 6-digit verification code sent to ${email
@@ -247,7 +293,7 @@ export default function AdminLoginPage() {
 
             <div className="absolute -inset-[1px] rounded-[22px] bg-gradient-to-b from-[#C8A96B]/35 via-[#B89A5A]/10 to-transparent" />
 
-            <div className="relative rounded-[21px] border border-[#C8A96B]/20 bg-[#0B1E13]/95 p-6 shadow-[0_25px_70px_rgba(0,0,0,0.35)]">
+            <div className="relative rounded-[21px] border border-[#C8A96B]/20 bg-[#181715]/95 p-6 shadow-[0_25px_70px_rgba(0,0,0,0.35)]">
 
               {/* CARD HEADER */}
               <div className="mb-5 flex items-center justify-between">
@@ -258,7 +304,7 @@ export default function AdminLoginPage() {
                       : "Two-Step Verification"}
                   </p>
 
-                  <p className="mt-1 text-[11px] text-[#718173]">
+                  <p className="mt-1 text-[11px] text-[#807B6F]">
                     KOVENIK private administration
                   </p>
                 </div>
@@ -276,11 +322,11 @@ export default function AdminLoginPage() {
                   {/* EMAIL */}
                   <label className="block">
 
-                    <span className="mb-2 block text-[10px] font-bold uppercase tracking-[0.24em] text-[#B9C7BA]">
+                    <span className="mb-2 block text-[10px] font-bold uppercase tracking-[0.24em] text-[#C9C1AE]">
                       Email Address
                     </span>
 
-                    <span className="flex h-14 items-center gap-3 rounded-xl border border-[#B89A5A]/25 bg-[#07180D] px-4 transition focus-within:border-[#C8A96B] focus-within:ring-1 focus-within:ring-[#C8A96B]/20">
+                    <span className="flex h-14 items-center gap-3 rounded-xl border border-[#B89A5A]/25 bg-[#131210] px-4 transition focus-within:border-[#C8A96B] focus-within:ring-1 focus-within:ring-[#C8A96B]/20">
 
                       <Mail className="h-5 w-5 shrink-0 text-[#C8A96B]" />
 
@@ -289,7 +335,7 @@ export default function AdminLoginPage() {
                         onChange={(event) =>
                           setEmail(event.target.value)
                         }
-                        className="min-w-0 flex-1 bg-transparent text-[16px] text-[#F4F0E6] outline-none placeholder:text-[#657466]"
+                        className="min-w-0 flex-1 bg-transparent text-[16px] text-[#F4F0E6] outline-none placeholder:text-[#726E63]"
                         type="email"
                         autoComplete="email"
                         placeholder="admin@kovenik.com"
@@ -303,17 +349,17 @@ export default function AdminLoginPage() {
 
                     <div className="mb-2 flex items-center justify-between">
 
-                      <span className="text-[10px] font-bold uppercase tracking-[0.24em] text-[#B9C7BA]">
+                      <span className="text-[10px] font-bold uppercase tracking-[0.24em] text-[#C9C1AE]">
                         Password
                       </span>
 
-                      <span className="text-[8px] uppercase tracking-[0.16em] text-[#657466]">
+                      <span className="text-[8px] uppercase tracking-[0.16em] text-[#726E63]">
                         Protected
                       </span>
 
                     </div>
 
-                    <span className="flex h-14 items-center gap-3 rounded-xl border border-[#B89A5A]/25 bg-[#07180D] px-4 transition focus-within:border-[#C8A96B] focus-within:ring-1 focus-within:ring-[#C8A96B]/20">
+                    <span className="flex h-14 items-center gap-3 rounded-xl border border-[#B89A5A]/25 bg-[#131210] px-4 transition focus-within:border-[#C8A96B] focus-within:ring-1 focus-within:ring-[#C8A96B]/20">
 
                       <LockKeyhole className="h-5 w-5 shrink-0 text-[#C8A96B]" />
 
@@ -322,7 +368,7 @@ export default function AdminLoginPage() {
                         onChange={(event) =>
                           setPassword(event.target.value)
                         }
-                        className="min-w-0 flex-1 bg-transparent text-[16px] text-[#F4F0E6] outline-none placeholder:text-[#657466]"
+                        className="min-w-0 flex-1 bg-transparent text-[16px] text-[#F4F0E6] outline-none placeholder:text-[#726E63]"
                         type="password"
                         autoComplete="current-password"
                         placeholder="Enter your password"
@@ -344,7 +390,7 @@ export default function AdminLoginPage() {
                   <button
                     type="submit"
                     disabled={isLoading}
-                    className="h-14 w-full rounded-xl bg-gradient-to-r from-[#B89A5A] via-[#C8A96B] to-[#B89A5A] text-[11px] font-bold uppercase tracking-[0.3em] text-[#07180D] shadow-[0_12px_30px_rgba(184,154,90,0.2)] transition hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-60"
+                    className="h-14 w-full rounded-xl bg-gradient-to-r from-[#B89A5A] via-[#C8A96B] to-[#B89A5A] text-[11px] font-bold uppercase tracking-[0.3em] text-[#131210] shadow-[0_12px_30px_rgba(184,154,90,0.2)] transition hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-60"
                   >
                     {isLoading ? "Checking..." : "Sign In →"}
                   </button>
@@ -354,7 +400,7 @@ export default function AdminLoginPage() {
 
                     <span className="h-px flex-1 bg-[#B89A5A]/10" />
 
-                    <span className="text-[8px] uppercase tracking-[0.2em] text-[#596A5C]">
+                    <span className="text-[8px] uppercase tracking-[0.2em] text-[#676359]">
                       Authorized Personnel Only
                     </span>
 
@@ -380,14 +426,14 @@ export default function AdminLoginPage() {
                           .slice(0, 6)
                       )
                     }
-                    className="h-14 w-full rounded-xl border border-[#B89A5A]/25 bg-[#07180D] px-4 text-center text-xl font-semibold tracking-[0.65em] text-[#F4F0E6] outline-none transition focus:border-[#C8A96B] focus:ring-1 focus:ring-[#C8A96B]/20"
+                    className="h-14 w-full rounded-xl border border-[#B89A5A]/25 bg-[#131210] px-4 text-center text-xl font-semibold tracking-[0.65em] text-[#F4F0E6] outline-none transition focus:border-[#C8A96B] focus:ring-1 focus:ring-[#C8A96B]/20"
                     inputMode="numeric"
                     autoComplete="one-time-code"
                     maxLength={6}
                     placeholder="••••••"
                   />
 
-                  <p className="text-center text-xs leading-5 text-[#8FA08F]">
+                  <p className="text-center text-xs leading-5 text-[#9F998A]">
                     Enter the 6-digit code sent to your registered admin
                     email.
                   </p>
@@ -403,7 +449,7 @@ export default function AdminLoginPage() {
                   <button
                     type="submit"
                     disabled={isLoading || otp.length !== 6}
-                    className="h-14 w-full rounded-xl bg-gradient-to-r from-[#B89A5A] to-[#C8A96B] text-[11px] font-bold uppercase tracking-[0.3em] text-[#07180D] shadow-[0_12px_30px_rgba(184,154,90,0.2)] transition hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-60"
+                    className="h-14 w-full rounded-xl bg-gradient-to-r from-[#B89A5A] to-[#C8A96B] text-[11px] font-bold uppercase tracking-[0.3em] text-[#131210] shadow-[0_12px_30px_rgba(184,154,90,0.2)] transition hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-60"
                   >
                     {isLoading ? "Verifying..." : "Verify OTP →"}
                   </button>
@@ -415,7 +461,7 @@ export default function AdminLoginPage() {
                       setError("");
                       setStep("LOGIN");
                     }}
-                    className="h-9 w-full text-[9px] font-semibold uppercase tracking-[0.2em] text-[#8FA08F] transition hover:text-[#C8A96B]"
+                    className="h-9 w-full text-[9px] font-semibold uppercase tracking-[0.2em] text-[#9F998A] transition hover:text-[#C8A96B]"
                   >
                     ← Back to Login
                   </button>
@@ -426,7 +472,7 @@ export default function AdminLoginPage() {
             </div>
           </motion.div>
 
-          <p className="mt-4 text-center text-[8px] font-medium uppercase tracking-[0.35em] text-[#596A5C]">
+          <p className="mt-4 text-center text-[8px] font-medium uppercase tracking-[0.35em] text-[#676359]">
             KOVENIK · Private Administration
           </p>
 

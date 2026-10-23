@@ -1,5 +1,5 @@
 'use client';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { profileRequest, unwrap } from '../services/profile-api';
 import type {
@@ -18,6 +18,8 @@ export function useProfile() {
   const [user, setUser] = useState<UserProfile | null>(null);
   const [orders, setOrders] = useState<Order[]>([]);
   const [wishlist, setWishlist] = useState<WishlistItem[]>([]);
+  const [cancellingId, setCancellingId] = useState<string | null>(null);
+  const cancelLock = useRef(false);
   const [addresses, setAddresses] = useState<Address[]>([]);
   const [activeSection, setActiveSection] =
     useState<Section>('overview');
@@ -235,13 +237,17 @@ if (section === 'addresses' || section === 'overview') {
     (async () => {
       try {
         await loadUser();
-      } catch {
-        localStorage.removeItem(
-          'ardenby_token'
-        );
-        router.replace('/');
-      } finally {
-        setLoading(false);
+      } catch (err: any) {
+        // Only a rejected session signs the customer out. A network or server
+        // error keeps the session and shows a message instead.
+        if (err?.status === 401 || err?.message === 'AUTH_REQUIRED') {
+          localStorage.removeItem('ardenby_token');
+          window.dispatchEvent(new Event('ardenby-auth-changed'));
+        } else {
+          setError(err?.message || 'Unable to load your account right now.');
+        }
+      } finally {
+        setLoading(false);
       }
     })();
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -495,34 +501,51 @@ if (section === 'addresses' || section === 'overview') {
       );
     }
   };
-  const cancelOrder = async (
-    id: string
-  ) => {
-    if (
-      !window.confirm(
-        'Cancel this order?'
-      )
-    ) {
-      return;
-    }
-    try {
-      await profileRequest(
-        `/api/orders/${id}/cancel`,
-        {
-          method: 'PATCH',
-        }
-      );
-      await loadSection('orders');
-      setMessage(
-        'Order cancelled successfully.'
-      );
-    } catch (err: any) {
-      setError(
-        err.message ||
-          'Unable to cancel order.'
-      );
-    }
-  };
+  // The confirmation modal lives in OrdersSection; this performs the cancel.
+  // Resolves true only when the server confirmed the cancellation.
+  const cancelOrder = async (
+    id: string
+  ): Promise<boolean> => {
+    // Duplicate-submit lock: a double click must not send two requests.
+    if (cancelLock.current) return false;
+    cancelLock.current = true;
+    setCancellingId(id);
+    setError('');
+    setMessage('');
+    try {
+      const data = await profileRequest(
+        `/api/orders/${id}/cancel`,
+        {
+          method: 'PATCH',
+        }
+      );
+      // Refresh in place so the new status shows without a page reload.
+      await loadSection('orders');
+      // The server words this: it only mentions a refund when one exists,
+      // and only says "processed" once the payment provider confirmed it.
+      setMessage(
+        data?.message ||
+          'Your order has been cancelled.'
+      );
+      return true;
+    } catch (err: any) {
+      if (err?.message === 'AUTH_REQUIRED') {
+        logout();
+        return false;
+      }
+      // The order may have moved on (shipped, already cancelled): reload so
+      // the list and the Cancel button reflect the real status.
+      await loadSection('orders');
+      setError(
+        err?.message ||
+          'Unable to cancel this order. Please try again.'
+      );
+      return false;
+    } finally {
+      cancelLock.current = false;
+      setCancellingId(null);
+    }
+  };
   const changePassword = async (
     e: React.FormEvent
   ) => {
@@ -588,7 +611,7 @@ if (section === 'addresses' || section === 'overview') {
     return 'bg-[#EFECE6] text-[#5C554E]';
   };
   const displayName =
-    user?.full_name || 'ARDENBY Member';
+    user?.full_name || 'KOVENIK Member';
   const initial =
     displayName.charAt(0).toUpperCase();
   const isGoogleAccount =
@@ -652,6 +675,7 @@ if (section === 'addresses' || section === 'overview') {
     deleteAddress,
     setDefaultAddress,
     cancelOrder,
+    cancellingId,
     changePassword,
     money,
     statusClass,

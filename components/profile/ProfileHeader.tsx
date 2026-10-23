@@ -7,7 +7,7 @@ export function ProfileHeader({ user, displayName }: { user: UserProfile; displa
   return (
     <header className="mb-7 border-b border-[#DCD5C9] pb-6 sm:mb-9 sm:pb-8">
       <p className="text-[9px] font-medium uppercase tracking-[0.34em] text-[#9A8060]">
-        ARDENBY / PRIVATE ACCOUNT
+        KOVENIK / PRIVATE ACCOUNT
       </p>
       <div className="mt-2 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
         <div>
@@ -40,14 +40,15 @@ export function ProfileFeedback({
   if (!error && !message) return null;
 
   return (
-    <div className={`mb-6 flex items-center gap-3 border px-4 py-3 text-sm ${
+    <div role={error ? 'alert' : 'status'}
+      className={`mb-5 flex items-center gap-3 rounded-2xl border px-4 py-3 text-[13px] ${
       error
-        ? 'border-red-200 bg-red-50 text-red-700'
-        : 'border-[#D7C7A7] bg-[#F3EEE4] text-[#554A3D]'
+        ? 'border-[#5a2a2c] bg-[#2a1517] text-[#EF7B7B]'
+        : 'border-[#245a3a] bg-[#11261a] text-[#5FD08A]'
     }`}>
       {error ? <AlertCircle className="h-4 w-4 shrink-0" /> : <ShieldCheck className="h-4 w-4 shrink-0" />}
       <span>{error || message}</span>
-      <button className="ml-auto shrink-0" onClick={onClear} aria-label="Dismiss message">
+      <button type="button" className="ml-auto flex h-8 w-8 shrink-0 items-center justify-center" onClick={onClear} aria-label="Dismiss message">
         <X className="h-4 w-4" />
       </button>
     </div>

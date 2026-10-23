@@ -13,6 +13,8 @@ const config: Config = {
       fontFamily: {
         sans: ['var(--font-inter)', 'system-ui', 'sans-serif'],
         display: ['var(--font-satoshi)', 'var(--font-inter)', 'sans-serif'],
+        bodoni: ['var(--font-bodoni)', 'Didot', 'Bodoni MT', 'serif'],
+        archivo: ['var(--font-archivo)', 'Arial', 'sans-serif'],
       },
       colors: {
         background: 'hsl(var(--background))',
@@ -54,6 +56,18 @@ const config: Config = {
           '3': 'hsl(var(--chart-3))',
           '4': 'hsl(var(--chart-4))',
           '5': 'hsl(var(--chart-5))',
+        },
+        // KOVENIK chrome theme
+        kv: {
+          bg: '#050506',
+          surface: '#0b0c0e',
+          surface2: '#16181b',
+          body: '#c4c8cf',
+          head: '#eef0f2',
+          muted: '#b0b5bc',
+          gold: '#c9a24a',
+          'gold-light': '#ecd189',
+          'gold-dark': '#9e7a2c',
         },
         // Brand palette
         ink: {

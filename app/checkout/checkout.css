@@ -1,0 +1,133 @@
+/* =========================================================
+   KOVENIK checkout — mirrors the Cart page tokens exactly:
+   page #0A0A0A · card #111111 · borders #2A2A2A / #3A3A3A · text #C0C0C0 / white
+   · square corners · white solid CTA. Scoped under .ck / .ck-scope.
+   ========================================================= */
+.ck,
+.ck-scope {
+  --ck-bg: #0a0a0a;
+  --ck-card: #111111;
+  --ck-line: #2a2a2a;
+  --ck-line-strong: #3a3a3a;
+  --ck-silver: #c0c0c0;
+  --ck-ink: #ffffff;
+}
+.ck {
+  position: relative;
+  isolation: isolate;
+  overflow-x: clip;
+  background: var(--ck-bg);
+  color: var(--ck-silver);
+}
+.ck *:focus-visible,
+.ck-scope *:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--ck-bg), 0 0 0 4px rgba(192, 192, 192, 0.7);
+}
+
+/* ---------- panels & tiles (cart "CARD" + summary border) ---------- */
+.ck-panel {
+  position: relative;
+  background: var(--ck-card);
+  border: 1px solid var(--ck-line-strong);
+}
+.ck-tile {
+  position: relative;
+  background: var(--ck-card);
+  border: 1px solid var(--ck-line);
+  transition: border-color 0.2s, background 0.2s;
+}
+.ck-tile:hover { border-color: var(--ck-line-strong); }
+.ck-tile[data-on='true'] { border-color: #ffffff; }
+.ck-tile[data-disabled='true'] { opacity: 0.5; cursor: not-allowed; }
+
+/* ---------- type ---------- */
+.ck-heading {
+  font-weight: 300;
+  line-height: 1.15;
+  color: var(--ck-ink);
+}
+.ck-chrome-text { color: var(--ck-ink); }
+.ck-chrome-link { color: inherit; }
+.ck-chip-chrome {
+  background: transparent;
+  border: 1px solid var(--ck-line-strong);
+  color: var(--ck-ink);
+}
+
+/* thin outline icon holder (cart's round outlined icon) */
+.ck-ico {
+  background: transparent;
+  border: 1px solid var(--ck-line-strong);
+  color: var(--ck-silver);
+}
+.ck-radio-dot { background: var(--ck-silver); }
+
+/* ---------- progress (cart's flat silver bar) ---------- */
+.ck-track { position: relative; height: 4px; background: var(--ck-line); overflow: hidden; }
+.ck-fill {
+  position: absolute; inset: 0 auto 0 0;
+  background: var(--ck-silver);
+  transition: width 0.5s ease-out;
+}
+.ck-node-active { box-shadow: none; }
+
+/* ---------- Place Order = cart's "CHECKOUT NOW" ---------- */
+.ck-cta {
+  display: flex; width: 100%; min-height: 52px;
+  align-items: center; justify-content: center; gap: 8px;
+  background: #ffffff;
+  color: #000000;
+  border: 0;
+  padding: 0 20px;
+  font-size: 13px; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase;
+  transition: background 0.2s, transform 0.1s;
+}
+.ck-cta:hover:not(:disabled) { background: var(--ck-silver); }
+.ck-cta:active:not(:disabled) { transform: scale(0.99); }
+.ck-cta:disabled { cursor: not-allowed; opacity: 0.6; }
+
+/* secondary = cart's outlined button */
+.ck-ghost {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  min-height: 40px;
+  border: 1px solid var(--ck-silver);
+  background: transparent;
+  padding: 0 16px;
+  font-size: 12px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase;
+  color: #ffffff;
+  transition: background 0.2s, color 0.2s;
+}
+.ck-ghost:hover:not(:disabled) { background: var(--ck-silver); color: var(--ck-bg); }
+.ck-ghost:disabled { opacity: 0.5; cursor: not-allowed; }
+
+.ck-input {
+  width: 100%;
+  min-height: 44px;
+  border: 1px solid var(--ck-line-strong);
+  background: var(--ck-bg);
+  padding: 10px 12px;
+  font-size: 14px; color: #ffffff;
+  outline: none;
+  color-scheme: dark;
+}
+.ck-input::placeholder { color: rgba(192, 192, 192, 0.5); }
+.ck-input:focus { border-color: var(--ck-silver); box-shadow: 0 0 0 1px rgba(192, 192, 192, 0.6); }
+.ck-input[aria-invalid='true'] { border-color: #ffffff; }
+select.ck-input { appearance: auto; }
+select.ck-input option { background: var(--ck-card); color: #ffffff; }
+
+.ck-scroll::-webkit-scrollbar { width: 6px; }
+.ck-scroll::-webkit-scrollbar-thumb { background: var(--ck-line-strong); }
+.ck, .ck-scope { accent-color: var(--ck-silver); }
+
+/* Collapsible grid-rows trick */
+.ck-collapse { display: grid; grid-template-rows: 0fr; transition: grid-template-rows 0.3s ease; }
+.ck-collapse[data-open='true'] { grid-template-rows: 1fr; }
+.ck-collapse > div { overflow: hidden; }
+.ck-collapse:not([data-open='true']) > div { visibility: hidden; }
+
+@media (max-width: 640px) { .ck-input { font-size: 16px; } }
+@media (prefers-reduced-motion: reduce) {
+  .ck-fill, .ck-collapse { transition: none; }
+}

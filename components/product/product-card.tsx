@@ -12,6 +12,7 @@ import {
 import { createPortal } from 'react-dom';
 
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 
 import { motion } from 'framer-motion';
 
@@ -183,7 +184,7 @@ export function WishlistLoginModal({
 
   return createPortal(
     <div
-      className="fixed inset-0 z-[100] flex items-end justify-center bg-black/75 p-4 backdrop-blur-sm sm:items-center"
+      className="fixed inset-0 z-[100] flex items-end justify-center bg-black/80 p-4 backdrop-blur-sm sm:items-center"
       onClick={(e) => {
         if (e.target === e.currentTarget) onClose();
       }}
@@ -194,38 +195,64 @@ export function WishlistLoginModal({
         aria-modal="true"
         aria-labelledby={titleId}
         aria-describedby={descId}
-        className="relative max-h-[calc(100dvh-2rem)] w-full max-w-[420px] overflow-y-auto rounded-xl border border-[#1f4435] bg-gradient-to-b from-[#0b1d14] to-[#06100b] px-6 pb-7 pt-9 text-center shadow-[0_30px_80px_-20px_rgba(0,0,0,0.9),0_0_0_1px_rgba(47,191,138,0.08)]"
+        className="relative max-h-[calc(100dvh-2rem)] w-full max-w-[420px] overflow-hidden rounded-2xl border border-[#C9A24B]/30 bg-[linear-gradient(145deg,#1b1b1b_0%,#070707_38%,#161616_62%,#050505_100%)] px-6 pb-8 pt-10 text-center shadow-[0_30px_80px_-20px_rgba(0,0,0,0.95),inset_0_1px_0_rgba(255,255,255,0.12)] sm:px-8"
       >
-        <div className="pointer-events-none absolute inset-x-8 top-0 h-px bg-gradient-to-r from-transparent via-[#d8bd86] to-transparent" />
-        <div className="pointer-events-none absolute inset-0 rounded-xl bg-[radial-gradient(circle_at_50%_0%,rgba(47,191,138,0.16),transparent_55%)]" />
+        {/* animated cosmos: stars, planet, orbital rings (decorative only) */}
+        <div aria-hidden="true" className="pointer-events-none absolute inset-0 overflow-hidden rounded-2xl">
+          <div
+            className="kv-twinkle absolute inset-0 opacity-80"
+            style={{
+              backgroundImage:
+                'radial-gradient(1px 1px at 12% 18%,#fff 50%,transparent 51%),radial-gradient(1.5px 1.5px at 30% 70%,#fff 50%,transparent 51%),radial-gradient(1px 1px at 58% 14%,rgba(255,255,255,.8) 50%,transparent 51%),radial-gradient(1px 1px at 78% 62%,#fff 50%,transparent 51%),radial-gradient(1.5px 1.5px at 90% 28%,rgba(255,255,255,.8) 50%,transparent 51%),radial-gradient(1px 1px at 20% 92%,rgba(255,255,255,.7) 50%,transparent 51%)',
+            }}
+          />
+          <div className="absolute -right-16 -top-16 h-44 w-44">
+            <div className="absolute inset-[22%] rounded-full bg-[radial-gradient(circle_at_32%_28%,#7d7d7d,#2a2a2a_55%,#0a0a0a_100%)] shadow-[0_0_30px_rgba(201,162,75,0.18)]" />
+            <div className="absolute inset-0 rotate-[-18deg]">
+              <div
+                className="kv-orbit h-full w-full rounded-full border border-[#F0DC9A]/45"
+                style={{ ['--kv-d' as string]: '28s', transform: 'scaleY(0.38)' }}
+              />
+            </div>
+            <div className="absolute inset-[-12%] rotate-[14deg]">
+              <div
+                className="kv-orbit h-full w-full rounded-[50%] border border-white/20"
+                style={{ ['--kv-d' as string]: '44s' }}
+              >
+                <span className="absolute left-1/2 top-0 h-1.5 w-1.5 -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#F0DC9A] shadow-[0_0_10px_3px_rgba(240,220,154,0.7)]" />
+              </div>
+            </div>
+          </div>
+          <div className="kv-float absolute -bottom-8 -left-8 h-24 w-24 rounded-full bg-[radial-gradient(circle_at_35%_30%,#5a5a5a,#161616_60%,#050505)] opacity-80" />
+          <div className="absolute inset-x-8 top-0 h-px bg-gradient-to-r from-transparent via-[#C9A24B] to-transparent" />
+        </div>
 
         <div className="relative">
-          <span className="mx-auto mb-5 flex h-14 w-14 items-center justify-center rounded-full border border-[#d8bd86]/60 bg-[#0a1812]">
-            <Heart className="h-6 w-6 text-[#d8bd86]" />
+          <span className="mx-auto mb-5 flex h-14 w-14 items-center justify-center rounded-full border border-[#C9A24B]/60 bg-black shadow-[0_0_24px_rgba(201,162,75,0.2)]">
+            <Heart className="h-6 w-6 text-[#E3C673]" />
           </span>
 
           <h2
             id={titleId}
-            className="font-serif text-[24px] font-bold leading-tight text-[#f6faf6] sm:text-[26px]"
+            className="font-serif text-[24px] font-bold leading-tight text-white sm:text-[26px]"
           >
             Sign in to save your favourites
           </h2>
 
           <p
             id={descId}
-            className="mx-auto mt-3 max-w-[320px] text-[15px] leading-relaxed text-[#c9d4cc]"
+            className="mx-auto mt-3 max-w-[320px] text-[15px] leading-relaxed text-white/80"
           >
             Keep the pieces you love in one place, come back to them on any
             device, and never lose track of a drop you want.
           </p>
-
         </div>
 
         <button
           type="button"
           onClick={onClose}
           aria-label="Close"
-          className="absolute right-2 top-2 flex h-11 w-11 items-center justify-center rounded-full text-[#98a69d] transition hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#d8bd86]"
+          className="absolute right-2 top-2 z-10 flex h-11 w-11 items-center justify-center rounded-full text-white/70 transition hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#C9A24B]"
         >
           <X className="h-5 w-5" />
         </button>
@@ -247,6 +274,8 @@ export function ProductCard({
 
   const wishlist = useWishlistStore();
   const addItem = useCartStore((s) => s.addItem);
+  const router = useRouter();
+  const [addStatus, setAddStatus] = useState<'idle' | 'adding' | 'added'>('idle');
 
   const isWishlisted = wishlist.has(product.id);
 
@@ -419,9 +448,10 @@ export function ProductCard({
     );
   };
 
-  const handleAddToCart = (e: React.MouseEvent) => {
+  const handleAddToCart = async (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
+    if (addStatus !== 'idle') return;
 
     if (!selectedVariant?.id || qty <= 0) {
       toast.error('This option is currently unavailable.', {
@@ -430,7 +460,8 @@ export function ProductCard({
       return;
     }
 
-    addItem({
+    setAddStatus('adding');
+    const added = await addItem({
       productId: product.id,
       variantId: selectedVariant.id,
       slug: product.slug,
@@ -442,7 +473,13 @@ export function ProductCard({
       mrp: product.mrp,
     });
 
-    toast.success('Added to cart', { description: product.name });
+    if (!added) {
+      setAddStatus('idle');
+      return;
+    }
+
+    setAddStatus('added');
+    router.push('/cart');
   };
 
   return (
@@ -709,9 +746,11 @@ export function ProductCard({
               <button
                 type="button"
                 onClick={handleAddToCart}
-                aria-label="Add to cart"
-                title="Add to cart"
-                className="flex h-9 w-9 shrink-0 items-center justify-center rounded-[5px] border border-[#d8bd86] bg-[#0a1812] text-[#d8bd86] transition hover:bg-[#d8bd86]/15 active:scale-95 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#d8bd86]"
+                disabled={addStatus !== 'idle'}
+                aria-busy={addStatus === 'adding'}
+                aria-label={addStatus === 'added' ? 'Added to cart' : 'Add to cart'}
+                title={addStatus === 'added' ? 'Added' : 'Add to cart'}
+                className="flex h-9 w-9 shrink-0 items-center justify-center rounded-[5px] border border-[#d8bd86] bg-[#0a1812] text-[#d8bd86] transition hover:bg-[#d8bd86]/15 active:scale-95 disabled:cursor-not-allowed disabled:opacity-60 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#d8bd86]"
               >
                 <ShoppingCart className="h-4 w-4" />
               </button>

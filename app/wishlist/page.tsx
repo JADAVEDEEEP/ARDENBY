@@ -1,18 +1,12 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import Link from 'next/link';
 import { Heart, Trash2, ArrowRight, SlidersHorizontal, ChevronDown } from 'lucide-react';
 import { useWishlistStore } from '@/store/wishlist-store';
 import { formatINR } from '@/lib/format';
-
-/* KOVENIK palette: charcoal #0A0A0A / #111111, black #050505,
-   gold #C9A24B, champagne #E6CF92, ivory #F3EBDD */
-const GOLD_SURFACE =
-  'bg-[linear-gradient(135deg,#B8903A_0%,#E6CF92_48%,#C9A24B_100%)] text-[#0A0A0A]';
-
-const GOLD_TEXT =
-  'bg-[linear-gradient(135deg,#B8903A_0%,#E6CF92_50%,#C9A24B_100%)] bg-clip-text text-transparent';
+import { IconDisc, MetalCard, SERIF_STYLE } from '@/components/profile/metal';
+import { CustomerAuthGate } from '@/components/auth/customer-auth-gate';
 
 type SortKey = 'recent' | 'price-asc' | 'price-desc' | 'name';
 
@@ -23,24 +17,17 @@ const SORT_OPTIONS: { value: SortKey; label: string }[] = [
   { value: 'name', label: 'Name: A to Z' },
 ];
 
-/* Decorative colour swatches (wishlist items carry no colour data). */
-const SWATCHES = ['#050505', '#2A2A2A', '#F3EBDD'];
-
-/* Category label is derived from the product name when recognisable. */
-function categoryOf(name: string): string | null {
-  const n = name.toLowerCase();
-  if (/(t-?shirt|tee)/.test(n)) return 'Oversized T-Shirt';
-  if (/hood/.test(n)) return 'Hoodie';
-  if (/(cargo|pant|trouser|jogger)/.test(n)) return 'Cargo Pants';
-  if (/(sneaker|shoe)/.test(n)) return 'Sneakers';
-  if (/jacket/.test(n)) return 'Jacket';
-  if (/(cap|hat)/.test(n)) return 'Cap';
-  return null;
-}
-
-export default function WishlistPage() {
-  const { items, remove, clear } = useWishlistStore();
+function WishlistPageView() {
+  const { items, remove, clear, syncFromApi } = useWishlistStore();
   const [sort, setSort] = useState<SortKey>('recent');
+
+  // Refresh from the backend so the page always reflects the signed-in user's saved pieces.
+  useEffect(() => {
+    if (typeof window !== 'undefined' && localStorage.getItem('ardenby_token')) {
+      void syncFromApi();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const sorted = useMemo(() => {
     const list = [...items];
@@ -56,181 +43,180 @@ export default function WishlistPage() {
     }
   }, [items, sort]);
 
+  const totalValue = items.reduce((sum, i) => sum + Number(i.price || 0), 0);
+  const totalSavings = items.reduce((sum, i) => sum + Math.max(0, Number(i.mrp || 0) - Number(i.price || 0)), 0);
+
   return (
-    <div className="min-h-screen bg-[radial-gradient(ellipse_at_top,#1A1A1A_0%,#0C0C0C_45%,#030303_100%)] text-[#F3EBDD] pb-14 lg:pb-20">
-      {/* Hero */}
-      <section className="relative overflow-hidden border-b border-[#C9A24B]/30 bg-[linear-gradient(120deg,#111111_0%,#1A1A1A_55%,#0A0A0A_100%)]">
-        <div className="pointer-events-none absolute inset-0 opacity-30 bg-[radial-gradient(circle_at_85%_30%,rgba(201,162,75,0.35),transparent_45%)]" />
-        <div className="relative max-w-[1280px] mx-auto px-4 sm:px-8 lg:px-12 py-8 lg:py-14">
-          <nav
-            aria-label="Breadcrumb"
-            className="flex items-center gap-2 text-xs sm:text-sm text-[#F3EBDD]/80"
+    <div className="kv-page min-h-screen pb-14 pt-5 text-white lg:pb-20 lg:pt-8">
+
+      <div className="mx-auto max-w-[1280px] px-4 lg:px-8">
+        {/* Hero */}
+        <MetalCard>
+          <span
+            className="kv-wordmark absolute -bottom-4 right-4 hidden text-[150px] sm:block"
+            style={SERIF_STYLE}
+            aria-hidden
           >
-            <Link href="/" className="hover:text-[#E6CF92] transition-colors">
-              Home
-            </Link>
-            <span className="text-[#C9A24B]">&rsaquo;</span>
-            <span>Wishlist</span>
-          </nav>
+            KOVENIK
+          </span>
+          <div className="relative px-5 py-8 sm:px-10 lg:px-12 lg:py-12">
+            <nav aria-label="Breadcrumb" className="flex items-center gap-2 text-[12px] text-[#9296A0]">
+              <Link href="/" className="transition-colors hover:text-white">
+                Home
+              </Link>
+              <span className="text-[#D6B06A]">&rsaquo;</span>
+              <span className="text-[#C6C9CF]">Wishlist</span>
+            </nav>
 
-          <h1 className="mt-4 lg:mt-6 font-serif text-4xl sm:text-5xl lg:text-7xl font-normal tracking-tight">
-            My <span className={GOLD_TEXT}>Wishlist</span>
-          </h1>
-          <p className="mt-3 text-sm sm:text-base text-[#F3EBDD]/85 max-w-xl">
-            Your favorite pieces, saved for later.
-            <span className="hidden sm:inline"> Don&apos;t let them get away.</span>
-          </p>
-
-          <div className="hidden lg:flex absolute right-12 top-1/2 -translate-y-1/2 flex-col gap-3 text-[11px] uppercase tracking-[0.3em] text-[#F3EBDD]/80">
-            <div className="flex items-center gap-4">
-              <span className="h-px w-12 bg-[#C9A24B]" />
-              Est. Kovenik
-            </div>
-            <div className="flex items-center gap-4 text-[9px] text-[#F3EBDD]/60">
-              <span className="h-px w-12 bg-[#C9A24B]" />
-              Wear your essence
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <div className="max-w-[1280px] mx-auto px-4 sm:px-8 lg:px-12 mt-6 lg:mt-8">
-        {items.length === 0 ? (
-          /* Empty state */
-          <div className="flex flex-col items-center text-center py-20 sm:py-28 rounded-2xl border border-[#C9A24B]/40 bg-[#0C0C0C]/80">
-            <div className="w-16 h-16 rounded-full border border-[#C9A24B]/60 flex items-center justify-center mb-6">
-              <Heart className="h-7 w-7 text-[#C9A24B] stroke-[1.5]" />
-            </div>
-            <h2 className="font-serif text-2xl sm:text-3xl px-4">Your wishlist is empty</h2>
-            <p className="mt-2 mb-8 text-sm text-[#F3EBDD]/60 max-w-sm px-6">
-              Save the pieces you love and they will wait for you here.
+            <p className="kv-label mt-6">KOVENIK — SAVED PIECES</p>
+            <h1 className="mt-3 text-[44px] font-normal leading-[1.05] text-white sm:text-[60px] lg:text-[76px]" style={SERIF_STYLE}>
+              My Wishlist.
+            </h1>
+            <p className="mt-3 max-w-md text-[14px] leading-6 text-[#C6C9CF]">
+              Your favourite pieces, saved for later.
             </p>
-            <Link
-              href="/shop"
-              className={`inline-flex items-center gap-2 min-h-[48px] px-8 rounded-full text-xs font-bold uppercase tracking-widest ${GOLD_SURFACE} shadow-[0_0_24px_rgba(201,162,75,0.25)] hover:brightness-110 transition`}
-            >
-              Explore the shop
-              <ArrowRight className="h-4 w-4" />
-            </Link>
-          </div>
-        ) : (
-          <section className="rounded-2xl border border-[#C9A24B]/50 bg-[#0A0A0A]/80 p-3 sm:p-6 shadow-[0_0_40px_rgba(201,162,75,0.06)]">
-            {/* Toolbar */}
-            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-4 sm:mb-6">
-              <div className="flex items-center gap-4">
-                <h2 className="text-base sm:text-lg font-semibold text-[#E6CF92]">
-                  {items.length} {items.length === 1 ? 'Item' : 'Items'}
-                </h2>
-                <button
-                  onClick={clear}
-                  className="text-[11px] uppercase tracking-[0.2em] text-[#F3EBDD]/50 hover:text-[#E6CF92] underline-offset-4 hover:underline transition-colors min-h-[32px]"
-                >
-                  Clear all
-                </button>
-              </div>
 
-              <label className="relative flex items-center gap-3 rounded-lg border border-[#C9A24B]/50 bg-[#050505]/70 px-4 py-2 sm:w-[260px] cursor-pointer">
-                <SlidersHorizontal className="h-5 w-5 text-[#C9A24B] stroke-[1.5] shrink-0" />
-                <span className="flex flex-col leading-tight flex-1">
-                  <span className="text-[10px] text-[#F3EBDD]/60">Sort by</span>
-                  <span className="text-sm text-[#F3EBDD]">
-                    {SORT_OPTIONS.find((o) => o.value === sort)?.label}
-                  </span>
+            {items.length > 0 && (
+              <div className="mt-6 flex flex-wrap gap-2">
+                <span className="kv-pill">
+                  <Heart className="h-3.5 w-3.5 text-[#D6B06A]" strokeWidth={1.7} />
+                  {items.length} {items.length === 1 ? 'piece' : 'pieces'} saved
                 </span>
-                <ChevronDown className="h-5 w-5 text-[#C9A24B] shrink-0" />
-                <select
-                  aria-label="Sort wishlist"
-                  value={sort}
-                  onChange={(e) => setSort(e.target.value as SortKey)}
-                  className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
-                >
-                  {SORT_OPTIONS.map((o) => (
-                    <option key={o.value} value={o.value} className="bg-[#0A0A0A] text-[#F3EBDD]">
-                      {o.label}
-                    </option>
-                  ))}
-                </select>
-              </label>
-            </div>
+                <span className="kv-pill">Total {formatINR(totalValue)}</span>
+                {totalSavings > 0 && <span className="kv-pill !text-[#5FD08A]">Saving {formatINR(totalSavings)}</span>}
+              </div>
+            )}
+          </div>
+        </MetalCard>
 
-            {/* Grid */}
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-5">
-              {sorted.map((item) => {
-                const category = categoryOf(item.name);
-                const hasDiscount = item.mrp > item.price;
-
-                return (
-                  <div
-                    key={item.productId}
-                    className="group relative rounded-xl border border-[#C9A24B]/40 bg-[#0C0C0C] overflow-hidden hover:border-[#E6CF92]/80 hover:shadow-[0_0_28px_rgba(201,162,75,0.12)] transition-all duration-300"
-                  >
-                    <Link href={`/product/${item.slug}`} className="block">
-                      <div className="aspect-[4/5] overflow-hidden bg-[#050505] border-b border-[#C9A24B]/30">
-                        {/* eslint-disable-next-line @next/next/no-img-element */}
-                        <img
-                          src={item.image}
-                          alt={item.name}
-                          className="w-full h-full object-cover object-center group-hover:scale-[1.03] transition-transform duration-500"
-                        />
-                      </div>
-
-                      <div className="px-3 sm:px-4 pt-3 pb-4">
-                        <div className="flex items-center gap-1.5" aria-hidden="true">
-                          {SWATCHES.map((c, i) => (
-                            <span
-                              key={i}
-                              className="h-4 w-4 sm:h-5 sm:w-5 rounded-full border border-[#F3EBDD]/70"
-                              style={{ backgroundColor: c }}
-                            />
-                          ))}
-                        </div>
-
-                        {category && (
-                          <p className="mt-3 text-[9px] sm:text-[10px] uppercase tracking-[0.25em] text-[#C9A24B] font-semibold">
-                            {category}
-                          </p>
-                        )}
-                        <h3 className="mt-1 text-sm sm:text-base uppercase leading-snug text-[#F3EBDD] group-hover:text-[#E6CF92] transition-colors line-clamp-2">
-                          {item.name}
-                        </h3>
-                        <p className="mt-2 flex items-baseline gap-2">
-                          <span className="font-bold text-base sm:text-xl tracking-tight text-[#E6CF92]">
-                            {formatINR(item.price)}
-                          </span>
-                          {hasDiscount && (
-                            <span className="text-xs sm:text-sm text-[#F3EBDD]/45 line-through">
-                              {formatINR(item.mrp)}
-                            </span>
-                          )}
-                        </p>
-                      </div>
-                    </Link>
-
-                    {/* Wishlist heart (saved) */}
-                    <span
-                      aria-hidden="true"
-                      className="absolute top-3 right-3 h-9 w-9 flex items-center justify-center rounded-full bg-[#050505]/70 backdrop-blur border border-[#C9A24B]/40 pointer-events-none"
+        <div className="mt-5 lg:mt-6">
+          {items.length === 0 ? (
+            <MetalCard>
+              <div className="flex flex-col items-center px-6 py-16 text-center sm:py-24">
+                <IconDisc icon={Heart} size={64} />
+                <h2 className="mt-6 text-[26px] text-white sm:text-[32px]" style={SERIF_STYLE}>
+                  Your wishlist is empty
+                </h2>
+                <p className="mb-8 mt-2 max-w-sm text-[13px] leading-6 text-[#9296A0]">
+                  Save the pieces you love and they will wait for you here.
+                </p>
+                <Link href="/shop" className="kv-btn-primary">
+                  Explore the shop <ArrowRight className="h-4 w-4" />
+                </Link>
+              </div>
+            </MetalCard>
+          ) : (
+            <MetalCard>
+              <div className="p-4 sm:p-6">
+                {/* Toolbar */}
+                <div className="mb-5 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                  <div className="flex items-center gap-4">
+                    <h2 className="text-[12px] font-bold uppercase tracking-[0.16em] text-white">
+                      {items.length} {items.length === 1 ? 'Item' : 'Items'}
+                    </h2>
+                    <button
+                      type="button"
+                      onClick={clear}
+                      className="min-h-[44px] text-[11px] uppercase tracking-[0.18em] text-[#9296A0] transition-colors hover:text-[#EF7B7B]"
                     >
-                      <Heart className="h-5 w-5 fill-red-500 text-red-500" />
-                    </span>
-
-                    {/* Remove */}
-                    <div className="absolute inset-x-0 top-0 aspect-[4/5] pointer-events-none">
-                      <button
-                        aria-label={`Remove ${item.name}`}
-                        onClick={() => remove(item.productId)}
-                        className="pointer-events-auto absolute bottom-3 right-3 h-10 w-10 flex items-center justify-center rounded-full bg-[#050505]/80 backdrop-blur border border-[#C9A24B]/50 text-[#F3EBDD]/80 hover:text-[#E6CF92] hover:border-[#E6CF92] transition-colors"
-                      >
-                        <Trash2 className="h-4 w-4 stroke-[1.5]" />
-                      </button>
-                    </div>
+                      Clear all
+                    </button>
                   </div>
-                );
-              })}
-            </div>
-          </section>
-        )}
+
+                  <label className="relative flex min-h-[48px] cursor-pointer items-center gap-3 rounded-full border border-[#42454C] bg-[#1E2024] px-4 sm:w-[260px]">
+                    <SlidersHorizontal className="h-4 w-4 shrink-0 text-[#D6B06A]" strokeWidth={1.7} />
+                    <span className="flex flex-1 flex-col leading-tight">
+                      <span className="text-[10px] text-[#9296A0]">Sort by</span>
+                      <span className="text-[13px] text-white">{SORT_OPTIONS.find((o) => o.value === sort)?.label}</span>
+                    </span>
+                    <ChevronDown className="h-4 w-4 shrink-0 text-[#9296A0]" />
+                    <select
+                      aria-label="Sort wishlist"
+                      value={sort}
+                      onChange={(e) => setSort(e.target.value as SortKey)}
+                      className="absolute inset-0 h-full w-full cursor-pointer opacity-0"
+                    >
+                      {SORT_OPTIONS.map((o) => (
+                        <option key={o.value} value={o.value} className="bg-[#16171B] text-white">
+                          {o.label}
+                        </option>
+                      ))}
+                    </select>
+                  </label>
+                </div>
+
+                {/* Grid */}
+                <div className="grid grid-cols-2 gap-3 sm:gap-5 lg:grid-cols-4">
+                  {sorted.map((item) => {
+                    const hasDiscount = item.mrp > item.price;
+                    const off = hasDiscount ? Math.round(((item.mrp - item.price) / item.mrp) * 100) : 0;
+
+                    return (
+                      <div
+                        key={item.productId}
+                        className="group relative min-w-0 overflow-hidden rounded-2xl border border-[#33363D] bg-[#141518] transition-colors hover:border-[#5a5e67]"
+                      >
+                        <Link href={`/product/${item.slug}`} className="block">
+                          <div className="relative aspect-[4/5] overflow-hidden border-b border-[#2c2e34] bg-[radial-gradient(circle_at_50%_30%,#2e3036,#141518)]">
+                            {item.image ? (
+                              // eslint-disable-next-line @next/next/no-img-element
+                              <img
+                                src={item.image}
+                                alt={item.name}
+                                className="h-full w-full object-cover object-center transition-transform duration-500 group-hover:scale-[1.03]"
+                              />
+                            ) : null}
+                            {off > 0 && (
+                              <span className="absolute left-3 top-3 rounded-full border border-[#5a4a2a] bg-[#261f12]/90 px-2.5 py-1 text-[10px] font-semibold text-[#D6B06A]">
+                                {off}% OFF
+                              </span>
+                            )}
+                          </div>
+
+                          <div className="px-3 pb-4 pt-3 sm:px-4">
+                            <h3
+                              title={item.name}
+                              className="line-clamp-2 min-h-[38px] break-words text-[13px] font-medium leading-[19px] text-white sm:text-[14px]"
+                            >
+                              {item.name}
+                            </h3>
+                            <p className="mt-2 flex flex-wrap items-baseline gap-x-2">
+                              <span className="text-[16px] font-semibold tabular-nums text-white sm:text-[18px]">
+                                {formatINR(item.price)}
+                              </span>
+                              {hasDiscount && (
+                                <span className="text-[12px] tabular-nums text-[#9296A0] line-through">{formatINR(item.mrp)}</span>
+                              )}
+                            </p>
+                          </div>
+                        </Link>
+
+                        <button
+                          type="button"
+                          aria-label={`Remove ${item.name} from wishlist`}
+                          onClick={() => remove(item.productId)}
+                          className="kv-disc absolute right-3 top-3 h-11 w-11 transition hover:brightness-125"
+                        >
+                          <Trash2 className="h-4 w-4" strokeWidth={1.7} />
+                        </button>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            </MetalCard>
+          )}
+        </div>
       </div>
     </div>
+  );
+}
+
+// Customer-only page: signed-out visitors are asked to sign in and brought back here.
+export default function WishlistPage() {
+  return (
+    <CustomerAuthGate title="Sign in to view your wishlist">
+      <WishlistPageView />
+    </CustomerAuthGate>
   );
 }

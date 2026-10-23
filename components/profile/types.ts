@@ -17,6 +17,7 @@ export interface UserProfile {
   is_active?: boolean;
   role?: string;
   auth_provider?: 'email' | 'google' | string;
+  created_at?: string;
 }
 
 export interface Order {

@@ -2,7 +2,14 @@ import './globals.css';
 
 import type { Metadata } from 'next';
 
-import { Inter } from 'next/font/google';
+import {
+  Archivo,
+  Bodoni_Moda,
+  Cormorant_Garamond,
+  Inter,
+  Manrope,
+  Unbounded,
+} from 'next/font/google';
 
 import { Providers } from '@/components/providers';
 
@@ -11,6 +18,43 @@ import { SiteShell } from '@/components/layout/site-shell';
 const inter = Inter({
   subsets: ['latin'],
   variable: '--font-inter',
+  display: 'swap',
+});
+
+const serif = Cormorant_Garamond({
+  subsets: ['latin'],
+  weight: ['400', '500', '600', '700'],
+  variable: '--font-serif',
+  display: 'swap',
+});
+
+// Display serif for the chrome homepage, navbar and footer.
+const bodoni = Bodoni_Moda({
+  subsets: ['latin'],
+  variable: '--font-bodoni',
+  display: 'swap',
+});
+
+// Archivo with the width axis (wdth 62-125) for the extended hero headline.
+const archivo = Archivo({
+  subsets: ['latin'],
+  axes: ['wdth'],
+  variable: '--font-archivo',
+  display: 'swap',
+});
+
+// Category page: Unbounded for the hero title, Manrope for UI text.
+const unbounded = Unbounded({
+  subsets: ['latin'],
+  weight: ['800'],
+  variable: '--font-unbounded',
+  display: 'swap',
+});
+
+const manrope = Manrope({
+  subsets: ['latin'],
+  weight: ['400', '500', '600', '700', '800'],
+  variable: '--font-manrope',
   display: 'swap',
 });
 
@@ -71,8 +115,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={inter.variable}>
-      <body className="font-sans bg-cream text-ink">
+    <html lang="en" className={`${inter.variable} ${serif.variable} ${bodoni.variable} ${archivo.variable} ${unbounded.variable} ${manrope.variable}`}>
+      <body className="font-sans bg-[#050505] text-ink">
         <Providers>
           <SiteShell>{children}</SiteShell>
         </Providers>

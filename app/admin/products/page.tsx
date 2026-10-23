@@ -109,15 +109,15 @@ const emptyForm = {
 
 /* shared UI tokens (presentation only) — KOVENIK forest green + gold */
 const inputCls =
-  "w-full min-h-11 rounded-xl border border-[#B89A5A]/25 bg-[#07180D] px-3.5 py-2.5 text-sm text-[#F4F0E6] outline-none transition duration-200 [color-scheme:dark] placeholder:text-[#5E7463] hover:border-[#B89A5A]/50 focus:border-[#C8A96B] focus:ring-4 focus:ring-[#B89A5A]/15";
+  "w-full min-h-11 rounded-xl border border-[#B89A5A]/25 bg-[#131210] px-3.5 py-2.5 text-sm text-[#F4F0E6] outline-none transition duration-200 [color-scheme:dark] placeholder:text-[#706C61] hover:border-[#B89A5A]/50 focus:border-[#C8A96B] focus:ring-4 focus:ring-[#B89A5A]/15";
 const labelCls =
-  "mb-1.5 block text-[11px] font-medium tracking-[0.08em] text-[#AEBDAF]";
+  "mb-1.5 block text-[11px] font-medium tracking-[0.08em] text-[#BEB7A5]";
 const goldBtn =
-  "bg-gradient-to-b from-[#C8A96B] to-[#B89A5A] text-[#07180D] shadow-[0_4px_16px_rgba(184,154,90,0.22)] hover:from-[#D6BB84] hover:to-[#C8A96B]";
+  "bg-gradient-to-b from-[#C8A96B] to-[#B89A5A] text-[#131210] shadow-[0_4px_16px_rgba(184,154,90,0.22)] hover:from-[#D6BB84] hover:to-[#C8A96B]";
 const panelCls =
-  "rounded-xl border border-[#B89A5A]/20 bg-gradient-to-br from-[#12351F] via-[#0D2415] to-[#0A1D11] shadow-[0_8px_30px_-12px_rgba(0,0,0,0.6)]";
+  "rounded-xl border border-[#B89A5A]/20 bg-gradient-to-br from-[#2A2824] via-[#1C1B18] to-[#171614] shadow-[0_8px_30px_-12px_rgba(0,0,0,0.6)]";
 const selectCls =
-  "h-11 w-full cursor-pointer appearance-none rounded-lg border border-[#B89A5A]/25 bg-[#0D2415] pl-3.5 pr-9 text-[13px] text-[#F4F0E6] outline-none transition duration-200 [color-scheme:dark] hover:border-[#B89A5A]/55 focus:border-[#C8A96B] focus:ring-4 focus:ring-[#B89A5A]/15";
+  "h-11 w-full cursor-pointer appearance-none rounded-lg border border-[#B89A5A]/25 bg-[#1C1B18] pl-3.5 pr-9 text-[13px] text-[#F4F0E6] outline-none transition duration-200 [color-scheme:dark] hover:border-[#B89A5A]/55 focus:border-[#C8A96B] focus:ring-4 focus:ring-[#B89A5A]/15";
 
 const tableGrid =
   "grid-cols-[40px_minmax(240px,2.3fr)_minmax(90px,.9fr)_minmax(100px,.9fr)_minmax(64px,.6fr)_minmax(90px,.9fr)_minmax(110px,1fr)_92px]";
@@ -619,7 +619,7 @@ export default function AdminProductsPage() {
         <div className="flex flex-wrap items-baseline gap-x-2">
           <span className="text-[15px] font-semibold tabular-nums text-[#F4F0E6]">₹{inr(priceOf(p))}</span>
           {p.mrp && p.mrp > priceOf(p) ? (
-            <span className="text-[11px] text-[#7F9484] line-through tabular-nums">₹{inr(p.mrp)}</span>
+            <span className="text-[11px] text-[#928C7E] line-through tabular-nums">₹{inr(p.mrp)}</span>
           ) : null}
         </div>
         {off > 0 && (
@@ -635,7 +635,7 @@ export default function AdminProductsPage() {
     stock === 0 ? "text-red-400" : stock <= 5 ? "text-[#E0A24A]" : "text-[#9FD3A8]";
 
   const thumb = (p: Product, cls: string) => (
-    <div className={`shrink-0 overflow-hidden rounded-lg border border-[#B89A5A]/30 bg-[#0D2415] ${cls}`}>
+    <div className={`shrink-0 overflow-hidden rounded-lg border border-[#B89A5A]/30 bg-[#1C1B18] ${cls}`}>
       {p.images?.[0]?.image_url ? (
         <img
           src={p.images[0].image_url}
@@ -643,7 +643,7 @@ export default function AdminProductsPage() {
           className="h-full w-full object-cover"
         />
       ) : (
-        <div className="flex h-full items-center justify-center text-[#5E7463]">
+        <div className="flex h-full items-center justify-center text-[#706C61]">
           <ImageOff className="h-5 w-5" />
         </div>
       )}
@@ -686,7 +686,7 @@ export default function AdminProductsPage() {
           small ? "px-2.5 py-1 text-[11px]" : "px-3 py-1 text-[11px]"
         } ${
           active
-            ? "border-[#B89A5A]/35 bg-[#1C5A34]/70 text-[#CFEBD3]"
+            ? "border-[#B89A5A]/35 bg-[#46433C]/70 text-[#E9E0CA]"
             : "border-[#9C5A4A]/50 bg-[#5A2A25]/60 text-[#F0B7AB]"
         }`}
       >
@@ -705,7 +705,7 @@ export default function AdminProductsPage() {
           e.stopPropagation();
           setMenuId(menuId === p.id ? null : p.id);
         }}
-        className="flex h-10 w-9 items-center justify-center rounded-lg border border-[#B89A5A]/15 bg-[#0D2415] text-[#AEBDAF] outline-none transition hover:border-[#B89A5A]/45 hover:text-[#F4F0E6] focus-visible:ring-2 focus-visible:ring-[#C8A96B]"
+        className="flex h-10 w-9 items-center justify-center rounded-lg border border-[#B89A5A]/15 bg-[#1C1B18] text-[#BEB7A5] outline-none transition hover:border-[#B89A5A]/45 hover:text-[#F4F0E6] focus-visible:ring-2 focus-visible:ring-[#C8A96B]"
       >
         <MoreVertical className="h-4 w-4" />
       </button>
@@ -719,7 +719,7 @@ export default function AdminProductsPage() {
             className="fixed inset-0 z-30 cursor-default"
           />
           <div
-            className={`absolute right-0 z-40 w-44 overflow-hidden rounded-lg border border-[#B89A5A]/35 bg-[#0D2415] py-1 shadow-[0_16px_40px_-10px_rgba(0,0,0,0.9)] ${
+            className={`absolute right-0 z-40 w-44 overflow-hidden rounded-lg border border-[#B89A5A]/35 bg-[#1C1B18] py-1 shadow-[0_16px_40px_-10px_rgba(0,0,0,0.9)] ${
               up ? "bottom-full mb-1.5" : "top-full mt-1.5"
             }`}
           >
@@ -757,7 +757,7 @@ export default function AdminProductsPage() {
       onClick={() => openEdit(p)}
       aria-label={`Edit ${p.name}`}
       title="Edit"
-      className="flex h-10 w-10 items-center justify-center rounded-lg border border-[#B89A5A]/55 bg-transparent text-[#C8A96B] outline-none transition hover:bg-[#B89A5A] hover:text-[#07180D] focus-visible:ring-2 focus-visible:ring-[#C8A96B]"
+      className="flex h-10 w-10 items-center justify-center rounded-lg border border-[#B89A5A]/55 bg-transparent text-[#C8A96B] outline-none transition hover:bg-[#B89A5A] hover:text-[#131210] focus-visible:ring-2 focus-visible:ring-[#C8A96B]"
     >
       <Pencil className="h-4 w-4" />
     </button>
@@ -770,9 +770,9 @@ export default function AdminProductsPage() {
         .kv-pop { animation: kv-pop .35s cubic-bezier(.2,.7,.2,1) both; }
         @media (prefers-reduced-motion: reduce) { .kv-pop { animation: none; } }
         .kv-scope ::selection { background: rgba(184,154,90,.3); color: #fff; }
-        .kv-scope * { scrollbar-width: thin; scrollbar-color: #3b5a43 transparent; }
+        .kv-scope * { scrollbar-width: thin; scrollbar-color: #514E46 transparent; }
         .kv-scope *::-webkit-scrollbar { width: 7px; height: 7px; }
-        .kv-scope *::-webkit-scrollbar-thumb { background: #3b5a43; border-radius: 999px; }
+        .kv-scope *::-webkit-scrollbar-thumb { background: #514E46; border-radius: 999px; }
         .kv-scope *::-webkit-scrollbar-track { background: transparent; }
         .kv-scope button, .kv-scope a, .kv-scope input, .kv-scope select, .kv-scope textarea { -webkit-tap-highlight-color: transparent; }
         @media (max-width: 639px) {
@@ -786,7 +786,7 @@ export default function AdminProductsPage() {
           <h2 className="font-serif text-3xl font-semibold leading-tight tracking-tight text-[#F4F0E6] sm:text-4xl">
             Product Management
           </h2>
-          <p className="mt-1.5 text-sm text-[#AEBDAF]">
+          <p className="mt-1.5 text-sm text-[#BEB7A5]">
             Manage your products, variants, inventory and more.
           </p>
         </div>
@@ -810,7 +810,7 @@ export default function AdminProductsPage() {
               key={s.label}
               className={`${panelCls} flex items-center gap-3 p-3.5 transition-colors duration-300 hover:border-[#C8A96B]/45 sm:gap-4 sm:p-4`}
             >
-              <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg border border-[#B89A5A]/40 bg-[#163D25] text-[#C8A96B] sm:h-12 sm:w-12">
+              <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg border border-[#B89A5A]/40 bg-[#312F2A] text-[#C8A96B] sm:h-12 sm:w-12">
                 <Icon className="h-5 w-5" />
               </span>
               <div className="min-w-0">
@@ -818,7 +818,7 @@ export default function AdminProductsPage() {
                 <p className="mt-0.5 font-serif text-3xl font-semibold leading-none tabular-nums text-[#F4F0E6]">
                   {loading && products.length === 0 ? "—" : s.value}
                 </p>
-                <p className="mt-1 hidden truncate text-[11px] text-[#AEBDAF] sm:block">{s.sub}</p>
+                <p className="mt-1 hidden truncate text-[11px] text-[#BEB7A5] sm:block">{s.sub}</p>
               </div>
             </div>
           );
@@ -836,7 +836,7 @@ export default function AdminProductsPage() {
               if (e.key === "Enter") loadProducts();
             }}
             placeholder="Search products..."
-            className="h-11 w-full rounded-lg border border-[#B89A5A]/25 bg-[#0D2415] pl-9 pr-3 text-[13px] text-[#F4F0E6] outline-none transition placeholder:text-[#5E7463] hover:border-[#B89A5A]/55 focus:border-[#C8A96B] focus:ring-4 focus:ring-[#B89A5A]/15"
+            className="h-11 w-full rounded-lg border border-[#B89A5A]/25 bg-[#1C1B18] pl-9 pr-3 text-[13px] text-[#F4F0E6] outline-none transition placeholder:text-[#706C61] hover:border-[#B89A5A]/55 focus:border-[#C8A96B] focus:ring-4 focus:ring-[#B89A5A]/15"
           />
         </div>
         <button
@@ -860,9 +860,9 @@ export default function AdminProductsPage() {
               if (e.key === "Enter") loadProducts();
             }}
             placeholder="Search products by name, SKU..."
-            className="h-11 w-full rounded-lg border border-[#B89A5A]/25 bg-[#0D2415] pl-10 pr-10 text-[13px] text-[#F4F0E6] outline-none transition placeholder:text-[#5E7463] hover:border-[#B89A5A]/55 focus:border-[#C8A96B] focus:ring-4 focus:ring-[#B89A5A]/15"
+            className="h-11 w-full rounded-lg border border-[#B89A5A]/25 bg-[#1C1B18] pl-10 pr-10 text-[13px] text-[#F4F0E6] outline-none transition placeholder:text-[#706C61] hover:border-[#B89A5A]/55 focus:border-[#C8A96B] focus:ring-4 focus:ring-[#B89A5A]/15"
           />
-          <kbd className="pointer-events-none absolute right-3 top-1/2 flex h-6 w-6 -translate-y-1/2 items-center justify-center rounded border border-[#B89A5A]/25 text-[11px] text-[#7F9484]">
+          <kbd className="pointer-events-none absolute right-3 top-1/2 flex h-6 w-6 -translate-y-1/2 items-center justify-center rounded border border-[#B89A5A]/25 text-[11px] text-[#928C7E]">
             /
           </kbd>
         </div>
@@ -955,14 +955,14 @@ export default function AdminProductsPage() {
               </button>
             ))}
             {selected.length > 0 && (
-              <span className="ml-auto text-[11px] text-[#AEBDAF]">{selected.length} selected</span>
+              <span className="ml-auto text-[11px] text-[#BEB7A5]">{selected.length} selected</span>
             )}
           </div>
         )}
 
         {/* loading / empty */}
         {loading && products.length === 0 && (
-          <div className="flex items-center justify-center gap-2 py-16 text-sm text-[#AEBDAF]">
+          <div className="flex items-center justify-center gap-2 py-16 text-sm text-[#BEB7A5]">
             <Loader2 className="h-4 w-4 animate-spin text-[#C8A96B]" />
             Loading products...
           </div>
@@ -970,11 +970,11 @@ export default function AdminProductsPage() {
 
         {!loading && filtered.length === 0 && (
           <div className="flex flex-col items-center justify-center gap-3 px-4 py-16 text-center">
-            <span className="flex h-14 w-14 items-center justify-center rounded-xl border border-[#B89A5A]/35 bg-[#163D25] text-[#C8A96B]">
+            <span className="flex h-14 w-14 items-center justify-center rounded-xl border border-[#B89A5A]/35 bg-[#312F2A] text-[#C8A96B]">
               <PackageOpen className="h-6 w-6" />
             </span>
             <p className="text-sm font-medium text-[#F4F0E6]">No products found</p>
-            <p className="text-xs text-[#7F9484]">
+            <p className="text-xs text-[#928C7E]">
               Try a different search or filter, or add a new product.
             </p>
           </div>
@@ -985,7 +985,7 @@ export default function AdminProductsPage() {
           <div className="hidden overflow-x-auto md:block">
             <div className="min-w-[960px]">
               <div
-                className={`grid ${tableGrid} items-center border-b border-[#B89A5A]/20 bg-[#07180D]/50 px-4 py-3 text-[11px] font-semibold tracking-[0.12em] text-[#C8A96B] lg:px-5`}
+                className={`grid ${tableGrid} items-center border-b border-[#B89A5A]/20 bg-[#131210]/50 px-4 py-3 text-[11px] font-semibold tracking-[0.12em] text-[#C8A96B] lg:px-5`}
               >
                 <div>
                   <input
@@ -1037,13 +1037,13 @@ export default function AdminProductsPage() {
                           <span className="block truncate text-[13px] font-semibold text-[#F4F0E6]">
                             {product.name}
                           </span>
-                          <span className="mt-1 block truncate text-[11px] text-[#7F9484]">
+                          <span className="mt-1 block truncate text-[11px] text-[#928C7E]">
                             SKU: {skuOf(product)}
                           </span>
                         </span>
                       </button>
 
-                      <span className="truncate pr-3 text-xs text-[#AEBDAF]">
+                      <span className="truncate pr-3 text-xs text-[#BEB7A5]">
                         {product.category_label || "Uncategorized"}
                       </span>
 
@@ -1063,7 +1063,7 @@ export default function AdminProductsPage() {
 
                       <div>{statusBadge(product)}</div>
 
-                      <span className="text-xs tabular-nums text-[#AEBDAF]">{createdOf(product)}</span>
+                      <span className="text-xs tabular-nums text-[#BEB7A5]">{createdOf(product)}</span>
 
                       <div className="flex justify-end gap-1.5">
                         {editBtn(product)}
@@ -1090,7 +1090,7 @@ export default function AdminProductsPage() {
                   className={`rounded-xl border p-3.5 transition ${
                     isSel
                       ? "border-[#C8A96B]/60 bg-[#B89A5A]/[0.08]"
-                      : "border-[#B89A5A]/20 bg-gradient-to-br from-[#12351F] to-[#0D2415]"
+                      : "border-[#B89A5A]/20 bg-gradient-to-br from-[#2A2824] to-[#1C1B18]"
                   }`}
                 >
                   <div className="flex gap-3">
@@ -1098,7 +1098,7 @@ export default function AdminProductsPage() {
                       type="button"
                       onClick={() => openPreview(product)}
                       aria-label={`View ${product.name}`}
-                      className="h-[72px] w-[72px] shrink-0 overflow-hidden rounded-lg border border-[#B89A5A]/30 bg-[#0D2415]"
+                      className="h-[72px] w-[72px] shrink-0 overflow-hidden rounded-lg border border-[#B89A5A]/30 bg-[#1C1B18]"
                     >
                       {product.images?.[0]?.image_url ? (
                         <img
@@ -1107,7 +1107,7 @@ export default function AdminProductsPage() {
                           className="h-full w-full object-cover"
                         />
                       ) : (
-                        <div className="flex h-full items-center justify-center text-[#5E7463]">
+                        <div className="flex h-full items-center justify-center text-[#706C61]">
                           <ImageOff className="h-5 w-5" />
                         </div>
                       )}
@@ -1123,7 +1123,7 @@ export default function AdminProductsPage() {
                           <p className="line-clamp-2 text-[13px] font-semibold leading-5 text-[#F4F0E6]">
                             {product.name}
                           </p>
-                          <p className="mt-0.5 truncate text-[11px] text-[#7F9484]">
+                          <p className="mt-0.5 truncate text-[11px] text-[#928C7E]">
                             SKU: {skuOf(product)}
                           </p>
                         </button>
@@ -1143,11 +1143,11 @@ export default function AdminProductsPage() {
 
                   <div className="mt-3 grid grid-cols-2 items-center gap-x-3 gap-y-2.5 border-t border-[#B89A5A]/15 pt-3">
                     <div>{priceView(product)}</div>
-                    <p className="text-right text-xs text-[#AEBDAF]">
+                    <p className="text-right text-xs text-[#BEB7A5]">
                       Stock:{" "}
                       <span className={`font-semibold tabular-nums ${stockClr(stock)}`}>{stock}</span>
                     </p>
-                    <p className="min-w-0 truncate text-xs text-[#AEBDAF]">
+                    <p className="min-w-0 truncate text-xs text-[#BEB7A5]">
                       {product.category_label || "Uncategorized"}
                     </p>
                     <div className="flex justify-end">{statusBadge(product, true)}</div>
@@ -1170,7 +1170,7 @@ export default function AdminProductsPage() {
         {/* PAGINATION */}
         {!loading && filtered.length > 0 && (
           <div className="flex flex-col gap-3 border-t border-[#B89A5A]/20 px-4 py-3.5 sm:flex-row sm:items-center sm:justify-between">
-            <span className="text-center text-[12px] text-[#AEBDAF] sm:text-left">
+            <span className="text-center text-[12px] text-[#BEB7A5] sm:text-left">
               Showing {start + 1} to {Math.min(start + perPage, filtered.length)} of{" "}
               {filtered.length} products
             </span>
@@ -1180,7 +1180,7 @@ export default function AdminProductsPage() {
                 type="button"
                 onClick={() => setPage(Math.max(1, safePage - 1))}
                 disabled={safePage === 1}
-                className="flex h-9 w-9 items-center justify-center rounded-md border border-[#B89A5A]/30 bg-[#163D25] text-[#C8A96B] transition hover:border-[#C8A96B]/70 disabled:cursor-not-allowed disabled:opacity-35"
+                className="flex h-9 w-9 items-center justify-center rounded-md border border-[#B89A5A]/30 bg-[#312F2A] text-[#C8A96B] transition hover:border-[#C8A96B]/70 disabled:cursor-not-allowed disabled:opacity-35"
                 aria-label="Previous page"
               >
                 <ArrowLeft className="h-4 w-4" />
@@ -1194,7 +1194,7 @@ export default function AdminProductsPage() {
                   className={`h-9 min-w-9 rounded-md border px-2 text-xs font-semibold transition ${
                     n === safePage
                       ? `border-transparent ${goldBtn}`
-                      : "border-[#B89A5A]/20 bg-[#163D25] text-[#F4F0E6] hover:border-[#C8A96B]/60"
+                      : "border-[#B89A5A]/20 bg-[#312F2A] text-[#F4F0E6] hover:border-[#C8A96B]/60"
                   }`}
                 >
                   {n}
@@ -1205,7 +1205,7 @@ export default function AdminProductsPage() {
                 type="button"
                 onClick={() => setPage(Math.min(pageCount, safePage + 1))}
                 disabled={safePage === pageCount}
-                className="flex h-9 w-9 items-center justify-center rounded-md border border-[#B89A5A]/30 bg-[#163D25] text-[#C8A96B] transition hover:border-[#C8A96B]/70 disabled:cursor-not-allowed disabled:opacity-35"
+                className="flex h-9 w-9 items-center justify-center rounded-md border border-[#B89A5A]/30 bg-[#312F2A] text-[#C8A96B] transition hover:border-[#C8A96B]/70 disabled:cursor-not-allowed disabled:opacity-35"
                 aria-label="Next page"
               >
                 <ArrowRight className="h-4 w-4" />
@@ -1223,7 +1223,7 @@ export default function AdminProductsPage() {
             onClick={() => setFiltersOpen(false)}
             className="absolute inset-0 bg-black/80 backdrop-blur-sm"
           />
-          <div className="kv-pop absolute inset-x-0 bottom-0 max-h-[90dvh] overflow-y-auto rounded-t-2xl border border-b-0 border-[#B89A5A]/40 bg-gradient-to-b from-[#12351F] to-[#07180D] p-5 pb-6">
+          <div className="kv-pop absolute inset-x-0 bottom-0 max-h-[90dvh] overflow-y-auto rounded-t-2xl border border-b-0 border-[#B89A5A]/40 bg-gradient-to-b from-[#2A2824] to-[#131210] p-5 pb-6">
             <div className="mb-4 flex items-center justify-between">
               <h3 className="font-serif text-xl font-semibold text-[#F4F0E6]">Filters</h3>
               <button
@@ -1275,7 +1275,7 @@ export default function AdminProductsPage() {
                   className={`h-11 rounded-lg border text-xs font-semibold transition ${
                     statusFilter === opt.v
                       ? "border-[#C8A96B] bg-[#B89A5A]/20 text-[#F4F0E6]"
-                      : "border-[#B89A5A]/25 bg-[#0D2415] text-[#AEBDAF]"
+                      : "border-[#B89A5A]/25 bg-[#1C1B18] text-[#BEB7A5]"
                   }`}
                 >
                   {opt.l}
@@ -1313,7 +1313,7 @@ export default function AdminProductsPage() {
                   setSortBy("default");
                   setPage(1);
                 }}
-                className="h-12 rounded-lg border border-[#B89A5A]/50 bg-[#0D2415] text-sm font-semibold text-[#C8A96B] transition hover:bg-[#B89A5A]/10"
+                className="h-12 rounded-lg border border-[#B89A5A]/50 bg-[#1C1B18] text-sm font-semibold text-[#C8A96B] transition hover:bg-[#B89A5A]/10"
               >
                 Reset
               </button>
@@ -1334,7 +1334,7 @@ export default function AdminProductsPage() {
 
       {/* FLOATING SELECTION BAR */}
       {selected.length > 0 && (
-        <div className="fixed inset-x-3 bottom-20 z-40 flex items-center justify-between gap-3 rounded-xl border border-[#B89A5A]/50 bg-[#0D2415] px-4 py-2.5 text-sm text-[#F4F0E6] shadow-[0_16px_40px_-10px_rgba(0,0,0,0.9)] sm:bottom-3 sm:left-1/2 sm:right-auto sm:inset-x-auto sm:-translate-x-1/2 sm:justify-center sm:rounded-full sm:pl-6 sm:pr-2.5">
+        <div className="fixed inset-x-3 bottom-20 z-40 flex items-center justify-between gap-3 rounded-xl border border-[#B89A5A]/50 bg-[#1C1B18] px-4 py-2.5 text-sm text-[#F4F0E6] shadow-[0_16px_40px_-10px_rgba(0,0,0,0.9)] sm:bottom-3 sm:left-1/2 sm:right-auto sm:inset-x-auto sm:-translate-x-1/2 sm:justify-center sm:rounded-full sm:pl-6 sm:pr-2.5">
           <span className="tabular-nums">{selected.length} selected</span>
           {selectedOne && (
             <button
@@ -1363,13 +1363,13 @@ export default function AdminProductsPage() {
           />
 
           <aside
-            className="fixed inset-y-0 right-0 z-[60] flex w-full max-w-[430px] flex-col border-l border-[#B89A5A]/35 bg-gradient-to-b from-[#0D2415] to-[#07180D] shadow-[-24px_0_70px_-20px_rgba(0,0,0,.9)]"
+            className="fixed inset-y-0 right-0 z-[60] flex w-full max-w-[430px] flex-col border-l border-[#B89A5A]/35 bg-gradient-to-b from-[#1C1B18] to-[#131210] shadow-[-24px_0_70px_-20px_rgba(0,0,0,.9)]"
             aria-label="Product details"
           >
             <div className="flex items-center justify-between border-b border-[#B89A5A]/20 px-5 py-4">
               <div>
                 <p className="font-serif text-lg font-semibold text-[#F4F0E6]">Product details</p>
-                <p className="mt-0.5 text-xs text-[#7F9484]">
+                <p className="mt-0.5 text-xs text-[#928C7E]">
                   Catalog / {previewProduct.category_label || "Uncategorized"}
                 </p>
               </div>
@@ -1377,7 +1377,7 @@ export default function AdminProductsPage() {
               <button
                 onClick={() => setPreviewProduct(null)}
                 aria-label="Close"
-                className="flex h-9 w-9 items-center justify-center rounded-full border border-[#B89A5A]/40 bg-[#12351F] text-[#C8A96B] transition hover:bg-[#B89A5A] hover:text-[#07180D]"
+                className="flex h-9 w-9 items-center justify-center rounded-full border border-[#B89A5A]/40 bg-[#2A2824] text-[#C8A96B] transition hover:bg-[#B89A5A] hover:text-[#131210]"
               >
                 <X className="h-4 w-4" />
               </button>
@@ -1385,7 +1385,7 @@ export default function AdminProductsPage() {
 
             <div className="min-h-0 flex-1 overflow-y-auto">
               <div className="p-5">
-                <div className="relative overflow-hidden rounded-xl border border-[#B89A5A]/25 bg-[#07180D]">
+                <div className="relative overflow-hidden rounded-xl border border-[#B89A5A]/25 bg-[#131210]">
                   {previewImages.length ? (
                     <img
                       src={previewImages[previewImageIndex]?.image_url || previewImages[0].image_url}
@@ -1393,7 +1393,7 @@ export default function AdminProductsPage() {
                       className="aspect-[4/4.35] w-full object-cover"
                     />
                   ) : (
-                    <div className="flex aspect-[4/4.35] items-center justify-center text-[#5E7463]">
+                    <div className="flex aspect-[4/4.35] items-center justify-center text-[#706C61]">
                       <ImageOff className="h-10 w-10" />
                     </div>
                   )}
@@ -1432,7 +1432,7 @@ export default function AdminProductsPage() {
                       <button
                         key={image.id || image.image_url}
                         onClick={() => setPreviewImageIndex(index)}
-                        className={`h-16 w-14 shrink-0 overflow-hidden rounded-lg border-2 bg-[#0D2415] ${
+                        className={`h-16 w-14 shrink-0 overflow-hidden rounded-lg border-2 bg-[#1C1B18] ${
                           index === previewImageIndex ? "border-[#C8A96B]" : "border-transparent"
                         }`}
                       >
@@ -1452,7 +1452,7 @@ export default function AdminProductsPage() {
                       <h2 className="font-serif text-2xl font-semibold tracking-tight text-[#F4F0E6]">
                         {previewProduct.name}
                       </h2>
-                      <div className="mt-1 flex items-center gap-2 text-xs text-[#7F9484]">
+                      <div className="mt-1 flex items-center gap-2 text-xs text-[#928C7E]">
                         <span className="truncate">SKU: {skuOf(previewProduct)}</span>
                         <button
                           onClick={() => navigator.clipboard?.writeText(skuOf(previewProduct))}
@@ -1468,7 +1468,7 @@ export default function AdminProductsPage() {
                     <span
                       className={`shrink-0 rounded-full border px-3 py-1.5 text-[11px] font-semibold ${
                         previewStatus === "Active"
-                          ? "border-[#B89A5A]/35 bg-[#1C5A34]/70 text-[#CFEBD3]"
+                          ? "border-[#B89A5A]/35 bg-[#46433C]/70 text-[#E9E0CA]"
                           : previewStatus === "Low Stock"
                             ? "border-[#E0A24A]/40 bg-[#E0A24A]/10 text-[#E0A24A]"
                             : "border-red-400/40 bg-red-500/10 text-red-300"
@@ -1481,20 +1481,20 @@ export default function AdminProductsPage() {
                   <div className="mt-3 flex items-end gap-2">
                     <span className="text-[25px] font-semibold tabular-nums text-[#C8A96B]">₹{inr(previewPrice)}</span>
                     {previewProduct.mrp && previewProduct.mrp > previewPrice && (
-                      <span className="pb-1 text-sm text-[#7F9484] line-through">
+                      <span className="pb-1 text-sm text-[#928C7E] line-through">
                         ₹{inr(previewProduct.mrp)}
                       </span>
                     )}
                   </div>
                 </div>
 
-                <div className="mt-6 divide-y divide-[#B89A5A]/15 rounded-xl border border-[#B89A5A]/20 bg-[#12351F]/50">
+                <div className="mt-6 divide-y divide-[#B89A5A]/15 rounded-xl border border-[#B89A5A]/20 bg-[#2A2824]/50">
                   <div className="flex items-center justify-between gap-3 px-4 py-4">
                     <div className="flex items-center gap-3">
                       <PackageCheck className="h-5 w-5 text-[#C8A96B]" />
                       <div>
                         <p className="text-sm font-medium text-[#F4F0E6]">Inventory</p>
-                        <p className="text-xs text-[#7F9484]">
+                        <p className="text-xs text-[#928C7E]">
                           {previewStock === 0 ? "No units available" : `${previewStock} units available`}
                         </p>
                       </div>
@@ -1511,7 +1511,7 @@ export default function AdminProductsPage() {
                     <Tag className="mt-0.5 h-5 w-5 text-[#C8A96B]" />
                     <div>
                       <p className="text-sm font-medium text-[#F4F0E6]">Category</p>
-                      <p className="mt-0.5 text-xs text-[#7F9484]">
+                      <p className="mt-0.5 text-xs text-[#928C7E]">
                         {previewProduct.category_label || "Uncategorized"}
                       </p>
                     </div>
@@ -1530,7 +1530,7 @@ export default function AdminProductsPage() {
                           !previewProduct.new_arrival &&
                           !previewProduct.trending &&
                           !previewProduct.limited_edition && (
-                            <span className="text-xs text-[#5E7463]">No tags assigned</span>
+                            <span className="text-xs text-[#706C61]">No tags assigned</span>
                           )}
                       </div>
                     </div>
@@ -1539,7 +1539,7 @@ export default function AdminProductsPage() {
                   <div className="px-4 py-4">
                     <div className="flex items-center justify-between">
                       <p className="text-sm font-medium text-[#F4F0E6]">Variants</p>
-                      <span className="text-xs text-[#7F9484]">
+                      <span className="text-xs text-[#928C7E]">
                         {previewProduct.variants?.length || 0} variants
                       </span>
                     </div>
@@ -1548,12 +1548,12 @@ export default function AdminProductsPage() {
                       {(previewProduct.variants || []).slice(0, 8).map((variant, index) => (
                         <div
                           key={variant.id || index}
-                          className="min-w-[76px] rounded-lg border border-[#B89A5A]/25 bg-[#07180D] px-3 py-2"
+                          className="min-w-[76px] rounded-lg border border-[#B89A5A]/25 bg-[#131210] px-3 py-2"
                         >
                           <p className="text-xs font-semibold text-[#F4F0E6]">
                             {variant.size || "—"} · {variant.color || "—"}
                           </p>
-                          <p className="mt-0.5 text-[10px] text-[#7F9484]">
+                          <p className="mt-0.5 text-[10px] text-[#928C7E]">
                             {variant.inventory} stock
                           </p>
                         </div>
@@ -1565,7 +1565,7 @@ export default function AdminProductsPage() {
                 {previewProduct.description && (
                   <div className="mt-5">
                     <p className="text-sm font-medium text-[#C8A96B]">Description</p>
-                    <p className="mt-2 text-sm leading-6 text-[#AEBDAF]">
+                    <p className="mt-2 text-sm leading-6 text-[#BEB7A5]">
                       {previewProduct.description}
                     </p>
                   </div>
@@ -1573,7 +1573,7 @@ export default function AdminProductsPage() {
               </div>
             </div>
 
-            <div className="border-t border-[#B89A5A]/20 bg-[#07180D] p-4">
+            <div className="border-t border-[#B89A5A]/20 bg-[#131210] p-4">
               <div className="grid grid-cols-2 gap-2.5">
                 <button
                   onClick={() => openEdit(previewProduct)}
@@ -1598,14 +1598,14 @@ export default function AdminProductsPage() {
       {/* ADD / EDIT MODAL */}
       {modal && (
         <div className="fixed inset-0 z-[80] flex items-end justify-center bg-black/80 p-0 backdrop-blur-[3px] sm:items-center sm:p-4">
-          <div className="kv-pop flex h-[100dvh] w-full max-w-5xl flex-col overflow-hidden border border-[#B89A5A]/40 bg-gradient-to-br from-[#0D2415] via-[#0A1D11] to-[#07180D] shadow-[0_30px_100px_-20px_rgba(0,0,0,0.95)] sm:h-auto sm:max-h-[92vh] sm:rounded-2xl">
+          <div className="kv-pop flex h-[100dvh] w-full max-w-5xl flex-col overflow-hidden border border-[#B89A5A]/40 bg-gradient-to-br from-[#1C1B18] via-[#171614] to-[#131210] shadow-[0_30px_100px_-20px_rgba(0,0,0,0.95)] sm:h-auto sm:max-h-[92vh] sm:rounded-2xl">
             {/* header */}
             <div className="flex items-center justify-between gap-3 border-b border-[#B89A5A]/25 px-4 py-4 sm:px-6">
               <div className="min-w-0">
                 <h2 className="truncate font-serif text-2xl font-semibold text-[#F4F0E6]">
                   {editingId ? "Edit Product" : "Add New Product"}
                 </h2>
-                <p className="truncate text-xs text-[#7F9484]">
+                <p className="truncate text-xs text-[#928C7E]">
                   {editingId
                     ? "Update this product in your store"
                     : "Create a new product for your store"}
@@ -1637,7 +1637,7 @@ export default function AdminProductsPage() {
 
             <div className="grid min-h-0 flex-1 md:grid-cols-[200px_1fr]">
               {/* desktop section rail */}
-              <nav className="hidden border-r border-[#B89A5A]/20 bg-[#07180D]/60 p-3 md:block">
+              <nav className="hidden border-r border-[#B89A5A]/20 bg-[#131210]/60 p-3 md:block">
                 <div className="space-y-1.5">
                   {formSections.map((s, i) => (
                     <button
@@ -1653,7 +1653,7 @@ export default function AdminProductsPage() {
                         <span className="block truncate text-xs font-medium text-[#F4F0E6]">
                           {s.label}
                         </span>
-                        <span className="block truncate text-[10px] text-[#7F9484]">
+                        <span className="block truncate text-[10px] text-[#928C7E]">
                           {s.hint}
                         </span>
                       </span>
@@ -1751,12 +1751,12 @@ export default function AdminProductsPage() {
 
                 {/* 2. IMAGES */}
                 <FormSection id="kv-images" n={2} title="Product Images">
-                  <label className="group flex cursor-pointer flex-col items-center justify-center gap-2 rounded-xl border border-dashed border-[#B89A5A]/45 bg-[#07180D] px-4 py-8 text-center transition hover:border-[#C8A96B] hover:bg-[#B89A5A]/[0.05]">
+                  <label className="group flex cursor-pointer flex-col items-center justify-center gap-2 rounded-xl border border-dashed border-[#B89A5A]/45 bg-[#131210] px-4 py-8 text-center transition hover:border-[#C8A96B] hover:bg-[#B89A5A]/[0.05]">
                     <UploadCloud className="h-8 w-8 text-[#C8A96B] transition group-hover:scale-110" />
                     <span className="text-sm font-medium text-[#F4F0E6]">
                       Click to upload images
                     </span>
-                    <span className="text-xs text-[#7F9484]">
+                    <span className="text-xs text-[#928C7E]">
                       Select multiple images at once, or open the picker again to add more.
                     </span>
                     <input
@@ -1771,7 +1771,7 @@ export default function AdminProductsPage() {
 
                   {files.length > 0 && (
                     <div className="mt-4 space-y-3">
-                      <p className="text-xs font-medium text-[#AEBDAF]">
+                      <p className="text-xs font-medium text-[#BEB7A5]">
                         {files.length} image{files.length > 1 ? "s" : ""} selected
                       </p>
 
@@ -1779,7 +1779,7 @@ export default function AdminProductsPage() {
                         {files.map((file, index) => (
                           <div
                             key={`${file.name}-${file.size}-${file.lastModified}-${index}`}
-                            className="group relative overflow-hidden rounded-lg border border-[#B89A5A]/30 bg-[#0D2415]"
+                            className="group relative overflow-hidden rounded-lg border border-[#B89A5A]/30 bg-[#1C1B18]"
                           >
                             <img
                               src={URL.createObjectURL(file)}
@@ -1794,7 +1794,7 @@ export default function AdminProductsPage() {
                             >
                               <X className="h-3.5 w-3.5" />
                             </button>
-                            <p className="truncate bg-black/70 px-2 py-1 text-[10px] text-[#AEBDAF]">
+                            <p className="truncate bg-black/70 px-2 py-1 text-[10px] text-[#BEB7A5]">
                               {file.name} · {(file.size / 1024 / 1024).toFixed(2)} MB
                             </p>
                           </div>
@@ -1842,11 +1842,11 @@ export default function AdminProductsPage() {
                   </div>
 
                   {/* VARIANTS */}
-                  <div className="mt-5 rounded-xl border border-[#B89A5A]/25 bg-[#12351F]/40 p-3.5 sm:p-4">
+                  <div className="mt-5 rounded-xl border border-[#B89A5A]/25 bg-[#2A2824]/40 p-3.5 sm:p-4">
                     <div className="mb-4 flex items-center justify-between gap-3">
                       <div>
                         <h3 className="font-serif text-lg font-semibold text-[#F4F0E6]">Variants</h3>
-                        <p className="text-xs text-[#7F9484]">Size, color and stock</p>
+                        <p className="text-xs text-[#928C7E]">Size, color and stock</p>
                       </div>
 
                       <button
@@ -1861,7 +1861,7 @@ export default function AdminProductsPage() {
 
                     <div className="space-y-3">
                       {form.variants.length === 0 && (
-                        <p className="rounded-lg border border-dashed border-[#B89A5A]/25 px-3 py-4 text-center text-xs text-[#7F9484]">
+                        <p className="rounded-lg border border-dashed border-[#B89A5A]/25 px-3 py-4 text-center text-xs text-[#928C7E]">
                           No variants added yet.
                         </p>
                       )}
@@ -1977,7 +1977,7 @@ export default function AdminProductsPage() {
             </div>
 
             {/* ACTIONS */}
-            <div className="flex justify-end gap-2.5 border-t border-[#B89A5A]/25 bg-[#07180D] px-4 py-3.5 pb-[max(0.875rem,env(safe-area-inset-bottom))] sm:gap-3 sm:px-6">
+            <div className="flex justify-end gap-2.5 border-t border-[#B89A5A]/25 bg-[#131210] px-4 py-3.5 pb-[max(0.875rem,env(safe-area-inset-bottom))] sm:gap-3 sm:px-6">
               <button
                 onClick={() => setModal(false)}
                 disabled={saving}
@@ -2005,7 +2005,7 @@ export default function AdminProductsPage() {
         {toasts.map((toast) => (
           <div
             key={toast.id}
-            className={`pointer-events-auto flex w-full max-w-sm items-start gap-2.5 rounded-xl border bg-[#0D2415] p-3.5 shadow-[0_10px_40px_rgba(0,0,0,0.8)] transition ${
+            className={`pointer-events-auto flex w-full max-w-sm items-start gap-2.5 rounded-xl border bg-[#1C1B18] p-3.5 shadow-[0_10px_40px_rgba(0,0,0,0.8)] transition ${
               toast.type === "success"
                 ? "border-emerald-400/40"
                 : "border-red-400/40"
@@ -2022,7 +2022,7 @@ export default function AdminProductsPage() {
             <button
               onClick={() => dismissToast(toast.id)}
               aria-label="Dismiss"
-              className="text-[#7F9484] transition hover:text-[#F4F0E6]"
+              className="text-[#928C7E] transition hover:text-[#F4F0E6]"
             >
               <X className="h-4 w-4" />
             </button>
@@ -2103,7 +2103,7 @@ function Check({
       className={`flex min-h-10 cursor-pointer items-center justify-center gap-2 rounded-full border px-4 py-2 text-xs font-semibold transition ${
         checked
           ? "border-[#C8A96B] bg-[#B89A5A]/20 text-[#F4F0E6]"
-          : "border-[#B89A5A]/25 bg-[#07180D] text-[#AEBDAF] hover:border-[#B89A5A]/60 hover:text-[#C8A96B]"
+          : "border-[#B89A5A]/25 bg-[#131210] text-[#BEB7A5] hover:border-[#B89A5A]/60 hover:text-[#C8A96B]"
       }`}
     >
       <input
@@ -2129,7 +2129,7 @@ function Badge({
     amber: "border-[#B89A5A]/45 bg-[#B89A5A]/10 text-[#C8A96B]",
     blue: "border-emerald-300/30 bg-emerald-400/10 text-emerald-200",
     pink: "border-[#C98B7A]/40 bg-[#C98B7A]/10 text-[#E5B3A5]",
-    violet: "border-[#AEBDAF]/30 bg-[#AEBDAF]/10 text-[#D5DFD6]",
+    violet: "border-[#BEB7A5]/30 bg-[#BEB7A5]/10 text-[#E4DBC5]",
   };
 
   return (

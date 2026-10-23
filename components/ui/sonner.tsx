@@ -12,6 +12,8 @@ const Toaster = ({ ...props }: ToasterProps) => {
     <Sonner
       theme={theme as ToasterProps['theme']}
       className="toaster group"
+      // Above every modal/drawer on the site (quick view is z-[9950]).
+      style={{ zIndex: 9999 }}
       duration={2600}
       toastOptions={{
         classNames: {
