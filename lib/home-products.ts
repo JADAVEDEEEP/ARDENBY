@@ -37,7 +37,6 @@ export type ApiProduct = {
   limited_edition?: boolean;
   inventory?: number | string | null;
   back_image?: string | null;
-  frames_360?: string[] | null;
   created_at?: string | null;
   images?: {
     id?: string;
@@ -108,7 +107,6 @@ export function normalizeApiProduct(product: ApiProduct): Product {
     variants,
     images,
     backImage: product.back_image || undefined,
-    frames360: Array.isArray(product.frames_360) && product.frames_360.length ? product.frames_360 : undefined,
     fabricImage: images[0] || '',
     price: Number(product.price || 0),
     mrp: product.mrp == null ? (undefined as unknown as number) : Number(product.mrp),

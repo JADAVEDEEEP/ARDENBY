@@ -18,27 +18,6 @@ export const philosophy = [
   },
 ] as const;
 
-export const reviews = [
-  {
-    name: 'Aarav Sharma',
-    text: 'The Phantom Beige Oversized Tee is unreal. The weight, stitch quality, and drop-shoulder structure exceed high-end luxury brands.',
-    rating: 5,
-    tag: 'Verified Buyer',
-  },
-  {
-    name: 'Karan Patel',
-    text: "Bought the Eclipse Hoodie and the fleece density is top tier. Doesn't lose shape after washing at all.",
-    rating: 5,
-    tag: 'Verified Buyer',
-  },
-  {
-    name: 'Vikram Reddy',
-    text: 'The Savage Black Back Print gets endless compliments. Print clarity is crisp and fabric feels insanely soft.',
-    rating: 5,
-    tag: 'Verified Buyer',
-  },
-] as const;
-
 export const collectionCopy = [
   'Heavyweight silhouettes engineered for everyday rotation.',
   'Premium graphics with a clean streetwear finish.',

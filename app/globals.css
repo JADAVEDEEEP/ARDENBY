@@ -370,36 +370,6 @@
 @keyframes kv-orbit {
   to { transform: rotate(360deg); }
 }
-/* eyes: independent groups; --kv-ex-* / --kv-ey are set from JS while following the cursor */
-.kv-logo3d .kv-eye-look {
-  transition: transform 0.16s ease-out;
-}
-.kv-logo3d .kv-eye-look-l {
-  transform: translate(calc(var(--kv-ex-l, 0) * 1px), calc(var(--kv-ey, 0) * 1px));
-}
-.kv-logo3d .kv-eye-look-r {
-  transform: translate(calc(var(--kv-ex-r, 0) * 1px), calc(var(--kv-ey, 0) * 1px));
-}
-/* no mouse seen (touch devices): eyes wander on their own */
-.kv-logo3d[data-look='auto'] .kv-eye-look-l { animation: kv-look 6.5s ease-in-out infinite; }
-.kv-logo3d[data-look='auto'] .kv-eye-look-r { animation: kv-look 6.5s ease-in-out 0.06s infinite; }
-.kv-logo3d .kv-eye-look-r .kv-eye-blink { animation-delay: 0.05s; }
-.kv-logo3d .kv-eye-blink {
-  transform-box: fill-box;
-  transform-origin: center;
-  animation: kv-blink 4.8s ease-in-out infinite;
-}
-@keyframes kv-look {
-  0%, 14%  { transform: translate(0, 0); }
-  24%, 40% { transform: translate(-9px, 1px); }
-  52%, 60% { transform: translate(0, 0); }
-  70%, 88% { transform: translate(9px, -1px); }
-  100%     { transform: translate(0, 0); }
-}
-@keyframes kv-blink {
-  0%, 92%, 100% { transform: scaleY(1); }
-  95.5%         { transform: scaleY(0.07); }
-}
 @keyframes kv-float {
   0%, 100% { transform: translate3d(0, 0, 0) rotate(var(--kv-r, 0deg)); }
   50% { transform: translate3d(0, -12px, 0) rotate(calc(var(--kv-r, 0deg) + 6deg)); }
@@ -510,17 +480,6 @@
   outline-offset: 3px;
 }
 
-/* Perspective floor grid (hero) */
-.chrome-grid-floor {
-  background-image:
-    linear-gradient(rgba(196, 200, 207, 0.16) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(196, 200, 207, 0.16) 1px, transparent 1px);
-  background-size: 56px 56px;
-  transform: perspective(500px) rotateX(62deg);
-  transform-origin: center top;
-  -webkit-mask-image: linear-gradient(to bottom, #000, transparent 85%);
-  mask-image: linear-gradient(to bottom, #000, transparent 85%);
-}
 
 @keyframes chrome-bob {
   0%, 100% { transform: translateY(0) rotate(-1deg); }
@@ -540,72 +499,7 @@
 }
 .kv-hero-float { animation: kv-hero-float 6s ease-in-out infinite; will-change: transform; }
 
-/* Gentle vertical float for showroom products (collections, pedestal). */
-@keyframes kv-bob {
-  0%, 100% { transform: translate3d(0, 6px, 0); }
-  50% { transform: translate3d(0, -8px, 0); }
-}
-.kv-bob { animation: kv-bob var(--kv-d, 6s) ease-in-out infinite; will-change: transform; }
 
-/* Slow drifting hero particles. */
-@keyframes kv-drift {
-  0% { transform: translate3d(0, 0, 0); opacity: 0.15; }
-  25% { opacity: 0.9; }
-  50% { transform: translate3d(var(--kv-dx, 14px), -26px, 0); opacity: 0.5; }
-  75% { opacity: 0.9; }
-  100% { transform: translate3d(0, 0, 0); opacity: 0.15; }
-}
-.kv-drift { animation: kv-drift var(--kv-d, 14s) ease-in-out infinite; }
-
-/* Chrome shine sweep across headline words (~6s cycle). */
-@keyframes kv-shine {
-  0%, 62% { background-position: 170% 0, 0 0; }
-  100% { background-position: -70% 0, 0 0; }
-}
-.chrome-shine {
-  background-image: linear-gradient(105deg, transparent 40%, rgba(255, 255, 255, 1) 50%, transparent 60%), var(--kv-chrome);
-  background-size: 260% 100%, 100% 100%;
-  background-repeat: no-repeat;
-  background-position: 170% 0, 0 0;
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-  -webkit-text-fill-color: transparent;
-  animation: kv-shine 6s ease-in-out infinite;
-}
-
-/* Continuous diagonal light sweep over glass cards. */
-@keyframes kv-card-sweep {
-  0%, 55% { transform: translateX(-130%) skewX(-18deg); }
-  100% { transform: translateX(420%) skewX(-18deg); }
-}
-.kv-card-sweep { animation: kv-card-sweep 7s ease-in-out infinite; }
-
-@keyframes kv-beam {
-  0%, 100% { opacity: 0.75; }
-  50% { opacity: 1; }
-}
-.kv-beam { animation: kv-beam 5s ease-in-out infinite; }
-
-/* Card interactions (fine pointers): cursor-following light + 3D flip. */
-.kv-spot {
-  background: radial-gradient(240px circle at var(--mx, 50%) var(--my, 30%), rgba(255, 255, 255, 0.2), transparent 65%);
-  opacity: 0;
-  transition: opacity 300ms ease;
-}
-.group:hover .kv-spot { opacity: 1; }
-
-.kv-flip { perspective: 1100px; }
-.kv-flip-inner { transform-style: preserve-3d; transition: transform 900ms cubic-bezier(0.16, 1, 0.3, 1); }
-.group:hover .kv-flip > .kv-flip-inner { transform: rotateY(180deg); }
-.kv-face { position: absolute; inset: 0; backface-visibility: hidden; -webkit-backface-visibility: hidden; }
-.kv-face-back { transform: rotateY(180deg); }
-
-@media (prefers-reduced-motion: reduce) {
-  .kv-hero-float, .kv-bob, .kv-drift, .chrome-shine, .kv-card-sweep, .kv-beam { animation: none !important; }
-  .chrome-shine { background-position: 170% 0, 0 0; }
-  .kv-flip-inner { transition: none !important; }
-}
 
 @media (prefers-reduced-motion: reduce) {
   .chrome-bob, .chrome-twinkle { animation: none !important; }
@@ -666,20 +560,6 @@
 @keyframes kv-rise { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: translateY(0); } }
 .kv-rise { opacity: 0; animation: kv-rise 0.6s var(--kv-ease) forwards; animation-delay: calc(var(--i, 0) * 65ms); }
 
-/* 3D tee: ~11s loop that lingers on front and back. */
-.kv-tee-stage { perspective: 1400px; }
-.kv-tee-float { animation: kv-tee-float 6s ease-in-out infinite; }
-@keyframes kv-tee-float { 0%, 100% { transform: translateY(8px); } 50% { transform: translateY(-14px); } }
-.kv-tee-spin { transform-style: preserve-3d; animation: kv-tee-spin 11s var(--kv-ease) infinite; }
-.kv-tee-paused .kv-tee-spin, .kv-tee-paused .kv-tee-float, .kv-tee-paused .kv-orbit-ring { animation-play-state: paused; }
-@keyframes kv-tee-spin {
-  0%, 38% { transform: rotateY(-14deg); }
-  50%, 88% { transform: rotateY(166deg); }
-  100% { transform: rotateY(346deg); }
-}
-.kv-tee-face { position: absolute; inset: 0; backface-visibility: hidden; -webkit-backface-visibility: hidden; }
-.kv-tee-back { transform: rotateY(180deg); }
-.kv-orbit-ring { animation: kv-orbit 30s linear infinite; }
 
 /* Glass-metallic toasts */
 .kv-toast {
@@ -700,9 +580,8 @@
 .kv-noscroll::-webkit-scrollbar { display: none; }
 
 @media (prefers-reduced-motion: reduce) {
-  .kv-sheen::after, .kv-dot-pulse, .kv-tee-float, .kv-tee-spin, .kv-orbit-ring, .kv-toast, .kv-toast-bar { animation: none !important; }
+  .kv-sheen::after, .kv-dot-pulse, .kv-toast, .kv-toast-bar { animation: none !important; }
   .kv-rise { animation: none !important; opacity: 1; }
-  .kv-tee-spin { transform: rotateY(-14deg); }
 }
 
 @media (max-width: 767px) { .kv-shop-shell footer { padding-bottom: 88px; } }
@@ -710,57 +589,6 @@
 /* /shop: no gold in the footer or newsletter (navbar gold badges/search icon stay). */
 .kv-shop-shell footer .gold-fill { background-image: var(--kv-chrome-metal) !important; color: #0c0c0e !important; }
 .kv-shop-shell footer [class*='text-[#c9a24a]'] { color: #d2d2d7 !important; }
-
-/* =========================================================
-   KOVENIK IMP LOGO — restrained 3D motion.
-   Slow float (all devices), mouse tilt + sheen (mouse only), no motion when
-   prefers-reduced-motion. Markup lives in components/layout/kovenik-logo.tsx
-   ========================================================= */
-.kv-logo3d {
-  --kv-rx: 0deg;
-  --kv-ry: 0deg;
-  --kv-sx: 0%;
-  display: block;
-  perspective: 700px;
-  animation: kv-float 7s ease-in-out infinite;
-  will-change: transform;
-}
-.kv-logo3d-tilt {
-  position: relative;
-  display: block;
-  width: 100%;
-  height: 100%;
-  transform: rotateX(var(--kv-rx)) rotateY(var(--kv-ry));
-  transform-style: preserve-3d;
-  transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
-}
-.kv-logo3d[data-active='true'] .kv-logo3d-tilt {
-  transition-duration: 0.15s;
-}
-.kv-logo3d-img {
-  display: block;
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-  user-select: none;
-  filter: drop-shadow(0 5px 6px rgba(0, 0, 0, 0.55)) drop-shadow(0 0 8px rgba(255, 255, 255, 0.06));
-}
-.kv-logo3d-sheen {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  -webkit-mask: url('/kovenik-logo.svg') center / 100% 100% no-repeat;
-  mask: url('/kovenik-logo.svg') center / 100% 100% no-repeat;
-  background: linear-gradient(105deg, transparent 42%, rgba(255, 255, 255, 0.34) 50%, transparent 58%);
-  background-size: 250% 100%;
-  background-position: 150% 0;
-  mix-blend-mode: soft-light;
-  animation: kv-sheen 9s ease-in-out infinite;
-}
-.kv-logo3d[data-active='true'] .kv-logo3d-sheen {
-  animation: none;
-  background-position: var(--kv-sx) 0;
-}
 @keyframes kv-float {
   0%, 100% { transform: translateY(0); }
   50%      { transform: translateY(-2.5px); }
@@ -768,12 +596,6 @@
 @keyframes kv-sheen {
   0%, 62%  { background-position: 150% 0; }
   100%     { background-position: -50% 0; }
-}
-@media (prefers-reduced-motion: reduce) {
-  .kv-logo3d, .kv-logo3d-sheen, .kv-logo3d .kv-eye-look, .kv-logo3d .kv-eye-blink { animation: none !important; }
-  .kv-logo3d .kv-eye-look { transform: none !important; transition: none !important; }
-  .kv-logo3d-tilt { transform: none !important; transition: none !important; }
-  .kv-logo3d-sheen { display: none; }
 }
 
 
@@ -848,3 +670,74 @@ textarea.kv-input { padding-top:12px; padding-bottom:12px; resize:none; line-hei
   letter-spacing:.12em; text-transform:uppercase; white-space:nowrap; transition:background .15s, border-color .15s; }
 .kv-btn-danger:hover:not(:disabled) { background:#3a1b1e; border-color:#8a3d40; }
 .kv-btn-primary:disabled, .kv-btn-ghost:disabled, .kv-btn-danger:disabled { opacity:.5; cursor:not-allowed; }
+
+/* =========================================================
+   KOVENIK light retail skin: homepage, header and footer.
+   Visual only. Scoped so the dark shop / checkout are untouched.
+   ========================================================= */
+.kv-light :focus-visible,
+.kv-light .chrome-focus:focus-visible {
+  outline: 2px solid #222222;
+  outline-offset: 2px;
+}
+
+/* Logo: static artwork. No float, tilt, sheen, shadow, filter or blur. */
+
+
+/* No drop shadows on images inside the light storefront (e.g. the hero 360 tee). */
+.kv-light img { filter: none !important; }
+
+
+/* =========================================================
+   KOVENIK flat storefront tokens (home, header, footer)
+   ========================================================= */
+:root {
+  --c-white: #FFFFFF;
+  --c-band: #F1F0ED;
+  --c-footer: #EAE9E6;
+  --c-img: #E8E6E1;
+  --c-line: #E2E0DB;
+  --c-ink: #222222;
+  --c-sub: #4A4A4A;
+  --c-gold: #B08D57;
+  --c-gold-text: #8C6D3A;
+  --c-gold-on-dark: #C9A86A;
+  --c-mist: #D6D3CC;
+}
+
+.kv-flat {
+  font-family: var(--font-archivo), Arial, sans-serif;
+  color: var(--c-ink);
+}
+.kv-flat :focus-visible {
+  outline: 2px solid var(--c-ink);
+  outline-offset: 2px;
+}
+.kv-flat .on-dark :focus-visible { outline-color: var(--c-gold-on-dark); }
+
+/* Horizontal rails: snap, no visible scrollbar */
+.kv-rail {
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.kv-rail::-webkit-scrollbar { display: none; }
+.kv-rail > * { scroll-snap-align: start; }
+
+/* Gold marquee: two identical halves, so -50% loops seamlessly */
+@keyframes kv-marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+.kv-marquee { animation: kv-marquee 30s linear infinite; }
+@media (prefers-reduced-motion: reduce) {
+  .kv-marquee { animation: none; }
+}
+
+/* Side padding for full-width sections */
+.kv-gutter { padding-inline: clamp(16px, 3vw, 48px); }
+
+/* Thin scrollbar for the side menu */
+.kv-thin-scroll { scrollbar-width: thin; scrollbar-color: #B5B5B5 transparent; }
+.kv-thin-scroll::-webkit-scrollbar { width: 6px; }
+.kv-thin-scroll::-webkit-scrollbar-thumb { background: #B5B5B5; border-radius: 3px; }

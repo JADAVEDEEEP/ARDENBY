@@ -12,7 +12,7 @@ import { getCartCount, useCartStore } from '@/store/cart-store';
 import { useWishlistStore } from '@/store/wishlist-store';
 
 const ITEM =
-  'chrome-focus relative flex min-h-[48px] min-w-[48px] flex-1 flex-col items-center justify-center gap-0.5 rounded-full text-[9px] font-semibold uppercase tracking-[0.1em] transition-colors';
+  'chrome-focus relative flex min-h-[48px] min-w-[48px] flex-1 flex-col items-center justify-center gap-0.5 rounded-full text-[12px] font-semibold transition-colors';
 
 /** Floating glass bottom bar, mobile only (hidden md+). It hides while the cart
  *  drawer is open. The mobile menu drawer sits above it (z-[9900]) and toasts
@@ -20,10 +20,10 @@ const ITEM =
 export function MobileShopBar({ variant = 'dark' }: { variant?: 'dark' | 'silver' }) {
   const pathname = usePathname() ?? "";
   const silver = variant === 'silver';
-  const idle = silver ? 'text-white/85 hover:text-white' : 'text-kv-muted hover:text-white';
+  const idle = silver ? 'text-white/90 hover:text-white' : 'text-kv-muted hover:text-kv-head';
   const activeCls = silver
     ? 'bg-[linear-gradient(180deg,#fafafc,#c9cbd2_55%,#8f929b)] text-[#121214] shadow-[inset_0_1px_0_rgba(255,255,255,.7)]'
-    : 'text-white';
+    : 'text-kv-head';
   const cartOpen = useCartStore((s) => s.isOpen);
   const cartCount = useCartStore((s) => getCartCount(s.items));
   const wishlistCount = useWishlistStore((s) => s.items.length);
@@ -36,7 +36,7 @@ export function MobileShopBar({ variant = 'dark' }: { variant?: 'dark' | 'silver
 
   const badge = (count: number) =>
     mounted && count > 0 ? (
-      <span className="absolute right-2 top-1 flex h-4 min-w-[16px] items-center justify-center rounded-full bg-[#c9a24a] px-1 text-[9px] font-bold leading-none text-[#17120a]">
+      <span className="absolute right-2 top-1 flex h-4 min-w-[16px] items-center justify-center rounded-full bg-[#B89548] px-1 text-[12px] font-bold leading-none text-white">
         {count}
       </span>
     ) : null;
@@ -44,15 +44,16 @@ export function MobileShopBar({ variant = 'dark' }: { variant?: 'dark' | 'silver
   return (
     <nav
       aria-label="Shop bar"
-      className={cn('chrome-scope fixed inset-x-3 bottom-3 md:hidden', silver ? 'z-[60]' : 'z-40')}
+      className={cn('fixed inset-x-3 bottom-3 md:hidden', silver ? 'chrome-scope z-[60]' : 'kv-light z-40')}
       style={{ paddingBottom: 'env(safe-area-inset-bottom)' }}
     >
       <div
         className={cn(
-          'flex items-center gap-1 rounded-full px-2 py-1.5 shadow-[0_12px_40px_rgba(0,0,0,0.6)]',
+          'flex items-center gap-1 rounded-full px-2 py-1.5',
+          silver ? 'shadow-[0_12px_40px_rgba(0,0,0,0.6)]' : '',
           silver
             ? 'border border-white/[0.38] backdrop-blur-[22px] [-webkit-backdrop-filter:blur(22px)] bg-[linear-gradient(180deg,rgba(236,236,240,.30),rgba(170,170,178,.20)_48%,rgba(96,96,104,.32))]'
-            : 'chrome-glass bg-black/60'
+            : 'border border-[#E5E5E5] bg-white'
         )}
       >
         <Link

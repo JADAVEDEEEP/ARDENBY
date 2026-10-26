@@ -12,14 +12,11 @@ type ProductStageProps = {
   onOpenFullscreen: (index: number) => void;
 };
 
-const MAX_TILT = 4; // degrees; subtle so the artwork never looks distorted
 const ZOOM_SCALE = 1.9;
 
 /**
- * Layered 2.5D product showcase.
- * No 3D garment model exists, so depth is built from CSS perspective, lighting,
- * shadows and cursor parallax. The real product photography is never replaced
- * or distorted. Desktop: cursor-responsive tilt + sheen + in-place zoom.
+ * Product showcase. The real product photography is never replaced or
+ * distorted. Desktop: in-place zoom that pans under the cursor.
  * Mobile: native scroll-snap swiper (no mouse effects).
  */
 export function ProductStage({ images, name, onOpenFullscreen }: ProductStageProps) {
@@ -76,15 +73,12 @@ export function ProductStage({ images, name, onOpenFullscreen }: ProductStagePro
     stage.style.setProperty('--my', `${ny * 100}%`);
 
     if (zoomed) {
-      // Pan the magnified image under the cursor instead of tilting.
+      // Pan the magnified image under the cursor.
       const image = imageRef.current;
       if (image) {
         image.style.transformOrigin = `${nx * 100}% ${ny * 100}%`;
         image.style.transform = `scale(${ZOOM_SCALE})`;
       }
-      card.style.transform = '';
-    } else {
-      card.style.transform = `rotateX(${-cy * MAX_TILT * 2}deg) rotateY(${cx * MAX_TILT * 2}deg)`;
     }
   };
 
@@ -168,10 +162,10 @@ export function ProductStage({ images, name, onOpenFullscreen }: ProductStagePro
             <span className="kv-ring kv-ring-b" />
           </div>
 
-          <div className="kv-stage-in [perspective:1400px]">
+          <div className="kv-stage-in">
             <div
               ref={cardRef}
-              className="kv-card relative overflow-hidden bg-[#090a0b] [transform-style:preserve-3d]"
+              className="kv-card relative overflow-hidden bg-[#090a0b]"
             >
               <div ref={imageRef} className="kv-zoom-layer">
                 <img

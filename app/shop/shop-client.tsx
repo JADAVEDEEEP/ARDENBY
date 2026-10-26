@@ -347,15 +347,9 @@ export function ShopClient() {
   const [apiCategories, setApiCategories] = useState<any[]>([]);
   const [categoriesLoading, setCategoriesLoading] = useState(true);
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
-  const [teePaused, setTeePaused] = useState(false);
 
   const isDesktop = useMediaQuery('(min-width: 1024px)');
   const { toasts, push, dismiss } = useToasts();
-
-  // Respect reduced motion: start the tee paused.
-  useEffect(() => {
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) setTeePaused(true);
-  }, []);
 
   // Backend-managed categories.
   useEffect(() => {
@@ -779,7 +773,6 @@ export function ShopClient() {
   /* ---------- derived hero data ---------- */
   const featured = useMemo(() => pickFeaturedDrop(products), [products]);
   const teeFront: string = featured?.images?.[0] ?? HERO_PRODUCT_IMAGE;
-  const teeBack: string = featured?.images?.[1] ?? teeFront;
   const printLabel = featured && /trapslayer/i.test(featured.name) ? 'TRAPSLAYER' : 'KOVENIK';
 
   const allCategory = shopCategories.find((c: any) => c.slug === 'all-products');
@@ -1189,13 +1182,6 @@ export function ShopClient() {
               <Link href={productHref} className={chromeBtn}>
                 Shop the drop <ArrowRight className="h-4 w-4" />
               </Link>
-              <button
-                type="button"
-                onClick={() => setTeePaused(false)}
-                className="inline-flex min-h-[48px] items-center gap-2 rounded-full border border-white/20 px-6 text-[11px] font-extrabold uppercase tracking-[0.18em] text-[#f4f2ec] transition hover:border-[#d2d2d7] hover:text-[#d2d2d7]"
-              >
-                View in 360°
-              </button>
             </div>
 
             <dl className="mt-8 hidden gap-10 lg:flex">
@@ -1214,13 +1200,7 @@ export function ShopClient() {
           </div>
 
           <div className="relative pb-6">
-            <HeroTee
-              front={teeFront}
-              back={teeBack}
-              printLabel={printLabel}
-              paused={teePaused}
-              onTogglePause={() => setTeePaused((p) => !p)}
-            />
+            <HeroTee front={teeFront} printLabel={printLabel} />
           </div>
 
           {featured && (

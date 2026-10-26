@@ -62,7 +62,7 @@ export default function InventoryPage() {
             ? 'rounded-md bg-red-500/20 px-2 py-1 font-bold text-red-300'
             : st === 'low'
               ? 'rounded-md bg-amber-500/20 px-2 py-1 font-bold text-amber-300'
-              : 'px-2 py-1 text-white/85'
+              : 'px-2 py-1 text-white/90'
         }
       >
         {q}

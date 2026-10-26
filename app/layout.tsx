@@ -7,7 +7,9 @@ import {
   Bodoni_Moda,
   Cormorant_Garamond,
   Inter,
+  Lora,
   Manrope,
+  Oswald,
   Unbounded,
 } from 'next/font/google';
 
@@ -18,6 +20,15 @@ import { SiteShell } from '@/components/layout/site-shell';
 const inter = Inter({
   subsets: ['latin'],
   variable: '--font-inter',
+  display: 'swap',
+});
+
+// Lora 500: headings on the light storefront (italic gold accent word).
+const lora = Lora({
+  subsets: ['latin'],
+  weight: ['500'],
+  style: ['normal', 'italic'],
+  variable: '--font-lora',
   display: 'swap',
 });
 
@@ -35,7 +46,15 @@ const bodoni = Bodoni_Moda({
   display: 'swap',
 });
 
-// Archivo with the width axis (wdth 62-125) for the extended hero headline.
+// Oswald: uppercase headings on the storefront.
+const oswald = Oswald({
+  subsets: ['latin'],
+  weight: ['500', '600', '700'],
+  variable: '--font-oswald',
+  display: 'swap',
+});
+
+// Archivo (with the width axis) is the storefront body font.
 const archivo = Archivo({
   subsets: ['latin'],
   axes: ['wdth'],
@@ -115,8 +134,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={`${inter.variable} ${serif.variable} ${bodoni.variable} ${archivo.variable} ${unbounded.variable} ${manrope.variable}`}>
-      <body className="font-sans bg-[#050505] text-ink">
+    <html lang="en" className={`${inter.variable} ${lora.variable} ${serif.variable} ${bodoni.variable} ${archivo.variable} ${oswald.variable} ${unbounded.variable} ${manrope.variable}`}>
+      <body className="font-sans bg-white text-[#222222]">
         <Providers>
           <SiteShell>{children}</SiteShell>
         </Providers>

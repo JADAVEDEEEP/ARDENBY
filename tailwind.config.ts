@@ -13,6 +13,8 @@ const config: Config = {
       fontFamily: {
         sans: ['var(--font-inter)', 'system-ui', 'sans-serif'],
         display: ['var(--font-satoshi)', 'var(--font-inter)', 'sans-serif'],
+        lora: ['var(--font-lora)', 'Georgia', 'serif'],
+        oswald: ['var(--font-oswald)', 'Impact', 'sans-serif'],
         bodoni: ['var(--font-bodoni)', 'Didot', 'Bodoni MT', 'serif'],
         archivo: ['var(--font-archivo)', 'Arial', 'sans-serif'],
       },
@@ -58,16 +60,29 @@ const config: Config = {
           '5': 'hsl(var(--chart-5))',
         },
         // KOVENIK chrome theme
+        // KOVENIK flat storefront (values live in globals.css :root)
         kv: {
-          bg: '#050506',
-          surface: '#0b0c0e',
-          surface2: '#16181b',
-          body: '#c4c8cf',
-          head: '#eef0f2',
-          muted: '#b0b5bc',
-          gold: '#c9a24a',
-          'gold-light': '#ecd189',
-          'gold-dark': '#9e7a2c',
+          bg: 'var(--c-white)',
+          band: 'var(--c-band)',
+          footer: 'var(--c-footer)',
+          img: 'var(--c-img)',
+          line: 'var(--c-line)',
+          ink: 'var(--c-ink)',
+          sub: 'var(--c-sub)',
+          gold: 'var(--c-gold)',
+          'gold-text': 'var(--c-gold-text)',
+          'gold-dark': 'var(--c-gold-on-dark)',
+          mist: 'var(--c-mist)',
+        },
+        // Light retail theme
+        store: {
+          bg: '#FFFFFF',
+          alt: '#F5F5F5',
+          text: '#222222',
+          sub: '#707070',
+          line: '#E5E5E5',
+          gold: '#B89548',
+          sale: '#C62828',
         },
         // Brand palette
         ink: {

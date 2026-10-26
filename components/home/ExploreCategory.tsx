@@ -1,183 +1,98 @@
 'use client';
 
-import { useEffect, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 
-import { apiUrl } from '@/lib/api-url';
-import { categories as staticCategories } from '@/lib/data';
-import { cn } from '@/lib/utils';
 import type { Product } from '@/types';
 
-import { GoldButton } from './ui/GoldButton';
-import { HomeProductCard } from './ui/HomeProductCard';
-import { Reveal } from './ui/Reveal';
-import { SectionHeading } from './ui/SectionHeading';
+import { FilterChips } from './FilterChips';
+import type { ChipOption } from './FilterChips';
+import { ProductCard } from './ProductCard';
+import { ProductSkeletonCard } from './ProductRail';
+import { SectionHeader } from './ui/SectionHeader';
 
 interface ExploreCategoryProps {
   products: Product[];
   loading: boolean;
   error: string;
+  onRetry: () => void;
 }
 
-const GRID_LIMIT = 6;
+const GRID_LIMIT = 8;
 
-// Not shown as a tab here ("All Products" is the All tab; Top Wear lives on the category page only).
-const HIDDEN_TABS = new Set(['all-products', 'top-wear']);
+const CHIPS: readonly ChipOption[] = [
+  { id: 'all', label: 'All' },
+  { id: 'new-in', label: 'New In' },
+  { id: 'best-seller', label: 'Best Seller' },
+  { id: 'ardenby-premium', label: 'Kovenik Premium' },
+  { id: 'bottom-wear', label: 'Bottom Wear' },
+  { id: 'epic-thread', label: 'Epic Thread' },
+  { id: 'plus-size', label: 'Plus Size' },
+  { id: 'supreme-edition', label: 'Supreme Edition' },
+];
 
-interface CategoryTab {
-  slug: string;
-  name: string;
+function matches(product: Product, filter: string): boolean {
+  switch (filter) {
+    case 'all':
+      return true;
+    case 'new-in':
+      return product.newArrival;
+    case 'best-seller':
+      return product.bestSeller;
+    case 'plus-size':
+      return product.sizes.includes('XXL');
+    default:
+      return product.category === filter;
+  }
 }
 
-// Live categories from the API (one shared request). Slugs are de-duplicated; where the
-// storefront already has a display name for a slug it is kept (e.g. "Kovenik Premium").
-let categoriesRequest: Promise<CategoryTab[]> | null = null;
+export function ExploreCategory({ products, loading, error, onRetry }: ExploreCategoryProps) {
+  const [active, setActive] = useState('all');
 
-function fetchLiveCategories(): Promise<CategoryTab[]> {
-  if (categoriesRequest) return categoriesRequest;
-
-  const request = (async () => {
-    const response = await fetch(apiUrl('/api/categories'), { cache: 'no-store' });
-    if (!response.ok) throw new Error(`Categories API failed with status ${response.status}`);
-
-    const data: unknown = await response.json();
-    const payload = (data ?? {}) as { categories?: unknown; data?: unknown };
-    const list = Array.isArray(payload.categories)
-      ? payload.categories
-      : Array.isArray(payload.data)
-        ? payload.data
-        : Array.isArray(data)
-          ? (data as unknown[])
-          : [];
-
-    const known = new Map<string, string>(staticCategories.map((c) => [c.slug, c.name]));
-    const seen = new Set<string>();
-    const result: CategoryTab[] = [];
-
-    for (const item of list) {
-      const record = (item ?? {}) as { slug?: unknown; name?: unknown };
-      const slug = String(record.slug ?? '').trim();
-      if (!slug || seen.has(slug)) continue;
-      seen.add(slug);
-      result.push({ slug, name: known.get(slug) ?? String(record.name ?? slug) });
-    }
-    return result;
-  })();
-
-  request.catch(() => {
-    if (categoriesRequest === request) categoriesRequest = null;
-  });
-  categoriesRequest = request;
-  return request;
-}
-
-export function ExploreCategory({ products, loading, error }: ExploreCategoryProps) {
-  const [activeFilter, setActiveFilter] = useState('all');
-  const [liveCategories, setLiveCategories] = useState<CategoryTab[] | null>(null);
-
-  useEffect(() => {
-    let cancelled = false;
-    fetchLiveCategories()
-      .then((list) => {
-        if (!cancelled) setLiveCategories(list);
-      })
-      .catch((err) => console.error('Categories API error:', err));
-    return () => {
-      cancelled = true;
-    };
-  }, []);
-
-  // Filter tabs: All / New In / Best Seller + every available category. The static list is only a fallback if the API fails.
-  const filterTabs = useMemo(() => {
-    const source: CategoryTab[] = liveCategories ?? staticCategories.map((c) => ({ slug: c.slug, name: c.name }));
-    return [
-      { id: 'all', label: 'All' },
-      { id: 'new-in', label: 'New In' },
-      { id: 'best-seller', label: 'Best Seller' },
-      ...source.filter((c) => !HIDDEN_TABS.has(c.slug)).map((c) => ({ id: c.slug, label: c.name })),
-    ];
-  }, [liveCategories]);
-
-  const gridProducts = useMemo(() => {
-    const list =
-      activeFilter === 'all'
-        ? products
-        : activeFilter === 'new-in'
-          ? products.filter((p) => p.newArrival)
-          : activeFilter === 'best-seller'
-            ? products.filter((p) => p.bestSeller)
-            : products.filter(
-                (p) => p.category === activeFilter || p.tags?.includes(activeFilter)
-              );
-    return list.slice(0, GRID_LIMIT);
-  }, [products, activeFilter]);
+  const visible = useMemo(
+    () => products.filter((p) => matches(p, active)).slice(0, GRID_LIMIT),
+    [products, active]
+  );
 
   return (
-    <section
-      aria-label="Explore our category"
-      className="bg-kv-bg px-4 py-14 sm:px-8 sm:py-16 lg:px-12 lg:py-20"
-    >
-      <div className="mx-auto w-full max-w-[1440px]">
-        <Reveal>
-          <SectionHeading eyebrow="Fresh drops" title="Explore our category" href="/shop" />
+    <section aria-labelledby="home-explore" className="w-full bg-kv-bg py-10 md:py-14">
+      <div className="kv-gutter w-full">
+        <SectionHeader id="home-explore" title="Explore our category" href="/shop" />
+        <FilterChips options={CHIPS} active={active} onChange={setActive} label="Filter products" />
 
-          <div
-            role="group"
-            aria-label="Filter products"
-            className="no-scrollbar -mx-4 mt-6 flex gap-2 overflow-x-auto px-4 sm:mx-0 sm:flex-wrap sm:px-0"
-          >
-            {filterTabs.map((tab) => {
-              const isActive = activeFilter === tab.id;
-              return (
-                <button
-                  key={tab.id}
-                  type="button"
-                  onClick={() => setActiveFilter(tab.id)}
-                  aria-pressed={isActive}
-                  className={cn(
-                    'chrome-focus min-h-[44px] shrink-0 rounded-full border px-5 text-[11px] font-semibold uppercase tracking-[0.14em] transition duration-300',
-                    isActive
-                      ? 'border-transparent bg-[linear-gradient(180deg,#ffffff,#c9ced5)] text-[#0b0c0e]'
-                      : 'border-white/20 text-kv-body hover:border-white/60 hover:text-white'
-                  )}
-                >
-                  {tab.label}
-                </button>
-              );
-            })}
+        {error && !loading ? (
+          <div role="status" className="flex flex-col items-center gap-3 py-10 text-center">
+            <p className="text-[16px] text-kv-sub">{error}</p>
+            <button
+              type="button"
+              onClick={onRetry}
+              className="inline-flex min-h-[48px] items-center border-2 border-kv-ink px-6 text-[14px] font-bold uppercase tracking-[0.1em] text-kv-ink hover:bg-kv-ink hover:text-white"
+            >
+              Try again
+            </button>
           </div>
-
-          {loading && (
-            <p className="mt-4 text-[11px] uppercase tracking-[0.18em] text-kv-gold" role="status">
-              Loading live collection...
-            </p>
-          )}
-          {!loading && error && (
-            <p className="mt-4 text-[11px] uppercase tracking-[0.18em] text-kv-muted" role="status">
-              Showing the latest available collection.
-            </p>
-          )}
-        </Reveal>
-
-        {gridProducts.length > 0 ? (
-          <div className={cn(
-              'mt-8 grid w-full grid-cols-2 gap-x-3 gap-y-7 sm:gap-x-5 md:grid-cols-3 lg:gap-x-6',
-              // fill the full container width instead of leaving empty tracks
-              gridProducts.length === 4 && 'lg:grid-cols-4',
-              gridProducts.length >= 5 && 'lg:grid-cols-5 xl:grid-cols-6'
-            )}>
-            {gridProducts.map((product) => (
-              <HomeProductCard key={product.id} product={product} />
+        ) : loading ? (
+          <div className="grid grid-cols-2 gap-x-3 gap-y-8 md:grid-cols-4 md:gap-x-6 min-[1600px]:grid-cols-5">
+            {Array.from({ length: 4 }).map((_, i) => (
+              <ProductSkeletonCard key={i} />
+            ))}
+          </div>
+        ) : visible.length > 0 ? (
+          <div className="grid grid-cols-2 gap-x-3 gap-y-8 md:grid-cols-4 md:gap-x-6 md:gap-y-10 min-[1600px]:grid-cols-5">
+            {visible.map((product) => (
+              <ProductCard key={product.id} product={product} variant="grid" />
             ))}
           </div>
         ) : (
-          <div className="chrome-glass mt-8 flex min-h-[240px] flex-col items-center justify-center rounded-2xl px-5 text-center">
-            <h3 className="chrome-text font-bodoni text-[26px]">No pieces found</h3>
-            <p className="mt-2 max-w-xs text-[13px] leading-6 text-kv-muted">
-              Nothing in this category yet.
-            </p>
-            <GoldButton className="mt-5" onClick={() => setActiveFilter('all')}>
+          <div role="status" className="flex min-h-[200px] flex-col items-center justify-center bg-kv-band px-4 text-center">
+            <p className="font-oswald text-[22px] font-semibold uppercase tracking-[0.06em] text-kv-ink">No pieces found</p>
+            <p className="mt-1 text-[16px] text-kv-sub">Nothing in this category yet.</p>
+            <button
+              type="button"
+              onClick={() => setActive('all')}
+              className="mt-4 inline-flex min-h-[48px] items-center bg-kv-ink px-6 text-[14px] font-bold uppercase tracking-[0.1em] text-white hover:bg-black"
+            >
               View all pieces
-            </GoldButton>
+            </button>
           </div>
         )}
       </div>

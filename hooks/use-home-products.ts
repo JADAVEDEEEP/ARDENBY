@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 
 import { apiUrl } from '@/lib/api-url';
 import { products as staticProducts } from '@/lib/data';
@@ -68,12 +68,14 @@ export function useHomeProducts() {
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [attempt, setAttempt] = useState(0);
 
   useEffect(() => {
     let cancelled = false;
 
     setLoading(true);
     setError('');
+    if (attempt > 0) cached = null;
 
     fetchLiveProducts()
       .then((live) => {
@@ -93,7 +95,9 @@ export function useHomeProducts() {
     return () => {
       cancelled = true;
     };
-  }, []);
+  }, [attempt]);
 
-  return { products, staticHomeProducts, loading, error };
+  const retry = useCallback(() => setAttempt((n) => n + 1), []);
+
+  return { products, staticHomeProducts, loading, error, retry };
 }

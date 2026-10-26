@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import * as SliderPrimitive from '@radix-ui/react-slider';
-import { AlertTriangle, BellOff, Check, Heart, Pause, Play, ShoppingBag, X } from 'lucide-react';
+import { AlertTriangle, BellOff, Check, Heart, ShoppingBag, X } from 'lucide-react';
 
 import { cn } from '@/lib/utils';
 import { formatINR } from '@/lib/format';
@@ -20,7 +20,6 @@ import {
 import { useWishlistStore } from '@/store/wishlist-store';
 import { useCartStore } from '@/store/cart-store';
 import { WishlistLoginModal } from '@/components/product/product-card';
-import { TeeSpinner } from '@/components/product/TeeSpinner';
 
 /* ------------------------------------------------------------------ */
 /*  Shared constants                                                  */
@@ -248,85 +247,14 @@ export function ToastStack({
 }
 
 /* ------------------------------------------------------------------ */
-/*  3D rotating hero tee                                              */
+/*  Hero product image (flat)                                          */
 /* ------------------------------------------------------------------ */
 
-export function HeroTee({
-  front,
-  back,
-  printLabel,
-  paused,
-  onTogglePause,
-}: {
-  front: string;
-  back: string;
-  printLabel: string;
-  paused: boolean;
-  onTogglePause: () => void;
-}) {
-  const [dragging, setDragging] = useState(false);
-
+export function HeroTee({ front, printLabel }: { front: string; printLabel: string }) {
   return (
-    <div
-      className={cn(
-        'relative mx-auto aspect-[4/5] w-[min(76vw,440px)] lg:w-[min(36vw,520px)]',
-        (paused || dragging) && 'kv-tee-paused'
-      )}
-    >
-      {/* spotlight cone */}
-      <div
-        aria-hidden
-        className="pointer-events-none absolute left-1/2 top-0 h-[88%] w-[78%] -translate-x-1/2"
-        style={{
-          clipPath: 'polygon(38% 0, 62% 0, 100% 100%, 0 100%)',
-          background:
-            'linear-gradient(180deg, rgba(246,246,248,.20), rgba(210,210,215,.05) 65%, transparent)',
-        }}
-      />
-      {/* floor glow */}
-      <div
-        aria-hidden
-        className="pointer-events-none absolute inset-x-[8%] bottom-0 h-[26%] rounded-[50%] bg-[radial-gradient(closest-side,rgba(210,210,215,.38),transparent)] blur-xl"
-      />
-      {/* orbit ring */}
-      <div
-        aria-hidden
-        className="kv-orbit-ring pointer-events-none absolute inset-[4%] rounded-full border border-[#d2d2d7]/35"
-      >
-        <span className="absolute left-1/2 top-0 h-2 w-2 -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#f6f6f8] shadow-[0_0_12px_#d2d2d7]" />
-      </div>
-
-      {/* tee */}
-      <TeeSpinner front={front} back={back} printLabel={printLabel} onDraggingChange={setDragging} />
-
-      {/* pedestal */}
-      <div
-        aria-hidden
-        className="absolute bottom-[3%] left-1/2 h-[9%] w-[64%] -translate-x-1/2 rounded-[50%] border border-[#f6f6f8]/50 shadow-[0_0_40px_rgba(210,210,215,.45),inset_0_2px_6px_rgba(255,255,255,.4)]"
-        style={{ background: 'var(--kv-chrome-metal)' }}
-      />
-
-      {/* glass labels */}
-      <div className="kv-panel absolute left-0 top-[34%] hidden rounded-[10px] px-3 py-2 backdrop-blur-md sm:block">
-        <p className="text-[10px] font-extrabold uppercase tracking-[0.18em] text-[#f4f2ec]">360° View</p>
-        <p className="text-[10px] text-[#BDB9B0]">Drag to rotate</p>
-      </div>
-      <div className="kv-panel absolute bottom-[14%] right-0 rounded-[10px] px-3 py-2 backdrop-blur-md">
-        <p className="text-[9px] font-semibold uppercase tracking-[0.2em] text-[#BDB9B0]">Print</p>
-        <p className="font-[family-name:var(--font-unbounded)] text-[12px] font-extrabold uppercase text-[#f4f2ec]">
-          {printLabel}
-        </p>
-      </div>
-
-      <button
-        type="button"
-        onClick={onTogglePause}
-        aria-label={paused ? 'Play rotation' : 'Pause rotation'}
-        aria-pressed={paused}
-        className="absolute bottom-0 left-1/2 flex h-11 w-11 -translate-x-1/2 translate-y-1/2 items-center justify-center rounded-full border border-white/20 bg-[#161618]/90 text-[#d2d2d7] shadow-lg backdrop-blur transition hover:border-[#d2d2d7]"
-      >
-        {paused ? <Play className="h-4 w-4" /> : <Pause className="h-4 w-4" />}
-      </button>
+    <div className="relative mx-auto aspect-[4/5] w-[min(76vw,440px)] overflow-hidden rounded-[4px] bg-[#E8E6E1] lg:w-[min(36vw,520px)]">
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img src={front} alt={printLabel} className="h-full w-full object-cover object-top" />
     </div>
   );
 }
