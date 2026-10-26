@@ -20,10 +20,10 @@ const ITEM =
 export function MobileShopBar({ variant = 'dark' }: { variant?: 'dark' | 'silver' }) {
   const pathname = usePathname() ?? "";
   const silver = variant === 'silver';
-  const idle = silver ? 'text-white/90 hover:text-white' : 'text-kv-muted hover:text-kv-head';
+  const idle = silver ? 'text-white/90 hover:text-white' : 'text-kv-sub hover:text-kv-ink';
   const activeCls = silver
     ? 'bg-[linear-gradient(180deg,#fafafc,#c9cbd2_55%,#8f929b)] text-[#121214] shadow-[inset_0_1px_0_rgba(255,255,255,.7)]'
-    : 'text-kv-head';
+    : 'text-kv-ink';
   const cartOpen = useCartStore((s) => s.isOpen);
   const cartCount = useCartStore((s) => getCartCount(s.items));
   const wishlistCount = useWishlistStore((s) => s.items.length);

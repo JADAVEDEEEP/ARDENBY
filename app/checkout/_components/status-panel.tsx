@@ -37,12 +37,12 @@ export function StatusPanel({
     <section
       role={failed ? 'alert' : 'status'}
       aria-live="polite"
-      className={`ck-panel overflow-hidden p-4 sm:p-5 ${failed ? 'border-[#2A2A2A]' : ''}`}
+      className={`ck-panel overflow-hidden p-4 sm:p-5 ${failed ? 'border-[#E2E0DB]' : ''}`}
     >
       <div className="flex flex-wrap items-center gap-4">
         <span
           className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-full ${
-            failed ? 'border border-white text-white' : 'border border-[#3A3A3A] text-[#C0C0C0]'
+            failed ? 'border border-[#222222] text-[#171717]' : 'border border-[#E2E0DB] text-[#4A4A4A]'
           }`}
         >
           {failed ? (
@@ -55,13 +55,13 @@ export function StatusPanel({
         </span>
 
         <div className="min-w-0 flex-1">
-          <p className="text-sm font-medium text-[#ffffff]">
+          <p className="text-sm font-medium text-[#171717]">
             {failed ? 'Something went wrong' : copy[phase]?.title}
             {orderNumber && !failed && (
-              <span className="ml-2 text-xs font-semibold text-[#C0C0C0]/70">{orderNumber}</span>
+              <span className="ml-2 text-xs font-semibold text-[#4A4A4A]/70">{orderNumber}</span>
             )}
           </p>
-          <p className="mt-0.5 text-xs leading-relaxed text-[#C0C0C0] sm:text-sm">
+          <p className="mt-0.5 text-xs leading-relaxed text-[#4A4A4A] sm:text-sm">
             {failed ? message : copy[phase]?.body}
           </p>
           {!failed && (
@@ -100,10 +100,10 @@ export function ConfirmedCard({ orderNumber }: { orderNumber: string | null }) {
       <span className="flex h-16 w-16 items-center justify-center rounded-full ck-ico">
         <CheckCircle2 className="h-8 w-8" />
       </span>
-      <p className="mt-6 text-[11px] font-medium tracking-[0.14em] text-[#C0C0C0]/70">ORDER CONFIRMATION</p>
+      <p className="mt-6 text-[11px] font-medium tracking-[0.14em] text-[#4A4A4A]/70">ORDER CONFIRMATION</p>
       <h1 className="ck-heading mt-2 text-3xl sm:text-4xl">Order placed</h1>
       {orderNumber && (
-        <p className="mt-3 text-sm font-medium tracking-wider text-[#C0C0C0]">{orderNumber}</p>
+        <p className="mt-3 text-sm font-medium tracking-wider text-[#4A4A4A]">{orderNumber}</p>
       )}
     </div>
   );

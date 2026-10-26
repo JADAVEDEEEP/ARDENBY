@@ -7,7 +7,7 @@ import React from 'react';
 ---------------------------------------------------------------- */
 
 export const SERIF_STYLE = {
-  fontFamily: 'Bodoni MT, Didot, "Playfair Display", "Times New Roman", serif',
+  fontFamily: 'var(--font-oswald), Impact, sans-serif',
 } as const;
 
 export function MetalCard({
@@ -71,23 +71,13 @@ export function MembershipCard({
 
   return (
     <div className="kv-scene relative" aria-label="KOVENIK Inner Circle membership card">
-      {/* soft floor shadow */}
-      <div
-        className="absolute -bottom-6 left-6 right-0 h-8 rounded-[50%] bg-black/70 blur-xl"
-        aria-hidden
-      />
       <div className="kv-card3d relative">
-        {/* layered second card */}
-        <div
-          className={`kv-card-face absolute ${compact ? 'left-5 top-3' : 'left-10 top-6'} ${w} opacity-70`}
-          aria-hidden
-        />
         <div className={`kv-card-face ${w} flex flex-col justify-between`}>
           <div className="flex items-start justify-between">
             <span className={`font-bold tracking-[0.06em] text-white ${compact ? 'text-[13px]' : 'text-[18px]'}`}>
               KOVENIK
             </span>
-            <span className={`font-semibold tracking-[0.2em] text-[#D6B06A] ${compact ? 'text-[7px]' : 'text-[9px]'}`}>
+            <span className={`font-semibold tracking-[0.2em] text-[#C9A86A] ${compact ? 'text-[7px]' : 'text-[9px]'}`}>
               INNER CIRCLE
             </span>
           </div>
@@ -95,18 +85,18 @@ export function MembershipCard({
           <div className="flex items-end justify-between gap-3">
             <div className="min-w-0">
               <p
-                className={`truncate uppercase text-[#E8EAEE] ${compact ? 'text-[16px]' : 'text-[22px]'}`}
+                className={`truncate uppercase text-white ${compact ? 'text-[16px]' : 'text-[22px]'}`}
                 style={SERIF_STYLE}
               >
                 {name}
               </p>
-              <p className={`mt-1 tracking-[0.18em] text-[#9296A0] ${compact ? 'text-[7px]' : 'text-[9px]'}`}>
+              <p className={`mt-1 tracking-[0.18em] text-[#D6D3CC] ${compact ? 'text-[7px]' : 'text-[9px]'}`}>
                 {memberCode(userId, createdAt)}
               </p>
             </div>
             {sinceText && (
               <div className="shrink-0 text-right">
-                <p className={`tracking-[0.18em] text-[#9296A0] ${compact ? 'text-[6px]' : 'text-[8px]'}`}>MEMBER SINCE</p>
+                <p className={`tracking-[0.18em] text-[#D6D3CC] ${compact ? 'text-[6px]' : 'text-[8px]'}`}>MEMBER SINCE</p>
                 <p className={`font-semibold text-white ${compact ? 'text-[10px]' : 'text-[13px]'}`}>{sinceText}</p>
               </div>
             )}
@@ -132,10 +122,10 @@ export function SectionTitle({
     <div className="mb-6 flex flex-wrap items-end justify-between gap-4">
       <div className="min-w-0">
         {label && <p className="kv-label">{label}</p>}
-        <h2 className="mt-2 text-[28px] font-normal leading-tight text-white sm:text-[32px]" style={SERIF_STYLE}>
+        <h2 className="mt-2 text-[28px] font-normal leading-tight text-[#171717] sm:text-[32px]" style={SERIF_STYLE}>
           {title}
         </h2>
-        {sub && <p className="mt-1.5 text-[13px] text-[#9296A0]">{sub}</p>}
+        {sub && <p className="mt-1.5 text-[13px] text-[#5C5C5C]">{sub}</p>}
       </div>
       {action}
     </div>
@@ -156,10 +146,10 @@ export function EmptyPanel({
   return (
     <div className="kv-inner flex flex-col items-center px-6 py-14 text-center">
       <IconDisc icon={icon} size={56} />
-      <h3 className="mt-5 text-[22px] text-white" style={SERIF_STYLE}>
+      <h3 className="mt-5 text-[22px] text-[#171717]" style={SERIF_STYLE}>
         {title}
       </h3>
-      <p className="mt-2 max-w-xs text-[13px] leading-6 text-[#9296A0]">{text}</p>
+      <p className="mt-2 max-w-xs text-[13px] leading-6 text-[#5C5C5C]">{text}</p>
       {action && <div className="mt-6">{action}</div>}
     </div>
   );

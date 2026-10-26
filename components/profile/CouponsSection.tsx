@@ -57,11 +57,11 @@ export function CouponsSection({ profile }: { profile: ProfileState }) {
               <div key={coupon.id} className="kv-inner flex min-w-0 overflow-hidden">
                 <div className="min-w-0 flex-1 p-5">
                   <p className="kv-label">Your offer</p>
-                  <p className="mt-2 text-[34px] font-light leading-none text-white">
-                    {discount} <span className="text-[16px] text-[#C6C9CF]">OFF</span>
+                  <p className="mt-2 text-[34px] font-light leading-none text-[#171717]">
+                    {discount} <span className="text-[16px] text-[#4A4A4A]">OFF</span>
                   </p>
-                  {coupon.description && <p className="mt-3 break-words text-[13px] leading-5 text-[#C6C9CF]">{coupon.description}</p>}
-                  <ul className="mt-3 space-y-0.5 text-[12px] text-[#9296A0]">
+                  {coupon.description && <p className="mt-3 break-words text-[13px] leading-5 text-[#4A4A4A]">{coupon.description}</p>}
+                  <ul className="mt-3 space-y-0.5 text-[12px] text-[#5C5C5C]">
                     {Number(coupon.min_order) > 0 && <li>On orders above ₹{Number(coupon.min_order).toLocaleString('en-IN')}</li>}
                     {coupon.max_discount !== null && coupon.max_discount !== undefined && Number(coupon.max_discount) > 0 && (
                       <li>Maximum discount ₹{Number(coupon.max_discount).toLocaleString('en-IN')}</li>
@@ -70,8 +70,8 @@ export function CouponsSection({ profile }: { profile: ProfileState }) {
                   </ul>
                 </div>
 
-                <div className="flex w-[124px] shrink-0 flex-col items-center justify-center gap-3 border-l border-dashed border-[#4a4d55] p-3">
-                  <span className="break-all text-center text-[12px] font-bold tracking-[0.12em] text-[#D6B06A]">{coupon.code}</span>
+                <div className="flex w-[124px] shrink-0 flex-col items-center justify-center gap-3 border-l border-dashed border-[#D6D0C2] p-3">
+                  <span className="break-all text-center text-[12px] font-bold tracking-[0.12em] text-[#8C6D3A]">{coupon.code}</span>
                   <button type="button" onClick={() => copy(coupon)} className="kv-btn-primary !px-4">
                     {copied ? <Check className="h-3.5 w-3.5" /> : <Copy className="h-3.5 w-3.5" />}
                     {copied ? 'Copied' : 'Copy'}

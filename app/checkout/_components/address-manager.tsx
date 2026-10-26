@@ -60,10 +60,10 @@ function Field({
 }) {
   return (
     <label className="block space-y-1.5">
-      <span className="text-xs font-semibold tracking-wide text-[#C0C0C0]">{label}</span>
+      <span className="text-xs font-semibold tracking-wide text-[#4A4A4A]">{label}</span>
       {children}
       {error && (
-        <span role="alert" className="flex items-center gap-1 text-xs text-[#ffffff]">
+        <span role="alert" className="flex items-center gap-1 text-xs text-[#171717]">
           <AlertCircle className="h-3 w-3" /> {error}
         </span>
       )}
@@ -124,7 +124,7 @@ function AddressModal({
   );
 
   const modal = (
-    <div className="ck-scope fixed inset-0 z-[9500] flex items-center justify-center bg-black/85 p-3 backdrop-blur-sm sm:p-6"
+    <div className="ck-scope fixed inset-0 z-[9500] flex items-center justify-center bg-black/50 p-3 backdrop-blur-sm sm:p-6"
       onMouseDown={(e) => e.target === e.currentTarget && !saving && onClose()}>
       <motion.div
         initial={{ opacity: 0, y: 18 }}
@@ -135,12 +135,12 @@ function AddressModal({
         className="ck-panel flex w-full max-w-xl flex-col overflow-hidden"
         style={{ maxHeight: 'calc(100dvh - 1.5rem)' }}
       >
-        <div className="flex shrink-0 items-center justify-between border-b border-[#2A2A2A] px-5 py-4 sm:px-6">
+        <div className="flex shrink-0 items-center justify-between border-b border-[#E2E0DB] px-5 py-4 sm:px-6">
           <div>
-            <p className="text-[10px] font-medium tracking-[0.14em] text-[#C0C0C0]">
+            <p className="text-[10px] font-medium tracking-[0.14em] text-[#4A4A4A]">
               {editingId ? 'UPDATE ADDRESS' : 'NEW ADDRESS'}
             </p>
-            <h3 id="address-modal-title" className="mt-0.5 text-xl font-medium text-[#ffffff]">
+            <h3 id="address-modal-title" className="mt-0.5 text-xl font-medium text-[#171717]">
               {editingId ? 'Edit address' : 'Add address'}
             </h3>
           </div>
@@ -149,7 +149,7 @@ function AddressModal({
             onClick={onClose}
             disabled={saving}
             aria-label="Close"
-            className="flex h-9 w-9 items-center justify-center rounded-full border border-[#3A3A3A] text-[#C0C0C0] hover:border-[#C0C0C0] hover:text-white disabled:opacity-50"
+            className="flex h-9 w-9 items-center justify-center rounded-full border border-[#E2E0DB] text-[#4A4A4A] hover:border-[#222222] hover:text-[#171717] disabled:opacity-50"
           >
             <X className="h-4 w-4" />
           </button>
@@ -210,12 +210,12 @@ function AddressModal({
             />
           </Field>
 
-          <label className="flex items-center gap-3 text-sm text-[#C0C0C0]">
+          <label className="flex items-center gap-3 text-sm text-[#4A4A4A]">
             <input
               type="checkbox"
               checked={form.is_default}
               onChange={(e) => set({ is_default: e.target.checked })}
-              className="h-4 w-4 accent-[#C0C0C0]"
+              className="h-4 w-4 accent-[#222222]"
             />
             Make this my default address
           </label>
@@ -223,7 +223,7 @@ function AddressModal({
           {error && (
             <div
               role="alert"
-              className="flex items-start gap-2  border border-[#2A2A2A] bg-[#0A0A0A] px-4 py-3 text-sm text-[#ffffff]"
+              className="flex items-start gap-2  border border-[#E2E0DB] bg-[#FFFFFF] px-4 py-3 text-sm text-[#171717]"
             >
               <AlertCircle className="mt-0.5 h-4 w-4 shrink-0" />
               {error}
@@ -232,7 +232,7 @@ function AddressModal({
 
          </div>
 
-          <div className="flex shrink-0 flex-col-reverse gap-3 border-t border-[#2A2A2A] bg-[#0A0A0A] px-5 py-4 sm:flex-row sm:justify-end sm:px-6">
+          <div className="flex shrink-0 flex-col-reverse gap-3 border-t border-[#E2E0DB] bg-[#FFFFFF] px-5 py-4 sm:flex-row sm:justify-end sm:px-6">
             <button type="button" onClick={onClose} disabled={saving} className="ck-ghost">
               Cancel
             </button>
@@ -419,14 +419,14 @@ export function AddressManager({
   return (
     <>
       <div className="space-y-3">
-        <p className="text-[11px] font-medium uppercase tracking-[0.14em] text-[#C0C0C0]/70">
+        <p className="text-[11px] font-medium uppercase tracking-[0.14em] text-[#4A4A4A]/70">
           Saved addresses
         </p>
 
         {error && (
           <div
             role="alert"
-            className="flex flex-wrap items-center justify-between gap-3  border border-[#2A2A2A] bg-[#0A0A0A] px-4 py-3 text-sm text-[#ffffff]"
+            className="flex flex-wrap items-center justify-between gap-3  border border-[#E2E0DB] bg-[#FFFFFF] px-4 py-3 text-sm text-[#171717]"
           >
             <span className="flex items-center gap-2">
               <AlertCircle className="h-4 w-4 shrink-0" />
@@ -455,11 +455,11 @@ export function AddressManager({
 
         {loading ? (
           <div
-            className="flex min-h-[140px] items-center justify-center  border border-[#2A2A2A] bg-white/[0.03]"
+            className="flex min-h-[140px] items-center justify-center  border border-[#E2E0DB] bg-[#171717]/[0.03]"
             aria-busy="true"
             aria-label="Loading addresses"
           >
-            <Loader2 className="h-6 w-6 animate-spin text-[#C0C0C0]" />
+            <Loader2 className="h-6 w-6 animate-spin text-[#4A4A4A]" />
           </div>
         ) : (
           <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-[1fr_1fr_0.7fr]">
@@ -484,8 +484,8 @@ export function AddressManager({
                       </span>
 
                       <div className="min-w-0 flex-1">
-                        <p className="truncate text-sm font-medium text-[#ffffff]">{a.name}</p>
-                        <p className="mt-0.5 text-[10px] font-medium uppercase tracking-[0.16em] text-[#C0C0C0]/70">
+                        <p className="truncate text-sm font-medium text-[#171717]">{a.name}</p>
+                        <p className="mt-0.5 text-[10px] font-medium uppercase tracking-[0.16em] text-[#4A4A4A]/70">
                           {a.address_type || 'Address'}
                           {a.is_default && ' · Default'}
                         </p>
@@ -494,26 +494,26 @@ export function AddressManager({
                       <span
                         aria-hidden
                         className={`mt-1 flex h-5 w-5 shrink-0 items-center justify-center rounded-full border ${
-                          on ? 'border-[#C0C0C0] bg-[#C0C0C0]/15' : 'border-[#3A3A3A]'
+                          on ? 'border-[#222222] bg-[#171717]/15' : 'border-[#E2E0DB]'
                         }`}
                       >
                         {on && <span className="ck-radio-dot h-2.5 w-2.5 rounded-full" />}
                       </span>
                     </div>
 
-                    <p className="mt-3 text-[13px] leading-relaxed text-[#C0C0C0]">
+                    <p className="mt-3 text-[13px] leading-relaxed text-[#4A4A4A]">
                       {a.address}
                       <br />
                       {a.city}, {a.state} {a.pincode}
                     </p>
-                    <p className="mt-1.5 text-xs text-[#C0C0C0]/70">{a.phone}</p>
+                    <p className="mt-1.5 text-xs text-[#4A4A4A]/70">{a.phone}</p>
                   </button>
 
-                  <div className="flex items-center justify-between gap-2 border-t border-[#2A2A2A] px-4 py-2">
+                  <div className="flex items-center justify-between gap-2 border-t border-[#E2E0DB] px-4 py-2">
                     <button
                       type="button"
                       onClick={() => openEdit(a)}
-                      className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#C0C0C0] hover:text-white"
+                      className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#4A4A4A] hover:text-[#171717]"
                     >
                       <Pencil className="h-3.5 w-3.5" /> Edit
                     </button>
@@ -525,7 +525,7 @@ export function AddressManager({
                           disabled={saving}
                           aria-label="Make default address"
                           title="Make default"
-                          className=" p-1.5 text-[#C0C0C0]/70 hover:bg-white/10 hover:text-white disabled:opacity-40"
+                          className=" p-1.5 text-[#4A4A4A]/70 hover:bg-[#171717]/10 hover:text-[#171717] disabled:opacity-40"
                         >
                           <Star className="h-3.5 w-3.5" />
                         </button>
@@ -536,7 +536,7 @@ export function AddressManager({
                         disabled={saving}
                         aria-label="Delete address"
                         title="Delete"
-                        className=" p-1.5 text-[#C0C0C0]/70 hover:bg-[#ffffff]/15 hover:text-[#ffffff] disabled:opacity-40"
+                        className=" p-1.5 text-[#4A4A4A]/70 hover:bg-[#171717]/15 hover:text-[#171717] disabled:opacity-40"
                       >
                         <Trash2 className="h-3.5 w-3.5" />
                       </button>
@@ -549,7 +549,7 @@ export function AddressManager({
             <button
               type="button"
               onClick={openAdd}
-              className="group flex min-h-[120px] flex-col items-center justify-center gap-2  border border-dashed border-[#3A3A3A] text-[11px] font-medium uppercase tracking-[0.14em] text-[#C0C0C0] transition hover:border-[#C0C0C0] hover:text-white"
+              className="group flex min-h-[120px] flex-col items-center justify-center gap-2  border border-dashed border-[#E2E0DB] text-[11px] font-medium uppercase tracking-[0.14em] text-[#4A4A4A] transition hover:border-[#222222] hover:text-[#171717]"
             >
               <span className="ck-chip-chrome flex h-9 w-9 items-center justify-center rounded-full transition group-hover:rotate-90">
                 <Plus className="h-5 w-5" />

@@ -179,7 +179,7 @@ export function AddToCart({ product }: { product: Product }) {
           text-cream
           transition-all duration-300
           hover:bg-ink-soft
-          hover:shadow-[0_14px_30px_rgba(20,20,18,0.14)]
+          
           active:scale-[0.99]
           focus:outline-none
           focus-visible:ring-2
@@ -187,7 +187,7 @@ export function AddToCart({ product }: { product: Product }) {
           focus-visible:ring-offset-2
         "
       >
-        <span className="absolute inset-0 -translate-x-full bg-white/10 transition-transform duration-500 group-hover:translate-x-0" />
+        <span className="absolute inset-0 -translate-x-full bg-[#171717]/10 transition-transform duration-500 group-hover:translate-x-0" />
 
         <ShoppingBag
           className="relative h-[17px] w-[17px] transition-transform duration-300 group-hover:-translate-y-0.5"

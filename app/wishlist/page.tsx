@@ -47,7 +47,7 @@ function WishlistPageView() {
   const totalSavings = items.reduce((sum, i) => sum + Math.max(0, Number(i.mrp || 0) - Number(i.price || 0)), 0);
 
   return (
-    <div className="kv-page min-h-screen pb-14 pt-5 text-white lg:pb-20 lg:pt-8">
+    <div className="kv-page min-h-screen pb-14 pt-5 text-[#171717] lg:pb-20 lg:pt-8">
 
       <div className="mx-auto max-w-[1280px] px-4 lg:px-8">
         {/* Hero */}
@@ -60,30 +60,30 @@ function WishlistPageView() {
             KOVENIK
           </span>
           <div className="relative px-5 py-8 sm:px-10 lg:px-12 lg:py-12">
-            <nav aria-label="Breadcrumb" className="flex items-center gap-2 text-[12px] text-[#9296A0]">
-              <Link href="/" className="transition-colors hover:text-white">
+            <nav aria-label="Breadcrumb" className="flex items-center gap-2 text-[12px] text-[#5C5C5C]">
+              <Link href="/" className="transition-colors hover:text-[#171717]">
                 Home
               </Link>
-              <span className="text-[#D6B06A]">&rsaquo;</span>
-              <span className="text-[#C6C9CF]">Wishlist</span>
+              <span className="text-[#8C6D3A]">&rsaquo;</span>
+              <span className="text-[#4A4A4A]">Wishlist</span>
             </nav>
 
             <p className="kv-label mt-6">KOVENIK — SAVED PIECES</p>
-            <h1 className="mt-3 text-[44px] font-normal leading-[1.05] text-white sm:text-[60px] lg:text-[76px]" style={SERIF_STYLE}>
+            <h1 className="mt-3 text-[44px] font-normal leading-[1.05] text-[#171717] sm:text-[60px] lg:text-[76px]" style={SERIF_STYLE}>
               My Wishlist.
             </h1>
-            <p className="mt-3 max-w-md text-[14px] leading-6 text-[#C6C9CF]">
+            <p className="mt-3 max-w-md text-[14px] leading-6 text-[#4A4A4A]">
               Your favourite pieces, saved for later.
             </p>
 
             {items.length > 0 && (
               <div className="mt-6 flex flex-wrap gap-2">
                 <span className="kv-pill">
-                  <Heart className="h-3.5 w-3.5 text-[#D6B06A]" strokeWidth={1.7} />
+                  <Heart className="h-3.5 w-3.5 text-[#8C6D3A]" strokeWidth={1.7} />
                   {items.length} {items.length === 1 ? 'piece' : 'pieces'} saved
                 </span>
                 <span className="kv-pill">Total {formatINR(totalValue)}</span>
-                {totalSavings > 0 && <span className="kv-pill !text-[#5FD08A]">Saving {formatINR(totalSavings)}</span>}
+                {totalSavings > 0 && <span className="kv-pill !text-[#1B7A43]">Saving {formatINR(totalSavings)}</span>}
               </div>
             )}
           </div>
@@ -94,10 +94,10 @@ function WishlistPageView() {
             <MetalCard>
               <div className="flex flex-col items-center px-6 py-16 text-center sm:py-24">
                 <IconDisc icon={Heart} size={64} />
-                <h2 className="mt-6 text-[26px] text-white sm:text-[32px]" style={SERIF_STYLE}>
+                <h2 className="mt-6 text-[26px] text-[#171717] sm:text-[32px]" style={SERIF_STYLE}>
                   Your wishlist is empty
                 </h2>
-                <p className="mb-8 mt-2 max-w-sm text-[13px] leading-6 text-[#9296A0]">
+                <p className="mb-8 mt-2 max-w-sm text-[13px] leading-6 text-[#5C5C5C]">
                   Save the pieces you love and they will wait for you here.
                 </p>
                 <Link href="/shop" className="kv-btn-primary">
@@ -111,25 +111,25 @@ function WishlistPageView() {
                 {/* Toolbar */}
                 <div className="mb-5 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                   <div className="flex items-center gap-4">
-                    <h2 className="text-[12px] font-bold uppercase tracking-[0.16em] text-white">
+                    <h2 className="text-[12px] font-bold uppercase tracking-[0.16em] text-[#171717]">
                       {items.length} {items.length === 1 ? 'Item' : 'Items'}
                     </h2>
                     <button
                       type="button"
                       onClick={clear}
-                      className="min-h-[44px] text-[11px] uppercase tracking-[0.18em] text-[#9296A0] transition-colors hover:text-[#EF7B7B]"
+                      className="min-h-[44px] text-[11px] uppercase tracking-[0.18em] text-[#5C5C5C] transition-colors hover:text-[#B3261E]"
                     >
                       Clear all
                     </button>
                   </div>
 
-                  <label className="relative flex min-h-[48px] cursor-pointer items-center gap-3 rounded-full border border-[#42454C] bg-[#1E2024] px-4 sm:w-[260px]">
-                    <SlidersHorizontal className="h-4 w-4 shrink-0 text-[#D6B06A]" strokeWidth={1.7} />
+                  <label className="relative flex min-h-[48px] cursor-pointer items-center gap-3 rounded-full border border-[#D6D0C2] bg-[#F4F0E8] px-4 sm:w-[260px]">
+                    <SlidersHorizontal className="h-4 w-4 shrink-0 text-[#8C6D3A]" strokeWidth={1.7} />
                     <span className="flex flex-1 flex-col leading-tight">
-                      <span className="text-[10px] text-[#9296A0]">Sort by</span>
-                      <span className="text-[13px] text-white">{SORT_OPTIONS.find((o) => o.value === sort)?.label}</span>
+                      <span className="text-[10px] text-[#5C5C5C]">Sort by</span>
+                      <span className="text-[13px] text-[#171717]">{SORT_OPTIONS.find((o) => o.value === sort)?.label}</span>
                     </span>
-                    <ChevronDown className="h-4 w-4 shrink-0 text-[#9296A0]" />
+                    <ChevronDown className="h-4 w-4 shrink-0 text-[#5C5C5C]" />
                     <select
                       aria-label="Sort wishlist"
                       value={sort}
@@ -137,7 +137,7 @@ function WishlistPageView() {
                       className="absolute inset-0 h-full w-full cursor-pointer opacity-0"
                     >
                       {SORT_OPTIONS.map((o) => (
-                        <option key={o.value} value={o.value} className="bg-[#16171B] text-white">
+                        <option key={o.value} value={o.value} className="bg-[#F4F0E8] text-[#171717]">
                           {o.label}
                         </option>
                       ))}
@@ -154,10 +154,10 @@ function WishlistPageView() {
                     return (
                       <div
                         key={item.productId}
-                        className="group relative min-w-0 overflow-hidden rounded-2xl border border-[#33363D] bg-[#141518] transition-colors hover:border-[#5a5e67]"
+                        className="group relative min-w-0 overflow-hidden rounded-2xl border border-[#E2E0DB] bg-[#F4F0E8] transition-colors hover:border-[#D6D0C2]"
                       >
                         <Link href={`/product/${item.slug}`} className="block">
-                          <div className="relative aspect-[4/5] overflow-hidden border-b border-[#2c2e34] bg-[radial-gradient(circle_at_50%_30%,#2e3036,#141518)]">
+                          <div className="relative aspect-[4/5] overflow-hidden border-b border-[#E2E0DB] bg-[#F4F0E8]">
                             {item.image ? (
                               // eslint-disable-next-line @next/next/no-img-element
                               <img
@@ -167,7 +167,7 @@ function WishlistPageView() {
                               />
                             ) : null}
                             {off > 0 && (
-                              <span className="absolute left-3 top-3 rounded-full border border-[#5a4a2a] bg-[#261f12]/90 px-2.5 py-1 text-[10px] font-semibold text-[#D6B06A]">
+                              <span className="absolute left-3 top-3 rounded-full border border-[#B08D57] bg-[#F4F0E8]/90 px-2.5 py-1 text-[10px] font-semibold text-[#8C6D3A]">
                                 {off}% OFF
                               </span>
                             )}
@@ -176,16 +176,16 @@ function WishlistPageView() {
                           <div className="px-3 pb-4 pt-3 sm:px-4">
                             <h3
                               title={item.name}
-                              className="line-clamp-2 min-h-[38px] break-words text-[13px] font-medium leading-[19px] text-white sm:text-[14px]"
+                              className="line-clamp-2 min-h-[38px] break-words text-[13px] font-medium leading-[19px] text-[#171717] sm:text-[14px]"
                             >
                               {item.name}
                             </h3>
                             <p className="mt-2 flex flex-wrap items-baseline gap-x-2">
-                              <span className="text-[16px] font-semibold tabular-nums text-white sm:text-[18px]">
+                              <span className="text-[16px] font-semibold tabular-nums text-[#171717] sm:text-[18px]">
                                 {formatINR(item.price)}
                               </span>
                               {hasDiscount && (
-                                <span className="text-[12px] tabular-nums text-[#9296A0] line-through">{formatINR(item.mrp)}</span>
+                                <span className="text-[12px] tabular-nums text-[#5C5C5C] line-through">{formatINR(item.mrp)}</span>
                               )}
                             </p>
                           </div>

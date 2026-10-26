@@ -115,17 +115,17 @@ export function ProductStage({ images, name, onOpenFullscreen }: ProductStagePro
 
   if (count === 0) {
     return (
-      <div className="flex aspect-[4/5] items-center justify-center border border-white/10 bg-[#1C1D20] text-base text-[#8D8A82]">
+      <div className="flex aspect-[4/5] items-center justify-center border border-[#171717]/10 bg-[#F4F0E8] text-base text-[#5C5C5C]">
         No image available
       </div>
     );
   }
 
   const thumbClass = (index: number) =>
-    `relative shrink-0 overflow-hidden border bg-[#1C1D20] transition-all duration-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#D2D2D7] ${
+    `relative shrink-0 overflow-hidden border bg-[#F4F0E8] transition-all duration-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#222222] ${
       active === index
-        ? 'border-white shadow-[0_8px_20px_rgba(0,0,0,.5)]'
-        : 'border-white/10 opacity-70 hover:-translate-y-0.5 hover:border-white/30 hover:opacity-100'
+        ? 'border-[#222222] '
+        : 'border-[#171717]/10 opacity-70 hover:-translate-y-0.5 hover:border-[#171717]/30 hover:opacity-100'
     }`;
 
   return (
@@ -165,7 +165,7 @@ export function ProductStage({ images, name, onOpenFullscreen }: ProductStagePro
           <div className="kv-stage-in">
             <div
               ref={cardRef}
-              className="kv-card relative overflow-hidden bg-[#090a0b]"
+              className="kv-card relative overflow-hidden bg-[#FFFFFF]"
             >
               <div ref={imageRef} className="kv-zoom-layer">
                 <img
@@ -173,7 +173,7 @@ export function ProductStage({ images, name, onOpenFullscreen }: ProductStagePro
                   src={images[active]}
                   alt={name}
                   draggable={false}
-                  className="kv-fade block h-auto max-h-[calc(100vh-9rem)] w-full select-none object-contain mix-blend-lighten"
+                  className="kv-fade block h-auto max-h-[calc(100vh-9rem)] w-full select-none object-contain"
                 />
               </div>
 
@@ -246,7 +246,7 @@ export function ProductStage({ images, name, onOpenFullscreen }: ProductStagePro
           <div
             ref={swiperRef}
             onScroll={handleSwiperScroll}
-            className="kv-swiper flex snap-x snap-mandatory overflow-x-auto overscroll-x-contain bg-[#090a0b]"
+            className="kv-swiper flex snap-x snap-mandatory overflow-x-auto overscroll-x-contain bg-[#FFFFFF]"
             aria-label={`${name} images`}
           >
             {images.map((image, index) => (
@@ -262,17 +262,17 @@ export function ProductStage({ images, name, onOpenFullscreen }: ProductStagePro
                   alt={`${name} ${index + 1}`}
                   draggable={false}
                   loading={index === 0 ? 'eager' : 'lazy'}
-                  className="block h-auto w-full select-none object-contain mix-blend-lighten"
+                  className="block h-auto w-full select-none object-contain"
                 />
               </button>
             ))}
           </div>
 
-          <span className="pointer-events-none absolute bottom-3 right-3 flex h-10 w-10 items-center justify-center rounded-full border border-white/30 bg-[#0C0C0E]/80 text-[#FFFFFF]">
+          <span className="pointer-events-none absolute bottom-3 right-3 flex h-10 w-10 items-center justify-center rounded-full border border-[#171717]/30 bg-[#FFFFFF]/80 text-[#171717]">
             <Maximize2 className="h-4 w-4" />
           </span>
           {count > 1 && (
-            <span className="pointer-events-none absolute bottom-3 left-3 rounded-full border border-white/15 bg-[#0C0C0E]/85 px-3 py-1 text-xs font-semibold tabular-nums text-[#FFFFFF]">
+            <span className="pointer-events-none absolute bottom-3 left-3 rounded-full border border-[#171717]/15 bg-[#FFFFFF]/85 px-3 py-1 text-xs font-semibold tabular-nums text-[#171717]">
               {active + 1}/{count}
             </span>
           )}
@@ -283,7 +283,7 @@ export function ProductStage({ images, name, onOpenFullscreen }: ProductStagePro
             {images.map((_, index) => (
               <span
                 key={index}
-                className={`h-1 rounded-full transition-all duration-300 ${active === index ? 'w-6 bg-[#FFFFFF]' : 'w-1.5 bg-white/25'}`}
+                className={`h-1 rounded-full transition-all duration-300 ${active === index ? 'w-6 bg-[#222222]' : 'w-1.5 bg-[#171717]/25'}`}
               />
             ))}
           </div>

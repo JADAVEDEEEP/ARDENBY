@@ -11,7 +11,7 @@ const config: Config = {
   theme: {
     extend: {
       fontFamily: {
-        sans: ['var(--font-inter)', 'system-ui', 'sans-serif'],
+        sans: ['var(--font-archivo)', 'system-ui', 'sans-serif'],
         display: ['var(--font-satoshi)', 'var(--font-inter)', 'sans-serif'],
         lora: ['var(--font-lora)', 'Georgia', 'serif'],
         oswald: ['var(--font-oswald)', 'Impact', 'sans-serif'],

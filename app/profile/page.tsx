@@ -49,10 +49,10 @@ function ProfilePageView() {
     return (
       <main className="kv-page min-h-screen">
         <div className="mx-auto max-w-[1280px] px-4 py-8 lg:px-8">
-          <div className="h-[260px] animate-pulse rounded-[20px] bg-[#1C1E22] lg:h-[360px]" />
+          <div className="h-[260px] animate-pulse rounded-[20px] bg-[#F4F0E8] lg:h-[360px]" />
           <div className="mt-6 grid gap-6 lg:grid-cols-[248px_minmax(0,1fr)]">
-            <div className="hidden h-[480px] animate-pulse rounded-[20px] bg-[#1C1E22] lg:block" />
-            <div className="h-[480px] animate-pulse rounded-[20px] bg-[#1C1E22]" />
+            <div className="hidden h-[480px] animate-pulse rounded-[20px] bg-[#F4F0E8] lg:block" />
+            <div className="h-[480px] animate-pulse rounded-[20px] bg-[#F4F0E8]" />
           </div>
         </div>
       </main>
@@ -87,10 +87,10 @@ function ProfilePageView() {
   const Tags = () => (
     <div className="flex flex-wrap gap-2">
       <span className="kv-pill">
-        <Star className="h-3.5 w-3.5 fill-[#D6B06A] text-[#D6B06A]" strokeWidth={1.7} /> Inner Circle Member
+        <Star className="h-3.5 w-3.5 fill-[#B08D57] text-[#8C6D3A]" strokeWidth={1.7} /> Inner Circle Member
       </span>
       {verified && (
-        <span className="kv-pill !text-[#5FD08A]">
+        <span className="kv-pill !text-[#1B7A43]">
           <BadgeCheck className="h-3.5 w-3.5" strokeWidth={1.7} /> Verified
         </span>
       )}
@@ -106,7 +106,7 @@ function ProfilePageView() {
   return (
     <>
 
-      <main className="kv-page min-h-screen pb-14 pt-5 text-white lg:pt-8">
+      <main className="kv-page min-h-screen pb-14 pt-5 text-[#171717] lg:pt-8">
         <div className="mx-auto max-w-[1280px] px-4 lg:px-8">
           {/* ================= HERO (DESKTOP) ================= */}
           <MetalCard className="hidden min-h-[360px] lg:block">
@@ -120,11 +120,11 @@ function ProfilePageView() {
             <div className="relative grid min-h-[360px] grid-cols-[1fr_auto] items-center gap-8 px-12 py-10">
               <div className="min-w-0">
                 <p className="kv-label">KOVENIK — MY ACCOUNT</p>
-                <p className="mt-5 text-[18px] text-[#C6C9CF]">Welcome back,</p>
-                <h1 className="truncate text-[84px] font-normal leading-[1.05] text-white" style={SERIF_STYLE}>
+                <p className="mt-5 text-[18px] text-[#4A4A4A]">Welcome back,</p>
+                <h1 className="truncate text-[84px] font-normal leading-[1.05] text-[#171717]" style={SERIF_STYLE}>
                   {firstName}.
                 </h1>
-                <p className="mt-3 max-w-md text-[14px] leading-6 text-[#C6C9CF]">
+                <p className="mt-3 max-w-md text-[14px] leading-6 text-[#4A4A4A]">
                   Your orders, saved pieces and Inner Circle privileges — all in one place.
                 </p>
                 <div className="mt-6">
@@ -158,8 +158,8 @@ function ProfilePageView() {
                   <Pencil className="h-4 w-4" strokeWidth={1.7} />
                 </button>
               </div>
-              <p className="mt-3 text-[15px] text-[#C6C9CF]">Welcome back,</p>
-              <h1 className="truncate text-[44px] font-normal leading-[1.1] text-white" style={SERIF_STYLE}>
+              <p className="mt-3 text-[15px] text-[#4A4A4A]">Welcome back,</p>
+              <h1 className="truncate text-[44px] font-normal leading-[1.1] text-[#171717]" style={SERIF_STYLE}>
                 {firstName}.
               </h1>
               <div className="mt-5 flex justify-center overflow-hidden py-3 pr-10">
@@ -180,7 +180,7 @@ function ProfilePageView() {
           <div
             role="tablist"
             aria-label="Account sections"
-            className="mt-4 grid grid-cols-4 gap-1 rounded-full border border-[#33363D] bg-[#16171B] p-1 lg:hidden"
+            className="mt-4 grid grid-cols-4 gap-1 rounded-full border border-[#E2E0DB] bg-[#F4F0E8] p-1 lg:hidden"
           >
             {MOBILE_TABS.map((tab) => {
               const active = profile.activeSection === tab.id;
@@ -192,7 +192,7 @@ function ProfilePageView() {
                   aria-selected={active}
                   onClick={() => handleSectionChange(tab.id)}
                   className={`min-h-[44px] rounded-full text-[12px] font-semibold transition ${
-                    active ? 'bg-gradient-to-b from-white to-[#E9E9E6] text-[#0A0A0A]' : 'text-[#C6C9CF]'
+                    active ? 'bg-gradient-to-b from-[#222222] to-[#222222] text-[#FFFFFF]' : 'text-[#4A4A4A]'
                   }`}
                 >
                   {tab.label}
@@ -207,12 +207,12 @@ function ProfilePageView() {
             <aside className="hidden space-y-5 lg:sticky lg:top-24 lg:block">
               <MetalCard className="p-4">
                 <div className="flex items-center gap-3 px-1 pb-4">
-                  <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border-2 border-[#D6B06A] bg-[#121316] text-[15px] text-white" style={SERIF_STYLE}>
+                  <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border-2 border-[#B08D57] bg-[#F4F0E8] text-[15px] text-[#171717]" style={SERIF_STYLE}>
                     {profile.initial}
                   </span>
                   <div className="min-w-0">
-                    <p className="truncate text-[14px] font-semibold text-white">{profile.displayName}</p>
-                    {memberSinceText && <p className="text-[11px] text-[#9296A0]">Member since {memberSinceText}</p>}
+                    <p className="truncate text-[14px] font-semibold text-[#171717]">{profile.displayName}</p>
+                    {memberSinceText && <p className="text-[11px] text-[#5C5C5C]">Member since {memberSinceText}</p>}
                   </div>
                 </div>
 
@@ -229,28 +229,28 @@ function ProfilePageView() {
                         aria-current={active ? 'page' : undefined}
                         className={`flex min-h-[42px] w-full items-center gap-3 rounded-xl border px-3 text-left transition ${
                           active
-                            ? 'border-[#42454C] bg-gradient-to-b from-[#34373d] to-[#24262b] text-white shadow-[inset_0_1px_0_rgba(255,255,255,.12)]'
-                            : 'border-transparent text-[#C6C9CF] hover:bg-white/[0.04] hover:text-white'
+                            ? 'border-[#D6D0C2] bg-gradient-to-b from-[#EAE5DA] to-[#EAE5DA] text-[#171717] '
+                            : 'border-transparent text-[#4A4A4A] hover:bg-[#171717]/[0.04] hover:text-[#171717]'
                         }`}
                       >
                         <Icon className="h-4 w-4 shrink-0" strokeWidth={1.7} />
                         <span className="flex-1 truncate text-[13px] font-medium">{item.label}</span>
                         {active ? (
-                          <span className="h-1.5 w-1.5 rounded-full bg-[#D6B06A]" />
+                          <span className="h-1.5 w-1.5 rounded-full bg-[#B08D57]" />
                         ) : count !== null && count > 0 ? (
-                          <span className="text-[11px] text-[#9296A0]">{count}</span>
+                          <span className="text-[11px] text-[#5C5C5C]">{count}</span>
                         ) : null}
                       </button>
                     );
                   })}
                 </nav>
 
-                <div className="my-3 h-px bg-[#2c2e34]" />
+                <div className="my-3 h-px bg-[#EAE5DA]" />
 
                 <button
                   type="button"
                   onClick={profile.logout}
-                  className="flex min-h-[42px] w-full items-center gap-3 rounded-xl px-3 text-[13px] font-medium text-[#EF7B7B] transition hover:bg-[#2a1517]"
+                  className="flex min-h-[42px] w-full items-center gap-3 rounded-xl px-3 text-[13px] font-medium text-[#B3261E] transition hover:bg-[#F4F0E8]"
                 >
                   <LogOut className="h-4 w-4" strokeWidth={1.7} />
                   Log out
@@ -259,10 +259,10 @@ function ProfilePageView() {
 
               <MetalCard className="p-5">
                 <p className="kv-label">Concierge</p>
-                <p className="mt-3 text-[17px] leading-snug text-white" style={SERIF_STYLE}>
+                <p className="mt-3 text-[17px] leading-snug text-[#171717]" style={SERIF_STYLE}>
                   Need a hand with an order?
                 </p>
-                <p className="mt-2 text-[11px] leading-5 text-[#9296A0]">
+                <p className="mt-2 text-[11px] leading-5 text-[#5C5C5C]">
                   Sizing, exchanges or delivery — reach our team any time.
                 </p>
                 <button type="button" onClick={goContact} className="kv-btn-ghost mt-4 w-full">

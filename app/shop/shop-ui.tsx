@@ -70,36 +70,11 @@ const TOAST_STYLE: Record<
   ToastVariant,
   { bg: string; border: string; accent: string; bar: string }
 > = {
-  stock: {
-    bg: 'linear-gradient(135deg, rgba(150,40,38,.55), rgba(52,12,14,.78) 60%, rgba(30,8,10,.85))',
-    border: 'rgba(255,110,96,.42)',
-    accent: '#ffb1a6',
-    bar: 'linear-gradient(90deg,#ff6a5a,#b3261e)',
-  },
-  low: {
-    bg: 'linear-gradient(135deg, rgba(245,158,11,.30), rgba(84,48,8,.74) 60%, rgba(34,20,6,.86))',
-    border: 'rgba(251,167,38,.5)',
-    accent: '#fcd28a',
-    bar: 'linear-gradient(90deg,#b45309,#fbbf24)',
-  },
-  bag: {
-    bg: 'linear-gradient(135deg, rgba(210,210,215,.26), rgba(60,60,66,.72) 60%, rgba(20,20,24,.85))',
-    border: 'rgba(210,210,215,.5)',
-    accent: '#eceef2',
-    bar: 'linear-gradient(90deg,#8e939b,#f6f6f8)',
-  },
-  filter: {
-    bg: 'linear-gradient(135deg, rgba(210,210,215,.22), rgba(60,60,66,.72) 60%, rgba(20,20,24,.85))',
-    border: 'rgba(210,210,215,.45)',
-    accent: '#eceef2',
-    bar: 'linear-gradient(90deg,#8e939b,#f6f6f8)',
-  },
-  wish: {
-    bg: 'linear-gradient(135deg, rgba(255,255,255,.2), rgba(120,122,130,.34) 55%, rgba(48,49,54,.7))',
-    border: 'rgba(255,255,255,.38)',
-    accent: '#eceef2',
-    bar: 'linear-gradient(90deg,#8e939b,#ffffff)',
-  },
+  stock: { bg: '#FDECEA', border: 'rgba(179,38,30,.4)', accent: '#B3261E', bar: '#B3261E' },
+  low: { bg: '#FFF6E5', border: 'rgba(176,141,87,.55)', accent: '#8C6D3A', bar: '#B08D57' },
+  bag: { bg: '#FFFFFF', border: '#E2E0DB', accent: '#171717', bar: '#B08D57' },
+  filter: { bg: '#FFFFFF', border: '#E2E0DB', accent: '#171717', bar: '#B08D57' },
+  wish: { bg: '#FFFFFF', border: '#E2E0DB', accent: '#171717', bar: '#B08D57' },
 };
 
 export function useToasts() {
@@ -152,7 +127,7 @@ function ToastItem({ toast, onDismiss }: { toast: KvToast; onDismiss: (id: numbe
   return (
     <div
       role="status"
-      className="kv-toast pointer-events-auto w-full p-3.5 pr-11 text-[#f4f2ec]"
+      className="kv-toast pointer-events-auto w-full p-3.5 pr-11 text-[#171717]"
       style={{ background: s.bg, border: `1px solid ${s.border}` }}
     >
       <div className="flex items-start gap-3">
@@ -161,12 +136,12 @@ function ToastItem({ toast, onDismiss }: { toast: KvToast; onDismiss: (id: numbe
           <img
             src={toast.thumb}
             alt=""
-            className="h-11 w-11 shrink-0 rounded-[10px] border border-white/20 object-cover"
+            className="h-11 w-11 shrink-0 rounded-[10px] border border-[#171717]/20 object-cover"
           />
         ) : (
           <span
             className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border"
-            style={{ borderColor: s.border, color: s.accent, background: 'rgba(0,0,0,.28)' }}
+            style={{ borderColor: s.border, color: s.accent, background: 'rgba(23,23,23,.06)' }}
           >
             <ToastIcon variant={toast.variant} />
           </span>
@@ -178,15 +153,15 @@ function ToastItem({ toast, onDismiss }: { toast: KvToast; onDismiss: (id: numbe
           >
             {TOAST_LABEL[toast.variant]}
           </p>
-          <p className="mt-1 text-[13px] leading-snug text-[#f4f2ec]">{toast.message}</p>
+          <p className="mt-1 text-[13px] leading-snug text-[#171717]">{toast.message}</p>
           {toast.actions && toast.actions.length > 0 && (
             <div className="mt-2.5 flex flex-wrap gap-2">
               {toast.actions.map((a) => {
                 const cls = cn(
                   'inline-flex min-h-[32px] items-center rounded-full border px-3.5 text-[10px] font-extrabold uppercase tracking-[0.14em] transition hover:brightness-125',
                   a.primary
-                    ? 'border-transparent bg-white/15 text-white'
-                    : 'border-white/25 bg-black/25 text-[#f4f2ec]'
+                    ? 'border-transparent bg-[#222222] text-[#FFFFFF]'
+                    : 'border-[#171717]/25 bg-transparent text-[#171717]'
                 );
                 return a.href ? (
                   <Link key={a.label} href={a.href} className={cls} onClick={() => onDismiss(toast.id)}>
@@ -214,7 +189,7 @@ function ToastItem({ toast, onDismiss }: { toast: KvToast; onDismiss: (id: numbe
         type="button"
         aria-label="Dismiss notification"
         onClick={() => onDismiss(toast.id)}
-        className="absolute right-1 top-1 flex h-11 w-11 items-center justify-center rounded-full text-white/70 transition hover:text-white"
+        className="absolute right-1 top-1 flex h-11 w-11 items-center justify-center rounded-full text-[#171717]/70 transition hover:text-[#171717]"
       >
         <X className="h-4 w-4" />
       </button>
@@ -252,7 +227,7 @@ export function ToastStack({
 
 export function HeroTee({ front, printLabel }: { front: string; printLabel: string }) {
   return (
-    <div className="relative mx-auto aspect-[4/5] w-[min(76vw,440px)] overflow-hidden rounded-[4px] bg-[#E8E6E1] lg:w-[min(36vw,520px)]">
+    <div className="relative mx-auto aspect-[4/5] w-[min(76vw,440px)] overflow-hidden rounded-[4px] bg-[#222222] lg:w-[min(36vw,520px)]">
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img src={front} alt={printLabel} className="h-full w-full object-cover object-top" />
     </div>
@@ -275,9 +250,9 @@ export function PriceSlider({
   onChange: (v: [number, number]) => void;
 }) {
   const thumb =
-    'group relative block h-5 w-5 rounded-full border-2 border-[#E7C873] bg-[#f6f6f8] shadow-[0_0_0_4px_rgba(231,200,115,.18)] outline-none transition focus-visible:ring-2 focus-visible:ring-white';
+    'group relative block h-5 w-5 rounded-full border-2 border-[#B08D57] bg-[#222222]  outline-none transition focus-visible:ring-2 focus-visible:ring-[#222222]';
   const tip =
-    'pointer-events-none absolute -top-8 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-md bg-[#d2d2d7] px-1.5 py-0.5 text-[10px] font-extrabold text-[#0c0c0e] opacity-0 transition group-hover:opacity-100 group-focus-visible:opacity-100 group-active:opacity-100';
+    'pointer-events-none absolute -top-8 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-md bg-[#222222] px-1.5 py-0.5 text-[10px] font-extrabold text-[#FFFFFF] opacity-0 transition group-hover:opacity-100 group-focus-visible:opacity-100 group-active:opacity-100';
   return (
     <SliderPrimitive.Root
       value={value}
@@ -288,8 +263,8 @@ export function PriceSlider({
       onValueChange={(v) => onChange([v[0], v[1]])}
       className="relative flex h-8 w-full touch-none select-none items-center"
     >
-      <SliderPrimitive.Track className="relative h-[3px] w-full grow overflow-hidden rounded-full bg-white/15">
-        <SliderPrimitive.Range className="absolute h-full bg-[#E7C873]" />
+      <SliderPrimitive.Track className="relative h-[3px] w-full grow overflow-hidden rounded-full bg-[#171717]/15">
+        <SliderPrimitive.Range className="absolute h-full bg-[#B08D57]" />
       </SliderPrimitive.Track>
       <SliderPrimitive.Thumb aria-label="Minimum price" className={thumb}>
         <span className={tip}>{formatINR(value[0])}</span>
@@ -320,7 +295,7 @@ function ColorDots({
     return (
       <span className="flex items-center gap-1" aria-label="Loading colors" role="status">
         {[0, 1, 2].map((i) => (
-          <span key={i} className="h-3 w-3 animate-pulse rounded-full bg-white/20" />
+          <span key={i} className="h-3 w-3 animate-pulse rounded-full bg-[#171717]/20" />
         ))}
       </span>
     );
@@ -329,14 +304,14 @@ function ColorDots({
     return (
       <span
         role="alert"
-        className="inline-flex items-center gap-1.5 rounded-full border border-[#ff6e60]/40 px-2 py-0.5 text-[10px] font-semibold text-[#ffb1a6] backdrop-blur-md"
-        style={{ background: 'linear-gradient(135deg, rgba(150,40,38,.5), rgba(40,10,12,.75))' }}
+        className="inline-flex items-center gap-1.5 rounded-full border border-[#B3261E]/40 px-2 py-0.5 text-[10px] font-semibold text-[#B3261E] backdrop-blur-md"
+        style={{ background: '#FDECEA' }}
       >
         Colors couldn&apos;t load ·
         <button
           type="button"
           onClick={onRetry}
-          className="-my-2 min-h-[44px] px-1 font-extrabold uppercase tracking-[0.1em] text-white underline-offset-2 hover:underline"
+          className="-my-2 min-h-[44px] px-1 font-extrabold uppercase tracking-[0.1em] text-[#171717] underline-offset-2 hover:underline"
         >
           Retry
         </button>
@@ -344,7 +319,7 @@ function ColorDots({
     );
   }
   if (colors.length === 0) {
-    return <span className="text-[10px] text-[#A8A49B]">Color unavailable</span>;
+    return <span className="text-[10px] text-[#5C5C5C]">Color unavailable</span>;
   }
   const shown = colors.slice(0, 4);
   const extra = colors.length - shown.length;
@@ -355,11 +330,11 @@ function ColorDots({
           key={c.name}
           title={c.name}
           aria-hidden
-          className="h-3 w-3 rounded-full border border-white/35"
+          className="h-3 w-3 rounded-full border border-[#171717]/35"
           style={{ backgroundColor: c.hex }}
         />
       ))}
-      {extra > 0 && <span className="text-[10px] font-bold text-[#BDB9B0]">+{extra}</span>}
+      {extra > 0 && <span className="text-[10px] font-bold text-[#4A4A4A]">+{extra}</span>}
     </span>
   );
 }
@@ -565,14 +540,14 @@ export function ShopProductCard({
     <article
       className={cn(
         'kv-rise group relative flex min-w-0 rounded-[18px] p-2 transition-all duration-500 [transition-timing-function:var(--kv-ease)] kv-panel',
-        'hover:-translate-y-1.5 hover:border-[#d2d2d7]/50 hover:shadow-[0_0_0_1px_rgba(210,210,215,.35),0_26px_50px_-20px_rgba(210,210,215,.28)] focus-within:border-[#d2d2d7]/50',
+        'hover:-translate-y-1.5 hover:border-[#171717]/50  focus-within:border-[#171717]/50',
         view === 'list' ? 'flex-row gap-4 sm:gap-5' : 'flex-col'
       )}
       style={{ ['--i' as string]: Math.min(index, 8) }}
     >
       <div
         className={cn(
-          'relative aspect-[4/5] overflow-hidden rounded-[14px] bg-[#0d0d0f]',
+          'relative aspect-[4/5] overflow-hidden rounded-[14px] bg-[#FFFFFF]',
           view === 'list' ? 'w-[42%] max-w-[260px] shrink-0' : 'w-full'
         )}
       >
@@ -593,7 +568,7 @@ export function ShopProductCard({
 
         <div className="pointer-events-none absolute left-2 top-2 z-10 flex flex-col items-start gap-1.5">
           {pct > 0 && (
-            <span className="rounded-md border border-[#6FD3A0]/45 bg-[#06150e]/80 px-1.5 py-0.5 text-[10px] font-extrabold text-[#6FD3A0] backdrop-blur-sm">
+            <span className="rounded-md border border-[#1B7A43]/45 bg-[#F4F0E8]/80 px-1.5 py-0.5 text-[10px] font-extrabold text-[#1B7A43] backdrop-blur-sm">
               −{pct}%
             </span>
           )}
@@ -602,17 +577,17 @@ export function ShopProductCard({
               className={cn(
                 'rounded-md border px-1.5 py-0.5 text-[9px] font-extrabold uppercase tracking-[0.12em] backdrop-blur-sm',
                 tag === 'NEW DROP'
-                  ? 'border-[#7DB7FF]/45 bg-[#07111f]/80 text-[#7DB7FF]'
+                  ? 'border-[#2B5BA8]/45 bg-[#F4F0E8]/80 text-[#2B5BA8]'
                   : tag === 'BESTSELLER'
-                    ? 'border-[#F2B45A]/45 bg-[#1c1204]/80 text-[#F2B45A]'
-                    : 'border-white/25 bg-black/65 text-[#f4f2ec]'
+                    ? 'border-[#B08D57]/45 bg-[#F4F0E8]/80 text-[#8C6D3A]'
+                    : 'border-white/25 bg-black/65 text-white'
               )}
             >
               {tag}
             </span>
           )}
           {lowBadge && (
-            <span className="inline-flex items-center gap-1.5 rounded-md border border-orange-400/45 bg-[#1c0e04]/85 px-1.5 py-0.5 text-[9px] font-extrabold uppercase tracking-[0.12em] text-[#fdba74] backdrop-blur-sm">
+            <span className="inline-flex items-center gap-1.5 rounded-md border border-orange-400/45 bg-[#F4F0E8]/85 px-1.5 py-0.5 text-[9px] font-extrabold uppercase tracking-[0.12em] text-[#8C6D3A] backdrop-blur-sm">
               <span aria-hidden className="h-1.5 w-1.5 rounded-full bg-orange-500" />
               Only {basisQty} left
             </span>
@@ -630,8 +605,8 @@ export function ShopProductCard({
             className={cn(
               'flex h-9 w-9 items-center justify-center rounded-full border backdrop-blur-md transition',
               isWishlisted
-                ? 'border-white bg-white/20 text-white'
-                : 'border-white/25 bg-black/45 text-white hover:border-[#d2d2d7]'
+                ? 'border-[#222222] bg-[#171717]/20 text-[#171717]'
+                : 'border-white/25 bg-black/45 text-white hover:border-[#222222]'
             )}
           >
             <Heart className={cn('h-4 w-4', isWishlisted && 'fill-white')} />
@@ -641,11 +616,8 @@ export function ShopProductCard({
         {unavailable && (
           <div className="pointer-events-none absolute inset-0 z-10 flex items-center justify-center">
             <span
-              className="rounded-[10px] border border-[#E0524A]/50 px-3.5 py-2 text-center text-[10px] font-extrabold uppercase tracking-[0.22em] text-[#f08a83] backdrop-blur-md"
-              style={{
-                background: 'linear-gradient(135deg, rgba(224,82,74,.28), rgba(36,10,10,.82))',
-                boxShadow: 'inset 0 1px 0 rgba(255,255,255,.2)',
-              }}
+              className="rounded-[10px] border border-[#B3261E]/50 px-3.5 py-2 text-center text-[10px] font-extrabold uppercase tracking-[0.22em] text-[#B3261E] backdrop-blur-md"
+              style={{ background: '#FDECEA' }}
             >
               Out of stock
               {soldOutInFocus && (
@@ -659,7 +631,7 @@ export function ShopProductCard({
           <button
             type="button"
             onClick={() => notify()}
-            className="absolute inset-x-2 bottom-2 z-20 h-11 rounded-full border border-white/25 bg-black/60 text-[11px] font-extrabold uppercase tracking-[0.18em] text-[#f4f2ec] backdrop-blur-md transition hover:border-[#d2d2d7] hover:text-[#d2d2d7]"
+            className="absolute inset-x-2 bottom-2 z-20 h-11 rounded-full border border-white/25 bg-black/60 text-[11px] font-extrabold uppercase tracking-[0.18em] text-white backdrop-blur-md transition hover:border-[#222222] hover:text-white"
           >
             Notify me
           </button>
@@ -672,7 +644,7 @@ export function ShopProductCard({
               aria-label={`Quick add ${product.name} to bag`}
               className="absolute bottom-1.5 right-1.5 z-10 flex h-11 w-11 items-center justify-center rounded-full transition active:scale-95"
             >
-              <span className="flex h-9 w-9 items-center justify-center rounded-full border border-white/25 bg-black/45 text-[#d2d2d7] backdrop-blur-md transition hover:bg-[#d2d2d7] hover:text-[#0c0c0e]">
+              <span className="flex h-9 w-9 items-center justify-center rounded-full border border-white/25 bg-black/45 text-white backdrop-blur-md transition hover:bg-[#222222] hover:text-[#FFFFFF]">
                 <ShoppingBag className="h-4 w-4" />
               </span>
             </button>
@@ -681,19 +653,19 @@ export function ShopProductCard({
             {view === 'grid' && (
               <div
                 className={cn(
-                  'absolute inset-x-2 bottom-2 z-30 rounded-[12px] border border-white/20 bg-black/70 p-2.5 backdrop-blur-xl transition duration-300 [transition-timing-function:var(--kv-ease)]',
+                  'absolute inset-x-2 bottom-2 z-30 rounded-[4px] border border-[#E2E0DB] bg-white/95 p-2.5 transition duration-300 [transition-timing-function:var(--kv-ease)]',
                   panelOpen
                     ? 'translate-y-0 opacity-100'
                     : 'pointer-events-none translate-y-3 opacity-0 group-focus-within:pointer-events-auto group-focus-within:translate-y-0 group-focus-within:opacity-100 lg:group-hover:pointer-events-auto lg:group-hover:translate-y-0 lg:group-hover:opacity-100'
                 )}
               >
                 <div className="mb-1.5 flex items-center justify-between">
-                  <p className="text-[9px] font-extrabold uppercase tracking-[0.22em] text-[#BDB9B0]">Quick add</p>
+                  <p className="text-[9px] font-extrabold uppercase tracking-[0.22em] text-[#4A4A4A]">Quick add</p>
                   <button
                     type="button"
                     aria-label="Close quick add"
                     onClick={() => setPanelOpen(false)}
-                    className="-m-3 flex h-11 w-11 items-center justify-center text-[#BDB9B0] lg:hidden"
+                    className="-m-3 flex h-11 w-11 items-center justify-center text-[#4A4A4A] lg:hidden"
                   >
                     <X className="h-3.5 w-3.5" />
                   </button>
@@ -713,11 +685,11 @@ export function ShopProductCard({
                         className={cn(
                           'relative h-11 min-w-[44px] rounded-md border px-1.5 text-[11px] font-bold transition lg:h-9 lg:min-w-[36px]',
                           size === s
-                            ? 'border-white bg-white text-[#121214]'
+                            ? 'border-[#222222] bg-[#222222] text-[#FFFFFF]'
                             : st === 'low'
-                              ? 'border-amber-400/70 text-[#f4f2ec] hover:border-amber-300'
-                              : 'border-white/25 text-[#f4f2ec] hover:border-[#d2d2d7]',
-                          st === 'out' && size !== s && 'border-dashed text-white/55 line-through'
+                              ? 'border-amber-400/70 text-[#171717] hover:border-amber-300'
+                              : 'border-[#171717]/25 text-[#171717] hover:border-[#222222]',
+                          st === 'out' && size !== s && 'border-dashed text-[#171717]/55 line-through'
                         )}
                       >
                         {s}
@@ -728,7 +700,7 @@ export function ShopProductCard({
                     );
                   })}
                 </div>
-                <p className="mb-2 min-h-[14px] text-center text-[10px] leading-tight text-[#f2d5a0]" aria-live="polite">
+                <p className="mb-2 min-h-[14px] text-center text-[10px] leading-tight text-[#8C6D3A]" aria-live="polite">
                   {hint || 'All sizes in stock'}
                 </p>
                 <button
@@ -749,26 +721,26 @@ export function ShopProductCard({
         <Link
           href={href}
           title={product.name}
-          className="line-clamp-1 text-[13px] font-semibold text-[#f4f2ec] transition hover:text-[#d2d2d7] sm:text-[14px]"
+          className="line-clamp-1 text-[13px] font-semibold text-[#171717] transition hover:text-[#4A4A4A] sm:text-[14px]"
         >
           {product.name}
         </Link>
         <div className="flex flex-wrap items-baseline gap-x-2">
-          <span className={cn('text-[16px] font-extrabold', unavailable ? 'text-[#A8A49B]' : 'text-[#f4f2ec]')}>
+          <span className={cn('text-[16px] font-extrabold', unavailable ? 'text-[#5C5C5C]' : 'text-[#171717]')}>
             {formatINR(price)}
           </span>
-          {mrp && <span className="text-[12px] text-[#A8A49B] line-through">{formatINR(mrp)}</span>}
+          {mrp && <span className="text-[12px] text-[#5C5C5C] line-through">{formatINR(mrp)}</span>}
         </div>
         <div className="flex min-h-[20px] flex-wrap items-center justify-between gap-x-2 gap-y-1">
           {showBestPrice ? (
-            <p className="text-[12px] font-semibold text-[#E7C873]">Best Price: {formatINR(bestPrice)}</p>
+            <p className="text-[12px] font-semibold text-[#8C6D3A]">Best Price: {formatINR(bestPrice)}</p>
           ) : (
             <span />
           )}
           <ColorDots colors={colors} status={colorStatus} onRetry={() => onRetryColors(product)} />
         </div>
         {view === 'list' && product.description && (
-          <p className="mt-1 line-clamp-3 hidden text-[13px] leading-relaxed text-[#BDB9B0] sm:block">
+          <p className="mt-1 line-clamp-3 hidden text-[13px] leading-relaxed text-[#4A4A4A] sm:block">
             {product.description}
           </p>
         )}

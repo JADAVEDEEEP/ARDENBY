@@ -12,8 +12,8 @@ function InfoTile({ icon, label, value }: { icon: React.ElementType; label: stri
     <div className="kv-inner flex items-start gap-3 p-4">
       <IconDisc icon={icon} size={38} />
       <div className="min-w-0">
-        <p className="text-[9px] font-semibold uppercase tracking-[0.18em] text-[#9296A0]">{label}</p>
-        <p className="mt-1 break-words text-[14px] text-white">{value}</p>
+        <p className="text-[9px] font-semibold uppercase tracking-[0.18em] text-[#5C5C5C]">{label}</p>
+        <p className="mt-1 break-words text-[14px] text-[#171717]">{value}</p>
       </div>
     </div>
   );
@@ -57,7 +57,7 @@ export function AccountSection({ profile }: { profile: ProfileState }) {
               <span className="inline-flex flex-wrap items-center gap-2">
                 {profile.user?.email || 'Not available'}
                 {profile.user?.email_verified && (
-                  <span className="inline-flex items-center gap-1 text-[11px] text-[#5FD08A]">
+                  <span className="inline-flex items-center gap-1 text-[11px] text-[#1B7A43]">
                     <BadgeCheck className="h-3.5 w-3.5" /> Verified
                   </span>
                 )}

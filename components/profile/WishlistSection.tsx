@@ -53,7 +53,7 @@ export function WishlistSection({ profile }: { profile: ProfileState }) {
             return (
               <article key={w.product_id} className="kv-inner group relative min-w-0 overflow-hidden">
                 <button type="button" onClick={viewProduct} className="block w-full text-left" aria-label={`View ${productName}`}>
-                  <span className="flex aspect-[4/5] w-full items-center justify-center overflow-hidden border-b border-[#2c2e34] bg-[radial-gradient(circle_at_50%_30%,#2e3036,#141518)]">
+                  <span className="flex aspect-[4/5] w-full items-center justify-center overflow-hidden border-b border-[#E2E0DB] bg-[#F4F0E8]">
                     {image ? (
                       // eslint-disable-next-line @next/next/no-img-element
                       <img
@@ -63,15 +63,15 @@ export function WishlistSection({ profile }: { profile: ProfileState }) {
                         className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
                       />
                     ) : (
-                      <ShoppingBag className="h-7 w-7 text-[#9296A0]" strokeWidth={1.5} />
+                      <ShoppingBag className="h-7 w-7 text-[#5C5C5C]" strokeWidth={1.5} />
                     )}
                   </span>
                   <span className="block px-3 pb-3 pt-3 sm:px-4">
-                    <span title={productName} className="line-clamp-2 min-h-[38px] break-words text-[13px] font-medium leading-[19px] text-white">
+                    <span title={productName} className="line-clamp-2 min-h-[38px] break-words text-[13px] font-medium leading-[19px] text-[#171717]">
                       {productName}
                     </span>
                     {w.price !== undefined && w.price !== null && (
-                      <span className="mt-1 block text-[15px] font-semibold tabular-nums text-white">
+                      <span className="mt-1 block text-[15px] font-semibold tabular-nums text-[#171717]">
                         {profile.money(w.price)}
                       </span>
                     )}
@@ -84,7 +84,7 @@ export function WishlistSection({ profile }: { profile: ProfileState }) {
                   aria-label={`Remove ${productName} from wishlist`}
                   className="kv-disc absolute right-3 top-3 h-11 w-11 transition hover:brightness-125"
                 >
-                  <Heart className="h-4 w-4 fill-[#EF7B7B] text-[#EF7B7B]" strokeWidth={1.7} />
+                  <Heart className="h-4 w-4 fill-[#B3261E] text-[#B3261E]" strokeWidth={1.7} />
                 </button>
               </article>
             );

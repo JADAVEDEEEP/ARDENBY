@@ -31,7 +31,7 @@ export function StepProgress({ step }: { step: 1 | 2 | 3 }) {
             {i > 0 && (
               <span
                 aria-hidden
-                className="absolute right-1/2 top-[15px] h-[3px] w-full overflow-hidden rounded-full bg-white/10"
+                className="absolute right-1/2 top-[15px] h-[3px] w-full overflow-hidden rounded-full bg-[#171717]/10"
               >
                 <span
                   className="ck-fill"
@@ -42,18 +42,18 @@ export function StepProgress({ step }: { step: 1 | 2 | 3 }) {
             <span
               className={`relative z-10 flex h-[34px] w-[34px] items-center justify-center rounded-full text-sm font-medium transition-all duration-500 ${
                 done
-                  ? 'bg-[#C0C0C0] text-[#0A0A0A]'
+                  ? 'bg-[#222222] text-[#FFFFFF]'
                   : active
-                    ? 'ck-node-active bg-white text-[#0A0A0A]'
-                    : 'border border-[#3A3A3A] bg-[#0A0A0A] text-[#C0C0C0]/70'
+                    ? 'ck-node-active bg-[#222222] text-[#FFFFFF]'
+                    : 'border border-[#E2E0DB] bg-[#FFFFFF] text-[#4A4A4A]/70'
               }`}
             >
               {done ? <Check className="h-4 w-4" strokeWidth={3} /> : n}
             </span>
-            <span className={`mt-1.5 text-xs font-semibold ${done || active ? 'text-[#ffffff]' : 'text-[#C0C0C0]/70'}`}>
+            <span className={`mt-1.5 text-xs font-semibold ${done || active ? 'text-[#171717]' : 'text-[#4A4A4A]/70'}`}>
               {s.label}
             </span>
-            <span className="text-[10px] text-[#C0C0C0]/70">{state}</span>
+            <span className="text-[10px] text-[#4A4A4A]/70">{state}</span>
           </li>
         );
       })}
@@ -85,7 +85,7 @@ export function SegmentedProgress({ step }: { step: 1 | 2 | 3 }) {
               key={s.label}
               aria-current={active ? 'step' : undefined}
               className={`flex flex-1 items-center gap-1 ${i === 1 ? 'justify-center' : i === 2 ? 'justify-end' : ''} ${
-                done ? 'text-[#C0C0C0]' : active ? 'text-[#ffffff]' : 'text-[#C0C0C0]/70'
+                done ? 'text-[#4A4A4A]' : active ? 'text-[#171717]' : 'text-[#4A4A4A]/70'
               }`}
             >
               {done && <Check className="h-3 w-3" strokeWidth={3} />}

@@ -41,7 +41,7 @@ const itemKey = (i: CartItem) => `${i.productId}-${i.size}-${i.color}`;
 function Thumb({ item, size = 'md' }: { item: CartItem; size?: 'sm' | 'md' }) {
   return (
     <span
-      className={`relative block shrink-0 overflow-hidden  border border-[#3A3A3A] bg-[#10131c] ${
+      className={`relative block shrink-0 overflow-hidden  border border-[#E2E0DB] bg-[#F4F0E8] ${
         size === 'sm' ? 'h-10 w-10' : 'h-[60px] w-[52px]'
       }`}
     >
@@ -60,15 +60,15 @@ function PromoField({ promo }: { promo: PromoControls }) {
 
   if (promo.couponCode) {
     return (
-      <div className="flex items-center justify-between gap-2  border border-[#3A3A3A] bg-[#0A0A0A] px-3 py-2.5 text-sm">
-        <span className="flex items-center gap-2 font-semibold text-[#C0C0C0]">
+      <div className="flex items-center justify-between gap-2  border border-[#E2E0DB] bg-[#FFFFFF] px-3 py-2.5 text-sm">
+        <span className="flex items-center gap-2 font-semibold text-[#4A4A4A]">
           <Tag className="h-4 w-4" /> {promo.couponCode} applied
         </span>
         <button
           type="button"
           onClick={promo.remove}
           aria-label="Remove coupon"
-          className=" p-1 text-[#C0C0C0] hover:bg-white/10 hover:text-white"
+          className=" p-1 text-[#4A4A4A] hover:bg-[#171717]/10 hover:text-[#171717]"
         >
           <X className="h-4 w-4" />
         </button>
@@ -81,7 +81,7 @@ function PromoField({ promo }: { promo: PromoControls }) {
       <div className="flex gap-2">
         <label className="relative min-w-0 flex-1">
           <span className="sr-only">Promo or gift code</span>
-          <Tag className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[#C0C0C0]/70" />
+          <Tag className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[#4A4A4A]/70" />
           <input
             value={code}
             onChange={(e) => {
@@ -105,13 +105,13 @@ function PromoField({ promo }: { promo: PromoControls }) {
           type="button"
           onClick={() => void submit()}
           disabled={promo.applying}
-          className="inline-flex h-11 min-w-[88px] shrink-0 items-center justify-center gap-1.5 border border-[#C0C0C0] px-4 text-xs font-bold uppercase tracking-[0.14em] text-white transition-colors hover:bg-[#C0C0C0] hover:text-[#0A0A0A] disabled:cursor-not-allowed disabled:opacity-50"
+          className="inline-flex h-11 min-w-[88px] shrink-0 items-center justify-center gap-1.5 border border-[#222222] px-4 text-xs font-bold uppercase tracking-[0.14em] text-[#171717] transition-colors hover:bg-[#222222] hover:text-[#FFFFFF] disabled:cursor-not-allowed disabled:opacity-50"
         >
           {promo.applying ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : 'Apply'}
         </button>
       </div>
       {promo.error && (
-        <p role="alert" className="mt-1.5 text-xs text-[#ffffff]">
+        <p role="alert" className="mt-1.5 text-xs text-[#171717]">
           {promo.error}
         </p>
       )}
@@ -134,55 +134,55 @@ export function SummaryBody({
 
   return (
     <>
-      <ul className="ck-scroll max-h-[340px] pl-2 pt-1 divide-y divide-white/[0.07] overflow-y-auto pr-1">
+      <ul className="ck-scroll max-h-[340px] pl-2 pt-1 divide-y divide-[#171717]/[0.07] overflow-y-auto pr-1">
         {items.map((item) => (
           <li key={itemKey(item)} className="flex items-center gap-3.5 py-3.5">
             <span className="relative block shrink-0">
               <Thumb item={item} />
-              <span className="absolute -left-1.5 -top-1.5 flex h-5 min-w-5 items-center justify-center rounded-full bg-white px-1 text-[10px] font-bold text-black">
+              <span className="absolute -left-1.5 -top-1.5 flex h-5 min-w-5 items-center justify-center rounded-full bg-[#222222] px-1 text-[10px] font-bold text-[#FFFFFF]">
                 {item.quantity}
               </span>
             </span>
             <div className="min-w-0 flex-1">
-              <p className="line-clamp-2 text-sm font-medium leading-snug text-[#ffffff]">{item.name}</p>
+              <p className="line-clamp-2 text-sm font-medium leading-snug text-[#171717]">{item.name}</p>
               <p className="mt-1.5 flex flex-wrap gap-1.5 text-[10px] font-semibold">
-                <span className="border border-[#3A3A3A] bg-white/5 px-2 py-0.5 text-[#C0C0C0]">
+                <span className="border border-[#E2E0DB] bg-[#171717]/5 px-2 py-0.5 text-[#4A4A4A]">
                   Size {item.size}
                 </span>
                 {item.color && (
-                  <span className="border border-[#3A3A3A] bg-white/5 px-2 py-0.5 text-[#C0C0C0]">
+                  <span className="border border-[#E2E0DB] bg-[#171717]/5 px-2 py-0.5 text-[#4A4A4A]">
                     {String(item.color)}
                   </span>
                 )}
               </p>
             </div>
-            <span className="shrink-0 text-sm font-semibold text-[#ffffff]">
+            <span className="shrink-0 text-sm font-semibold text-[#171717]">
               {formatINR(item.price * item.quantity)}
             </span>
           </li>
         ))}
       </ul>
 
-      <div className="mt-3 border-t border-[#2A2A2A] pt-4">
+      <div className="mt-3 border-t border-[#E2E0DB] pt-4">
         <PromoField promo={promo} />
       </div>
 
       <dl className="mt-4 space-y-2.5 text-sm">
-        <div className="flex justify-between text-[#C0C0C0]">
+        <div className="flex justify-between text-[#4A4A4A]">
           <dt>
             Subtotal · {itemCount} {itemCount === 1 ? 'unit' : 'units'}
           </dt>
-          <dd className="font-medium text-[#ffffff]">{formatINR(subtotal)}</dd>
+          <dd className="font-medium text-[#171717]">{formatINR(subtotal)}</dd>
         </div>
         {discount > 0 && (
-          <div className="flex justify-between text-[#C0C0C0]">
+          <div className="flex justify-between text-[#4A4A4A]">
             <dt>Coupon{couponCode ? ` (${couponCode})` : ''}</dt>
-            <dd className="font-medium text-[#C0C0C0]">−{formatINR(discount)}</dd>
+            <dd className="font-medium text-[#4A4A4A]">−{formatINR(discount)}</dd>
           </div>
         )}
-        <div className="flex justify-between text-[#C0C0C0]">
+        <div className="flex justify-between text-[#4A4A4A]">
           <dt>Shipping · Standard</dt>
-          <dd className={shipping === 0 ? 'inline-flex items-center gap-1.5 text-xs font-semibold tracking-wider text-[#C0C0C0]' : 'font-medium text-[#ffffff]'}>
+          <dd className={shipping === 0 ? 'inline-flex items-center gap-1.5 text-xs font-semibold tracking-wider text-[#4A4A4A]' : 'font-medium text-[#171717]'}>
             {shipping === 0 ? (
               <>
                 <Truck className="h-3.5 w-3.5" /> FREE
@@ -192,12 +192,12 @@ export function SummaryBody({
             )}
           </dd>
         </div>
-        <div className="flex justify-between text-[#C0C0C0]">
+        <div className="flex justify-between text-[#4A4A4A]">
           <dt>GST (5%)</dt>
-          <dd className="font-medium text-[#ffffff]">{formatINR(gst)}</dd>
+          <dd className="font-medium text-[#171717]">{formatINR(gst)}</dd>
         </div>
         {(pricing.totalSavings ?? 0) > 0 && (
-          <div className="flex justify-between border border-[#2A2A2A] bg-[#0A0A0A] px-3 py-2.5 text-white">
+          <div className="flex justify-between border border-[#E2E0DB] bg-[#FFFFFF] px-3 py-2.5 text-[#171717]">
             <dt>You save</dt>
             <dd className="font-semibold tabular-nums">{formatINR(pricing.totalSavings ?? 0)}</dd>
           </div>
@@ -262,8 +262,8 @@ export function DesktopSummary({
       className="ck-panel overflow-hidden"
     >
       <header className="flex items-center justify-between px-5 pt-5 sm:px-6 sm:pt-6">
-        <h2 className="flex items-center gap-2 text-lg text-white">
-          <Lock className="h-4 w-4 text-[#C0C0C0]" strokeWidth={1.5} /> Order Summary
+        <h2 className="flex items-center gap-2 text-lg text-[#171717]">
+          <Lock className="h-4 w-4 text-[#4A4A4A]" strokeWidth={1.5} /> Order Summary
         </h2>
         <span className="ck-chip-chrome px-2.5 py-0.5 text-[10px] font-semibold">
           {pricing.itemCount} {pricing.itemCount === 1 ? 'ITEM' : 'ITEMS'}
@@ -273,10 +273,10 @@ export function DesktopSummary({
       <div className="p-5 pt-4 sm:px-6 sm:pb-6">
         <SummaryBody items={items} pricing={pricing} couponCode={couponCode} promo={promo} />
 
-        <div className="mt-4 flex items-end justify-between border-t border-[#2A2A2A] pt-4">
+        <div className="mt-4 flex items-end justify-between border-t border-[#E2E0DB] pt-4">
           <div>
-            <p className="text-base font-bold text-white">Order Total</p>
-            <p className="text-[11px] text-[#C0C0C0]/70">Inclusive of all taxes</p>
+            <p className="text-base font-bold text-[#171717]">Order Total</p>
+            <p className="text-[11px] text-[#4A4A4A]/70">Inclusive of all taxes</p>
           </div>
           <strong className="ck-chrome-text text-3xl font-semibold tabular-nums">
             {formatINR(pricing.total)}
@@ -285,8 +285,8 @@ export function DesktopSummary({
 
         <div className="mt-5">{cta}</div>
 
-        <p className="mt-3 flex items-center justify-center gap-1.5 text-[11px] text-[#C0C0C0]/70">
-          <ShieldCheck className="h-3.5 w-3.5 text-[#C0C0C0]" />
+        <p className="mt-3 flex items-center justify-center gap-1.5 text-[11px] text-[#4A4A4A]/70">
+          <ShieldCheck className="h-3.5 w-3.5 text-[#4A4A4A]" />
           {paymentNote}
         </p>
       </div>
@@ -306,12 +306,12 @@ const TRUST = [
 export function TrustRow({ compact = false }: { compact?: boolean }) {
   return (
     <ul
-      className={`grid grid-cols-4 gap-2 ${compact ? 'px-1 py-2' : 'border-t border-[#2A2A2A] px-4 py-5'}`}
+      className={`grid grid-cols-4 gap-2 ${compact ? 'px-1 py-2' : 'border-t border-[#E2E0DB] px-4 py-5'}`}
     >
       {TRUST.map(({ Icon, title, sub, tone }) => (
         <li key={title} className="flex flex-col items-center text-center">
-          <Icon className="h-5 w-5 text-[#C0C0C0]" strokeWidth={1.25} />
-          <span className="mt-2 text-[10px] uppercase leading-snug tracking-[0.14em] text-[#C0C0C0]">{title}</span>
+          <Icon className="h-5 w-5 text-[#4A4A4A]" strokeWidth={1.25} />
+          <span className="mt-2 text-[10px] uppercase leading-snug tracking-[0.14em] text-[#4A4A4A]">{title}</span>
         </li>
       ))}
     </ul>
@@ -343,26 +343,26 @@ export function MobileSummaryBar({
       >
         <span className="flex shrink-0 -space-x-3">
           {items.slice(0, 3).map((i) => (
-            <span key={itemKey(i)} className=" ring-2 ring-[#0a0a0a]">
+            <span key={itemKey(i)} className=" ring-2 ring-[#E2E0DB]">
               <Thumb item={i} size="sm" />
             </span>
           ))}
         </span>
         <span className="min-w-0 flex-1">
-          <span className="block text-sm font-semibold text-[#ffffff]">
+          <span className="block text-sm font-semibold text-[#171717]">
             {pricing.itemCount} {pricing.itemCount === 1 ? 'item' : 'items'}
           </span>
-          <span className="flex items-center gap-1 text-xs font-semibold text-[#C0C0C0]">
+          <span className="flex items-center gap-1 text-xs font-semibold text-[#4A4A4A]">
             {open ? 'Hide summary' : 'Show summary'}
             <ChevronDown className={`h-3.5 w-3.5 transition-transform ${open ? 'rotate-180' : ''}`} />
           </span>
         </span>
-        <strong className="text-xl font-semibold tabular-nums text-white">{formatINR(pricing.total)}</strong>
+        <strong className="text-xl font-semibold tabular-nums text-[#171717]">{formatINR(pricing.total)}</strong>
       </button>
 
       <div id="ck-mobile-summary" className="ck-collapse" data-open={open}>
         <div>
-          <div className="border-t border-[#2A2A2A] px-4 pb-4 pt-2">
+          <div className="border-t border-[#E2E0DB] px-4 pb-4 pt-2">
             <SummaryBody items={items} pricing={pricing} couponCode={couponCode} promo={promo} />
           </div>
         </div>

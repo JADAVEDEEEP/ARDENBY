@@ -68,10 +68,10 @@ function SectionCard({
             {index}
           </span>
           <div>
-            <h2 id={id} className="text-lg font-semibold leading-tight text-[#ffffff]">
+            <h2 id={id} className="text-lg font-semibold leading-tight text-[#171717]">
               {title}
             </h2>
-            <p className="mt-0.5 hidden text-xs text-[#C0C0C0]/70 sm:block">{sub}</p>
+            <p className="mt-0.5 hidden text-xs text-[#4A4A4A]/70 sm:block">{sub}</p>
           </div>
         </div>
         {badge}
@@ -84,8 +84,8 @@ function SectionCard({
 function Badge({ children, tone = 'cyan' }: { children: React.ReactNode; tone?: 'cyan' | 'green' }) {
   const cls =
     tone === 'green'
-      ? 'border-[#3A3A3A] text-[#C0C0C0]'
-      : 'border-[#3A3A3A] text-[#C0C0C0]';
+      ? 'border-[#E2E0DB] text-[#4A4A4A]'
+      : 'border-[#E2E0DB] text-[#4A4A4A]';
   return (
     <span className={`inline-flex shrink-0 items-center gap-1.5 border px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.14em] ${cls}`}>
       {children}
@@ -310,7 +310,7 @@ function CheckoutPageView() {
     return (
       <Shell>
         <div className="flex min-h-[70vh] items-center justify-center">
-          <Loader2 className="h-6 w-6 animate-spin text-[#C0C0C0]" aria-label="Loading checkout" />
+          <Loader2 className="h-6 w-6 animate-spin text-[#4A4A4A]" aria-label="Loading checkout" />
         </div>
       </Shell>
     );
@@ -332,7 +332,7 @@ function CheckoutPageView() {
               </div>
             </div>
             <ConfirmedCard orderNumber={orderNumber} />
-            <p className="mb-8 mt-5 text-center text-sm leading-relaxed text-[#C0C0C0]">
+            <p className="mb-8 mt-5 text-center text-sm leading-relaxed text-[#4A4A4A]">
               Thank you for shopping with KÖVENIK. Your order is confirmed. You can track it anytime from My Orders.
             </p>
             <div className="grid gap-3">
@@ -361,8 +361,8 @@ function CheckoutPageView() {
             <span className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full ck-ico">
               <ShoppingBag className="h-6 w-6" />
             </span>
-            <h1 className="mb-2 text-2xl font-semibold text-[#ffffff]">Your cart is empty</h1>
-            <p className="mb-6 text-sm text-[#C0C0C0]">
+            <h1 className="mb-2 text-2xl font-semibold text-[#171717]">Your cart is empty</h1>
+            <p className="mb-6 text-sm text-[#4A4A4A]">
               Please add items to your shopping bag before proceeding to checkout.
             </p>
             <Link href="/shop" className="ck-cta">
@@ -392,7 +392,7 @@ function CheckoutPageView() {
         {/* ---------- header ---------- */}
         <Link
           href="/cart"
-          className="hidden items-center gap-2 text-xs text-[#C0C0C0] underline underline-offset-2 transition-colors hover:text-white lg:inline-flex"
+          className="hidden items-center gap-2 text-xs text-[#4A4A4A] underline underline-offset-2 transition-colors hover:text-[#171717] lg:inline-flex"
         >
           <ArrowLeft className="h-3.5 w-3.5" /> <span className="ck-chrome-link">Back to cart</span>
         </Link>
@@ -401,11 +401,11 @@ function CheckoutPageView() {
         <header className="mb-8 mt-5 hidden items-center justify-between gap-8 lg:flex">
           <div>
             <h1 className="ck-heading text-3xl sm:text-4xl">Checkout</h1>
-            <p className="mt-4 flex items-center gap-3 text-base text-[#C0C0C0]">
+            <p className="mt-4 flex items-center gap-3 text-base text-[#4A4A4A]">
               <Badge>
                 <Lock className="h-3 w-3" /> SECURE
               </Badge>
-              Complete your order and <strong className="font-semibold text-white">wear beyond ordinary.</strong>
+              Complete your order and <strong className="font-semibold text-[#171717]">wear beyond ordinary.</strong>
             </p>
           </div>
           <StepProgress step={step} />
@@ -418,7 +418,7 @@ function CheckoutPageView() {
               <Link
                 href="/cart"
                 aria-label="Back to cart"
-                className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-[#3A3A3A] bg-white/5 text-white"
+                className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-[#E2E0DB] bg-[#171717]/5 text-[#171717]"
               >
                 <ArrowLeft className="h-4 w-4" />
               </Link>
@@ -428,8 +428,8 @@ function CheckoutPageView() {
               <Badge>
                 <Lock className="h-3 w-3" /> SECURE
               </Badge>
-              <p className="mt-1.5 text-[11px] font-medium tracking-[0.14em] text-[#C0C0C0]/70">
-                STEP <span className="text-[#C0C0C0]">{step}</span> / 3
+              <p className="mt-1.5 text-[11px] font-medium tracking-[0.14em] text-[#4A4A4A]/70">
+                STEP <span className="text-[#4A4A4A]">{step}</span> / 3
               </p>
             </div>
           </div>
@@ -468,7 +468,7 @@ function CheckoutPageView() {
               <AddressManager selectedAddressId={selectedAddress?.id || null} onSelect={setSelectedAddress} />
 
               <div className="mt-5">
-                <p className="mb-3 text-[11px] font-medium uppercase tracking-[0.14em] text-[#C0C0C0]/70">
+                <p className="mb-3 text-[11px] font-medium uppercase tracking-[0.14em] text-[#4A4A4A]/70">
                   Delivery speed
                 </p>
                 <div className="grid grid-cols-2 gap-3">
@@ -477,12 +477,12 @@ function CheckoutPageView() {
                       <Truck className="h-5 w-5" />
                     </span>
                     <span className="min-w-0 flex-1">
-                      <span className="block text-sm font-semibold text-[#ffffff]">Standard</span>
-                      <span className="hidden truncate sm:block text-[11px] text-[#C0C0C0]">
+                      <span className="block text-sm font-semibold text-[#171717]">Standard</span>
+                      <span className="hidden truncate sm:block text-[11px] text-[#4A4A4A]">
                         Free above ₹999
                       </span>
                     </span>
-                    <span className="text-xs font-semibold tracking-wider text-[#C0C0C0]">
+                    <span className="text-xs font-semibold tracking-wider text-[#4A4A4A]">
                       {shipping === 0 ? 'FREE' : formatINR(shipping)}
                     </span>
                   </div>
@@ -496,17 +496,17 @@ function CheckoutPageView() {
                       <Zap className="h-5 w-5" />
                     </span>
                     <span className="min-w-0 flex-1">
-                      <span className="block text-sm font-semibold text-[#ffffff]">Express</span>
-                      <span className="block truncate text-[11px] text-[#C0C0C0]">Coming soon</span>
+                      <span className="block text-sm font-semibold text-[#171717]">Express</span>
+                      <span className="block truncate text-[11px] text-[#4A4A4A]">Coming soon</span>
                     </span>
                   </div>
                 </div>
 
                 {selectedAddress && (
-                  <p className="mt-3 flex items-center gap-2 text-xs text-[#C0C0C0]">
-                    <MapPin className="h-3.5 w-3.5 shrink-0 text-[#C0C0C0]" />
+                  <p className="mt-3 flex items-center gap-2 text-xs text-[#4A4A4A]">
+                    <MapPin className="h-3.5 w-3.5 shrink-0 text-[#4A4A4A]" />
                     Delivering to pincode{' '}
-                    <strong className="font-medium text-[#ffffff]">{selectedAddress.pincode}</strong> ·{' '}
+                    <strong className="font-medium text-[#171717]">{selectedAddress.pincode}</strong> ·{' '}
                     {selectedAddress.city}, {selectedAddress.state}
                   </p>
                 )}
@@ -561,12 +561,12 @@ function CheckoutPageView() {
       </div>
 
       {/* mobile dock */}
-      <div className="fixed inset-x-0 bottom-0 z-40 border-t border-[#3A3A3A] bg-[#0A0A0A]/95 backdrop-blur lg:hidden">
+      <div className="fixed inset-x-0 bottom-0 z-40 border-t border-[#E2E0DB] bg-[#FFFFFF]/95 backdrop-blur lg:hidden">
         <div className="mx-auto max-w-[640px] px-4 pb-[calc(0.75rem+env(safe-area-inset-bottom))] pt-3">
           <div className="mb-2.5 flex items-end justify-between">
             <div>
-              <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-[#C0C0C0]/70">Total payable</p>
-              <p className="text-[11px] text-[#C0C0C0]/70">
+              <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-[#4A4A4A]/70">Total payable</p>
+              <p className="text-[11px] text-[#4A4A4A]/70">
                 Incl. GST {formatINR(gst)} · {shipping === 0 ? 'Free shipping' : `Shipping ${formatINR(shipping)}`}
               </p>
             </div>

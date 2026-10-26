@@ -518,16 +518,208 @@
   --kv-ease: cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
-/* Same metallic surface under announcement bar, header and footer on /shop. */
-.kv-shop-shell,
-.kv-shop-shell > header,
-.kv-shop-shell footer,
-.kv-shop-shell [role='note'] {
-  background-image: var(--kv-metal) !important;
-  background-color: #121214 !important;
+.kv-shop { background-image: var(--kv-metal); background-color: #121214; color: #f4f2ec; font-family: var(--font-manrope), Inter, system-ui, sans-serif; }
+.kv-panel {
+  background: var(--kv-panel);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08), 0 18px 40px -22px rgba(0, 0, 0, 0.9);
 }
-.kv-shop-shell > header { backdrop-filter: none !important; }
-.kv-shop-shell footer section { background: transparent !important; }
+.kv-chrome-bg { background-image: var(--kv-chrome-metal); color: #0c0c0e; box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.7); }
+.kv-chrome-text {
+  background-image: var(--kv-chrome-metal);
+  -webkit-background-clip: text; background-clip: text;
+  color: transparent; -webkit-text-fill-color: transparent;
+}
+.kv-silver-text {
+  background-image: linear-gradient(180deg, #ffffff 0%, #d9dce1 45%, #8e939b 60%, #eef0f2 100%);
+  -webkit-background-clip: text; background-clip: text;
+  color: transparent; -webkit-text-fill-color: transparent;
+}
+.kv-sheen { position: relative; overflow: hidden; isolation: isolate; }
+.kv-sheen::after {
+  content: ''; position: absolute; inset: 0; z-index: -1;
+  background: linear-gradient(105deg, transparent 35%, rgba(255, 255, 255, 0.6) 50%, transparent 65%);
+  transform: translateX(-130%); animation: kv-btn-sheen 4.5s var(--kv-ease) infinite;
+}
+@keyframes kv-btn-sheen { 0%, 55% { transform: translateX(-130%); } 100% { transform: translateX(130%); } }
+
+@keyframes kv-dot-pulse { 0%, 100% { opacity: 0.45; transform: scale(1); } 50% { opacity: 1; transform: scale(1.5); } }
+.kv-dot-pulse { animation: kv-dot-pulse 2.2s ease-in-out infinite; }
+
+@keyframes kv-rise { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: translateY(0); } }
+.kv-rise { opacity: 0; animation: kv-rise 0.6s var(--kv-ease) forwards; animation-delay: calc(var(--i, 0) * 65ms); }
+
+
+/* Glass-metallic toasts */
+.kv-toast {
+  position: relative; overflow: hidden; border-radius: 18px;
+  backdrop-filter: blur(20px) saturate(150%); -webkit-backdrop-filter: blur(20px) saturate(150%);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.22), 0 24px 50px -16px rgba(0, 0, 0, 0.9);
+  animation: kv-toast-in 0.5s var(--kv-ease) both;
+}
+@keyframes kv-toast-in { from { opacity: 0; transform: translateX(32px) scale(0.97); } to { opacity: 1; transform: none; } }
+@media (max-width: 1023px) {
+  @keyframes kv-toast-in { from { opacity: 0; transform: translateY(-28px) scale(0.97); } to { opacity: 1; transform: none; } }
+}
+.kv-toast-bar { position: absolute; left: 0; bottom: 0; height: 2px; width: 100%; transform-origin: left; animation: kv-toast-drain var(--dur, 5000ms) linear forwards; }
+@keyframes kv-toast-drain { to { transform: scaleX(0); } }
+
+/* Hidden scrollbar for rails */
+.kv-noscroll { scrollbar-width: none; }
+.kv-noscroll::-webkit-scrollbar { display: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  .kv-sheen::after, .kv-dot-pulse, .kv-toast, .kv-toast-bar { animation: none !important; }
+  .kv-rise { animation: none !important; opacity: 1; }
+}
+
+@keyframes kv-float {
+  0%, 100% { transform: translate3d(0, 0, 0) rotate(var(--kv-r, 0deg)); }
+  50% { transform: translate3d(0, -12px, 0) rotate(calc(var(--kv-r, 0deg) + 6deg)); }
+}
+@keyframes kv-breathe {
+  0%, 100% { transform: scale(1) translateY(0); }
+  50% { transform: scale(1.012) translateY(-4px); }
+}
+@keyframes kv-sweep {
+  0% { transform: translateX(-120%) skewX(-18deg); }
+  60%, 100% { transform: translateX(260%) skewX(-18deg); }
+}
+.kv-orbit { animation: kv-orbit var(--kv-d, 40s) linear infinite; }
+.kv-float { animation: kv-float var(--kv-d, 9s) ease-in-out infinite; }
+.kv-breathe { animation: kv-breathe 7s ease-in-out infinite; }
+.kv-sweep { animation: kv-sweep 9s ease-in-out infinite; }
+
+@media (prefers-reduced-motion: reduce) {
+  .kv-twinkle, .kv-orbit, .kv-float, .kv-breathe, .kv-sweep { animation: none !important; }
+}
+
+.kv-glass {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+}
+
+/* =========================================================
+   KOVENIK CHROME — dark chrome / glass / gold design tokens
+   Scoped to the redesigned homepage + navbar + footer.
+   ========================================================= */
+:root {
+  --kv-bg: #050506;
+  --kv-surface: #0b0c0e;
+  --kv-surface-2: #16181b;
+  --kv-body: #b8bdc4;
+  --kv-head: #eef0f2;
+  --kv-muted: #b0b5bc;
+  --kv-gold-1: #ecd189;
+  --kv-gold-2: #c9a24a;
+  --kv-gold-3: #9e7a2c;
+  --kv-chrome: linear-gradient(180deg, #ffffff 0%, #dfe3e8 40%, #8a9098 55%, #f1f3f5 72%, #b4b9c0 100%);
+  --kv-chrome-ring: conic-gradient(from 210deg, #fff, #5a5f67, #eff1f4, #34373c, #c7ccd2, #fff);
+  --kv-glass: linear-gradient(160deg, rgba(255, 255, 255, 0.10), rgba(255, 255, 255, 0.02));
+  --kv-gold: linear-gradient(135deg, #ecd189 0%, #c9a24a 55%, #9e7a2c 100%);
+}
+
+/* Chrome gradient text */
+.chrome-text {
+  background-image: var(--kv-chrome);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Chrome text with a light sweep on hover */
+.chrome-sweep {
+  background-image: linear-gradient(105deg, transparent 38%, rgba(255, 255, 255, 0.95) 50%, transparent 62%), var(--kv-chrome);
+  background-size: 250% 100%, 100% 100%;
+  background-position: 160% 0, 0 0;
+  background-repeat: no-repeat;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+  transition: background-position 900ms ease;
+}
+.chrome-sweep:hover { background-position: -60% 0, 0 0; }
+
+/* Outlined giant wordmarks */
+.chrome-outline {
+  color: transparent;
+  -webkit-text-stroke: 1px rgba(214, 218, 224, 0.3);
+}
+
+/* Glass panel */
+.chrome-glass {
+  background: var(--kv-glass);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.28), 0 24px 50px -20px rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+}
+
+/* Gold fill (CTAs only) */
+.gold-fill {
+  background-image: var(--kv-gold);
+  color: #17120a;
+}
+.gold-sheen { position: relative; overflow: hidden; isolation: isolate; }
+.gold-sheen::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: linear-gradient(105deg, transparent 35%, rgba(255, 255, 255, 0.55) 50%, transparent 65%);
+  transform: translateX(-120%);
+  transition: transform 700ms ease;
+}
+.gold-sheen:hover::after { transform: translateX(120%); }
+
+/* Silver focus ring inside the dark chrome surfaces */
+.chrome-focus:focus-visible,
+.chrome-scope :focus-visible {
+  outline: 2px solid #dfe3e8;
+  outline-offset: 3px;
+}
+
+
+@keyframes chrome-bob {
+  0%, 100% { transform: translateY(0) rotate(-1deg); }
+  50% { transform: translateY(-14px) rotate(1deg); }
+}
+@keyframes chrome-twinkle {
+  0%, 100% { opacity: 0.25; }
+  50% { opacity: 0.9; }
+}
+.chrome-bob { animation: chrome-bob 8s ease-in-out infinite; }
+.chrome-twinkle { animation: chrome-twinkle 4s ease-in-out infinite; }
+
+/* Hero product float: y +-12px and rotateZ -5deg <-> -2deg on a 6s loop. */
+@keyframes kv-hero-float {
+  0%, 100% { transform: translate3d(0, 12px, 0) rotate(-5deg); }
+  50% { transform: translate3d(0, -12px, 0) rotate(-2deg); }
+}
+.kv-hero-float { animation: kv-hero-float 6s ease-in-out infinite; will-change: transform; }
+
+
+
+@media (prefers-reduced-motion: reduce) {
+  .chrome-bob, .chrome-twinkle { animation: none !important; }
+  .chrome-sweep, .gold-sheen::after { transition: none !important; }
+}
+
+/* =========================================================
+   KÖVENIK CATEGORY PAGE (/shop) — black metallic surface,
+   3D hero tee, glass toasts. Scoped to .kv-shop.
+   ========================================================= */
+:root {
+  --kv-metal: repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.016) 0 1px, transparent 1px 4px),
+    linear-gradient(180deg, #1c1c1f 0%, #121214 45%, #0c0c0e 100%);
+  --kv-chrome-metal: linear-gradient(135deg, #8e939b, #d2d2d7 35%, #f6f6f8 50%, #c4c4ca 68%, #8e939b);
+  --kv-panel: linear-gradient(180deg, #161618, #0d0d0f);
+  --kv-ease: cubic-bezier(0.2, 0.8, 0.2, 1);
+}
 
 .kv-shop { background-image: var(--kv-metal); background-color: #121214; color: #f4f2ec; font-family: var(--font-manrope), Inter, system-ui, sans-serif; }
 .kv-panel {
@@ -693,8 +885,8 @@ textarea.kv-input { padding-top:12px; padding-bottom:12px; resize:none; line-hei
    ========================================================= */
 :root {
   --c-white: #FFFFFF;
-  --c-band: #F1F0ED;
-  --c-footer: #EAE9E6;
+  --c-band: #F4F0E8;
+  --c-footer: #EAE5DA;
   --c-img: #E8E6E1;
   --c-line: #E2E0DB;
   --c-ink: #222222;
@@ -741,3 +933,130 @@ textarea.kv-input { padding-top:12px; padding-bottom:12px; resize:none; line-hei
 .kv-thin-scroll { scrollbar-width: thin; scrollbar-color: #B5B5B5 transparent; }
 .kv-thin-scroll::-webkit-scrollbar { width: 6px; }
 .kv-thin-scroll::-webkit-scrollbar-thumb { background: #B5B5B5; border-radius: 3px; }
+
+
+/* =========================================================
+   KOVENIK light storefront: shop, product, cart, checkout.
+   The old chrome / metal / glass classes keep their names but are
+   now flat: ivory panels, charcoal buttons, champagne-gold accents.
+   ========================================================= */
+:root {
+  --kv-metal: none;
+  --kv-chrome-metal: linear-gradient(#222222, #222222);
+  --kv-panel: #f4f0e8;
+}
+
+.kv-shop {
+  background: #ffffff;
+  background-image: none;
+  color: #171717;
+  font-family: var(--font-archivo), Arial, sans-serif;
+}
+.kv-panel {
+  background: #f4f0e8;
+  border: 1px solid #e2e0db;
+  box-shadow: none;
+}
+.kv-chrome-bg { background: #222222; background-image: none; color: #ffffff; box-shadow: none; }
+.kv-chrome-text,
+.kv-silver-text {
+  background: none;
+  -webkit-background-clip: border-box;
+  background-clip: border-box;
+  color: #171717;
+  -webkit-text-fill-color: currentColor;
+}
+.kv-sheen::after { display: none; }
+
+.chrome-text,
+.chrome-sweep,
+.chrome-shine {
+  background: none;
+  -webkit-background-clip: border-box;
+  background-clip: border-box;
+  color: #171717;
+  -webkit-text-fill-color: currentColor;
+  animation: none;
+}
+.chrome-glass {
+  background: #ffffff;
+  border: 1px solid #e2e0db;
+  box-shadow: none;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+.gold-fill { background: #222222; background-image: none; color: #ffffff; }
+.gold-sheen::after { display: none; }
+.chrome-outline { color: transparent; -webkit-text-stroke: 1px #e2e0db; }
+.chrome-focus:focus-visible,
+.chrome-scope :focus-visible { outline: 2px solid #222222; outline-offset: 2px; }
+
+/* Flat toasts */
+.kv-toast {
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  box-shadow: none;
+  border: 1px solid #e2e0db;
+  border-radius: 4px;
+}
+
+
+/* =========================================================
+   Account / wishlist set (kv-page, kv-metal, kv-btn-*, kv-input...)
+   Same class names as the old black-metal design, now light and flat.
+   The membership card stays charcoal as the one selective dark element.
+   ========================================================= */
+.kv-page { background-color: #ffffff; background-image: none; }
+.kv-metal {
+  position: relative; overflow: hidden; border: 1px solid #e2e0db; border-radius: 4px;
+  background: #f4f0e8; box-shadow: none;
+}
+.kv-metal::before { display: none; }
+.kv-stat::after { content: ""; position: absolute; left: 18px; right: 18px; top: 0; height: 2px; z-index: 2; background: #b08d57; }
+.kv-disc {
+  display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; border-radius: 9999px;
+  background: #ffffff; border: 1px solid #e2e0db; box-shadow: none; color: #171717;
+}
+.kv-btn-primary {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 44px; padding: 0 22px;
+  border-radius: 2px; background: #222222; color: #ffffff; font-size: 12px; font-weight: 700;
+  letter-spacing: .1em; text-transform: uppercase; white-space: nowrap; transition: background .15s;
+}
+.kv-btn-primary:hover { background: #000000; filter: none; }
+.kv-btn-ghost {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 44px; padding: 0 18px;
+  border-radius: 2px; background: transparent; border: 1px solid #222222; color: #171717; font-size: 12px; font-weight: 600;
+  letter-spacing: .06em; white-space: nowrap; transition: background .15s, color .15s;
+}
+.kv-btn-ghost:hover { border-color: #222222; background: #222222; color: #ffffff; }
+.kv-btn-danger {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 44px; padding: 0 20px;
+  border-radius: 2px; border: 1px solid #b3261e; background: #fdecea; color: #b3261e; font-size: 12px; font-weight: 700;
+  letter-spacing: .1em; text-transform: uppercase; white-space: nowrap; transition: background .15s;
+}
+.kv-btn-danger:hover:not(:disabled) { background: #f9d6d2; border-color: #b3261e; }
+.kv-label { font-size: 12px; font-weight: 700; letter-spacing: .18em; text-transform: uppercase; color: #8c6d3a; }
+.kv-pill {
+  display: inline-flex; align-items: center; gap: 6px; min-height: 30px; padding: 0 12px; border-radius: 9999px;
+  border: 1px solid #e2e0db; background: #ffffff; font-size: 12px; color: #4a4a4a; max-width: 100%;
+}
+.kv-wordmark {
+  font-weight: 700; letter-spacing: .04em; color: transparent; -webkit-text-stroke: 1px #e2e0db;
+  line-height: 1; white-space: nowrap; pointer-events: none; user-select: none;
+}
+.kv-scene { perspective: none; }
+.kv-card3d { transform: none; transform-style: flat; }
+.kv-card-face {
+  position: relative; border-radius: 8px; border: 1px solid #222222; overflow: hidden; background: #222222; color: #ffffff; box-shadow: none;
+}
+.kv-card-face::after { display: none; }
+.kv-chip { background: #b08d57; border-radius: 4px; border: 0; }
+.kv-ticket { background: #ffffff; border: 1px solid #e2e0db; }
+.kv-inner { border: 1px solid #e2e0db; border-radius: 4px; background: #ffffff; box-shadow: none; }
+.kv-field-label { display: block; margin-bottom: 8px; font-size: 12px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: #4a4a4a; }
+.kv-input {
+  width: 100%; min-height: 48px; border-radius: 2px; border: 1px solid #d6d0c2; background: #ffffff; padding: 0 16px;
+  font-size: 16px; color: #171717; outline: none; transition: border-color .15s;
+}
+.kv-input::placeholder { color: #5c5c5c; }
+.kv-input:focus { border-color: #222222; box-shadow: none; }

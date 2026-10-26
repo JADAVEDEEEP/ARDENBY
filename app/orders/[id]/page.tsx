@@ -42,8 +42,8 @@ type OrderDetail = {
 };
 
 const PANEL =
-  'rounded-2xl border border-[#C9A24B]/20 bg-[linear-gradient(180deg,#141414_0%,#0A0A0A_100%)] p-5 sm:p-6';
-const LABEL = 'text-[10px] font-semibold uppercase tracking-[0.2em] text-[#C9A24B]';
+  'rounded-2xl border border-[#B08D57]/20 bg-[#F4F0E8] p-5 sm:p-6';
+const LABEL = 'text-[10px] font-semibold uppercase tracking-[0.2em] text-[#8C6D3A]';
 
 function OrderDetailPageView() {
   const { id } = useParams<{ id: string }>();
@@ -96,26 +96,26 @@ function OrderDetailPageView() {
   }, [id, router]);
 
   return (
-    <main className="min-h-screen bg-[#050505] px-4 pb-16 pt-8 text-[#F3EBDD] sm:px-8">
+    <main className="min-h-screen bg-[#FFFFFF] px-4 pb-16 pt-8 text-[#171717] sm:px-8">
       <div className="mx-auto max-w-3xl">
         <Link
           href="/profile"
-          className="inline-flex items-center gap-2 text-xs font-semibold tracking-[0.15em] text-[#F3EBDD]/70 transition-colors hover:text-[#E6CF92]"
+          className="inline-flex items-center gap-2 text-xs font-semibold tracking-[0.15em] text-[#171717]/70 transition-colors hover:text-[#8C6D3A]"
         >
-          <ArrowLeft className="h-3.5 w-3.5 text-[#C9A24B]" />
+          <ArrowLeft className="h-3.5 w-3.5 text-[#8C6D3A]" />
           BACK TO ACCOUNT
         </Link>
 
         {loading && (
           <div className="flex justify-center py-24">
-            <Loader2 className="h-6 w-6 animate-spin text-[#C9A24B]" />
+            <Loader2 className="h-6 w-6 animate-spin text-[#8C6D3A]" />
           </div>
         )}
 
         {!loading && error && (
           <div className={`${PANEL} mt-8 text-center`}>
-            <Package className="mx-auto h-8 w-8 text-[#C9A24B]" strokeWidth={1.4} />
-            <p className="mt-3 text-sm text-[#F3EBDD]/70">{error}</p>
+            <Package className="mx-auto h-8 w-8 text-[#8C6D3A]" strokeWidth={1.4} />
+            <p className="mt-3 text-sm text-[#171717]/70">{error}</p>
           </div>
         )}
 
@@ -124,7 +124,7 @@ function OrderDetailPageView() {
             <header>
               <p className={LABEL}>Order</p>
               <h1 className="mt-1 font-serif text-3xl sm:text-4xl">{order.order_number}</h1>
-              <p className="mt-1 text-xs text-[#F3EBDD]/55">
+              <p className="mt-1 text-xs text-[#171717]/55">
                 Placed on{' '}
                 {new Date(order.created_at).toLocaleDateString('en-IN', {
                   day: '2-digit',
@@ -151,7 +151,7 @@ function OrderDetailPageView() {
               </div>
               <div className="col-span-2 sm:col-span-1">
                 <p className={LABEL}>Deliver to</p>
-                <p className="mt-1 text-sm leading-relaxed text-[#F3EBDD]/80">
+                <p className="mt-1 text-sm leading-relaxed text-[#171717]/80">
                   {order.shipping_name}, {order.shipping_address}, {order.shipping_city},{' '}
                   {order.shipping_state} - {order.shipping_pincode}
                 </p>
@@ -159,14 +159,14 @@ function OrderDetailPageView() {
             </section>
 
             {['packed', 'shipped', 'delivered'].includes(String(order.status).toLowerCase()) && (
-              <p role="status" className={`${PANEL} text-sm leading-relaxed text-[#F3EBDD]/70`}>
+              <p role="status" className={`${PANEL} text-sm leading-relaxed text-[#171717]/70`}>
                 Sorry, this order can no longer be cancelled because it has moved beyond the processing stage.
               </p>
             )}
 
             <section className={PANEL}>
               <p className={LABEL}>Items</p>
-              <ul className="mt-4 divide-y divide-[#C9A24B]/15">
+              <ul className="mt-4 divide-y divide-[#B08D57]/15">
                 {order.items.map((item) => (
                   <li key={item.id} className="flex gap-4 py-4 first:pt-0 last:pb-0">
                     {item.product_image ? (
@@ -177,15 +177,15 @@ function OrderDetailPageView() {
                         className="h-20 w-16 shrink-0 rounded-md object-cover"
                       />
                     ) : (
-                      <div className="h-20 w-16 shrink-0 rounded-md bg-[#141414]" />
+                      <div className="h-20 w-16 shrink-0 rounded-md bg-[#F4F0E8]" />
                     )}
                     <div className="min-w-0 flex-1">
                       <p className="truncate text-sm font-medium">{item.product_name}</p>
-                      <p className="mt-1 text-xs text-[#F3EBDD]/55">
+                      <p className="mt-1 text-xs text-[#171717]/55">
                         {item.size} · {item.color} · Qty {item.quantity}
                       </p>
                     </div>
-                    <p className="shrink-0 text-sm text-[#E6CF92]">
+                    <p className="shrink-0 text-sm text-[#8C6D3A]">
                       {formatINR(Number(item.unit_price) * item.quantity)}
                     </p>
                   </li>
@@ -195,7 +195,7 @@ function OrderDetailPageView() {
 
             <section className={PANEL}>
               <dl className="space-y-2 text-sm">
-                <div className="flex justify-between text-[#F3EBDD]/75">
+                <div className="flex justify-between text-[#171717]/75">
                   <dt>Subtotal</dt>
                   <dd>{formatINR(Number(order.subtotal))}</dd>
                 </div>
@@ -205,7 +205,7 @@ function OrderDetailPageView() {
                     <dd>−{formatINR(Number(order.discount_amount))}</dd>
                   </div>
                 )}
-                <div className="flex justify-between text-[#F3EBDD]/75">
+                <div className="flex justify-between text-[#171717]/75">
                   <dt>Shipping</dt>
                   <dd>
                     {Number(order.shipping_amount) === 0
@@ -213,13 +213,13 @@ function OrderDetailPageView() {
                       : formatINR(Number(order.shipping_amount))}
                   </dd>
                 </div>
-                <div className="flex justify-between text-[#F3EBDD]/75">
+                <div className="flex justify-between text-[#171717]/75">
                   <dt>GST</dt>
                   <dd>{formatINR(Number(order.tax_amount))}</dd>
                 </div>
-                <div className="flex justify-between border-t border-[#C9A24B]/20 pt-3 font-serif text-lg">
+                <div className="flex justify-between border-t border-[#B08D57]/20 pt-3 font-serif text-lg">
                   <dt>Total</dt>
-                  <dd className="text-[#E6CF92]">{formatINR(Number(order.total_amount))}</dd>
+                  <dd className="text-[#8C6D3A]">{formatINR(Number(order.total_amount))}</dd>
                 </div>
               </dl>
             </section>

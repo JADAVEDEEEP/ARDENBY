@@ -34,7 +34,7 @@ function LogoChip({ name, size = 'sm' }: { name: LogoName; size?: 'sm' | 'md' })
   const w = Math.min(maxW, Math.round(h * ratio));
   const height = Math.round(w / ratio);
   return (
-    <span className="inline-flex shrink-0 items-center justify-center rounded border border-[#d9d9d9] bg-white p-1">
+    <span className="inline-flex shrink-0 items-center justify-center rounded border border-[#222222] bg-[#222222] p-1">
       <Image
         src={`/payment-icons/${name}.svg`}
         alt={alt}
@@ -102,7 +102,7 @@ function Radio({ on }: { on: boolean }) {
     <span
       aria-hidden
       className={`flex h-6 w-6 shrink-0 items-center justify-center rounded-full border-2 ${
-        on ? 'border-[#C0C0C0]' : 'border-[#3A3A3A]'
+        on ? 'border-[#222222]' : 'border-[#E2E0DB]'
       }`}
     >
       {on && <span className="ck-radio-dot h-3 w-3 rounded-full" />}
@@ -136,19 +136,19 @@ export function PaymentSection({
         >
           <Radio on={online} />
           <span className="min-w-0 flex-1">
-            <span className="block text-lg font-semibold text-[#ffffff]">Pay online</span>
-            <span className="block text-xs text-[#C0C0C0] sm:text-sm">
+            <span className="block text-lg font-semibold text-[#171717]">Pay online</span>
+            <span className="block text-xs text-[#4A4A4A] sm:text-sm">
               <span className="sm:hidden">Instant confirmation</span>
               <span className="hidden sm:inline">
                 Instant confirmation · completed in Razorpay’s secure window
               </span>
             </span>
           </span>
-          <span className="hidden shrink-0 items-center gap-2.5  border border-[#2A2A2A] bg-[#0A0A0A] px-3 py-2 sm:flex">
+          <span className="hidden shrink-0 items-center gap-2.5  border border-[#E2E0DB] bg-[#FFFFFF] px-3 py-2 sm:flex">
             <LogoChip name="razorpay" size="md" />
             <span className="leading-tight">
-              <span className="block text-sm font-medium text-[#ffffff]">Razorpay</span>
-              <span className="block text-[9px] font-semibold tracking-[0.14em] text-[#C0C0C0]/70">
+              <span className="block text-sm font-medium text-[#171717]">Razorpay</span>
+              <span className="block text-[9px] font-semibold tracking-[0.14em] text-[#4A4A4A]/70">
                 SECURED CHECKOUT
               </span>
             </span>
@@ -160,18 +160,18 @@ export function PaymentSection({
             {ONLINE_TILES.map(({ label, short, main, brands, badge }) => (
               <li
                 key={label}
-                className=" border border-[#2A2A2A] bg-[#111111] p-3"
+                className=" border border-[#E2E0DB] bg-[#F4F0E8] p-3"
               >
                 <div className="flex flex-wrap items-start justify-between gap-2">
                   {main}
                   {badge && (
-                    <span className="border border-[#3A3A3A] px-1.5 py-0.5 text-[8px] font-semibold uppercase tracking-wider text-[#C0C0C0]">
+                    <span className="border border-[#E2E0DB] px-1.5 py-0.5 text-[8px] font-semibold uppercase tracking-wider text-[#4A4A4A]">
                       {badge}
                     </span>
                   )}
                 </div>
-                <p className="mt-2.5 text-sm font-medium text-[#ffffff]">{label}</p>
-                <p className="mt-0.5 text-[11px] leading-snug text-[#C0C0C0]/70 sm:hidden">{short}</p>
+                <p className="mt-2.5 text-sm font-medium text-[#171717]">{label}</p>
+                <p className="mt-0.5 text-[11px] leading-snug text-[#4A4A4A]/70 sm:hidden">{short}</p>
                 <div className="mt-2 flex flex-wrap gap-1">
                   {brands.map((b) => (
                     <LogoChip key={b} name={b} />
@@ -181,8 +181,8 @@ export function PaymentSection({
             ))}
           </ul>
 
-          <p className="mt-3 flex items-start gap-2 border-t border-[#2A2A2A] pt-3 text-xs text-[#C0C0C0]/70">
-            <Zap className="mt-0.5 h-3.5 w-3.5 shrink-0 text-[#C0C0C0]" />
+          <p className="mt-3 flex items-start gap-2 border-t border-[#E2E0DB] pt-3 text-xs text-[#4A4A4A]/70">
+            <Zap className="mt-0.5 h-3.5 w-3.5 shrink-0 text-[#4A4A4A]" />
             Only the methods enabled on our Razorpay account appear in the payment window.
           </p>
         </div>
@@ -199,16 +199,16 @@ export function PaymentSection({
           className="flex w-full items-center gap-3  p-4 text-left sm:p-5"
         >
           <Radio on={cod} />
-          <span className="inline-flex shrink-0 items-center justify-center rounded border border-[#d9d9d9] bg-white p-1.5 text-[#0b8f66]">
+          <span className="inline-flex shrink-0 items-center justify-center rounded border border-[#222222] bg-[#222222] p-1.5 text-[#1B7A43]">
             <Banknote className="h-6 w-6" aria-hidden />
           </span>
           <span className="min-w-0 flex-1">
-            <span className="block text-base font-semibold text-[#ffffff]">Cash on Delivery</span>
-            <span className="block text-xs text-[#C0C0C0] sm:text-sm">
+            <span className="block text-base font-semibold text-[#171717]">Cash on Delivery</span>
+            <span className="block text-xs text-[#4A4A4A] sm:text-sm">
               Pay in cash or UPI to the courier when your order arrives.
             </span>
           </span>
-          <span className="hidden shrink-0 rounded-full border border-[#3A3A3A] px-3 py-1 text-[11px] font-semibold text-[#C0C0C0] sm:inline">
+          <span className="hidden shrink-0 rounded-full border border-[#E2E0DB] px-3 py-1 text-[11px] font-semibold text-[#4A4A4A] sm:inline">
             No extra fee
           </span>
         </button>

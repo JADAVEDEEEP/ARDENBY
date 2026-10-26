@@ -21,7 +21,7 @@ export function DeleteAccountModal({ profile }: { profile: ProfileState }) {
       role="dialog"
       aria-modal="true"
       aria-labelledby="kv-delete-title"
-      className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/80 px-4 backdrop-blur-md"
+      className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/50 px-4 backdrop-blur-md"
     >
       <div className="kv-metal w-full max-w-md">
         <div className="p-6 sm:p-8">
@@ -36,28 +36,28 @@ export function DeleteAccountModal({ profile }: { profile: ProfileState }) {
           </button>
 
           <span className="kv-disc mb-5 h-12 w-12">
-            <ShieldAlert className="h-5 w-5 text-[#EF7B7B]" strokeWidth={1.7} />
+            <ShieldAlert className="h-5 w-5 text-[#B3261E]" strokeWidth={1.7} />
           </span>
-          <p className="text-[10px] font-semibold uppercase tracking-[0.24em] text-[#EF7B7B]">KOVENIK — Danger zone</p>
+          <p className="text-[10px] font-semibold uppercase tracking-[0.24em] text-[#B3261E]">KOVENIK — Danger zone</p>
           <h2
             id="kv-delete-title"
-            className="mt-3 text-[28px] font-normal leading-tight text-white"
+            className="mt-3 text-[28px] font-normal leading-tight text-[#171717]"
             style={{ fontFamily: 'Bodoni MT, Didot, serif' }}
           >
             Delete your account?
           </h2>
-          <p className="mt-3 text-[13px] leading-6 text-[#C6C9CF]">
+          <p className="mt-3 text-[13px] leading-6 text-[#4A4A4A]">
             This will permanently remove your KOVENIK account access and cannot be reversed.
           </p>
 
-          <div className="my-6 h-px bg-[#33363D]" />
+          <div className="my-6 h-px bg-[#EAE5DA]" />
 
           {profile.isGoogleAccount ? (
             <div className="kv-inner flex items-start gap-3 p-4">
-              <ShieldAlert className="mt-0.5 h-4 w-4 shrink-0 text-[#D6B06A]" strokeWidth={1.7} />
+              <ShieldAlert className="mt-0.5 h-4 w-4 shrink-0 text-[#8C6D3A]" strokeWidth={1.7} />
               <div>
                 <p className="kv-label">Google account</p>
-                <p className="mt-2 text-[13px] leading-5 text-[#C6C9CF]">
+                <p className="mt-2 text-[13px] leading-5 text-[#4A4A4A]">
                   You signed in with Google. No password is required to delete this account.
                 </p>
               </div>
@@ -86,7 +86,7 @@ export function DeleteAccountModal({ profile }: { profile: ProfileState }) {
                   onClick={() => profile.setShowDeletePassword((prev) => !prev)}
                   disabled={profile.deleteLoading}
                   aria-label={profile.showDeletePassword ? 'Hide password' : 'Show password'}
-                  className="absolute right-1 top-1/2 flex h-11 w-11 -translate-y-1/2 items-center justify-center text-[#9296A0] hover:text-white"
+                  className="absolute right-1 top-1/2 flex h-11 w-11 -translate-y-1/2 items-center justify-center text-[#5C5C5C] hover:text-[#171717]"
                 >
                   {profile.showDeletePassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                 </button>
@@ -95,7 +95,7 @@ export function DeleteAccountModal({ profile }: { profile: ProfileState }) {
           )}
 
           {profile.error && (
-            <div role="alert" className="mt-5 flex items-start gap-3 rounded-xl border border-[#5a2a2c] bg-[#2a1517] px-4 py-3 text-[12px] text-[#EF7B7B]">
+            <div role="alert" className="mt-5 flex items-start gap-3 rounded-xl border border-[#B3261E] bg-[#F4F0E8] px-4 py-3 text-[12px] text-[#B3261E]">
               <AlertCircle className="mt-0.5 h-4 w-4 shrink-0" />
               <span className="leading-5">{profile.error}</span>
             </div>
@@ -116,7 +116,7 @@ export function DeleteAccountModal({ profile }: { profile: ProfileState }) {
             </button>
           </div>
 
-          <p className="mt-5 text-center text-[10px] font-medium uppercase tracking-[0.2em] text-[#9296A0]">
+          <p className="mt-5 text-center text-[10px] font-medium uppercase tracking-[0.2em] text-[#5C5C5C]">
             This action cannot be undone
           </p>
         </div>

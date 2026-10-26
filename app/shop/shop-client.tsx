@@ -258,16 +258,16 @@ function FilterSection({
 }) {
   const [open, setOpen] = useState(defaultOpen);
   return (
-    <div className="border-t border-white/[0.07] py-3.5 first:border-t-0">
+    <div className="border-t border-[#171717]/[0.07] py-3.5 first:border-t-0">
       <button
         type="button"
         aria-expanded={open}
         onClick={() => setOpen(!open)}
-        className="flex min-h-[32px] w-full items-center justify-between text-left text-[13px] font-extrabold text-[#f4f2ec]"
+        className="flex min-h-[32px] w-full items-center justify-between text-left text-[13px] font-extrabold text-[#171717]"
       >
         <span>{title}</span>
         <ChevronDown
-          className={cn('h-4 w-4 text-[#BDB9B0] transition-transform duration-300', open && 'rotate-180')}
+          className={cn('h-4 w-4 text-[#4A4A4A] transition-transform duration-300', open && 'rotate-180')}
         />
       </button>
       <AnimatePresence initial={false}>
@@ -309,14 +309,14 @@ function CheckRow({
       <span
         className={cn(
           'flex h-[18px] w-[18px] shrink-0 items-center justify-center rounded-[5px] border transition-colors',
-          checked ? 'border-[#d2d2d7] bg-[#d2d2d7]' : 'border-white/30 group-hover:border-[#d2d2d7]'
+          checked ? 'border-[#222222] bg-[#222222]' : 'border-[#171717]/30 group-hover:border-[#222222]'
         )}
       >
-        {checked && <Check className="h-3 w-3 stroke-[3] text-[#121214]" />}
+        {checked && <Check className="h-3 w-3 stroke-[3] text-[#FFFFFF]" />}
       </span>
-      <span className="text-[13px] text-[#f4f2ec]">
+      <span className="text-[13px] text-[#171717]">
         {label}
-        {typeof count === 'number' && <span className="ml-1 text-[12px] text-[#A8A49B]">({count})</span>}
+        {typeof count === 'number' && <span className="ml-1 text-[12px] text-[#5C5C5C]">({count})</span>}
       </span>
     </button>
   );
@@ -831,7 +831,7 @@ export function ShopClient() {
   ] as { key: string; label: string; remove: () => void }[];
 
   const chipClass =
-    'inline-flex min-h-[36px] shrink-0 items-center gap-1.5 rounded-full border border-[#d2d2d7]/45 bg-[#d2d2d7]/10 px-3 text-[12px] font-semibold text-[#f4f2ec] transition hover:border-[#d2d2d7]';
+    'inline-flex min-h-[36px] shrink-0 items-center gap-1.5 rounded-full border border-[#171717]/45 bg-[#171717]/10 px-3 text-[12px] font-semibold text-[#171717] transition hover:border-[#222222]';
 
   /* ---------- shared filter pieces ---------- */
   const priceBlock = (
@@ -842,9 +842,9 @@ export function ShopClient() {
           {(['Minimum', 'Maximum'] as const).map((which) => (
             <label
               key={which}
-              className="flex h-11 min-w-0 flex-1 items-center gap-1 rounded-[10px] border border-white/10 bg-black/40 px-3 text-[13px] text-[#f4f2ec] focus-within:border-[#d2d2d7]"
+              className="flex h-11 min-w-0 flex-1 items-center gap-1 rounded-[2px] border border-[#E2E0DB] bg-white px-3 text-[13px] text-[#171717] focus-within:border-[#222222]"
             >
-              <span className="text-[#BDB9B0]">₹</span>
+              <span className="text-[#4A4A4A]">₹</span>
               <input
                 type="number"
                 inputMode="numeric"
@@ -878,12 +878,12 @@ export function ShopClient() {
               className={cn(
                 'relative h-11 min-w-[48px] rounded-[10px] border px-3 text-[13px] font-bold transition-all duration-200',
                 on
-                  ? 'border-white bg-white text-[#121214] ring-2 ring-[#E7C873] ring-offset-2 ring-offset-[#121214]'
+                  ? 'border-[#222222] bg-[#222222] text-[#FFFFFF] ring-2 ring-[#B08D57] ring-offset-2 ring-offset-[#121214]'
                   : st === 'low'
-                    ? 'border-amber-400/70 text-[#f4f2ec] hover:border-amber-300'
+                    ? 'border-amber-400/70 text-[#171717] hover:border-amber-300'
                     : st === 'out'
-                      ? 'border-dashed border-white/25 text-white/55 hover:border-white/50'
-                      : 'border-white/15 text-[#f4f2ec] hover:border-[#d2d2d7]',
+                      ? 'border-dashed border-[#171717]/25 text-[#171717]/55 hover:border-[#171717]/50'
+                      : 'border-[#171717]/15 text-[#171717] hover:border-[#222222]',
                 st === 'out' && 'line-through'
               )}
             >
@@ -893,10 +893,10 @@ export function ShopClient() {
           );
         })}
       </div>
-      <ul className="mt-3 flex flex-wrap gap-x-4 gap-y-1 text-[11px] text-[#BDB9B0]" aria-label="Size stock legend">
-        <li className="flex items-center gap-1.5"><span aria-hidden className="h-2.5 w-2.5 rounded-[3px] border border-white/40" />In stock</li>
+      <ul className="mt-3 flex flex-wrap gap-x-4 gap-y-1 text-[11px] text-[#4A4A4A]" aria-label="Size stock legend">
+        <li className="flex items-center gap-1.5"><span aria-hidden className="h-2.5 w-2.5 rounded-[3px] border border-[#171717]/40" />In stock</li>
         <li className="flex items-center gap-1.5"><span aria-hidden className="h-2.5 w-2.5 rounded-[3px] border border-amber-400/80 bg-amber-400/30" />Low</li>
-        <li className="flex items-center gap-1.5"><span aria-hidden className="h-2.5 w-2.5 rounded-[3px] border border-dashed border-white/40" />Sold out</li>
+        <li className="flex items-center gap-1.5"><span aria-hidden className="h-2.5 w-2.5 rounded-[3px] border border-dashed border-[#171717]/40" />Sold out</li>
       </ul>
       <div aria-live="polite" className="mt-2 space-y-1.5">
         {selectedSizes.map((s) => (
@@ -904,7 +904,7 @@ export function ShopClient() {
             key={s}
             className={cn(
               'text-[12px] leading-snug',
-              sizeStats[s].state === 'low' ? 'text-[#fcd28a]' : sizeStats[s].state === 'out' ? 'text-[#ffb1a6]' : 'text-[#BDB9B0]'
+              sizeStats[s].state === 'low' ? 'text-[#8C6D3A]' : sizeStats[s].state === 'out' ? 'text-[#B3261E]' : 'text-[#4A4A4A]'
             )}
           >
             {sizeMessage(s)}
@@ -931,8 +931,8 @@ export function ShopClient() {
             >
               <span
                 className={cn(
-                  'flex h-7 w-7 items-center justify-center rounded-full border border-white/30 transition-transform duration-200',
-                  on ? 'scale-110 ring-2 ring-[#E7C873] ring-offset-2 ring-offset-[#121214]' : 'hover:scale-110'
+                  'flex h-7 w-7 items-center justify-center rounded-full border border-[#171717]/30 transition-transform duration-200',
+                  on ? 'scale-110 ring-2 ring-[#B08D57] ring-offset-2 ring-offset-[#121214]' : 'hover:scale-110'
                 )}
                 style={{ backgroundColor: c.hex }}
               >
@@ -940,7 +940,7 @@ export function ShopClient() {
                   <Check
                     className={cn(
                       'h-3.5 w-3.5 stroke-[3]',
-                      c.name === 'White' || c.name === 'Beige' ? 'text-black' : 'text-white'
+                      c.name === 'White' || c.name === 'Beige' ? 'text-[#FFFFFF]' : 'text-[#171717]'
                     )}
                   />
                 )}
@@ -967,8 +967,8 @@ export function ShopClient() {
   );
 
   const stockBlock = (
-    <div className="flex min-h-[44px] items-center justify-between border-t border-white/[0.07] py-2">
-      <span className="text-[13px] font-extrabold text-[#f4f2ec]" id="kv-stock-label">
+    <div className="flex min-h-[44px] items-center justify-between border-t border-[#171717]/[0.07] py-2">
+      <span className="text-[13px] font-extrabold text-[#171717]" id="kv-stock-label">
         In stock only
       </span>
       <button
@@ -982,13 +982,13 @@ export function ShopClient() {
         <span
           className={cn(
             'relative h-6 w-11 rounded-full border transition-colors',
-            inStockOnly ? 'border-[#f6f6f8]/60' : 'border-white/20 bg-white/10'
+            inStockOnly ? 'border-[#171717]/60' : 'border-[#171717]/20 bg-[#171717]/10'
           )}
           style={inStockOnly ? { background: 'var(--kv-chrome-metal)' } : undefined}
         >
           <span
             className={cn(
-              'absolute top-0.5 h-[18px] w-[18px] rounded-full bg-white shadow transition-all duration-300',
+              'absolute top-0.5 h-[18px] w-[18px] rounded-full bg-[#222222] shadow transition-all duration-300',
               inStockOnly ? 'left-[22px]' : 'left-0.5'
             )}
           />
@@ -1056,11 +1056,11 @@ export function ShopClient() {
         className={cn(
           'kv-rise group inline-flex min-h-[48px] items-center gap-2.5 rounded-full border p-1 pr-3.5 transition-all duration-300 [transition-timing-function:var(--kv-ease)] hover:-translate-y-1',
           active
-            ? 'kv-chrome-bg border-[#E7C873] text-[#0c0c0e] shadow-[0_0_0_1px_#E7C873]'
-            : 'kv-panel text-[#f4f2ec] hover:border-[#d2d2d7]/50'
+            ? 'kv-chrome-bg border-[#B08D57] text-[#FFFFFF] '
+            : 'kv-panel text-[#171717] hover:border-[#171717]/50'
         )}
       >
-        <span className="flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-full border border-white/15 bg-[#0d0d0f] text-[13px] font-bold text-[#d2d2d7]">
+        <span className="flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-full border border-[#171717]/15 bg-[#FFFFFF] text-[13px] font-bold text-[#4A4A4A]">
           {c.img ? (
             // eslint-disable-next-line @next/next/no-img-element
             <img src={c.img} alt="" className="h-full w-full object-cover" />
@@ -1073,7 +1073,7 @@ export function ShopClient() {
           <span
             className={cn(
               'rounded-full px-2 py-0.5 text-[11px] font-extrabold',
-              active ? 'bg-black/80 text-[#d2d2d7]' : 'bg-white/10 text-[#d2d2d7]'
+              active ? 'bg-black/80 text-white' : 'bg-[#171717]/10 text-[#4A4A4A]'
             )}
           >
             {count}
@@ -1089,15 +1089,15 @@ export function ShopClient() {
         aria-label="Sort products"
         value={sort}
         onChange={(e) => setSort(e.target.value)}
-        className="h-11 min-w-[190px] cursor-pointer appearance-none rounded-[12px] border border-white/10 bg-[#161618] pl-3.5 pr-9 text-[13px] font-semibold text-[#f4f2ec] outline-none transition hover:border-[#d2d2d7] focus:border-[#d2d2d7]"
+        className="h-11 min-w-[190px] cursor-pointer appearance-none rounded-[12px] border border-[#171717]/10 bg-[#F4F0E8] pl-3.5 pr-9 text-[13px] font-semibold text-[#171717] outline-none transition hover:border-[#222222] focus:border-[#222222]"
       >
         {sortOptions.map((opt) => (
-          <option key={opt.value} value={opt.value} className="bg-[#161618] text-white">
+          <option key={opt.value} value={opt.value} className="bg-[#F4F0E8] text-[#171717]">
             Sort by: {opt.label}
           </option>
         ))}
       </select>
-      <ChevronDown className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[#f4f2ec]" />
+      <ChevronDown className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[#171717]" />
     </div>
   );
 
@@ -1114,39 +1114,39 @@ export function ShopClient() {
       <section aria-labelledby="kv-hero-title" className="relative isolate overflow-hidden">
         <span
           aria-hidden
-          className="chrome-outline pointer-events-none absolute -top-4 left-1/2 -z-10 -translate-x-1/2 select-none whitespace-nowrap font-[family-name:var(--font-serif)] text-[clamp(120px,22vw,340px)] leading-none opacity-40"
+          className="chrome-outline pointer-events-none absolute -top-4 left-1/2 -z-10 -translate-x-1/2 select-none whitespace-nowrap font-oswald text-[clamp(120px,22vw,340px)] leading-none opacity-40"
         >
           KOVENIK
         </span>
 
         <div className="mx-auto grid w-full max-w-[1440px] items-center gap-6 px-4 pb-14 pt-5 sm:px-8 lg:min-h-[560px] lg:grid-cols-[1fr_1fr] lg:gap-10 lg:px-12 lg:pb-16">
           <div>
-            <nav aria-label="Breadcrumb" className="flex flex-wrap items-center gap-2 text-[12px] text-[#BDB9B0]">
-              <Link href="/" className="transition hover:text-[#d2d2d7]">Home</Link>
+            <nav aria-label="Breadcrumb" className="flex flex-wrap items-center gap-2 text-[12px] text-[#4A4A4A]">
+              <Link href="/" className="transition hover:text-[#4A4A4A]">Home</Link>
               <ChevronRight className="h-3 w-3" aria-hidden />
-              <Link href="/shop" className="transition hover:text-[#d2d2d7]">Shop</Link>
+              <Link href="/shop" className="transition hover:text-[#4A4A4A]">Shop</Link>
               {categoryName.trim() && (
                 <>
                   <ChevronRight className="h-3 w-3" aria-hidden />
-                  <span aria-current="page" className="font-semibold text-[#d2d2d7]">{categoryName}</span>
+                  <span aria-current="page" className="font-semibold text-[#4A4A4A]">{categoryName}</span>
                 </>
               )}
             </nav>
 
-            <p className="mt-6 flex items-center gap-3 text-[10px] font-extrabold uppercase tracking-[0.28em] text-[#d2d2d7] sm:text-[11px]">
-              <span className="h-px w-8 bg-[#d2d2d7]/70" aria-hidden />
+            <p className="mt-6 flex items-center gap-3 text-[10px] font-extrabold uppercase tracking-[0.28em] text-[#4A4A4A] sm:text-[11px]">
+              <span className="h-px w-8 bg-[#171717]/70" aria-hidden />
               KÖVENIK · The category
             </p>
 
             <h1
               id="kv-hero-title"
-              className="mt-3 font-[family-name:var(--font-unbounded)] text-[clamp(40px,9.5vw,104px)] font-extrabold uppercase leading-[0.95] tracking-[-0.02em]"
+              className="mt-3 font-oswald text-[clamp(40px,9.5vw,104px)] font-extrabold uppercase leading-[0.95] tracking-[-0.02em]"
             >
-              {titleHead && <span className="block text-[#F4F2EC]">{titleHead}</span>}
+              {titleHead && <span className="block text-[#171717]">{titleHead}</span>}
               <span className="kv-chrome-text block">{titleTail}</span>
             </h1>
 
-            <p className="mt-4 max-w-[430px] text-[14px] leading-relaxed text-[#BDB9B0] sm:text-[15px]">
+            <p className="mt-4 max-w-[430px] text-[14px] leading-relaxed text-[#4A4A4A] sm:text-[15px]">
               Premium men&apos;s clothing crafted for the bold. High-density fabrics, relaxed cuts, and minimalist
               luxury aesthetics.
             </p>
@@ -1154,22 +1154,22 @@ export function ShopClient() {
             {featured && (
               <Link
                 href={productHref}
-                className="mt-6 hidden max-w-[440px] items-center gap-4 rounded-[16px] border border-white/15 bg-white/[0.05] p-3 backdrop-blur-xl shadow-[inset_0_1px_0_rgba(255,255,255,.14)] transition hover:border-[#d2d2d7]/50 lg:flex"
+                className="mt-6 hidden max-w-[440px] items-center gap-4 rounded-[16px] border border-[#171717]/15 bg-[#171717]/[0.05] p-3 backdrop-blur-xl  transition hover:border-[#171717]/50 lg:flex"
               >
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img src={featured.images[0]} alt="" className="h-14 w-14 rounded-[10px] object-cover" />
                 <span className="min-w-0">
-                  <span className="block text-[10px] font-extrabold uppercase tracking-[0.22em] text-[#d2d2d7]">
+                  <span className="block text-[10px] font-extrabold uppercase tracking-[0.22em] text-[#4A4A4A]">
                     Featured drop
                   </span>
-                  <span className="block truncate text-[14px] font-bold text-[#f4f2ec]">{featured.name}</span>
-                  <span className="mt-0.5 block text-[13px] text-[#f4f2ec]">
+                  <span className="block truncate text-[14px] font-bold text-[#171717]">{featured.name}</span>
+                  <span className="mt-0.5 block text-[13px] text-[#171717]">
                     {formatINR(featPrice || 0)}
                     {featured.mrp > featured.price && (
-                      <span className="ml-2 text-[12px] text-[#A8A49B] line-through">{formatINR(featured.mrp)}</span>
+                      <span className="ml-2 text-[12px] text-[#5C5C5C] line-through">{formatINR(featured.mrp)}</span>
                     )}
                     {featured.bestPrice > 0 && featured.bestPrice < featured.price && (
-                      <span className="ml-2 text-[12px] font-semibold text-[#E7C873]">
+                      <span className="ml-2 text-[12px] font-semibold text-[#8C6D3A]">
                         Best {formatINR(featured.bestPrice)}
                       </span>
                     )}
@@ -1192,8 +1192,8 @@ export function ShopClient() {
               ].map(([n, l]) => (
                 <div key={l}>
                   <dt className="sr-only">{l}</dt>
-                  <dd className="kv-chrome-text font-[family-name:var(--font-unbounded)] text-[26px] font-extrabold">{n}</dd>
-                  <p aria-hidden className="mt-1 text-[10px] font-semibold uppercase tracking-[0.2em] text-[#BDB9B0]">{l}</p>
+                  <dd className="kv-chrome-text font-oswald text-[26px] font-extrabold">{n}</dd>
+                  <p aria-hidden className="mt-1 text-[10px] font-semibold uppercase tracking-[0.2em] text-[#4A4A4A]">{l}</p>
                 </div>
               ))}
             </dl>
@@ -1211,13 +1211,13 @@ export function ShopClient() {
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img src={featured.images[0]} alt="" className="h-12 w-12 rounded-[8px] object-cover" />
               <span className="min-w-0 flex-1">
-                <span className="block text-[9px] font-extrabold uppercase tracking-[0.22em] text-[#d2d2d7]">
+                <span className="block text-[9px] font-extrabold uppercase tracking-[0.22em] text-[#4A4A4A]">
                   Featured drop
                 </span>
                 <span className="block truncate text-[13px] font-bold">{featured.name}</span>
-                <span className="text-[12px] text-[#BDB9B0]">{formatINR(featPrice || 0)}</span>
+                <span className="text-[12px] text-[#4A4A4A]">{formatINR(featPrice || 0)}</span>
               </span>
-              <ArrowRight className="h-4 w-4 text-[#d2d2d7]" aria-hidden />
+              <ArrowRight className="h-4 w-4 text-[#4A4A4A]" aria-hidden />
             </Link>
           )}
         </div>
@@ -1226,13 +1226,13 @@ export function ShopClient() {
       {/* ======================= CATEGORY RAIL ======================= */}
       <section aria-labelledby="kv-cat-title" className="mx-auto w-full max-w-[1440px] px-4 pb-8 sm:px-8 lg:px-12">
         <div className="mb-4 flex items-end justify-between gap-4">
-          <h2 id="kv-cat-title" className="font-[family-name:var(--font-serif)] text-[26px] font-semibold text-[#f4f2ec] sm:text-[30px]">
+          <h2 id="kv-cat-title" className="font-oswald text-[26px] font-semibold text-[#171717] sm:text-[30px]">
             Shop by category
           </h2>
-          <p className="text-[10px] font-extrabold uppercase tracking-[0.2em] text-[#BDB9B0]" aria-live="polite">
+          <p className="text-[10px] font-extrabold uppercase tracking-[0.2em] text-[#4A4A4A]" aria-live="polite">
             <span className="lg:hidden">{filtered.length} items</span>
             <span className="hidden lg:inline">
-              Showing <span className="text-[#d2d2d7]">{categoryName.trim() || 'All Products'}</span>
+              Showing <span className="text-[#4A4A4A]">{categoryName.trim() || 'All Products'}</span>
             </span>
           </p>
         </div>
@@ -1256,11 +1256,11 @@ export function ShopClient() {
                 className={cn(
                   'kv-rise flex min-h-[44px] w-[92px] shrink-0 snap-start flex-col items-center gap-1.5 rounded-[18px] border p-2.5 text-center transition',
                   active
-                    ? 'kv-chrome-bg border-[#E7C873] shadow-[0_0_0_1px_#E7C873]'
-                    : 'kv-panel text-[#f4f2ec]'
+                    ? 'kv-chrome-bg border-[#B08D57] '
+                    : 'kv-panel text-[#171717]'
                 )}
               >
-                <span className="flex h-[62px] w-[62px] items-center justify-center overflow-hidden rounded-[14px] border border-white/15 bg-[#0d0d0f] text-[18px] font-bold text-[#d2d2d7]">
+                <span className="flex h-[62px] w-[62px] items-center justify-center overflow-hidden rounded-[14px] border border-[#171717]/15 bg-[#FFFFFF] text-[18px] font-bold text-[#4A4A4A]">
                   {c.img ? (
                     // eslint-disable-next-line @next/next/no-img-element
                     <img src={c.img} alt="" className="h-full w-full object-cover" />
@@ -1273,7 +1273,7 @@ export function ShopClient() {
                   <span
                     className={cn(
                       'rounded-full px-2 text-[10px] font-extrabold',
-                      active ? 'bg-black/80 text-[#d2d2d7]' : 'bg-white/10 text-[#d2d2d7]'
+                      active ? 'bg-black/80 text-white' : 'bg-[#171717]/10 text-[#4A4A4A]'
                     )}
                   >
                     {count}
@@ -1287,18 +1287,18 @@ export function ShopClient() {
 
       {/* ============== MOBILE TOOLBAR (filter + sort + tags) ============== */}
       <div className="px-4 sm:px-8 lg:hidden">
-        <p className="mb-2 text-[11px] font-extrabold uppercase tracking-[0.16em] text-[#d2d2d7]" aria-live="polite">
+        <p className="mb-2 text-[11px] font-extrabold uppercase tracking-[0.16em] text-[#4A4A4A]" aria-live="polite">
           {filtered.length} {filtered.length === 1 ? 'Product' : 'Products'}
-          {activeFilterCount > 0 && <span className="ml-2 text-[#BDB9B0]">{activeFilterCount} filters active</span>}
+          {activeFilterCount > 0 && <span className="ml-2 text-[#4A4A4A]">{activeFilterCount} filters active</span>}
         </p>
         <div className="flex items-center gap-2">
           <Sheet open={mobileFiltersOpen} onOpenChange={setMobileFiltersOpen}>
             <SheetTrigger asChild>
               <button
                 type="button"
-                className="kv-panel flex h-12 flex-1 items-center justify-center gap-2 rounded-[14px] text-[13px] font-bold text-[#f4f2ec]"
+                className="kv-panel flex h-12 flex-1 items-center justify-center gap-2 rounded-[14px] text-[13px] font-bold text-[#171717]"
               >
-                <SlidersHorizontal className="h-4 w-4 text-[#d2d2d7]" />
+                <SlidersHorizontal className="h-4 w-4 text-[#4A4A4A]" />
                 Filter
                 {activeFilterCount > 0 && (
                   <span className="kv-chrome-bg flex h-5 min-w-5 items-center justify-center rounded-full px-1 text-[11px] font-extrabold">
@@ -1309,12 +1309,12 @@ export function ShopClient() {
             </SheetTrigger>
             <SheetContent
               side="bottom"
-              className="kv-shop flex max-h-[calc(100dvh-200px)] flex-col gap-0 rounded-t-[26px] border border-white/15 p-0 text-[#f4f2ec] backdrop-blur-2xl max-md:bottom-[88px]"
-              style={{ background: 'linear-gradient(180deg, rgba(34,34,38,.94), rgba(14,14,16,.96))' }}
+              className="kv-shop flex max-h-[calc(100dvh-200px)] flex-col gap-0 rounded-t-[26px] border border-[#171717]/15 p-0 text-[#171717] backdrop-blur-2xl max-md:bottom-[88px]"
+              style={{ background: '#FFFFFF' }}
             >
-              <SheetHeader className="shrink-0 border-b border-white/10 px-5 py-3 text-left">
-                <SheetTitle className="flex items-center gap-2 text-[12px] font-extrabold uppercase tracking-[0.2em] text-[#f4f2ec]">
-                  <SlidersHorizontal className="h-4 w-4 text-[#d2d2d7]" />
+              <SheetHeader className="shrink-0 border-b border-[#171717]/10 px-5 py-3 text-left">
+                <SheetTitle className="flex items-center gap-2 text-[12px] font-extrabold uppercase tracking-[0.2em] text-[#171717]">
+                  <SlidersHorizontal className="h-4 w-4 text-[#4A4A4A]" />
                   Filters
                 </SheetTitle>
               </SheetHeader>
@@ -1333,7 +1333,7 @@ export function ShopClient() {
                         style={{ ['--i' as string]: i }}
                         className={cn(
                           'kv-rise inline-flex min-h-[44px] shrink-0 items-center rounded-full border px-4 text-[12px] font-bold',
-                          active ? 'kv-chrome-bg border-[#E7C873]' : 'border-white/15 text-[#f4f2ec]'
+                          active ? 'kv-chrome-bg border-[#B08D57]' : 'border-[#171717]/15 text-[#171717]'
                         )}
                       >
                         {c.name}
@@ -1349,12 +1349,12 @@ export function ShopClient() {
                 {availBlock}
               </div>
 
-              <div className="grid shrink-0 grid-cols-[1fr_1.6fr] gap-3 border-t border-white/10 px-5 py-3">
+              <div className="grid shrink-0 grid-cols-[1fr_1.6fr] gap-3 border-t border-[#171717]/10 px-5 py-3">
                 <button
                   type="button"
                   onClick={clearAll}
                   disabled={activeFilterCount === 0}
-                  className="flex h-12 items-center justify-center gap-1.5 rounded-full border border-white/20 text-[11px] font-extrabold uppercase tracking-[0.16em] disabled:opacity-40"
+                  className="flex h-12 items-center justify-center gap-1.5 rounded-full border border-[#171717]/20 text-[11px] font-extrabold uppercase tracking-[0.16em] disabled:opacity-40"
                 >
                   <RotateCcw className="h-3.5 w-3.5" /> Reset
                 </button>
@@ -1374,10 +1374,10 @@ export function ShopClient() {
               aria-label="Sort products"
               value={sort}
               onChange={(e) => setSort(e.target.value)}
-              className="kv-panel h-12 w-full appearance-none rounded-[14px] pl-4 pr-9 text-[13px] font-bold text-[#f4f2ec] outline-none"
+              className="kv-panel h-12 w-full appearance-none rounded-[14px] pl-4 pr-9 text-[13px] font-bold text-[#171717] outline-none"
             >
               {sortOptions.map((o) => (
-                <option key={o.value} value={o.value} className="bg-[#161618]">
+                <option key={o.value} value={o.value} className="bg-[#F4F0E8]">
                   {o.label}
                 </option>
               ))}
@@ -1397,13 +1397,13 @@ export function ShopClient() {
                 className={chipClass}
               >
                 {chip.label}
-                <X className="h-3.5 w-3.5 text-[#BDB9B0]" />
+                <X className="h-3.5 w-3.5 text-[#4A4A4A]" />
               </button>
             ))}
             <button
               type="button"
               onClick={clearAll}
-              className="min-h-[36px] shrink-0 px-2 text-[12px] font-bold text-[#d2d2d7]"
+              className="min-h-[36px] shrink-0 px-2 text-[12px] font-bold text-[#4A4A4A]"
             >
               Clear all
             </button>
@@ -1419,8 +1419,8 @@ export function ShopClient() {
           className="kv-panel hidden w-[250px] shrink-0 rounded-[20px] px-4 pb-3 lg:sticky lg:top-[150px] lg:block xl:w-[270px]"
         >
           <div className="flex items-center justify-between pb-2 pt-4">
-            <h2 className="flex items-center gap-2 text-[14px] font-extrabold text-[#f4f2ec]">
-              <SlidersHorizontal className="h-4 w-4 text-[#d2d2d7]" />
+            <h2 className="flex items-center gap-2 text-[14px] font-extrabold text-[#171717]">
+              <SlidersHorizontal className="h-4 w-4 text-[#4A4A4A]" />
               Filters
               {activeFilterCount > 0 && (
                 <span className="kv-chrome-bg flex h-5 min-w-5 items-center justify-center rounded-full px-1 text-[11px] font-extrabold">
@@ -1432,7 +1432,7 @@ export function ShopClient() {
               type="button"
               onClick={clearAll}
               disabled={activeFilterCount === 0}
-              className="min-h-[44px] px-1 text-[12px] font-semibold text-[#BDB9B0] transition hover:text-[#d2d2d7] disabled:opacity-50"
+              className="min-h-[44px] px-1 text-[12px] font-semibold text-[#4A4A4A] transition hover:text-[#4A4A4A] disabled:opacity-50"
             >
               Clear all
             </button>
@@ -1449,7 +1449,7 @@ export function ShopClient() {
         {/* Products */}
         <main className="min-w-0 flex-1" id="kv-products">
           <div className="mb-4 hidden flex-wrap items-center gap-3 lg:flex">
-            <span className="mr-1 text-[13px] font-extrabold text-[#f4f2ec]" aria-live="polite">
+            <span className="mr-1 text-[13px] font-extrabold text-[#171717]" aria-live="polite">
               {filtered.length} {filtered.length === 1 ? 'Product' : 'Products'}
             </span>
             {chips.map((chip) => (
@@ -1461,7 +1461,7 @@ export function ShopClient() {
                 className={chipClass}
               >
                 {chip.label}
-                <X className="h-3.5 w-3.5 text-[#BDB9B0]" />
+                <X className="h-3.5 w-3.5 text-[#4A4A4A]" />
               </button>
             ))}
             <div className="ml-auto flex items-center gap-2">
@@ -1475,8 +1475,8 @@ export function ShopClient() {
                   className={cn(
                     'inline-flex h-11 w-11 items-center justify-center rounded-[12px] border transition',
                     viewMode === m
-                      ? 'border-[#d2d2d7] bg-[#d2d2d7]/10 text-[#d2d2d7]'
-                      : 'border-white/10 text-[#f4f2ec] hover:border-[#d2d2d7]'
+                      ? 'border-[#222222] bg-[#171717]/10 text-[#4A4A4A]'
+                      : 'border-[#171717]/10 text-[#171717] hover:border-[#222222]'
                   )}
                 >
                   {m === 'grid' ? <LayoutGrid className="h-4 w-4" /> : <List className="h-4 w-4" />}
@@ -1488,9 +1488,9 @@ export function ShopClient() {
 
           {!isLoading && filtered.length === 0 ? (
             <div className="kv-panel flex min-h-[380px] flex-col items-center justify-center rounded-[20px] px-6 text-center">
-              <Grid className="mb-4 h-9 w-9 stroke-[1] text-[#d2d2d7]" />
-              <p className="font-[family-name:var(--font-serif)] text-2xl text-[#f4f2ec]">No products found</p>
-              <p className="mb-6 mt-2 max-w-xs text-sm text-[#BDB9B0]">
+              <Grid className="mb-4 h-9 w-9 stroke-[1] text-[#4A4A4A]" />
+              <p className="font-oswald text-2xl text-[#171717]">No products found</p>
+              <p className="mb-6 mt-2 max-w-xs text-sm text-[#4A4A4A]">
                 We couldn&apos;t find any items matching your selected criteria.
               </p>
               <button type="button" onClick={clearAll} className={chromeBtn}>
@@ -1529,20 +1529,20 @@ export function ShopClient() {
           {/* Progress + pagination */}
           {filtered.length > 0 && (
             <div className="mt-10 flex flex-col items-center gap-4">
-              <div className="h-[3px] w-32 overflow-hidden rounded-full bg-white/10" aria-hidden>
+              <div className="h-[3px] w-32 overflow-hidden rounded-full bg-[#171717]/10" aria-hidden>
                 <div
                   className="h-full rounded-full transition-[width] duration-500 [transition-timing-function:var(--kv-ease)]"
                   style={{ width: `${progress * 100}%`, background: 'var(--kv-chrome-metal)' }}
                 />
               </div>
-              <p className="text-[12px] text-[#BDB9B0]">
+              <p className="text-[12px] text-[#4A4A4A]">
                 {isDesktop ? (
                   <>
-                    Showing <b className="text-[#f4f2ec]">{rangeStart}–{rangeEnd}</b> of {filtered.length}
+                    Showing <b className="text-[#171717]">{rangeStart}–{rangeEnd}</b> of {filtered.length}
                   </>
                 ) : (
                   <>
-                    Showing <b className="text-[#f4f2ec]">{visible.length}</b> of {filtered.length}
+                    Showing <b className="text-[#171717]">{visible.length}</b> of {filtered.length}
                   </>
                 )}
               </p>
@@ -1553,7 +1553,7 @@ export function ShopClient() {
                     type="button"
                     onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
                     disabled={currentPage === 1}
-                    className="h-11 rounded-[12px] border border-white/10 px-5 text-[12px] font-bold text-[#f4f2ec] transition hover:border-[#d2d2d7] disabled:opacity-40"
+                    className="h-11 rounded-[12px] border border-[#171717]/10 px-5 text-[12px] font-bold text-[#171717] transition hover:border-[#222222] disabled:opacity-40"
                   >
                     Prev
                   </button>
@@ -1567,8 +1567,8 @@ export function ShopClient() {
                       className={cn(
                         'h-11 w-11 rounded-[12px] border text-[13px] font-extrabold transition',
                         currentPage === i + 1
-                          ? 'kv-chrome-bg border-[#f6f6f8]/60'
-                          : 'border-white/10 text-[#f4f2ec] hover:border-[#d2d2d7]'
+                          ? 'kv-chrome-bg border-[#171717]/60'
+                          : 'border-[#171717]/10 text-[#171717] hover:border-[#222222]'
                       )}
                     >
                       {i + 1}
@@ -1578,7 +1578,7 @@ export function ShopClient() {
                     type="button"
                     onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
                     disabled={currentPage === totalPages}
-                    className="h-11 rounded-[12px] border border-white/10 px-5 text-[12px] font-bold text-[#f4f2ec] transition hover:border-[#d2d2d7] disabled:opacity-40"
+                    className="h-11 rounded-[12px] border border-[#171717]/10 px-5 text-[12px] font-bold text-[#171717] transition hover:border-[#222222] disabled:opacity-40"
                   >
                     Next
                   </button>
@@ -1589,7 +1589,7 @@ export function ShopClient() {
                 <button
                   type="button"
                   onClick={() => setMobileCount((c) => c + PER_PAGE)}
-                  className="kv-panel h-[52px] w-full rounded-full border-[#d2d2d7]/50 text-[12px] font-extrabold uppercase tracking-[0.22em] text-[#d2d2d7] transition hover:bg-[#d2d2d7]/10"
+                  className="kv-panel h-[52px] w-full rounded-full border-[#171717]/50 text-[12px] font-extrabold uppercase tracking-[0.22em] text-[#4A4A4A] transition hover:bg-[#171717]/10"
                 >
                   Load more
                 </button>
@@ -1599,7 +1599,7 @@ export function ShopClient() {
         </main>
       </div>
 
-      <MobileShopBar variant="silver" />
+      <MobileShopBar />
     </div>
   );
 }

@@ -32,13 +32,13 @@ import {
 import { formatINR } from '@/lib/format';
 import type { CartItem } from '@/types';
 
-const CARD = 'border border-[#2A2A2A] bg-[#111111]';
+const CARD = 'border border-[#E2E0DB] bg-[#F4F0E8]';
 
 const silverLink =
-  'text-[#C0C0C0] underline underline-offset-2 transition-colors hover:text-white';
+  'text-[#4A4A4A] underline underline-offset-2 transition-colors hover:text-[#171717]';
 
 const focusRing =
-  'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#C0C0C0]/70 focus-visible:ring-offset-2 focus-visible:ring-offset-[#0A0A0A]';
+  'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#171717]/70 focus-visible:ring-offset-2 focus-visible:ring-offset-[#0A0A0A]';
 
 const lineKey = (item: CartItem) =>
   `${item.productId}-${item.variantId}-${item.size}-${item.color}`;
@@ -49,7 +49,7 @@ const stockKey = (item: CartItem) =>
 
 function Eyebrow({ children }: { children: React.ReactNode }) {
   return (
-    <p className="text-[10px] font-semibold uppercase tracking-[0.24em] text-[#C0C0C0]">
+    <p className="text-[10px] font-semibold uppercase tracking-[0.24em] text-[#4A4A4A]">
       {children}
     </p>
   );
@@ -63,31 +63,31 @@ function ShippingProgress({ subtotal }: { subtotal: number }) {
   return (
     <div className={`px-4 py-4 sm:px-5 ${CARD}`}>
       <div className="flex items-center gap-3">
-        <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-[#3A3A3A] text-[#C0C0C0]">
+        <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-[#E2E0DB] text-[#4A4A4A]">
           {unlocked ? (
             <Check className="h-4 w-4" strokeWidth={2} />
           ) : (
             <Truck className="h-4 w-4" strokeWidth={1.5} />
           )}
         </span>
-        <p className="min-w-0 text-sm text-[#C0C0C0]">
+        <p className="min-w-0 text-sm text-[#4A4A4A]">
           {unlocked ? (
             <>
-              <span className="font-semibold text-white">Free shipping unlocked.</span>{' '}
+              <span className="font-semibold text-[#171717]">Free shipping unlocked.</span>{' '}
               Your order ships on us.
             </>
           ) : (
             <>
               Add{' '}
-              <span className="font-semibold text-white">{formatINR(remaining)}</span>{' '}
+              <span className="font-semibold text-[#171717]">{formatINR(remaining)}</span>{' '}
               more to unlock{' '}
-              <span className="font-semibold text-white">free shipping</span>
+              <span className="font-semibold text-[#171717]">free shipping</span>
             </>
           )}
         </p>
       </div>
       <div
-        className="mt-3 h-1 overflow-hidden bg-[#2A2A2A]"
+        className="mt-3 h-1 overflow-hidden bg-[#EAE5DA]"
         role="progressbar"
         aria-label="Progress to free shipping"
         aria-valuemin={0}
@@ -95,7 +95,7 @@ function ShippingProgress({ subtotal }: { subtotal: number }) {
         aria-valuenow={Math.round(progress)}
       >
         <div
-          className="h-full bg-[#C0C0C0] transition-[width] duration-500 ease-out motion-reduce:transition-none"
+          className="h-full bg-[#222222] transition-[width] duration-500 ease-out motion-reduce:transition-none"
           style={{ width: `${progress}%` }}
         />
       </div>
@@ -118,7 +118,7 @@ function CartLine({ item, busy, stockLimit, onQuantity, onRemove }: LineProps) {
   const href = item.slug ? `/product/${item.slug}` : undefined;
 
   const imageBox = (
-    <div className="aspect-square w-[96px] overflow-hidden border border-[#2A2A2A] bg-black sm:w-[140px]">
+    <div className="aspect-square w-[96px] overflow-hidden border border-[#E2E0DB] bg-[#FFFFFF] sm:w-[140px]">
       {item.image ? (
         // eslint-disable-next-line @next/next/no-img-element
         <img
@@ -131,9 +131,9 @@ function CartLine({ item, busy, stockLimit, onQuantity, onRemove }: LineProps) {
   );
 
   const stepper =
-    'flex h-10 w-10 items-center justify-center bg-[#1A1A1A] text-[#C0C0C0] transition-colors hover:text-white disabled:cursor-not-allowed disabled:opacity-35 disabled:hover:text-[#C0C0C0]';
+    'flex h-10 w-10 items-center justify-center bg-[#F4F0E8] text-[#4A4A4A] transition-colors hover:text-[#171717] disabled:cursor-not-allowed disabled:opacity-35 disabled:hover:text-[#4A4A4A]';
 
-  const actionBtn = `flex flex-1 flex-col items-center justify-center gap-1.5 px-4 py-3 text-[11px] text-[#C0C0C0] transition-colors hover:bg-[#1A1A1A] hover:text-white disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:bg-transparent disabled:hover:text-[#C0C0C0] ${focusRing}`;
+  const actionBtn = `flex flex-1 flex-col items-center justify-center gap-1.5 px-4 py-3 text-[11px] text-[#4A4A4A] transition-colors hover:bg-[#F4F0E8] hover:text-[#171717] disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:bg-transparent disabled:hover:text-[#4A4A4A] ${focusRing}`;
 
   return (
     <motion.li
@@ -142,23 +142,23 @@ function CartLine({ item, busy, stockLimit, onQuantity, onRemove }: LineProps) {
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, height: 0, marginBottom: 0 }}
       transition={{ duration: 0.22 }}
-      className="border-b border-[#2A2A2A]"
+      className="border-b border-[#E2E0DB]"
     >
       <div className="flex flex-col gap-4 py-5 sm:flex-row sm:items-start sm:justify-between">
         <div className="min-w-0 flex-1">
           {href ? (
             <Link
               href={href}
-              className={`line-clamp-2 text-base font-semibold leading-snug text-white underline-offset-2 hover:underline sm:text-lg ${focusRing}`}
+              className={`line-clamp-2 text-base font-semibold leading-snug text-[#171717] underline-offset-2 hover:underline sm:text-lg ${focusRing}`}
             >
               {item.name}
             </Link>
           ) : (
-            <span className="line-clamp-2 text-base font-semibold text-white sm:text-lg">
+            <span className="line-clamp-2 text-base font-semibold text-[#171717] sm:text-lg">
               {item.name}
             </span>
           )}
-          <p className="mt-1 text-xs text-[#C0C0C0]">
+          <p className="mt-1 text-xs text-[#4A4A4A]">
             Size: {item.size} · {item.color}
           </p>
         </div>
@@ -166,7 +166,7 @@ function CartLine({ item, busy, stockLimit, onQuantity, onRemove }: LineProps) {
         <div className="flex items-center justify-between gap-6 sm:justify-end sm:gap-8">
           <div className="flex flex-col items-start gap-1.5">
             <div
-              className="flex items-center border border-[#3A3A3A]"
+              className="flex items-center border border-[#E2E0DB]"
               role="group"
               aria-label={`Quantity for ${item.name}`}
             >
@@ -180,11 +180,11 @@ function CartLine({ item, busy, stockLimit, onQuantity, onRemove }: LineProps) {
                 <Minus className="h-4 w-4" />
               </button>
               <span
-                className="flex h-10 w-12 items-center justify-center border-x border-[#3A3A3A] bg-[#0A0A0A] text-sm font-semibold tabular-nums text-white"
+                className="flex h-10 w-12 items-center justify-center border-x border-[#E2E0DB] bg-[#FFFFFF] text-sm font-semibold tabular-nums text-[#171717]"
                 aria-live="polite"
               >
                 {busy ? (
-                  <Loader2 className="h-4 w-4 animate-spin text-[#C0C0C0]" />
+                  <Loader2 className="h-4 w-4 animate-spin text-[#4A4A4A]" />
                 ) : (
                   item.quantity
                 )}
@@ -202,7 +202,7 @@ function CartLine({ item, busy, stockLimit, onQuantity, onRemove }: LineProps) {
             {atLimit && (
               <p
                 role="alert"
-                className="text-[10px] font-bold uppercase tracking-[0.16em] text-white"
+                className="text-[10px] font-bold uppercase tracking-[0.16em] text-[#171717]"
               >
                 {stockLimit! > 0 ? `Only ${stockLimit} in stock` : 'Out of stock'}
               </p>
@@ -210,21 +210,21 @@ function CartLine({ item, busy, stockLimit, onQuantity, onRemove }: LineProps) {
           </div>
 
           <div className="text-right">
-            <p className="text-sm tabular-nums text-[#C0C0C0]">{formatINR(item.price)}</p>
+            <p className="text-sm tabular-nums text-[#4A4A4A]">{formatINR(item.price)}</p>
             {off > 0 && (
-              <p className="text-[11px] tabular-nums text-[#C0C0C0]/70">
+              <p className="text-[11px] tabular-nums text-[#4A4A4A]/70">
                 <span className="line-through">{formatINR(item.mrp)}</span> · {off}% off
               </p>
             )}
-            <p className="mt-1 text-lg font-bold tabular-nums text-white sm:text-xl">
+            <p className="mt-1 text-lg font-bold tabular-nums text-[#171717] sm:text-xl">
               {formatINR(item.price * item.quantity)}
             </p>
           </div>
         </div>
       </div>
 
-      <div className="mb-5 flex border border-[#2A2A2A]">
-        <div className="shrink-0 border-r border-[#2A2A2A] p-3">
+      <div className="mb-5 flex border border-[#E2E0DB]">
+        <div className="shrink-0 border-r border-[#E2E0DB] p-3">
           {href ? (
             <Link href={href} className={`block ${focusRing}`} aria-label={item.name}>
               {imageBox}
@@ -233,10 +233,10 @@ function CartLine({ item, busy, stockLimit, onQuantity, onRemove }: LineProps) {
             imageBox
           )}
         </div>
-        <div className="flex min-w-0 flex-1 flex-col justify-center gap-1 px-4 py-3 text-xs text-[#C0C0C0] sm:text-sm">
-          <p className="flex items-center gap-2 text-white">
-            <span className="inline-flex h-4 w-4 items-center justify-center rounded-full border border-[#C0C0C0]">
-              <span className="h-2 w-2 rounded-full bg-[#C0C0C0]" />
+        <div className="flex min-w-0 flex-1 flex-col justify-center gap-1 px-4 py-3 text-xs text-[#4A4A4A] sm:text-sm">
+          <p className="flex items-center gap-2 text-[#171717]">
+            <span className="inline-flex h-4 w-4 items-center justify-center rounded-full border border-[#222222]">
+              <span className="h-2 w-2 rounded-full bg-[#222222]" />
             </span>
             Ship Only
           </p>
@@ -247,7 +247,7 @@ function CartLine({ item, busy, stockLimit, onQuantity, onRemove }: LineProps) {
             </p>
           )}
         </div>
-        <div className="flex w-[96px] shrink-0 flex-col divide-y divide-[#2A2A2A] border-l border-[#2A2A2A] sm:w-[128px]">
+        <div className="flex w-[96px] shrink-0 flex-col divide-y divide-[#E2E0DB] border-l border-[#E2E0DB] sm:w-[128px]">
           <button
             type="button"
             onClick={() => onRemove(item)}
@@ -292,23 +292,23 @@ function CouponPanel({
   };
 
   return (
-    <div className="border-t border-[#2A2A2A] pt-5">
-      <p className="text-sm font-semibold text-white">Apply a Promotion Code</p>
-      <p className="mb-3 mt-0.5 text-xs text-[#C0C0C0]/70">
+    <div className="border-t border-[#E2E0DB] pt-5">
+      <p className="text-sm font-semibold text-[#171717]">Apply a Promotion Code</p>
+      <p className="mb-3 mt-0.5 text-xs text-[#4A4A4A]/70">
         Remove any spaces or dashes before hitting apply.
       </p>
 
       {couponCode && (
-        <div className="mb-2 flex items-center justify-between gap-2 border border-[#3A3A3A] bg-[#0A0A0A] px-3 py-2">
+        <div className="mb-2 flex items-center justify-between gap-2 border border-[#E2E0DB] bg-[#FFFFFF] px-3 py-2">
           <div className="flex min-w-0 items-center gap-2.5">
-            <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-[#C0C0C0] text-[#0A0A0A]">
+            <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-[#222222] text-[#FFFFFF]">
               <Check className="h-3.5 w-3.5" strokeWidth={3} />
             </span>
             <div className="min-w-0">
-              <span className="block truncate text-sm font-semibold uppercase tracking-[0.12em] text-white">
+              <span className="block truncate text-sm font-semibold uppercase tracking-[0.12em] text-[#171717]">
                 {couponCode}
               </span>
-              <span className="block text-[11px] text-[#C0C0C0]">
+              <span className="block text-[11px] text-[#4A4A4A]">
                 {minOrderShortfall > 0
                   ? `Add ${formatINR(minOrderShortfall)} more to use this coupon`
                   : discount > 0
@@ -321,7 +321,7 @@ function CouponPanel({
             type="button"
             onClick={remove}
             aria-label={`Remove coupon ${couponCode}`}
-            className={`flex h-11 w-11 shrink-0 items-center justify-center text-[#C0C0C0] transition-colors hover:text-white ${focusRing}`}
+            className={`flex h-11 w-11 shrink-0 items-center justify-center text-[#4A4A4A] transition-colors hover:text-[#171717] ${focusRing}`}
           >
             <X className="h-4 w-4" />
           </button>
@@ -347,12 +347,12 @@ function CouponPanel({
             autoCapitalize="characters"
             autoComplete="off"
             disabled={applying}
-            className="h-11 min-w-0 flex-1 border border-[#3A3A3A] bg-[#0A0A0A] px-3 text-sm uppercase text-white placeholder:normal-case placeholder:text-[#C0C0C0]/50 focus:border-[#C0C0C0] focus:outline-none focus:ring-1 focus:ring-[#C0C0C0]/60 disabled:opacity-60"
+            className="h-11 min-w-0 flex-1 border border-[#E2E0DB] bg-[#FFFFFF] px-3 text-sm uppercase text-[#171717] placeholder:normal-case placeholder:text-[#4A4A4A]/50 focus:border-[#222222] focus:outline-none focus:ring-1 focus:ring-[#171717]/60 disabled:opacity-60"
           />
           <button
             type="submit"
             disabled={applying || !input.trim()}
-            className={`flex h-11 min-w-[88px] shrink-0 items-center justify-center border border-[#C0C0C0] px-4 text-xs font-bold uppercase tracking-[0.14em] text-white transition-colors hover:bg-[#C0C0C0] hover:text-[#0A0A0A] disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:bg-transparent disabled:hover:text-white ${focusRing}`}
+            className={`flex h-11 min-w-[88px] shrink-0 items-center justify-center border border-[#222222] px-4 text-xs font-bold uppercase tracking-[0.14em] text-[#171717] transition-colors hover:bg-[#222222] hover:text-[#FFFFFF] disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:bg-transparent disabled:hover:text-[#171717] ${focusRing}`}
           >
             {applying ? <Loader2 className="h-4 w-4 animate-spin" /> : 'Apply'}
           </button>
@@ -361,14 +361,14 @@ function CouponPanel({
         <button
           type="button"
           onClick={() => window.dispatchEvent(new Event('ardenby-open-auth'))}
-          className={`flex min-h-[44px] w-full items-center justify-center border border-[#3A3A3A] px-4 text-xs font-semibold uppercase tracking-[0.16em] text-[#C0C0C0] transition-colors hover:border-[#C0C0C0] hover:text-white ${focusRing}`}
+          className={`flex min-h-[44px] w-full items-center justify-center border border-[#E2E0DB] px-4 text-xs font-semibold uppercase tracking-[0.16em] text-[#4A4A4A] transition-colors hover:border-[#222222] hover:text-[#171717] ${focusRing}`}
         >
           Sign in to use a coupon
         </button>
       )}
 
       {error && (
-        <p role="alert" className="mt-2 text-xs leading-relaxed text-white">
+        <p role="alert" className="mt-2 text-xs leading-relaxed text-[#171717]">
           {error}
         </p>
       )}
@@ -392,7 +392,7 @@ function Recommendations({ exclude }: { exclude: Set<string> }) {
   return (
     <section aria-labelledby="also-like" className="mt-12 lg:mt-16">
       <Eyebrow>Complete the look</Eyebrow>
-      <h2 id="also-like" className="mt-2 font-bodoni text-2xl text-white sm:text-3xl">
+      <h2 id="also-like" className="mt-2 font-oswald text-2xl text-[#171717] sm:text-3xl">
         You may also like
       </h2>
       <ul className="mt-6 grid grid-cols-2 gap-3 sm:gap-5 lg:grid-cols-4">
@@ -400,9 +400,9 @@ function Recommendations({ exclude }: { exclude: Set<string> }) {
           <li key={p.id}>
             <Link
               href={`/product/${p.slug}`}
-              className={`group block overflow-hidden ${CARD} transition-colors hover:border-[#3A3A3A] ${focusRing}`}
+              className={`group block overflow-hidden ${CARD} transition-colors hover:border-[#E2E0DB] ${focusRing}`}
             >
-              <div className="aspect-[4/5] overflow-hidden bg-black">
+              <div className="aspect-[4/5] overflow-hidden bg-[#FFFFFF]">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                   src={p.images[0]}
@@ -412,11 +412,11 @@ function Recommendations({ exclude }: { exclude: Set<string> }) {
                 />
               </div>
               <div className="p-3 sm:p-4">
-                <p className="line-clamp-1 text-sm font-medium text-white">{p.name}</p>
+                <p className="line-clamp-1 text-sm font-medium text-[#171717]">{p.name}</p>
                 <p className="mt-1 flex items-center gap-2 text-sm tabular-nums">
-                  <span className="font-semibold text-white">{formatINR(p.price)}</span>
+                  <span className="font-semibold text-[#171717]">{formatINR(p.price)}</span>
                   {p.mrp > p.price && (
-                    <span className="text-xs text-[#C0C0C0]/70 line-through">
+                    <span className="text-xs text-[#4A4A4A]/70 line-through">
                       {formatINR(p.mrp)}
                     </span>
                   )}
@@ -519,10 +519,10 @@ export default function CartPage() {
     [safeItems]
   );
 
-  const checkoutClass = `group flex min-h-[52px] w-full items-center justify-center gap-2 bg-white text-xs font-bold uppercase tracking-[0.18em] text-black transition-colors duration-200 hover:bg-[#C0C0C0] active:scale-[0.99] sm:text-sm ${focusRing}`;
+  const checkoutClass = `group flex min-h-[52px] w-full items-center justify-center gap-2 bg-[#222222] text-xs font-bold uppercase tracking-[0.18em] text-[#FFFFFF] transition-colors duration-200 hover:bg-[#222222] active:scale-[0.99] sm:text-sm ${focusRing}`;
 
   return (
-    <div className="min-h-screen bg-[#0A0A0A] py-8 text-[#C0C0C0] lg:py-12">
+    <div className="min-h-screen bg-[#FFFFFF] py-8 text-[#4A4A4A] lg:py-12">
       <div
         className={`mx-auto max-w-[1280px] px-4 sm:px-8 lg:px-12 ${
           safeItems.length > 0 ? 'pb-[calc(6.5rem+env(safe-area-inset-bottom))] lg:pb-0' : ''
@@ -530,11 +530,11 @@ export default function CartPage() {
       >
         {!mounted ? (
           <div className="flex min-h-[40vh] items-center justify-center" aria-busy="true">
-            <Loader2 className="h-6 w-6 animate-spin text-[#C0C0C0]" />
+            <Loader2 className="h-6 w-6 animate-spin text-[#4A4A4A]" />
           </div>
         ) : safeItems.length === 0 ? (
           <>
-            <h1 className="mb-8 border-b border-[#2A2A2A] pb-5 font-bodoni text-3xl text-white sm:text-4xl">
+            <h1 className="mb-8 border-b border-[#E2E0DB] pb-5 font-oswald text-3xl text-[#171717] sm:text-4xl">
               Cart
             </h1>
             <motion.div
@@ -542,18 +542,18 @@ export default function CartPage() {
               animate={{ opacity: 1 }}
               className={`flex flex-col items-center px-6 py-20 text-center sm:py-24 ${CARD}`}
             >
-              <div className="mb-6 flex h-16 w-16 items-center justify-center rounded-full border border-[#3A3A3A]">
-                <ShoppingBag className="h-7 w-7 text-[#C0C0C0]" strokeWidth={1.5} />
+              <div className="mb-6 flex h-16 w-16 items-center justify-center rounded-full border border-[#E2E0DB]">
+                <ShoppingBag className="h-7 w-7 text-[#4A4A4A]" strokeWidth={1.5} />
               </div>
-              <h2 className="mb-2 font-bodoni text-2xl text-white sm:text-3xl">
+              <h2 className="mb-2 font-oswald text-2xl text-[#171717] sm:text-3xl">
                 Your shopping bag is empty
               </h2>
-              <p className="mb-8 max-w-sm text-sm text-[#C0C0C0]">
+              <p className="mb-8 max-w-sm text-sm text-[#4A4A4A]">
                 Your next statement piece is waiting.
               </p>
               <Link
                 href="/shop"
-                className={`inline-flex min-h-[48px] items-center gap-2 bg-white px-8 text-xs font-bold uppercase tracking-[0.18em] text-black transition-colors hover:bg-[#C0C0C0] ${focusRing}`}
+                className={`inline-flex min-h-[48px] items-center gap-2 bg-[#222222] px-8 text-xs font-bold uppercase tracking-[0.18em] text-[#FFFFFF] transition-colors hover:bg-[#222222] ${focusRing}`}
               >
                 Explore Collections
                 <ArrowRight className="h-4 w-4" />
@@ -565,9 +565,9 @@ export default function CartPage() {
             <div className="grid items-start gap-8 lg:grid-cols-[minmax(0,1.7fr)_minmax(320px,1fr)] lg:gap-10">
               <div className="min-w-0">
                 <div className="mb-6 flex flex-wrap items-end justify-between gap-x-4 gap-y-2">
-                  <h1 className="text-3xl font-light text-white sm:text-4xl">
+                  <h1 className="text-3xl font-light text-[#171717] sm:text-4xl">
                     Cart:{' '}
-                    <span className="text-[#C0C0C0]">
+                    <span className="text-[#4A4A4A]">
                       ({itemCount} {itemCount === 1 ? 'item' : 'items'})
                     </span>
                   </h1>
@@ -584,7 +584,7 @@ export default function CartPage() {
                   <ShippingProgress subtotal={rawSubtotal} />
                 </div>
 
-                <ul aria-label="Cart items" className="border-t border-[#2A2A2A]">
+                <ul aria-label="Cart items" className="border-t border-[#E2E0DB]">
                   <AnimatePresence initial={false}>
                     {safeItems.map((item) => (
                       <CartLine
@@ -601,7 +601,7 @@ export default function CartPage() {
 
                 <Recommendations exclude={inBag} />
 
-                <ul className="mt-12 grid grid-cols-3 gap-2 border-t border-[#2A2A2A] pt-6 text-center">
+                <ul className="mt-12 grid grid-cols-3 gap-2 border-t border-[#E2E0DB] pt-6 text-center">
                   {[
                     { Icon: ShieldCheck, label: 'Secure checkout' },
                     {
@@ -611,8 +611,8 @@ export default function CartPage() {
                     { Icon: RotateCcw, label: '7-day returns' },
                   ].map(({ Icon, label }) => (
                     <li key={label} className="flex flex-col items-center gap-2 px-1">
-                      <Icon className="h-5 w-5 text-[#C0C0C0]" strokeWidth={1.25} />
-                      <span className="text-[10px] uppercase leading-snug tracking-[0.14em] text-[#C0C0C0]">
+                      <Icon className="h-5 w-5 text-[#4A4A4A]" strokeWidth={1.25} />
+                      <span className="text-[10px] uppercase leading-snug tracking-[0.14em] text-[#4A4A4A]">
                         {label}
                       </span>
                     </li>
@@ -622,50 +622,50 @@ export default function CartPage() {
 
               <aside
                 aria-label="Order summary"
-                className={`p-5 sm:p-6 lg:sticky lg:top-28 ${CARD} border-[#3A3A3A]`}
+                className={`p-5 sm:p-6 lg:sticky lg:top-28 ${CARD} border-[#E2E0DB]`}
               >
-                <h2 className="flex items-center gap-2 text-lg text-white">
-                  <Lock className="h-4 w-4 text-[#C0C0C0]" strokeWidth={1.5} />
+                <h2 className="flex items-center gap-2 text-lg text-[#171717]">
+                  <Lock className="h-4 w-4 text-[#4A4A4A]" strokeWidth={1.5} />
                   Cart Summary
                 </h2>
 
                 <dl className="mt-5 space-y-3 text-sm">
                   <div className="flex justify-between">
-                    <dt className="text-[#C0C0C0]">Subtotal</dt>
-                    <dd className="font-semibold tabular-nums text-white">{formatINR(subtotal)}</dd>
+                    <dt className="text-[#4A4A4A]">Subtotal</dt>
+                    <dd className="font-semibold tabular-nums text-[#171717]">{formatINR(subtotal)}</dd>
                   </div>
                   <div className="flex justify-between">
-                    <dt className="text-[#C0C0C0]">Shipping</dt>
-                    <dd className="tabular-nums text-white">
+                    <dt className="text-[#4A4A4A]">Shipping</dt>
+                    <dd className="tabular-nums text-[#171717]">
                       {shipping === 0 ? 'FREE' : formatINR(shipping)}
                     </dd>
                   </div>
                   {discount > 0 && (
                     <div className="flex justify-between">
-                      <dt className="text-[#C0C0C0]">
+                      <dt className="text-[#4A4A4A]">
                         Discount{coupon.couponCode ? ` (${coupon.couponCode})` : ''}
                       </dt>
-                      <dd className="tabular-nums text-white">−{formatINR(discount)}</dd>
+                      <dd className="tabular-nums text-[#171717]">−{formatINR(discount)}</dd>
                     </div>
                   )}
                   <div className="flex justify-between">
-                    <dt className="text-[#C0C0C0]">GST ({Math.round(GST_RATE * 100)}%)</dt>
-                    <dd className="tabular-nums text-white">{formatINR(gst)}</dd>
+                    <dt className="text-[#4A4A4A]">GST ({Math.round(GST_RATE * 100)}%)</dt>
+                    <dd className="tabular-nums text-[#171717]">{formatINR(gst)}</dd>
                   </div>
                   {totalSavings > 0 && (
-                    <div className="flex justify-between border border-[#2A2A2A] bg-[#0A0A0A] px-3 py-2.5 text-white">
+                    <div className="flex justify-between border border-[#E2E0DB] bg-[#FFFFFF] px-3 py-2.5 text-[#171717]">
                       <dt>You save</dt>
                       <dd className="font-semibold tabular-nums">{formatINR(totalSavings)}</dd>
                     </div>
                   )}
                 </dl>
 
-                <div className="mt-5 flex items-end justify-between border-t border-[#3A3A3A] pt-5">
+                <div className="mt-5 flex items-end justify-between border-t border-[#E2E0DB] pt-5">
                   <div>
-                    <span className="text-base font-bold text-white">Order Total</span>
-                    <p className="mt-1 text-[10px] text-[#C0C0C0]/70">Inclusive of GST and shipping</p>
+                    <span className="text-base font-bold text-[#171717]">Order Total</span>
+                    <p className="mt-1 text-[10px] text-[#4A4A4A]/70">Inclusive of GST and shipping</p>
                   </div>
-                  <strong className="text-2xl font-bold tabular-nums tracking-tight text-white sm:text-3xl">
+                  <strong className="text-2xl font-bold tabular-nums tracking-tight text-[#171717] sm:text-3xl">
                     {formatINR(total)}
                   </strong>
                 </div>
@@ -687,7 +687,7 @@ export default function CartPage() {
                   >
                     Checkout Now
                   </Link>
-                  <p className="text-center text-[11px] text-[#C0C0C0]/70">
+                  <p className="text-center text-[11px] text-[#4A4A4A]/70">
                     Secure checkout · 7-day returns
                   </p>
                   <Link
@@ -704,18 +704,18 @@ export default function CartPage() {
       </div>
 
       {mounted && safeItems.length > 0 && (
-        <div className="fixed inset-x-0 bottom-0 z-40 border-t border-[#3A3A3A] bg-[#0A0A0A]/95 backdrop-blur lg:hidden">
+        <div className="fixed inset-x-0 bottom-0 z-40 border-t border-[#E2E0DB] bg-[#FFFFFF]/95 backdrop-blur lg:hidden">
           <div className="mx-auto flex max-w-[640px] items-center justify-between gap-4 px-4 pb-[calc(0.75rem+env(safe-area-inset-bottom))] pt-3">
             <div className="min-w-0">
-              <p className="text-[11px] text-[#C0C0C0]">Total</p>
-              <p className="truncate text-xl font-semibold tabular-nums text-white">
+              <p className="text-[11px] text-[#4A4A4A]">Total</p>
+              <p className="truncate text-xl font-semibold tabular-nums text-[#171717]">
                 {formatINR(total)}
               </p>
             </div>
             <Link
               href="/checkout"
               onClick={handleCheckout}
-              className={`flex min-h-[48px] shrink-0 items-center gap-2 bg-white px-6 text-xs font-bold uppercase tracking-[0.16em] text-black transition-colors hover:bg-[#C0C0C0] active:scale-[0.98] ${focusRing}`}
+              className={`flex min-h-[48px] shrink-0 items-center gap-2 bg-[#222222] px-6 text-xs font-bold uppercase tracking-[0.16em] text-[#FFFFFF] transition-colors hover:bg-[#222222] active:scale-[0.98] ${focusRing}`}
             >
               Checkout
               <ArrowRight className="h-4 w-4" />

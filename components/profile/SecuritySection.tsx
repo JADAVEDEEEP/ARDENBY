@@ -29,7 +29,7 @@ function PasswordField({
     <div>
       <label className="kv-field-label">{label}</label>
       <div className="relative">
-        <LockKeyhole className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-[#9296A0]" strokeWidth={1.7} />
+        <LockKeyhole className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-[#5C5C5C]" strokeWidth={1.7} />
         <input
           type="password"
           value={value}
@@ -40,7 +40,7 @@ function PasswordField({
           className="kv-input !pl-11"
         />
       </div>
-      {hint && <p className="mt-1.5 text-[11px] text-[#9296A0]">{hint}</p>}
+      {hint && <p className="mt-1.5 text-[11px] text-[#5C5C5C]">{hint}</p>}
     </div>
   );
 }
@@ -106,8 +106,8 @@ export function SecuritySection({ profile }: { profile: ProfileState }) {
         <div className="kv-inner flex items-start gap-4 p-5">
           <IconDisc icon={ShieldCheck} size={42} />
           <div>
-            <p className="text-[14px] font-semibold text-white">Signed in with Google</p>
-            <p className="mt-1 text-[13px] leading-6 text-[#9296A0]">
+            <p className="text-[14px] font-semibold text-[#171717]">Signed in with Google</p>
+            <p className="mt-1 text-[13px] leading-6 text-[#5C5C5C]">
               Your password is managed by Google, so there is nothing to change here.
             </p>
           </div>
@@ -118,10 +118,10 @@ export function SecuritySection({ profile }: { profile: ProfileState }) {
             <IconDisc icon={LockKeyhole} size={42} />
             <div>
               <p className="kv-label">Password</p>
-              <h3 className="mt-1.5 text-[22px] text-white" style={{ fontFamily: 'Bodoni MT, Didot, serif' }}>
+              <h3 className="mt-1.5 text-[22px] text-[#171717]" style={{ fontFamily: 'Bodoni MT, Didot, serif' }}>
                 Change password
               </h3>
-              <p className="mt-1 text-[13px] text-[#9296A0]">Update your password to keep your account secure.</p>
+              <p className="mt-1 text-[13px] text-[#5C5C5C]">Update your password to keep your account secure.</p>
             </div>
           </div>
 
@@ -156,15 +156,15 @@ export function SecuritySection({ profile }: { profile: ProfileState }) {
 
             <div className="md:col-span-2">
               {passwordError && (
-                <div role="alert" className="flex items-start gap-2 rounded-xl border border-[#5a2a2c] bg-[#2a1517] px-4 py-3">
-                  <AlertCircle className="mt-0.5 h-4 w-4 shrink-0 text-[#EF7B7B]" />
-                  <p className="text-[12px] leading-5 text-[#EF7B7B]">{passwordError}</p>
+                <div role="alert" className="flex items-start gap-2 rounded-xl border border-[#B3261E] bg-[#F4F0E8] px-4 py-3">
+                  <AlertCircle className="mt-0.5 h-4 w-4 shrink-0 text-[#B3261E]" />
+                  <p className="text-[12px] leading-5 text-[#B3261E]">{passwordError}</p>
                 </div>
               )}
               {passwordMessage && (
-                <div role="status" className="flex items-start gap-2 rounded-xl border border-[#245a3a] bg-[#11261a] px-4 py-3">
-                  <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-[#5FD08A]" />
-                  <p className="text-[12px] leading-5 text-[#5FD08A]">{passwordMessage}</p>
+                <div role="status" className="flex items-start gap-2 rounded-xl border border-[#1B7A43] bg-[#EAE5DA] px-4 py-3">
+                  <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-[#1B7A43]" />
+                  <p className="text-[12px] leading-5 text-[#1B7A43]">{passwordMessage}</p>
                 </div>
               )}
             </div>
@@ -179,12 +179,12 @@ export function SecuritySection({ profile }: { profile: ProfileState }) {
         </div>
       )}
 
-      <div className="kv-inner !border-[#4a2a2c] p-5 sm:p-6">
-        <p className="text-[10px] font-semibold uppercase tracking-[0.24em] text-[#EF7B7B]">Danger zone</p>
-        <h3 className="mt-2 text-[22px] text-white" style={{ fontFamily: 'Bodoni MT, Didot, serif' }}>
+      <div className="kv-inner !border-[#E2E0DB] p-5 sm:p-6">
+        <p className="text-[10px] font-semibold uppercase tracking-[0.24em] text-[#B3261E]">Danger zone</p>
+        <h3 className="mt-2 text-[22px] text-[#171717]" style={{ fontFamily: 'Bodoni MT, Didot, serif' }}>
           Delete account
         </h3>
-        <p className="mt-2 max-w-xl text-[13px] leading-6 text-[#9296A0]">
+        <p className="mt-2 max-w-xl text-[13px] leading-6 text-[#5C5C5C]">
           Permanently remove your KOVENIK customer access and associated account.
         </p>
         <button type="button" onClick={profile.openDeleteModal} className="kv-btn-danger mt-5">

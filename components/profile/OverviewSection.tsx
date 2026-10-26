@@ -48,10 +48,10 @@ const stepIndex = (status: string) => STEPS.findIndex((s) => s === status);
 function statusPill(status: string) {
   const s = status.toLowerCase();
   if (s === 'cancelled' || s === 'canceled')
-    return 'border-[#5a2a2c] bg-[#2a1517] text-[#EF7B7B]';
-  if (s === 'shipped') return 'border-[#2c4670] bg-[#14223a] text-[#9FC3FF]';
-  if (s === 'delivered') return 'border-[#245a3a] bg-[#11261a] text-[#5FD08A]';
-  return 'border-[#5a4a2a] bg-[#261f12] text-[#D6B06A]';
+    return 'border-[#B3261E] bg-[#F4F0E8] text-[#B3261E]';
+  if (s === 'shipped') return 'border-[#2B5BA8] bg-[#2B5BA8] text-[#2B5BA8]';
+  if (s === 'delivered') return 'border-[#1B7A43] bg-[#EAE5DA] text-[#1B7A43]';
+  return 'border-[#B08D57] bg-[#F4F0E8] text-[#8C6D3A]';
 }
 
 type Thumb = { image: string | null; name: string | null; count: number };
@@ -93,14 +93,14 @@ function useOrderThumbs(ids: string[]) {
 function Thumbnail({ thumb, size = 44 }: { thumb?: Thumb; size?: number }) {
   return (
     <span
-      className="flex shrink-0 items-center justify-center overflow-hidden rounded-xl border border-[#3a3d44] bg-[#121316]"
+      className="flex shrink-0 items-center justify-center overflow-hidden rounded-xl border border-[#E2E0DB] bg-[#F4F0E8]"
       style={{ width: size, height: size }}
     >
       {thumb?.image ? (
         // eslint-disable-next-line @next/next/no-img-element
         <img src={thumb.image} alt={thumb.name || 'Order item'} className="h-full w-full object-cover" referrerPolicy="no-referrer" />
       ) : (
-        <ShoppingBag className="h-4 w-4 text-[#9296A0]" strokeWidth={1.7} />
+        <ShoppingBag className="h-4 w-4 text-[#5C5C5C]" strokeWidth={1.7} />
       )}
     </span>
   );
@@ -116,9 +116,9 @@ function Tracker({ order }: { order: ProfileState['orders'][number] }) {
   const updated = fmtDate((order as any).updated_at);
   return (
     <ol className="relative grid grid-cols-4">
-      <span className="absolute left-[12.5%] right-[12.5%] top-[7px] h-px bg-[#3a3d44]" aria-hidden />
+      <span className="absolute left-[12.5%] right-[12.5%] top-[7px] h-px bg-[#EAE5DA]" aria-hidden />
       <span
-        className="absolute left-[12.5%] top-[7px] h-px bg-white/80"
+        className="absolute left-[12.5%] top-[7px] h-px bg-[#171717]/80"
         style={{ width: `${Math.max(current, 0) * 25}%` }}
         aria-hidden
       />
@@ -130,16 +130,16 @@ function Tracker({ order }: { order: ProfileState['orders'][number] }) {
             <span
               className={`h-[15px] w-[15px] rounded-full border-2 ${
                 isCurrent
-                  ? 'border-[#D6B06A] bg-[#D6B06A]'
+                  ? 'border-[#B08D57] bg-[#B08D57]'
                   : done
-                  ? 'border-white/80 bg-white/80'
-                  : 'border-[#4a4d55] bg-[#17181c]'
+                  ? 'border-[#171717]/80 bg-[#171717]/80'
+                  : 'border-[#D6D0C2] bg-[#F4F0E8]'
               }`}
             />
-            <span className={`mt-2 text-[11px] ${isCurrent ? 'font-semibold text-white' : done ? 'text-[#C6C9CF]' : 'text-[#9296A0]'}`}>
+            <span className={`mt-2 text-[11px] ${isCurrent ? 'font-semibold text-[#171717]' : done ? 'text-[#4A4A4A]' : 'text-[#5C5C5C]'}`}>
               {step}
             </span>
-            <span className="mt-0.5 min-h-[14px] text-[10px] text-[#9296A0]">{isCurrent ? updated : ''}</span>
+            <span className="mt-0.5 min-h-[14px] text-[10px] text-[#5C5C5C]">{isCurrent ? updated : ''}</span>
           </li>
         );
       })}
@@ -159,8 +159,8 @@ function SectionHead({
   return (
     <div className="flex items-start justify-between gap-3">
       <div>
-        <h3 className="text-[12px] font-bold uppercase tracking-[0.16em] text-white">{title}</h3>
-        {sub && <p className="mt-1 text-[11px] text-[#9296A0]">{sub}</p>}
+        <h3 className="text-[12px] font-bold uppercase tracking-[0.16em] text-[#171717]">{title}</h3>
+        {sub && <p className="mt-1 text-[11px] text-[#5C5C5C]">{sub}</p>}
       </div>
       {right}
     </div>
@@ -171,8 +171,8 @@ function EmptyNote({ icon: Icon, title, text }: { icon: React.ElementType; title
   return (
     <div className="flex flex-col items-center px-4 py-8 text-center">
       <IconDisc icon={Icon} size={44} />
-      <p className="mt-3 text-[13px] font-semibold text-white">{title}</p>
-      <p className="mt-1 max-w-[240px] text-[11px] leading-5 text-[#9296A0]">{text}</p>
+      <p className="mt-3 text-[13px] font-semibold text-[#171717]">{title}</p>
+      <p className="mt-1 max-w-[240px] text-[11px] leading-5 text-[#5C5C5C]">{text}</p>
     </div>
   );
 }
@@ -271,15 +271,15 @@ export function OverviewSection({ profile }: { profile: ProfileState }) {
     <button
       type="button"
       onClick={() => openOrder(order.id)}
-      className="flex w-full min-h-[72px] items-center gap-3 px-4 py-3.5 text-left transition hover:bg-white/[0.03] sm:gap-4 sm:px-5"
+      className="flex w-full min-h-[72px] items-center gap-3 px-4 py-3.5 text-left transition hover:bg-[#171717]/[0.03] sm:gap-4 sm:px-5"
     >
       <Thumbnail thumb={thumbs[order.id]} size={48} />
       <span className="min-w-0 flex-1">
-        <span className="block truncate text-[13px] font-semibold text-white">Order #{order.order_number}</span>
+        <span className="block truncate text-[13px] font-semibold text-[#171717]">Order #{order.order_number}</span>
         {orderSummary(thumbs[order.id]) && (
-          <span className="mt-0.5 block truncate text-[12px] text-[#C6C9CF]">{orderSummary(thumbs[order.id])}</span>
+          <span className="mt-0.5 block truncate text-[12px] text-[#4A4A4A]">{orderSummary(thumbs[order.id])}</span>
         )}
-        <span className="mt-0.5 block truncate text-[11px] text-[#9296A0]">
+        <span className="mt-0.5 block truncate text-[11px] text-[#5C5C5C]">
           {[
             fmtDate(order.created_at, true),
             String(order.payment_method).toLowerCase() === 'cod' ? 'Cash on delivery' : 'Online payment',
@@ -289,12 +289,12 @@ export function OverviewSection({ profile }: { profile: ProfileState }) {
         </span>
       </span>
       <span className="flex shrink-0 flex-col items-end gap-1.5">
-        <span className="text-[14px] font-semibold tabular-nums text-white">{profile.money(order.total_amount)}</span>
+        <span className="text-[14px] font-semibold tabular-nums text-[#171717]">{profile.money(order.total_amount)}</span>
         <span className={`rounded-full border px-2.5 py-0.5 text-[10px] font-semibold ${statusPill(order.status)}`}>
           {order.status}
         </span>
       </span>
-      <ChevronRight className="h-4 w-4 shrink-0 text-[#9296A0]" />
+      <ChevronRight className="h-4 w-4 shrink-0 text-[#5C5C5C]" />
     </button>
   );
 
@@ -307,22 +307,22 @@ export function OverviewSection({ profile }: { profile: ProfileState }) {
         onClick={() => openProduct(item)}
         className="group min-w-0 text-left"
       >
-        <span className="flex aspect-square items-center justify-center overflow-hidden rounded-2xl border border-[#3a3d44] bg-[radial-gradient(circle_at_50%_30%,#2e3036,#141518)]">
+        <span className="flex aspect-square items-center justify-center overflow-hidden rounded-2xl border border-[#E2E0DB] bg-[#F4F0E8]">
           {image ? (
             // eslint-disable-next-line @next/next/no-img-element
             <img src={image} alt={name} className="h-full w-full object-cover" referrerPolicy="no-referrer" />
           ) : (
-            <ShoppingBag className="h-6 w-6 text-[#9296A0]" strokeWidth={1.5} />
+            <ShoppingBag className="h-6 w-6 text-[#5C5C5C]" strokeWidth={1.5} />
           )}
         </span>
         <span
           title={name}
-          className="mt-2.5 line-clamp-2 min-h-[34px] break-words text-[12px] font-medium leading-[17px] text-white"
+          className="mt-2.5 line-clamp-2 min-h-[34px] break-words text-[12px] font-medium leading-[17px] text-[#171717]"
         >
           {name}
         </span>
         {item.price !== undefined && item.price !== null && (
-          <span className="mt-0.5 block text-[12px] tabular-nums text-[#C6C9CF]">{profile.money(item.price)}</span>
+          <span className="mt-0.5 block text-[12px] tabular-nums text-[#4A4A4A]">{profile.money(item.price)}</span>
         )}
       </button>
     );
@@ -345,11 +345,11 @@ export function OverviewSection({ profile }: { profile: ProfileState }) {
               <button type="button" onClick={() => go(s.section)} className="flex w-full flex-col p-5 text-left">
                 <span className="flex items-center justify-between">
                   <IconDisc icon={s.icon} size={38} />
-                  <ArrowRight className="h-4 w-4 text-[#9296A0]" />
+                  <ArrowRight className="h-4 w-4 text-[#5C5C5C]" />
                 </span>
-                <span className="mt-5 text-[44px] font-extralight leading-none tracking-tight tabular-nums text-white">{pad(s.value)}</span>
-                <span className="mt-4 block text-[13px] font-medium text-white">{s.title}</span>
-                <span className="mt-0.5 block truncate text-[11px] text-[#9296A0]">{s.sub}</span>
+                <span className="mt-5 text-[44px] font-extralight leading-none tracking-tight tabular-nums text-[#171717]">{pad(s.value)}</span>
+                <span className="mt-4 block text-[13px] font-medium text-[#171717]">{s.title}</span>
+                <span className="mt-0.5 block truncate text-[11px] text-[#5C5C5C]">{s.sub}</span>
               </button>
             </MetalCard>
           ))}
@@ -375,27 +375,27 @@ export function OverviewSection({ profile }: { profile: ProfileState }) {
             ) : (
               <>
                 {featured && (
-                  <div className="mx-5 mb-4 rounded-2xl border border-[#3a3d44] bg-black/20 p-5">
+                  <div className="mx-5 mb-4 rounded-2xl border border-[#E2E0DB] bg-[#F4F0E8] p-5">
                     <div className="flex items-start gap-4">
                       <Thumbnail thumb={thumbs[featured.id]} size={52} />
                       <div className="min-w-0 flex-1">
                         <div className="flex flex-wrap items-center gap-2">
-                          <button type="button" onClick={() => openOrder(featured.id)} className="text-[14px] font-semibold text-white hover:underline">
+                          <button type="button" onClick={() => openOrder(featured.id)} className="text-[14px] font-semibold text-[#171717] hover:underline">
                             Order #{featured.order_number}
                           </button>
                           <span className={`rounded-full border px-2.5 py-0.5 text-[10px] font-semibold ${statusPill(featured.status)}`}>
                             {featured.status}
                           </span>
                         </div>
-                        <p className="mt-1 truncate text-[12px] text-[#9296A0]">
+                        <p className="mt-1 truncate text-[12px] text-[#5C5C5C]">
                           {[orderSummary(thumbs[featured.id]), thumbs[featured.id] ? `${thumbs[featured.id].count} ${thumbs[featured.id].count === 1 ? 'item' : 'items'}` : null]
                             .filter(Boolean)
                             .join(' · ') || `Placed ${fmtDate(featured.created_at, true) ?? ''}`}
                         </p>
                       </div>
                       <div className="shrink-0 text-right">
-                        <p className="text-[20px] font-semibold text-white">{profile.money(featured.total_amount)}</p>
-                        <p className="mt-0.5 text-[11px] text-[#9296A0]">Placed {fmtDate(featured.created_at)}</p>
+                        <p className="text-[20px] font-semibold text-[#171717]">{profile.money(featured.total_amount)}</p>
+                        <p className="mt-0.5 text-[11px] text-[#5C5C5C]">Placed {fmtDate(featured.created_at)}</p>
                       </div>
                     </div>
                     {stepIndex(featured.status) >= 0 ? (
@@ -403,12 +403,12 @@ export function OverviewSection({ profile }: { profile: ProfileState }) {
                         <Tracker order={featured} />
                       </div>
                     ) : (
-                      <p className="mt-4 text-[11px] text-[#9296A0]">Your order is being processed. Tracking begins once it is confirmed.</p>
+                      <p className="mt-4 text-[11px] text-[#5C5C5C]">Your order is being processed. Tracking begins once it is confirmed.</p>
                     )}
                   </div>
                 )}
                 {history.length > 0 && (
-                  <div className="divide-y divide-[#2c2e34] border-t border-[#2c2e34]">
+                  <div className="divide-y divide-[#E2E0DB] border-t border-[#E2E0DB]">
                     {history.map((o) => (
                       <OrderRow key={o.id} order={o} />
                     ))}
@@ -448,20 +448,20 @@ export function OverviewSection({ profile }: { profile: ProfileState }) {
                 <div className="flex">
                   <div className="min-w-0 flex-1 p-5">
                     <p className="kv-label">Your Offer</p>
-                    <p className="mt-2 text-[34px] font-light leading-none text-white">
-                      {discountText} <span className="text-[16px] text-[#C6C9CF]">OFF</span>
+                    <p className="mt-2 text-[34px] font-light leading-none text-[#171717]">
+                      {discountText} <span className="text-[16px] text-[#4A4A4A]">OFF</span>
                     </p>
                     {Number(coupon.min_order) > 0 && (
-                      <p className="mt-2 text-[11px] text-[#C6C9CF]">
+                      <p className="mt-2 text-[11px] text-[#4A4A4A]">
                         On orders above ₹{Number(coupon.min_order).toLocaleString('en-IN')}
                       </p>
                     )}
                     {coupon.expiry && fmtDate(coupon.expiry, true) && (
-                      <p className="mt-0.5 text-[11px] text-[#9296A0]">Valid till {fmtDate(coupon.expiry, true)}</p>
+                      <p className="mt-0.5 text-[11px] text-[#5C5C5C]">Valid till {fmtDate(coupon.expiry, true)}</p>
                     )}
                   </div>
-                  <div className="flex w-[52px] items-center justify-center border-l border-dashed border-[#4a4d55]">
-                    <span className="-rotate-90 whitespace-nowrap text-[11px] font-bold tracking-[0.18em] text-[#D6B06A]">
+                  <div className="flex w-[52px] items-center justify-center border-l border-dashed border-[#D6D0C2]">
+                    <span className="-rotate-90 whitespace-nowrap text-[11px] font-bold tracking-[0.18em] text-[#8C6D3A]">
                       {coupon.code}
                     </span>
                   </div>
@@ -489,13 +489,13 @@ export function OverviewSection({ profile }: { profile: ProfileState }) {
             </div>
           </div>
           <MetalCard>
-            <div className="grid grid-cols-[0.8fr_1.2fr_0.9fr_1.5fr] divide-x divide-[#2c2e34]">
+            <div className="grid grid-cols-[0.8fr_1.2fr_0.9fr_1.5fr] divide-x divide-[#E2E0DB]">
               {detailRows.map((r) => (
                 <div key={r.label} className="flex min-w-0 items-start gap-3 p-5">
                   <IconDisc icon={r.icon} size={34} />
                   <div className="min-w-0">
-                    <p className="text-[9px] font-semibold uppercase tracking-[0.18em] text-[#9296A0]">{r.label}</p>
-                    <p className="mt-1 line-clamp-3 break-words text-[13px] font-medium leading-[19px] text-white" title={r.value}>
+                    <p className="text-[9px] font-semibold uppercase tracking-[0.18em] text-[#5C5C5C]">{r.label}</p>
+                    <p className="mt-1 line-clamp-3 break-words text-[13px] font-medium leading-[19px] text-[#171717]" title={r.value}>
                       {r.value}
                     </p>
                   </div>
@@ -514,10 +514,10 @@ export function OverviewSection({ profile }: { profile: ProfileState }) {
               <button type="button" onClick={() => go(s.section)} className="flex min-h-[44px] w-full flex-col p-4 text-left">
                 <span className="flex items-center justify-between">
                   <IconDisc icon={s.icon} size={34} />
-                  <ArrowRight className="h-3.5 w-3.5 text-[#9296A0]" />
+                  <ArrowRight className="h-3.5 w-3.5 text-[#5C5C5C]" />
                 </span>
-                <span className="mt-3 text-[34px] font-extralight leading-none text-white">{pad(s.value)}</span>
-                <span className="mt-2 text-[12px] text-[#C6C9CF]">{s.title}</span>
+                <span className="mt-3 text-[34px] font-extralight leading-none text-[#171717]">{pad(s.value)}</span>
+                <span className="mt-2 text-[12px] text-[#4A4A4A]">{s.title}</span>
               </button>
             </MetalCard>
           ))}
@@ -535,19 +535,19 @@ export function OverviewSection({ profile }: { profile: ProfileState }) {
               <div className="flex items-center gap-3">
                 <Thumbnail thumb={thumbs[featured.id]} size={48} />
                 <div className="min-w-0 flex-1">
-                  <p className="truncate text-[14px] font-semibold text-white">#{featured.order_number}</p>
-                  <p className="mt-0.5 truncate text-[11px] text-[#9296A0]">
+                  <p className="truncate text-[14px] font-semibold text-[#171717]">#{featured.order_number}</p>
+                  <p className="mt-0.5 truncate text-[11px] text-[#5C5C5C]">
                     {orderSummary(thumbs[featured.id]) ?? `Placed ${fmtDate(featured.created_at)}`}
                   </p>
                 </div>
-                <p className="shrink-0 text-[17px] font-semibold text-white">{profile.money(featured.total_amount)}</p>
+                <p className="shrink-0 text-[17px] font-semibold text-[#171717]">{profile.money(featured.total_amount)}</p>
               </div>
               {stepIndex(featured.status) >= 0 ? (
                 <div className="mt-5">
                   <Tracker order={featured} />
                 </div>
               ) : (
-                <p className="mt-4 text-[11px] text-[#9296A0]">Your order is being processed.</p>
+                <p className="mt-4 text-[11px] text-[#5C5C5C]">Your order is being processed.</p>
               )}
               <div className="mt-5 grid grid-cols-2 gap-3">
                 <button type="button" onClick={() => openOrder(featured.id)} className="kv-btn-ghost">
@@ -564,7 +564,7 @@ export function OverviewSection({ profile }: { profile: ProfileState }) {
         <div>
           <div className="mb-2 flex items-center justify-between px-1">
             <p className="kv-label">Order History</p>
-            <button type="button" onClick={() => go('orders')} className="inline-flex min-h-[44px] items-center gap-1 text-[12px] text-[#C6C9CF]">
+            <button type="button" onClick={() => go('orders')} className="inline-flex min-h-[44px] items-center gap-1 text-[12px] text-[#4A4A4A]">
               View all <ChevronRight className="h-3.5 w-3.5" />
             </button>
           </div>
@@ -572,9 +572,9 @@ export function OverviewSection({ profile }: { profile: ProfileState }) {
             {orders.length === 0 ? (
               <EmptyNote icon={Package} title="No orders yet" text="Your purchases will appear here once you place your first order." />
             ) : history.length === 0 ? (
-              <p className="p-4 text-[12px] text-[#9296A0]">No other orders.</p>
+              <p className="p-4 text-[12px] text-[#5C5C5C]">No other orders.</p>
             ) : (
-              <div className="divide-y divide-[#2c2e34]">
+              <div className="divide-y divide-[#E2E0DB]">
                 {history.map((o) => (
                   <OrderRow key={o.id} order={o} />
                 ))}
@@ -586,7 +586,7 @@ export function OverviewSection({ profile }: { profile: ProfileState }) {
         <div>
           <div className="mb-2 flex items-center justify-between px-1">
             <p className="kv-label">Wishlist</p>
-            <button type="button" onClick={() => go('wishlist')} className="inline-flex min-h-[44px] items-center gap-1 text-[12px] text-[#C6C9CF]">
+            <button type="button" onClick={() => go('wishlist')} className="inline-flex min-h-[44px] items-center gap-1 text-[12px] text-[#4A4A4A]">
               {wishlist.length} {wishlist.length === 1 ? 'piece' : 'pieces'} <ChevronRight className="h-3.5 w-3.5" />
             </button>
           </div>
@@ -608,18 +608,18 @@ export function OverviewSection({ profile }: { profile: ProfileState }) {
             <div className="flex items-stretch">
               <div className="min-w-0 flex-1 p-4">
                 <p className="kv-label">Your Offer</p>
-                <p className="mt-1.5 text-[28px] font-light leading-none text-white">
-                  {discountText} <span className="text-[14px] text-[#C6C9CF]">OFF</span>
+                <p className="mt-1.5 text-[28px] font-light leading-none text-[#171717]">
+                  {discountText} <span className="text-[14px] text-[#4A4A4A]">OFF</span>
                 </p>
                 {Number(coupon.min_order) > 0 && (
-                  <p className="mt-1.5 text-[11px] text-[#C6C9CF]">Orders above ₹{Number(coupon.min_order).toLocaleString('en-IN')}</p>
+                  <p className="mt-1.5 text-[11px] text-[#4A4A4A]">Orders above ₹{Number(coupon.min_order).toLocaleString('en-IN')}</p>
                 )}
                 {coupon.expiry && fmtDate(coupon.expiry, true) && (
-                  <p className="text-[11px] text-[#9296A0]">Valid till {fmtDate(coupon.expiry, true)}</p>
+                  <p className="text-[11px] text-[#5C5C5C]">Valid till {fmtDate(coupon.expiry, true)}</p>
                 )}
               </div>
-              <div className="flex w-[116px] shrink-0 flex-col items-center justify-center gap-2 border-l border-dashed border-[#4a4d55] p-3">
-                <span className="text-[11px] font-bold tracking-[0.14em] text-[#D6B06A]">{coupon.code}</span>
+              <div className="flex w-[116px] shrink-0 flex-col items-center justify-center gap-2 border-l border-dashed border-[#D6D0C2] p-3">
+                <span className="text-[11px] font-bold tracking-[0.14em] text-[#8C6D3A]">{coupon.code}</span>
                 <button type="button" onClick={copyCode} className="kv-btn-primary !min-h-[44px] !px-4">
                   {copied ? <Check className="h-3.5 w-3.5" /> : <Copy className="h-3.5 w-3.5" />}
                   {copied ? 'Copied' : 'Copy'}
@@ -632,12 +632,12 @@ export function OverviewSection({ profile }: { profile: ProfileState }) {
         <div>
           <div className="mb-2 flex items-center justify-between px-1">
             <p className="kv-label">Personal Details</p>
-            <button type="button" onClick={() => go('account')} className="inline-flex min-h-[44px] items-center gap-1 text-[12px] text-[#C6C9CF]">
+            <button type="button" onClick={() => go('account')} className="inline-flex min-h-[44px] items-center gap-1 text-[12px] text-[#4A4A4A]">
               <Pencil className="h-3.5 w-3.5" /> Edit
             </button>
           </div>
           <MetalCard>
-            <div className="divide-y divide-[#2c2e34]">
+            <div className="divide-y divide-[#E2E0DB]">
               {[
                 ...detailRows,
                 {
@@ -649,8 +649,8 @@ export function OverviewSection({ profile }: { profile: ProfileState }) {
                 <div key={r.label} className="flex items-center gap-3 p-4">
                   <IconDisc icon={r.icon} size={36} />
                   <div className="min-w-0">
-                    <p className="text-[9px] font-semibold uppercase tracking-[0.18em] text-[#9296A0]">{r.label}</p>
-                    <p className={`mt-0.5 break-words text-[14px] ${r.label === 'Account Status' && r.value === 'Verified' ? 'text-[#5FD08A]' : 'text-white'}`}>
+                    <p className="text-[9px] font-semibold uppercase tracking-[0.18em] text-[#5C5C5C]">{r.label}</p>
+                    <p className={`mt-0.5 break-words text-[14px] ${r.label === 'Account Status' && r.value === 'Verified' ? 'text-[#1B7A43]' : 'text-[#171717]'}`}>
                       {r.value}
                     </p>
                   </div>
@@ -663,7 +663,7 @@ export function OverviewSection({ profile }: { profile: ProfileState }) {
         <div>
           <p className="kv-label mb-2 px-1">Settings</p>
           <MetalCard>
-            <div className="divide-y divide-[#2c2e34]">
+            <div className="divide-y divide-[#E2E0DB]">
               {[
                 { icon: User, label: 'Account Details', section: 'account' },
                 { icon: MapPin, label: 'Saved Addresses', section: 'addresses' },
@@ -676,8 +676,8 @@ export function OverviewSection({ profile }: { profile: ProfileState }) {
                   className="flex min-h-[56px] w-full items-center gap-3 px-4 text-left"
                 >
                   <IconDisc icon={r.icon} size={34} />
-                  <span className="flex-1 text-[14px] text-white">{r.label}</span>
-                  <ChevronRight className="h-4 w-4 text-[#9296A0]" />
+                  <span className="flex-1 text-[14px] text-[#171717]">{r.label}</span>
+                  <ChevronRight className="h-4 w-4 text-[#5C5C5C]" />
                 </button>
               ))}
             </div>
@@ -687,7 +687,7 @@ export function OverviewSection({ profile }: { profile: ProfileState }) {
         <button
           type="button"
           onClick={profile.logout}
-          className="flex min-h-[52px] w-full items-center justify-center gap-2 rounded-2xl border border-[#6a2f31] bg-[#2a1517]/60 text-[13px] font-semibold text-[#EF7B7B]"
+          className="flex min-h-[52px] w-full items-center justify-center gap-2 rounded-2xl border border-[#B3261E] bg-[#F4F0E8]/60 text-[13px] font-semibold text-[#B3261E]"
         >
           <LogOut className="h-4 w-4" /> Log out
         </button>
@@ -696,8 +696,8 @@ export function OverviewSection({ profile }: { profile: ProfileState }) {
           <div className="flex items-center gap-3">
             <IconDisc icon={LifeBuoy} size={38} />
             <div className="min-w-0 flex-1">
-              <p className="text-[14px] font-semibold text-white">Need help?</p>
-              <p className="text-[11px] text-[#9296A0]">Our team is here for orders and sizing.</p>
+              <p className="text-[14px] font-semibold text-[#171717]">Need help?</p>
+              <p className="text-[11px] text-[#5C5C5C]">Our team is here for orders and sizing.</p>
             </div>
             <button type="button" onClick={() => profile.router.push('/contact')} className="kv-btn-ghost">
               Contact

@@ -7,7 +7,7 @@ import type { Product } from '@/types';
 
 export const dynamic = 'force-dynamic';
 
-const SERIF = { fontFamily: 'Bodoni MT, Didot, Times New Roman, serif' };
+const SERIF = { fontFamily: 'var(--font-oswald), Impact, sans-serif' };
 
 async function searchProducts(query: string): Promise<{ products: Product[]; failed: boolean }> {
   try {
@@ -40,17 +40,12 @@ export default async function SearchPage({ searchParams }: { searchParams: { q?:
 
   return (
     <main
-      className="min-h-[70vh] px-4 py-12 text-[#F3EBDD] sm:px-8 lg:px-10 lg:py-16"
-      style={{
-        backgroundColor: '#050505',
-        backgroundImage:
-          'radial-gradient(ellipse 60% 40% at 85% 0%, rgba(201,162,75,0.12), transparent 70%)',
-      }}
+      className="min-h-[70vh] bg-white px-4 py-12 text-[#171717] sm:px-8 lg:px-10 lg:py-16"
     >
       <div className="mx-auto max-w-[1360px]">
         <div className="mb-3 flex items-center gap-2">
-          <span className="h-1.5 w-1.5 rotate-45 bg-[#C9A24B]" />
-          <p className="text-[10px] font-semibold uppercase tracking-[0.25em] text-[#C9A24B]">
+          <span className="h-1.5 w-1.5 rotate-45 bg-[#B08D57]" />
+          <p className="text-[10px] font-semibold uppercase tracking-[0.25em] text-[#8C6D3A]">
             Search
           </p>
         </div>
@@ -60,7 +55,7 @@ export default async function SearchPage({ searchParams }: { searchParams: { q?:
         </h1>
 
         {!failed && (
-          <p className="mt-2 text-[13px] text-[#F3EBDD]/60">
+          <p className="mt-2 text-[13px] text-[#171717]/60">
             {results.length} {results.length === 1 ? 'product' : 'products'} found
           </p>
         )}
@@ -72,15 +67,15 @@ export default async function SearchPage({ searchParams }: { searchParams: { q?:
             ))}
           </div>
         ) : (
-          <div className="mt-12 rounded-2xl border border-dashed border-[#C9A24B]/30 bg-[#0A0A0A] px-6 py-16 text-center">
-            <p className="text-[15px] text-[#F3EBDD]/70">
+          <div className="mt-12 rounded-2xl border border-dashed border-[#B08D57]/30 bg-[#FFFFFF] px-6 py-16 text-center">
+            <p className="text-[15px] text-[#171717]/70">
               {failed
                 ? 'Search is temporarily unavailable. Please try again shortly.'
                 : 'No products matched your search.'}
             </p>
             <Link
               href="/shop"
-              className="mt-6 inline-flex min-h-[48px] items-center rounded-lg bg-[linear-gradient(135deg,#9C7A32_0%,#E6CF92_45%,#B8903A_100%)] px-8 text-[11px] font-bold uppercase tracking-[0.16em] text-[#0A0A0A] transition hover:brightness-110"
+              className="mt-6 inline-flex min-h-[48px] items-center rounded-[2px] bg-[#222222] px-8 text-[11px] font-bold uppercase tracking-[0.16em] text-[#FFFFFF] transition hover:brightness-110"
             >
               Browse all products
             </Link>

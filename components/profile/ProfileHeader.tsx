@@ -5,8 +5,8 @@ import type { UserProfile } from './types';
 
 export function ProfileHeader({ user, displayName }: { user: UserProfile; displayName: string }) {
   return (
-    <header className="mb-7 border-b border-[#DCD5C9] pb-6 sm:mb-9 sm:pb-8">
-      <p className="text-[9px] font-medium uppercase tracking-[0.34em] text-[#9A8060]">
+    <header className="mb-7 border-b border-[#222222] pb-6 sm:mb-9 sm:pb-8">
+      <p className="text-[9px] font-medium uppercase tracking-[0.34em] text-[#8C6D3A]">
         KOVENIK / PRIVATE ACCOUNT
       </p>
       <div className="mt-2 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
@@ -14,14 +14,14 @@ export function ProfileHeader({ user, displayName }: { user: UserProfile; displa
           <h1 className="font-serif text-[36px] leading-none tracking-[-0.03em] sm:text-[48px] lg:text-[56px]">
             My Account
           </h1>
-          <p className="mt-3 max-w-xl text-[13px] leading-6 text-[#756F66]">
+          <p className="mt-3 max-w-xl text-[13px] leading-6 text-[#5C5C5C]">
            account settings.
           </p>
         </div>
-        <div className="hidden border-l border-[#DCD5C9] pl-5 text-right sm:block">
-          <p className="text-[9px] uppercase tracking-[0.22em] text-[#9A8060]">Customer</p>
+        <div className="hidden border-l border-[#222222] pl-5 text-right sm:block">
+          <p className="text-[9px] uppercase tracking-[0.22em] text-[#8C6D3A]">Customer</p>
           <p className="mt-1 text-sm font-medium">{displayName}</p>
-          <p className="mt-0.5 text-[11px] text-[#81796F]">{user.email}</p>
+          <p className="mt-0.5 text-[11px] text-[#5C5C5C]">{user.email}</p>
         </div>
       </div>
     </header>
@@ -43,8 +43,8 @@ export function ProfileFeedback({
     <div role={error ? 'alert' : 'status'}
       className={`mb-5 flex items-center gap-3 rounded-2xl border px-4 py-3 text-[13px] ${
       error
-        ? 'border-[#5a2a2c] bg-[#2a1517] text-[#EF7B7B]'
-        : 'border-[#245a3a] bg-[#11261a] text-[#5FD08A]'
+        ? 'border-[#B3261E] bg-[#F4F0E8] text-[#B3261E]'
+        : 'border-[#1B7A43] bg-[#EAE5DA] text-[#1B7A43]'
     }`}>
       {error ? <AlertCircle className="h-4 w-4 shrink-0" /> : <ShieldCheck className="h-4 w-4 shrink-0" />}
       <span>{error || message}</span>
