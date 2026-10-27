@@ -1,33 +1,138 @@
 'use client';
 
-import { useEffect, useMemo, useState } from 'react';
-import Link from 'next/link';
-import { Heart, Trash2, ArrowRight, SlidersHorizontal, ChevronDown } from 'lucide-react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { ChevronDown } from 'lucide-react';
+import { toast } from 'sonner';
+
 import { useWishlistStore } from '@/store/wishlist-store';
-import { formatINR } from '@/lib/format';
-import { IconDisc, MetalCard, SERIF_STYLE } from '@/components/profile/metal';
+import { useCartStore } from '@/store/cart-store';
 import { CustomerAuthGate } from '@/components/auth/customer-auth-gate';
+import { apiUrl } from '@/lib/api-url';
+import { normalizeApiProduct } from '@/lib/home-products';
+import type { ApiProduct } from '@/lib/home-products';
+
+import {
+  FOCUS,
+  WishlistCard,
+  cartLine,
+  defaultSize,
+  isOutOfStock,
+  type ProductDetail,
+} from './wishlist-card';
+import {
+  CONTAINER,
+  EmptyWishlist,
+  ExploreTile,
+  StickyCartBar,
+  WishlistError,
+  WishlistHero,
+  WishlistSkeleton,
+} from './wishlist-sections';
 
 type SortKey = 'recent' | 'price-asc' | 'price-desc' | 'name';
 
 const SORT_OPTIONS: { value: SortKey; label: string }[] = [
-  { value: 'recent', label: 'Recently Added' },
+  { value: 'recent', label: 'Recently added' },
   { value: 'price-asc', label: 'Price: Low to High' },
   { value: 'price-desc', label: 'Price: High to Low' },
   { value: 'name', label: 'Name: A to Z' },
 ];
 
+const REMOVE_FADE_MS = 200;
+
+function useIsMobile() {
+  const [mobile, setMobile] = useState(false);
+
+  useEffect(() => {
+    const mq = window.matchMedia('(max-width: 639px)');
+    const sync = () => setMobile(mq.matches);
+    sync();
+    mq.addEventListener('change', sync);
+    return () => mq.removeEventListener('change', sync);
+  }, []);
+
+  return mobile;
+}
+
 function WishlistPageView() {
   const { items, remove, clear, syncFromApi } = useWishlistStore();
+  const addItem = useCartStore((s) => s.addItem);
+  const isMobile = useIsMobile();
+
+  const [status, setStatus] = useState<'loading' | 'ready' | 'error'>('loading');
   const [sort, setSort] = useState<SortKey>('recent');
+  const [details, setDetails] = useState<Record<string, ProductDetail>>({});
+  const [chosenSizes, setChosenSizes] = useState<Record<string, string>>({});
+  const [removing, setRemoving] = useState<string[]>([]);
+  const [confirmClear, setConfirmClear] = useState(false);
+  const [clearing, setClearing] = useState(false);
+  const [addingAll, setAddingAll] = useState(false);
+
+  const requested = useRef(new Set<string>());
+
+  // The sticky bar only appears once the hero's own "Add all" buttons have scrolled away.
+  const [heroActionsVisible, setHeroActionsVisible] = useState(true);
+  const [gridInView, setGridInView] = useState(false);
+  const heroObserver = useRef<IntersectionObserver | null>(null);
+  const gridObserver = useRef<IntersectionObserver | null>(null);
+  const heroActionsRef = useCallback((node: HTMLDivElement | null) => {
+    heroObserver.current?.disconnect();
+    if (!node || typeof IntersectionObserver === 'undefined') return;
+    heroObserver.current = new IntersectionObserver(([entry]) => setHeroActionsVisible(entry.isIntersecting));
+    heroObserver.current.observe(node);
+  }, []);
+  // The bar must not float over the footer, so it only shows while the pieces are on screen.
+  const gridRef = useCallback((node: HTMLElement | null) => {
+    gridObserver.current?.disconnect();
+    if (!node || typeof IntersectionObserver === 'undefined') return;
+    gridObserver.current = new IntersectionObserver(([entry]) => setGridInView(entry.isIntersecting));
+    gridObserver.current.observe(node);
+  }, []);
 
   // Refresh from the backend so the page always reflects the signed-in user's saved pieces.
+  const load = useCallback(async () => {
+    setStatus('loading');
+    try {
+      await syncFromApi();
+      setStatus('ready');
+    } catch {
+      setStatus('error');
+    }
+  }, [syncFromApi]);
+
   useEffect(() => {
     if (typeof window !== 'undefined' && localStorage.getItem('ardenby_token')) {
-      void syncFromApi();
+      void load();
+    } else {
+      setStatus('ready');
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  // The wishlist only stores id/slug/price, so sizes and stock come from the product API.
+  useEffect(() => {
+    items.forEach((item) => {
+      if (!item.slug || requested.current.has(item.productId)) return;
+      requested.current.add(item.productId);
+
+      fetch(apiUrl(`/api/products/${encodeURIComponent(item.slug)}`), { cache: 'no-store' })
+        .then((res) => (res.ok ? res.json() : Promise.reject(new Error(`HTTP ${res.status}`))))
+        .then((data) => {
+          const raw: ApiProduct | undefined = data?.product ?? data?.data?.product;
+          if (!raw?.id) throw new Error('Unexpected product response');
+          setDetails((d) => ({ ...d, [item.productId]: normalizeApiProduct(raw) }));
+        })
+        .catch(() => {
+          setDetails((d) => ({ ...d, [item.productId]: null }));
+        });
+    });
+  }, [items]);
+
+  const retry = () => {
+    requested.current.clear();
+    setDetails({});
+    void load();
+  };
 
   const sorted = useMemo(() => {
     const list = [...items];
@@ -43,171 +148,207 @@ function WishlistPageView() {
     }
   }, [items, sort]);
 
-  const totalValue = items.reduce((sum, i) => sum + Number(i.price || 0), 0);
-  const totalSavings = items.reduce((sum, i) => sum + Math.max(0, Number(i.mrp || 0) - Number(i.price || 0)), 0);
+  // Items fading out no longer count, so the stats and sticky bar update instantly.
+  const live = useMemo(() => items.filter((i) => !removing.includes(i.productId)), [items, removing]);
+  const totalValue = useMemo(() => live.reduce((sum, i) => sum + Number(i.price || 0), 0), [live]);
+  const totalSavings = useMemo(
+    () => live.reduce((sum, i) => sum + Math.max(0, Number(i.mrp || 0) - Number(i.price || 0)), 0),
+    [live]
+  );
+
+  const sizeFor = (productId: string) => {
+    const product = details[productId];
+    return chosenSizes[productId] ?? (product ? defaultSize(product) : undefined);
+  };
+
+  const removeItem = (productId: string) => {
+    setRemoving((r) => [...r, productId]);
+    window.setTimeout(async () => {
+      try {
+        await remove(productId);
+      } catch (error) {
+        toast.error(error instanceof Error ? error.message : 'Unable to remove from wishlist.');
+      } finally {
+        setRemoving((r) => r.filter((id) => id !== productId));
+      }
+    }, REMOVE_FADE_MS);
+  };
+
+  const clearAll = async () => {
+    setClearing(true);
+    try {
+      await clear();
+      setConfirmClear(false);
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : 'Unable to clear wishlist.');
+    } finally {
+      setClearing(false);
+    }
+  };
+
+  const addAll = async () => {
+    if (addingAll) return;
+    setAddingAll(true);
+
+    let added = 0;
+    let outOfStock = 0;
+    let failed = 0;
+
+    // Sequential: each add re-syncs the cart, so parallel calls could overwrite each other.
+    for (const item of live) {
+      const product = details[item.productId];
+      if (!product) {
+        failed += 1;
+      } else if (isOutOfStock(product)) {
+        outOfStock += 1;
+      } else {
+        const line = cartLine(item, product, sizeFor(item.productId));
+        if (!line) failed += 1;
+        else if (await addItem(line)) added += 1;
+        else failed += 1;
+      }
+    }
+
+    setAddingAll(false);
+
+    const noun = (n: number) => `${n} ${n === 1 ? 'item' : 'items'}`;
+    const notes = [
+      outOfStock > 0 && `${outOfStock} ${outOfStock === 1 ? 'is' : 'are'} out of stock.`,
+      failed > 0 && `${failed} couldn't be added.`,
+    ].filter(Boolean);
+
+    if (added > 0) {
+      toast.success([`${noun(added)} added to your bag.`, ...notes].join(' '));
+    } else {
+      toast.error(notes.join(' ') || 'Nothing could be added.');
+    }
+  };
+
+  const share = async () => {
+    const url = window.location.href;
+
+    try {
+      if (typeof navigator.share === 'function') {
+        await navigator.share({ title: 'My KOVENIK Wishlist', url });
+        return;
+      }
+      await navigator.clipboard.writeText(url);
+      toast.success('Link copied');
+    } catch (error) {
+      // Dismissing the native share sheet is not a failure.
+      if (error instanceof DOMException && error.name === 'AbortError') return;
+      toast.error('Could not share the link.');
+    }
+  };
+
+  const showSkeleton = status === 'loading' && items.length === 0;
+  const isEmpty = status === 'ready' && items.length === 0;
 
   return (
-    <div className="kv-page min-h-screen pb-14 pt-5 text-[#171717] lg:pb-20 lg:pt-8">
+    <div className="kv-page text-[#171717]">
+      <WishlistHero
+        count={live.length}
+        total={totalValue}
+        savings={totalSavings}
+        addingAll={addingAll}
+        onAddAll={addAll}
+        onShare={share}
+        actionsRef={heroActionsRef}
+      />
 
-      <div className="mx-auto max-w-[1280px] px-4 lg:px-8">
-        {/* Hero */}
-        <MetalCard>
-          <span
-            className="kv-wordmark absolute -bottom-4 right-4 hidden text-[150px] sm:block"
-            style={SERIF_STYLE}
-            aria-hidden
-          >
-            KOVENIK
-          </span>
-          <div className="relative px-5 py-8 sm:px-10 lg:px-12 lg:py-12">
-            <nav aria-label="Breadcrumb" className="flex items-center gap-2 text-[12px] text-[#5C5C5C]">
-              <Link href="/" className="transition-colors hover:text-[#171717]">
-                Home
-              </Link>
-              <span className="text-[#8C6D3A]">&rsaquo;</span>
-              <span className="text-[#4A4A4A]">Wishlist</span>
-            </nav>
-
-            <p className="kv-label mt-6">KOVENIK — SAVED PIECES</p>
-            <h1 className="mt-3 text-[44px] font-normal leading-[1.05] text-[#171717] sm:text-[60px] lg:text-[76px]" style={SERIF_STYLE}>
-              My Wishlist.
-            </h1>
-            <p className="mt-3 max-w-md text-[14px] leading-6 text-[#4A4A4A]">
-              Your favourite pieces, saved for later.
-            </p>
-
-            {items.length > 0 && (
-              <div className="mt-6 flex flex-wrap gap-2">
-                <span className="kv-pill">
-                  <Heart className="h-3.5 w-3.5 text-[#8C6D3A]" strokeWidth={1.7} />
-                  {items.length} {items.length === 1 ? 'piece' : 'pieces'} saved
-                </span>
-                <span className="kv-pill">Total {formatINR(totalValue)}</span>
-                {totalSavings > 0 && <span className="kv-pill !text-[#1B7A43]">Saving {formatINR(totalSavings)}</span>}
-              </div>
-            )}
-          </div>
-        </MetalCard>
-
-        <div className="mt-5 lg:mt-6">
-          {items.length === 0 ? (
-            <MetalCard>
-              <div className="flex flex-col items-center px-6 py-16 text-center sm:py-24">
-                <IconDisc icon={Heart} size={64} />
-                <h2 className="mt-6 text-[26px] text-[#171717] sm:text-[32px]" style={SERIF_STYLE}>
-                  Your wishlist is empty
-                </h2>
-                <p className="mb-8 mt-2 max-w-sm text-[13px] leading-6 text-[#5C5C5C]">
-                  Save the pieces you love and they will wait for you here.
+      {status === 'error' && items.length === 0 ? (
+        <WishlistError onRetry={retry} />
+      ) : isEmpty ? (
+        <EmptyWishlist />
+      ) : (
+        <>
+          <section ref={gridRef} aria-label="Saved pieces" className={`${CONTAINER} pb-28 lg:pb-20`}>
+            {/* Toolbar */}
+            <div className="flex items-center justify-between gap-4 pb-[14px] pt-4 sm:pb-6 sm:pt-8">
+              <div className="flex flex-wrap items-center gap-x-5 gap-y-1 sm:gap-x-7">
+                <p className="text-[13px] font-bold uppercase tracking-[0.16em] text-[#171717]">
+                  {live.length} {live.length === 1 ? 'ITEM' : 'ITEMS'}
                 </p>
-                <Link href="/shop" className="kv-btn-primary">
-                  Explore the shop <ArrowRight className="h-4 w-4" />
-                </Link>
-              </div>
-            </MetalCard>
-          ) : (
-            <MetalCard>
-              <div className="p-4 sm:p-6">
-                {/* Toolbar */}
-                <div className="mb-5 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-                  <div className="flex items-center gap-4">
-                    <h2 className="text-[12px] font-bold uppercase tracking-[0.16em] text-[#171717]">
-                      {items.length} {items.length === 1 ? 'Item' : 'Items'}
-                    </h2>
+
+                {live.length > 0 &&
+                  (confirmClear ? (
+                    <div className="flex items-center gap-3 text-[12px] font-bold uppercase tracking-[0.16em]" role="alert">
+                      <span className="text-[#5E5A53]">Clear all?</span>
+                      <button
+                        type="button"
+                        onClick={clearAll}
+                        disabled={clearing}
+                        className={`min-h-[44px] text-[#B3261E] disabled:opacity-60 ${FOCUS}`}
+                      >
+                        {clearing ? 'Clearing…' : 'Yes, clear'}
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setConfirmClear(false)}
+                        disabled={clearing}
+                        className={`min-h-[44px] text-[#171717] ${FOCUS}`}
+                      >
+                        Cancel
+                      </button>
+                    </div>
+                  ) : (
                     <button
                       type="button"
-                      onClick={clear}
-                      className="min-h-[44px] text-[11px] uppercase tracking-[0.18em] text-[#5C5C5C] transition-colors hover:text-[#B3261E]"
+                      onClick={() => setConfirmClear(true)}
+                      className={`min-h-[44px] border-b border-[#E2DBCF] text-[12px] font-bold uppercase tracking-[0.16em] text-[#8A847A] hover:text-[#171717] ${FOCUS}`}
                     >
                       Clear all
                     </button>
-                  </div>
-
-                  <label className="relative flex min-h-[48px] cursor-pointer items-center gap-3 rounded-full border border-[#D6D0C2] bg-[#F4F0E8] px-4 sm:w-[260px]">
-                    <SlidersHorizontal className="h-4 w-4 shrink-0 text-[#8C6D3A]" strokeWidth={1.7} />
-                    <span className="flex flex-1 flex-col leading-tight">
-                      <span className="text-[10px] text-[#5C5C5C]">Sort by</span>
-                      <span className="text-[13px] text-[#171717]">{SORT_OPTIONS.find((o) => o.value === sort)?.label}</span>
-                    </span>
-                    <ChevronDown className="h-4 w-4 shrink-0 text-[#5C5C5C]" />
-                    <select
-                      aria-label="Sort wishlist"
-                      value={sort}
-                      onChange={(e) => setSort(e.target.value as SortKey)}
-                      className="absolute inset-0 h-full w-full cursor-pointer opacity-0"
-                    >
-                      {SORT_OPTIONS.map((o) => (
-                        <option key={o.value} value={o.value} className="bg-[#F4F0E8] text-[#171717]">
-                          {o.label}
-                        </option>
-                      ))}
-                    </select>
-                  </label>
-                </div>
-
-                {/* Grid */}
-                <div className="grid grid-cols-2 gap-3 sm:gap-5 lg:grid-cols-4">
-                  {sorted.map((item) => {
-                    const hasDiscount = item.mrp > item.price;
-                    const off = hasDiscount ? Math.round(((item.mrp - item.price) / item.mrp) * 100) : 0;
-
-                    return (
-                      <div
-                        key={item.productId}
-                        className="group relative min-w-0 overflow-hidden rounded-2xl border border-[#E2E0DB] bg-[#F4F0E8] transition-colors hover:border-[#D6D0C2]"
-                      >
-                        <Link href={`/product/${item.slug}`} className="block">
-                          <div className="relative aspect-[4/5] overflow-hidden border-b border-[#E2E0DB] bg-[#F4F0E8]">
-                            {item.image ? (
-                              // eslint-disable-next-line @next/next/no-img-element
-                              <img
-                                src={item.image}
-                                alt={item.name}
-                                className="h-full w-full object-cover object-center transition-transform duration-500 group-hover:scale-[1.03]"
-                              />
-                            ) : null}
-                            {off > 0 && (
-                              <span className="absolute left-3 top-3 rounded-full border border-[#B08D57] bg-[#F4F0E8]/90 px-2.5 py-1 text-[10px] font-semibold text-[#8C6D3A]">
-                                {off}% OFF
-                              </span>
-                            )}
-                          </div>
-
-                          <div className="px-3 pb-4 pt-3 sm:px-4">
-                            <h3
-                              title={item.name}
-                              className="line-clamp-2 min-h-[38px] break-words text-[13px] font-medium leading-[19px] text-[#171717] sm:text-[14px]"
-                            >
-                              {item.name}
-                            </h3>
-                            <p className="mt-2 flex flex-wrap items-baseline gap-x-2">
-                              <span className="text-[16px] font-semibold tabular-nums text-[#171717] sm:text-[18px]">
-                                {formatINR(item.price)}
-                              </span>
-                              {hasDiscount && (
-                                <span className="text-[12px] tabular-nums text-[#5C5C5C] line-through">{formatINR(item.mrp)}</span>
-                              )}
-                            </p>
-                          </div>
-                        </Link>
-
-                        <button
-                          type="button"
-                          aria-label={`Remove ${item.name} from wishlist`}
-                          onClick={() => remove(item.productId)}
-                          className="kv-disc absolute right-3 top-3 h-11 w-11 transition hover:brightness-125"
-                        >
-                          <Trash2 className="h-4 w-4" strokeWidth={1.7} />
-                        </button>
-                      </div>
-                    );
-                  })}
-                </div>
+                  ))}
               </div>
-            </MetalCard>
-          )}
-        </div>
-      </div>
+
+              {live.length > 0 && (
+                <label className="relative flex min-h-[44px] shrink-0 cursor-pointer items-center gap-2 text-[15px]">
+                  <span className="hidden text-[#8A847A] sm:inline">Sort by</span>
+                  <span className="font-semibold text-[#171717]">
+                    {SORT_OPTIONS.find((o) => o.value === sort)?.label}
+                  </span>
+                  <ChevronDown className="h-4 w-4 text-[#171717]" aria-hidden />
+                  <select
+                    aria-label="Sort wishlist"
+                    value={sort}
+                    onChange={(e) => setSort(e.target.value as SortKey)}
+                    className={`absolute inset-0 h-full w-full cursor-pointer opacity-0 ${FOCUS}`}
+                  >
+                    {SORT_OPTIONS.map((o) => (
+                      <option key={o.value} value={o.value}>
+                        {o.label}
+                      </option>
+                    ))}
+                  </select>
+                </label>
+              )}
+            </div>
+
+            {showSkeleton ? (
+              <WishlistSkeleton />
+            ) : (
+              <ul className="grid grid-cols-2 gap-x-3 gap-y-5 sm:grid-cols-3 sm:gap-5 lg:grid-cols-4 lg:gap-7">
+                {sorted.map((item) => (
+                  <WishlistCard
+                    key={item.productId}
+                    item={item}
+                    product={details[item.productId]}
+                    size={sizeFor(item.productId)}
+                    isMobile={isMobile}
+                    removing={removing.includes(item.productId)}
+                    onSize={(size) => setChosenSizes((s) => ({ ...s, [item.productId]: size }))}
+                    onRemove={() => removeItem(item.productId)}
+                  />
+                ))}
+                <ExploreTile />
+              </ul>
+            )}
+          </section>
+
+          {live.length > 0 && <StickyCartBar total={totalValue} busy={addingAll} visible={!heroActionsVisible && gridInView} onAddAll={addAll} />}
+        </>
+      )}
     </div>
   );
 }

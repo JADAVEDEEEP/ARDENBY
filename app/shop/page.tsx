@@ -13,11 +13,11 @@ export default function ShopPage() {
   return (
     <Suspense
       fallback={
-        <div className="container-ardenby py-10">
-          <div className="h-9 w-56 rounded-lg bg-muted" />
-          <div className="mt-8 grid grid-cols-2 gap-4 lg:grid-cols-4 lg:gap-6">
+        <div className="kvl min-h-screen bg-[var(--ivory)] px-4 py-10 lg:pl-[336px] lg:pr-12">
+          <div className="kvl-skeleton h-9 w-56" />
+          <div className="mt-8 grid grid-cols-2 gap-x-2.5 gap-y-[26px] md:grid-cols-3 lg:grid-cols-4 lg:gap-x-[22px] lg:gap-y-11">
             {Array.from({ length: 8 }).map((_, index) => (
-              <div key={index} className="aspect-[3/4] rounded-xl bg-muted" />
+              <div key={index} className="kvl-skeleton aspect-[4/5]" />
             ))}
           </div>
         </div>

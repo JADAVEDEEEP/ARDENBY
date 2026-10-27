@@ -264,7 +264,33 @@ export function Footer() {
           </p>
         </details>
 
-        <p className="mt-6 text-center text-[14px] text-kv-sub">© 2026 KOVENIK. All rights reserved.</p>
+        {/* Decorative brand wordmark: scales with the container, stays on one line at every width. */}
+        <div aria-hidden="true" className="pointer-events-none mx-auto mt-10 w-full max-w-[300px] select-none sm:max-w-[420px] md:mt-14 md:max-w-[600px]">
+          <svg
+            viewBox="0 0 1000 170"
+            preserveAspectRatio="xMidYMid meet"
+            className="block h-auto w-full"
+            focusable="false"
+          >
+            <text
+              x="0"
+              y="150"
+              textLength="1000"
+              lengthAdjust="spacingAndGlyphs"
+              fill="#C9B48A"
+              fillOpacity="0.4"
+              style={{
+                fontFamily: "var(--font-inter), Inter, Arial, system-ui, sans-serif",
+                fontWeight: 900,
+                fontSize: 190,
+              }}
+            >
+              KOVENIK
+            </text>
+          </svg>
+        </div>
+
+        <p className="mt-8 pb-2 text-center text-[14px] text-kv-sub md:mt-10">© 2026 KOVENIK. All rights reserved.</p>
       </div>
     </footer>
   );

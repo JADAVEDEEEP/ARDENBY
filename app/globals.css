@@ -1060,3 +1060,28 @@ textarea.kv-input { padding-top:12px; padding-bottom:12px; resize:none; line-hei
 }
 .kv-input::placeholder { color: #5c5c5c; }
 .kv-input:focus { border-color: #222222; box-shadow: none; }
+
+/* ---------------------------------------------------------------------------
+   Listing page (/shop) design tokens. Scoped to .kvl so the shadcn --muted
+   triplet used elsewhere is untouched. Add `kvl` to any element (header,
+   portalled sheets) that needs them.
+--------------------------------------------------------------------------- */
+.kvl {
+  --ivory: #F4F0E8;
+  --ivory-2: #EDE7DC;
+  --ink: #171717;
+  --charcoal: #222222;
+  --gold: #B08D57;
+  --line: #DDD5C7;
+  --line-2: #E7E0D3;
+  --muted: #6E6A63;
+  --soft: #8F897F;
+  font-family: var(--font-inter), system-ui, sans-serif;
+  color: var(--charcoal);
+  line-height: 1.4;
+}
+.kvl *:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
+.kvl-eyebrow { font-weight: 600; letter-spacing: 0.16em; text-transform: uppercase; }
+@keyframes kvl-pulse { 0%, 100% { opacity: 1; } 50% { opacity: .55; } }
+.kvl-skeleton { background: var(--ivory-2); animation: kvl-pulse 1.4s ease-in-out infinite; }
+@media (prefers-reduced-motion: reduce) { .kvl-skeleton { animation: none; } }

@@ -10,16 +10,15 @@ import type {
   RefObject,
   SetStateAction,
 } from 'react';
+import { useEffect, useState } from 'react';
+import { createPortal } from 'react-dom';
 import { AnimatePresence, motion } from 'framer-motion';
 import {
   ArrowRight,
-  Crown,
   Eye,
   EyeOff,
-  Gem,
   Lock,
   Mail,
-  Sparkles,
   X,
 } from 'lucide-react';
 
@@ -33,7 +32,7 @@ const GOLD_TEXT_STYLE = {
 const PHOTO_STYLE = {
   backgroundImage: "url('/images/hero-olive-graphic.jpg')",
   backgroundSize: 'cover',
-  backgroundPosition: 'center top',
+  backgroundPosition: '60% 20%',
 } as const;
 
 const METAL_BG = 'none';
@@ -41,22 +40,16 @@ const METAL_BG = 'none';
 const CARD_BG = 'none';
 
 const INPUT_CLASS =
-  'h-[50px] w-full rounded-[6px] border border-[#171717]/20 bg-[#FFFFFF]/80 px-11 text-[14px] text-[#171717] outline-none transition focus:border-[#171717]/60 focus:ring-4 focus:ring-[#171717]/15 placeholder:text-[#5C5C5C]';
+  'h-[48px] w-full rounded-[6px] border border-[#171717]/20 bg-[#FFFFFF] px-11 text-[14px] text-[#171717] outline-none transition focus:border-[#171717]/60 focus:ring-4 focus:ring-[#171717]/15 placeholder:text-[#5C5C5C]';
 
 const GOLD_BUTTON_CLASS =
-  'flex h-[52px] w-full items-center justify-center gap-3 rounded-[6px] bg-gradient-to-b from-[#B08D57] via-[#B08D57] to-[#B08D57] px-6 text-[13px] font-bold tracking-[0.12em] text-[#FFFFFF]  transition duration-300 hover:from-[#B08D57] hover:via-[#B08D57] hover:to-[#B08D57]  disabled:cursor-not-allowed disabled:opacity-50';
+  'flex h-[50px] w-full items-center justify-center gap-3 rounded-[6px] bg-gradient-to-b from-[#B08D57] via-[#B08D57] to-[#B08D57] px-6 text-[13px] font-bold tracking-[0.12em] text-[#FFFFFF]  transition duration-300 hover:from-[#B08D57] hover:via-[#B08D57] hover:to-[#B08D57]  disabled:cursor-not-allowed disabled:opacity-50';
 
 const LABEL_CLASS =
   'mb-1.5 block text-[10px] font-bold uppercase tracking-[0.2em] text-[#4A4A4A]';
 
 const ERROR_CLASS =
   'mb-5 rounded-[4px] border border-red-900/60 bg-red-950/40 px-4 py-3 text-center text-xs text-red-300';
-
-const FEATURES = [
-  { icon: Crown, label: 'Premium Quality' },
-  { icon: Gem, label: 'Exclusive Drops' },
-  { icon: Sparkles, label: 'Limited Editions' },
-];
 
 type AuthStep = 'LOGIN' | 'OTP' | 'RESET_PASSWORD';
 type OtpPurpose = 'login' | 'email_verification' | 'password_reset';
@@ -98,15 +91,12 @@ type NavbarAuthModalProps = {
 
 function Wordmark({ className = '' }: { className?: string }) {
   return (
-    <div className={`flex flex-col items-center ${className}`}>
+    <div className={`flex flex-col items-start ${className}`}>
       <span
-        className="text-[34px] font-semibold uppercase leading-none tracking-[-0.02em] sm:text-[40px]"
-        style={GOLD_TEXT_STYLE}
+        className="text-[18px] font-bold uppercase leading-none tracking-[0.3em] text-[#F4F0E8]"
+        style={{ fontFamily: SERIF }}
       >
         KOVENIK
-      </span>
-      <span className="mt-2 text-[8px] font-semibold uppercase tracking-[0.42em] text-[#8C6D3A]">
-        Wear Your Essence
       </span>
     </div>
   );
@@ -146,93 +136,78 @@ export function NavbarAuthModal({
   handleResetPassword,
   setStep,
 }: NavbarAuthModalProps) {
-  return (
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => setMounted(true), []);
+
+  // Lock page scroll while the modal is open
+  useEffect(() => {
+    if (!isOpen) return;
+    const previous = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.body.style.overflow = previous;
+    };
+  }, [isOpen]);
+
+  if (!mounted) return null;
+
+  // Portaled to <body> so no transformed/filtered ancestor can shrink the fixed backdrop.
+  return createPortal(
     <AnimatePresence>
       {isOpen && (
-        <div className="chrome-scope fixed inset-0 z-[9999] h-screen overflow-hidden bg-[#FFFFFF] text-[#171717]">
+        <div
+          className="chrome-scope fixed inset-0 z-[1000] flex items-center justify-center p-0 text-[#171717] md:p-6"
+          style={{ background: 'rgba(17,17,17,0.72)', backdropFilter: 'blur(6px)' }}
+        >
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="relative h-screen overflow-y-auto overflow-x-hidden"
+            className="relative flex w-full justify-center"
             style={{ backgroundImage: METAL_BG }}
           >
-            {/* Close */}
-            <button
-              type="button"
-              onClick={() => setIsOpen(false)}
-              className="fixed right-4 top-4 z-50 flex h-11 w-11 items-center justify-center rounded-full border border-[#E2E0DB] bg-white text-[#171717] transition hover:border-[#222222] hover:bg-[#F4F0E8] sm:right-6 sm:top-6"
-              aria-label="Close"
-            >
-              <X className="h-4 w-4" strokeWidth={1.5} />
-            </button>
+            <main className="relative z-10 w-full max-w-[920px]">
+              <div className="relative grid max-h-screen w-full grid-cols-1 overflow-y-auto overflow-x-hidden bg-[#F4F0E8] shadow-[0_40px_100px_rgba(0,0,0,0.35)] md:h-[580px] md:max-h-[calc(100vh-48px)] md:grid-cols-2 md:overflow-hidden md:rounded-[6px]">
+                {/* Close */}
+                <button
+                  type="button"
+                  onClick={() => setIsOpen(false)}
+                  className="absolute right-4 top-4 z-50 flex h-[34px] w-[34px] items-center justify-center rounded-full border border-[#E2E0DB] bg-white text-[#171717] transition hover:border-[#222222] hover:bg-[#F4F0E8]"
+                  aria-label="Close"
+                >
+                  <X className="h-4 w-4" strokeWidth={1.5} />
+                </button>
 
-            <main className="relative z-10 flex min-h-screen items-center justify-center p-0 lg:p-8">
-              <div className="relative grid w-full max-w-[1180px] overflow-hidden border-[#171717]/20 bg-[#FFFFFF]  lg:min-h-[640px] lg:grid-cols-[1.05fr_0.95fr] lg:border">
                 {/* Photo / brand panel */}
                 <div
-                  className="relative flex min-h-[250px] flex-col justify-between overflow-hidden lg:min-h-full lg:p-12"
+                  className="relative h-[180px] overflow-hidden md:h-full"
                   style={PHOTO_STYLE}
                 >
-                  <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-[#FFFFFF]/70 via-[#F4F0E8]/35 to-[#FFFFFF] lg:bg-gradient-to-tr lg:from-[#FFFFFF]/90 lg:via-[#F4F0E8]/30 lg:to-[#FFFFFF]/50" />
-                  <div className="pointer-events-none absolute inset-0 bg-[#F4F0E8]/25 mix-blend-multiply" />
+                  <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(to_top,rgba(17,17,17,0.85)_0%,rgba(17,17,17,0.2)_45%,rgba(17,17,17,0.35)_100%)]" />
 
                   <Link
                     href="/"
                     aria-label="Kovenik home"
-                    className="relative z-10 flex justify-center pt-5 lg:block lg:pt-0"
+                    className="absolute left-5 top-5 z-[2] block md:left-8 md:top-8"
                   >
-                    <Wordmark className="lg:items-start" />
+                    <Wordmark />
                   </Link>
 
-                  <div className="relative z-10 hidden lg:block">
-                    <p className="text-[10px] font-bold uppercase tracking-[0.4em] text-[#8C6D3A]">
-                      KOVENIK ATELIER
-                    </p>
-                    <div className="mt-4 h-px w-16 bg-[#B08D57]/70" />
-                    <h2
-                      className="mt-6 max-w-[320px] text-[56px] font-normal leading-[0.95] tracking-[-0.03em] text-[#171717]"
-                      style={{ fontFamily: SERIF }}
-                    >
-                      Wear Your
-                      <span className="block text-[#8C6D3A]">Essence.</span>
-                    </h2>
-                    <p className="mt-5 max-w-[300px] text-[13px] leading-6 text-[#4A4A4A]">
-                      Your wardrobe, your identity, your signature. Enter the KOVENIK world and continue your style journey.
-                    </p>
-
-                    <ul className="mt-8 space-y-3">
-                      {FEATURES.map(({ icon: Icon, label }) => (
-                        <li key={label} className="flex items-center gap-3">
-                          <span className="flex h-10 w-10 items-center justify-center rounded-full border border-[#B08D57]/60 bg-black/30">
-                            <Icon className="h-4 w-4 text-[#8C6D3A]" strokeWidth={1.4} />
-                          </span>
-                          <span className="text-[12px] text-[#4A4A4A]">{label}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-
-                  <div className="relative z-10 hidden lg:block">
-                    <div className="mb-3 flex items-center gap-3">
-                      <span className="h-px w-10 bg-[#B08D57]/50" />
-                      <span className="text-[9px] uppercase tracking-[0.3em] text-[#4A4A4A]">
-                        EST. KOVENIK
-                      </span>
-                    </div>
-                    <p className="text-[9px] uppercase tracking-[0.25em] text-[#5C5C5C]">
-                      Crafted for the ones who stand apart.
-                    </p>
-                  </div>
+                  <h2
+                    className="absolute bottom-5 left-5 z-[2] text-[32px] font-bold leading-none text-[#F4F0E8] md:bottom-9 md:left-9 md:text-[48px]"
+                    style={{ fontFamily: SERIF }}
+                  >
+                    Wear Your
+                    <span className="block text-[#B08D57]">Essence.</span>
+                  </h2>
                 </div>
 
                 {/* Form panel */}
                 <div
-                  className="relative -mt-8 rounded-t-[22px] border-t border-[#171717]/20 px-6 pb-8 pt-8 sm:px-12 lg:mt-0 lg:flex lg:flex-col lg:justify-center lg:rounded-none lg:border-l lg:border-t-0 lg:px-14 lg:py-12"
+                  className="relative flex flex-col justify-center bg-[#F4F0E8] px-5 py-6 md:overflow-y-auto md:p-12"
                   style={{ backgroundImage: CARD_BG }}
                 >
-                  <div className="pointer-events-none absolute left-0 top-0 h-px w-full bg-gradient-to-r from-transparent via-[#B08D57] to-transparent opacity-80" />
-                  <div className="pointer-events-none absolute -right-24 -top-24 h-48 w-48 rounded-full bg-[#B08D57]/[0.07] blur-3xl" />
 
                   <div className="relative">
                     <AnimatePresence mode="wait">
@@ -245,15 +220,14 @@ export function NavbarAuthModal({
                           exit={{ opacity: 0, y: -12 }}
                           transition={{ duration: 0.25 }}
                         >
-                          <div className="mb-6 text-center">
-                            <div className="mx-auto mb-5 hidden h-px w-14 bg-[#B08D57]/60 lg:block" />
+                          <div className="mb-5 text-center">
                             <h1
-                              className="text-[34px] font-normal leading-none tracking-[-0.03em] text-[#171717] sm:text-[40px]"
+                              className="text-[34px] font-normal leading-none tracking-[-0.03em] text-[#171717]"
                               style={{ fontFamily: SERIF }}
                             >
                               Welcome <span className="text-[#8C6D3A]">Back</span>
                             </h1>
-                            <p className="mx-auto mt-3 max-w-[340px] text-[13px] leading-5 text-[#4A4A4A]">
+                            <p className="mx-auto mt-3 max-w-[340px] text-[14px] leading-5 text-[#4A4A4A]">
                               Sign in to your account and continue your style journey.
                             </p>
                           </div>
@@ -268,7 +242,7 @@ export function NavbarAuthModal({
                             </motion.div>
                           )}
 
-                          <form onSubmit={handleEmailAuth} className="mx-auto max-w-[460px] space-y-3.5">
+                          <form onSubmit={handleEmailAuth} className="mx-auto max-w-[360px] space-y-4">
                             <label className="block">
                               <span className={LABEL_CLASS}>Email Address</span>
 
@@ -358,7 +332,7 @@ export function NavbarAuthModal({
                             </button>
                           </form>
 
-                          <div className="mx-auto my-5 flex max-w-[460px] items-center gap-4">
+                          <div className="mx-auto my-4 flex max-w-[360px] items-center gap-4">
                             <div className="h-px flex-1 bg-[#171717]/20" />
                             <span className="text-[9px] font-bold uppercase tracking-[0.3em] text-[#4A4A4A]">
                               OR
@@ -366,7 +340,7 @@ export function NavbarAuthModal({
                             <div className="h-px flex-1 bg-[#171717]/20" />
                           </div>
 
-                          <div className="group relative mx-auto h-[50px] w-full max-w-[460px]">
+                          <div className="group relative mx-auto h-[50px] w-full max-w-[360px]">
                             <div className="pointer-events-none absolute inset-0 flex items-center justify-center gap-3 rounded-[6px] border border-[#171717]/20 bg-[#FFFFFF]/80 text-[13px] font-medium text-[#171717] transition group-hover:border-[#171717]/60 group-hover:bg-[#F4F0E8]">
                               <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true">
                                 <path fill="#4285F4" d="M21.35 12.27c0-.72-.06-1.42-.18-2.09H12v3.95h5.22a4.46 4.46 0 0 1-1.94 2.93v2.43h3.14c1.84-1.69 2.93-4.18 2.93-7.22Z"/>
@@ -384,12 +358,6 @@ export function NavbarAuthModal({
                               }`}
                               aria-label="Continue with Google"
                             />
-                          </div>
-
-                          <div className="mx-auto mt-6 max-w-[460px] border-t border-[#171717]/20 pt-4 text-center">
-                            <p className="text-[8px] uppercase tracking-[0.25em] text-[#5C5C5C]">
-                              KOVENIK · WEAR YOUR ESSENCE
-                            </p>
                           </div>
                         </motion.div>
                       )}
@@ -634,6 +602,7 @@ export function NavbarAuthModal({
           </motion.div>
         </div>
       )}
-    </AnimatePresence>
+    </AnimatePresence>,
+    document.body,
   );
 }
