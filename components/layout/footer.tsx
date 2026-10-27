@@ -265,7 +265,7 @@ export function Footer() {
         </details>
 
         {/* Decorative brand wordmark: scales with the container, stays on one line at every width. */}
-        <div aria-hidden="true" className="pointer-events-none mx-auto mt-10 w-full max-w-[300px] select-none sm:max-w-[420px] md:mt-14 md:max-w-[600px]">
+        <div aria-hidden="true" className="pointer-events-none mt-8 select-none md:mt-12">
           <svg
             viewBox="0 0 1000 170"
             preserveAspectRatio="xMidYMid meet"
@@ -278,7 +278,7 @@ export function Footer() {
               textLength="1000"
               lengthAdjust="spacingAndGlyphs"
               fill="#C9B48A"
-              fillOpacity="0.4"
+              fillOpacity="0.55"
               style={{
                 fontFamily: "var(--font-inter), Inter, Arial, system-ui, sans-serif",
                 fontWeight: 900,
@@ -290,7 +290,7 @@ export function Footer() {
           </svg>
         </div>
 
-        <p className="mt-8 pb-2 text-center text-[14px] text-kv-sub md:mt-10">© 2026 KOVENIK. All rights reserved.</p>
+        <p className="mt-6 text-center text-[14px] text-kv-sub">© 2026 KOVENIK. All rights reserved.</p>
       </div>
     </footer>
   );
