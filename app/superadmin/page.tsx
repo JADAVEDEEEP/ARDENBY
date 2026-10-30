@@ -27,7 +27,7 @@ import { cn } from '@/lib/utils';
 const RANGES = [7, 30, 90] as const;
 
 const card =
-  'rounded-xl border border-[#B89A5A]/20 bg-gradient-to-b from-[#1C1B18] to-[#171612] shadow-[0_1px_0_rgba(255,255,255,0.04)_inset]';
+  'rounded-xl border border-[#E53935]/20 bg-gradient-to-b from-[#1A1A1A] to-[#111111] shadow-[0_1px_0_rgba(255,255,255,0.04)_inset]';
 
 /* ------------------------------ small pieces ------------------------------ */
 
@@ -45,7 +45,7 @@ function Panel({
   return (
     <section className={cn(card, 'p-5', className)}>
       <div className="mb-4 flex items-center justify-between gap-3">
-        <h2 className="text-[11px] font-semibold uppercase tracking-[0.24em] text-[#B89A5A]">
+        <h2 className="text-[11px] font-semibold uppercase tracking-[0.24em] text-[#E53935]">
           {title}
         </h2>
         {action}
@@ -69,21 +69,21 @@ function StatCard({
   return (
     <div className={cn(card, 'p-5')}>
       <div className="flex items-center justify-between">
-        <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-[#A19B8C]">
+        <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-[#979797]">
           {label}
         </p>
-        <span className="flex h-9 w-9 items-center justify-center rounded-full border border-[#B89A5A]/30 bg-[#2A2824]">
-          <Icon className="h-4 w-4 text-[#C8A96B]" />
+        <span className="flex h-9 w-9 items-center justify-center rounded-full border border-[#E53935]/30 bg-[#272727]">
+          <Icon className="h-4 w-4 text-[#E53935]" />
         </span>
       </div>
-      <p className="mt-3 font-serif text-3xl text-[#F4F0E6]">{value}</p>
-      {hint && <p className="mt-1 text-xs text-[#827D71]">{hint}</p>}
+      <p className="mt-3 font-serif text-3xl text-[#F7F7F7]">{value}</p>
+      {hint && <p className="mt-1 text-xs text-[#7A7A7A]">{hint}</p>}
     </div>
   );
 }
 
 function Change({ value }: { value: number | null }) {
-  if (value === null) return <span className="text-xs text-[#827D71]">no prior data</span>;
+  if (value === null) return <span className="text-xs text-[#7A7A7A]">no prior data</span>;
   const up = value >= 0;
   const Icon = up ? TrendingUp : TrendingDown;
   return (
@@ -99,9 +99,10 @@ const TONE: Record<string, string> = {
   paid: 'border-[#7FAF7F]/40 text-[#9BC49B]',
   delivered: 'border-[#7FAF7F]/40 text-[#9BC49B]',
   shipped: 'border-[#8DB0D6]/40 text-[#A9C4E4]',
-  refunded: 'border-[#B89A5A]/40 text-[#C8A96B]',
-  pending: 'border-[#B89A5A]/40 text-[#C8A96B]',
-  'refund pending': 'border-[#B89A5A]/40 text-[#C8A96B]',
+  refunded: 'border-[#E53935]/40 text-[#E53935]',
+  pending: 'border-[#E53935]/40 text-[#E53935]',
+  'refund pending': 'border-[#E53935]/40 text-[#E53935]',
+  'partially refunded': 'border-[#8DB0D6]/40 text-[#A9C4E4]',
   cancelled: 'border-[#D98B7E]/40 text-[#E2A79D]',
   failed: 'border-[#D98B7E]/40 text-[#E2A79D]',
 };
@@ -111,7 +112,7 @@ function Badge({ value }: { value: string }) {
     <span
       className={cn(
         'inline-block whitespace-nowrap rounded-full border px-2.5 py-0.5 text-[11px] font-medium capitalize',
-        TONE[value.toLowerCase()] || 'border-[#A19B8C]/40 text-[#C8C0AD]'
+        TONE[value.toLowerCase()] || 'border-[#979797]/40 text-[#BBBBBB]'
       )}
     >
       {value}
@@ -120,7 +121,7 @@ function Badge({ value }: { value: string }) {
 }
 
 function Empty({ children }: { children: ReactNode }) {
-  return <p className="py-8 text-center text-sm text-[#827D71]">{children}</p>;
+  return <p className="py-8 text-center text-sm text-[#7A7A7A]">{children}</p>;
 }
 
 /* --------------------------------- chart ---------------------------------- */
@@ -141,9 +142,9 @@ function RevenueChart({ series }: { series: DashboardData['series'] }) {
 
   return (
     <div>
-      <div className="mb-2 flex h-5 items-center justify-between text-xs text-[#A19B8C]">
+      <div className="mb-2 flex h-5 items-center justify-between text-xs text-[#979797]">
         <span>{active ? formatDate(active.date) : 'Paid revenue per day'}</span>
-        <span className="text-[#F4F0E6]">
+        <span className="text-[#F7F7F7]">
           {active ? `${formatInr(active.revenue)} · ${active.orders} order${active.orders === 1 ? '' : 's'}` : `Peak ${formatInr(max)}`}
         </span>
       </div>
@@ -156,12 +157,12 @@ function RevenueChart({ series }: { series: DashboardData['series'] }) {
       >
         <defs>
           <linearGradient id="kv-silver" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stopColor="#E4DFD2" />
-            <stop offset="100%" stopColor="#8E7B52" />
+            <stop offset="0%" stopColor="#E5E5E5" />
+            <stop offset="100%" stopColor="#707070" />
           </linearGradient>
         </defs>
         {[0.25, 0.5, 0.75, 1].map((f) => (
-          <line key={f} x1="0" x2={W} y1={H - f * (H - 6)} y2={H - f * (H - 6)} stroke="#B89A5A" strokeOpacity="0.12" />
+          <line key={f} x1="0" x2={W} y1={H - f * (H - 6)} y2={H - f * (H - 6)} stroke="#E53935" strokeOpacity="0.12" />
         ))}
         {series.map((p, i) => {
           const h = max > 0 ? Math.max((p.revenue / max) * (H - 6), p.revenue > 0 ? 2 : 0) : 0;
@@ -178,13 +179,13 @@ function RevenueChart({ series }: { series: DashboardData['series'] }) {
                 opacity={hover === null || hover === i ? 1 : 0.45}
               />
               {p.revenue === 0 && p.orders > 0 && (
-                <rect x={i * (bar + gap)} y={H - 2} width={bar} height="2" fill="#827D71" />
+                <rect x={i * (bar + gap)} y={H - 2} width={bar} height="2" fill="#7A7A7A" />
               )}
             </g>
           );
         })}
       </svg>
-      <div className="mt-1 flex justify-between text-[10px] text-[#827D71]">
+      <div className="mt-1 flex justify-between text-[10px] text-[#7A7A7A]">
         <span>{formatDate(series[0].date)}</span>
         <span>{formatDate(series[series.length - 1].date)}</span>
       </div>
@@ -200,12 +201,12 @@ function Breakdown({ items }: { items: { status: string; count: number }[] }) {
       {items.map((i) => (
         <li key={i.status}>
           <div className="flex justify-between text-xs">
-            <span className="text-[#C8C0AD]">{i.status}</span>
-            <span className="text-[#F4F0E6]">{i.count}</span>
+            <span className="text-[#BBBBBB]">{i.status}</span>
+            <span className="text-[#F7F7F7]">{i.count}</span>
           </div>
-          <div className="mt-1 h-1.5 overflow-hidden rounded-full bg-[#2A2824]">
+          <div className="mt-1 h-1.5 overflow-hidden rounded-full bg-[#272727]">
             <div
-              className="h-full rounded-full bg-gradient-to-r from-[#8E7B52] to-[#E4DFD2]"
+              className="h-full rounded-full bg-gradient-to-r from-[#707070] to-[#E5E5E5]"
               style={{ width: `${(i.count / total) * 100}%` }}
             />
           </div>
@@ -261,9 +262,9 @@ export default function SuperAdminPage() {
       type="button"
       onClick={() => void load()}
       disabled={loading}
-      className="inline-flex h-9 items-center gap-2 rounded-lg border border-[#B89A5A]/30 px-3 text-xs font-semibold text-[#EAE4D5] outline-none transition hover:bg-[#2A2824] focus-visible:ring-1 focus-visible:ring-[#C8A96B] disabled:opacity-60"
+      className="inline-flex h-9 items-center gap-2 rounded-lg border border-[#E53935]/30 px-3 text-xs font-semibold text-[#E5E5E5] outline-none transition hover:bg-[#272727] focus-visible:ring-1 focus-visible:ring-[#E53935] disabled:opacity-60"
     >
-      <RefreshCw className={cn('h-4 w-4 text-[#B89A5A]', loading && 'animate-spin')} />
+      <RefreshCw className={cn('h-4 w-4 text-[#E53935]', loading && 'animate-spin')} />
       Refresh
     </button>
   );
@@ -275,7 +276,7 @@ export default function SuperAdminPage() {
       <div className={cn(card, 'mx-auto max-w-md p-8 text-center')} role="alert">
         <AlertTriangle className="mx-auto h-8 w-8 text-[#D98B7E]" />
         <p className="mt-3 font-serif text-xl">Dashboard unavailable</p>
-        <p className="mt-2 text-sm text-[#A19B8C]">{error}</p>
+        <p className="mt-2 text-sm text-[#979797]">{error}</p>
         <div className="mt-5 flex justify-center">{refresh}</div>
       </div>
     );
@@ -286,11 +287,11 @@ export default function SuperAdminPage() {
   return (
     <div className="space-y-5">
       <div className="flex flex-wrap items-center justify-between gap-3">
-        <p className="text-xs text-[#827D71]">
+        <p className="text-xs text-[#7A7A7A]">
           Updated {formatDate(data.generatedAt, true)}
         </p>
         <div className="flex items-center gap-2">
-          <div className="inline-flex overflow-hidden rounded-lg border border-[#B89A5A]/30" role="group" aria-label="Date range">
+          <div className="inline-flex overflow-hidden rounded-lg border border-[#E53935]/30" role="group" aria-label="Date range">
             {RANGES.map((r) => (
               <button
                 key={r}
@@ -299,7 +300,7 @@ export default function SuperAdminPage() {
                 aria-pressed={days === r}
                 className={cn(
                   'h-9 px-3 text-xs font-semibold transition',
-                  days === r ? 'bg-[#373530] text-[#F4F0E6]' : 'text-[#A19B8C] hover:bg-[#2A2824]'
+                  days === r ? 'bg-[#343434] text-[#F7F7F7]' : 'text-[#979797] hover:bg-[#272727]'
                 )}
               >
                 {r}D
@@ -337,20 +338,20 @@ export default function SuperAdminPage() {
               ['Last 7 days', revenue.last7Days, revenue.last7DaysChange, `${orders.last7Days} orders`],
               ['Last 30 days', revenue.last30Days, revenue.last30DaysChange, `${orders.last30Days} orders`],
             ].map(([label, amount, change, count]) => (
-              <div key={label as string} className="border-b border-[#B89A5A]/10 pb-3 last:border-0 last:pb-0">
+              <div key={label as string} className="border-b border-[#E53935]/10 pb-3 last:border-0 last:pb-0">
                 <div className="flex items-baseline justify-between">
-                  <dt className="text-[#A19B8C]">{label as string}</dt>
-                  <dd className="font-serif text-lg text-[#F4F0E6]">{formatInr(amount as number)}</dd>
+                  <dt className="text-[#979797]">{label as string}</dt>
+                  <dd className="font-serif text-lg text-[#F7F7F7]">{formatInr(amount as number)}</dd>
                 </div>
-                <div className="mt-0.5 flex justify-between text-xs text-[#827D71]">
+                <div className="mt-0.5 flex justify-between text-xs text-[#7A7A7A]">
                   <span>{count as string}</span>
                   {change !== null && <Change value={change as number | null} />}
                 </div>
               </div>
             ))}
             <div className="flex justify-between text-xs">
-              <span className="text-[#A19B8C]">Average paid order</span>
-              <span className="text-[#F4F0E6]">{formatInr(revenue.averageOrderValue)}</span>
+              <span className="text-[#979797]">Average paid order</span>
+              <span className="text-[#F7F7F7]">{formatInr(revenue.averageOrderValue)}</span>
             </div>
           </dl>
         </Panel>
@@ -363,7 +364,7 @@ export default function SuperAdminPage() {
           <div className="-mx-5 overflow-x-auto px-5">
             <table className="w-full min-w-[640px] text-left text-sm">
               <thead>
-                <tr className="border-b border-[#B89A5A]/20 text-[10px] uppercase tracking-[0.18em] text-[#827D71]">
+                <tr className="border-b border-[#E53935]/20 text-[10px] uppercase tracking-[0.18em] text-[#7A7A7A]">
                   <th className="pb-2 font-semibold">Order</th>
                   <th className="pb-2 font-semibold">Customer</th>
                   <th className="pb-2 text-right font-semibold">Amount</th>
@@ -374,16 +375,16 @@ export default function SuperAdminPage() {
               </thead>
               <tbody>
                 {data.recentOrders.map((o) => (
-                  <tr key={o.id} className="border-b border-[#B89A5A]/10 last:border-0">
-                    <td className="py-3 pr-3 font-medium text-[#F4F0E6]">{o.orderNumber}</td>
-                    <td className="py-3 pr-3 text-[#C8C0AD]">
+                  <tr key={o.id} className="border-b border-[#E53935]/10 last:border-0">
+                    <td className="py-3 pr-3 font-medium text-[#F7F7F7]">{o.orderNumber}</td>
+                    <td className="py-3 pr-3 text-[#BBBBBB]">
                       {o.customer}
-                      {o.customerEmail && <span className="block text-[11px] text-[#827D71]">{o.customerEmail}</span>}
+                      {o.customerEmail && <span className="block text-[11px] text-[#7A7A7A]">{o.customerEmail}</span>}
                     </td>
-                    <td className="py-3 text-right text-[#F4F0E6]">{formatInr(o.amount)}</td>
+                    <td className="py-3 text-right text-[#F7F7F7]">{formatInr(o.amount)}</td>
                     <td className="py-3 pl-4"><Badge value={o.paymentStatus} /></td>
                     <td className="py-3"><Badge value={o.status} /></td>
-                    <td className="py-3 text-right text-xs text-[#A19B8C]">{formatDate(o.createdAt, true)}</td>
+                    <td className="py-3 text-right text-xs text-[#979797]">{formatDate(o.createdAt, true)}</td>
                   </tr>
                 ))}
               </tbody>
@@ -406,13 +407,13 @@ export default function SuperAdminPage() {
             <ol className="space-y-3">
               {products.topSelling.map((p, i) => (
                 <li key={p.productId} className="flex items-center gap-3 text-sm">
-                  <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full border border-[#B89A5A]/30 text-[11px] text-[#C8A96B]">
+                  <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full border border-[#E53935]/30 text-[11px] text-[#E53935]">
                     {i + 1}
                   </span>
-                  <span className="min-w-0 flex-1 truncate text-[#F4F0E6]">{p.name}</span>
-                  <span className="text-right text-xs text-[#A19B8C]">
+                  <span className="min-w-0 flex-1 truncate text-[#F7F7F7]">{p.name}</span>
+                  <span className="text-right text-xs text-[#979797]">
                     {p.units} sold
-                    <span className="block text-[#C8C0AD]">{formatInr(p.revenue)}</span>
+                    <span className="block text-[#BBBBBB]">{formatInr(p.revenue)}</span>
                   </span>
                 </li>
               ))}
@@ -429,9 +430,9 @@ export default function SuperAdminPage() {
               [`Low stock (≤${products.lowStockLimit})`, products.lowStock],
               ['Out of stock', products.outOfStock],
             ].map(([label, value]) => (
-              <div key={label as string} className="rounded-lg border border-[#B89A5A]/15 bg-[#131210]/60 p-3">
-                <dd className="font-serif text-2xl text-[#F4F0E6]">{value as number}</dd>
-                <dt className="mt-1 text-[10px] uppercase tracking-wider text-[#827D71]">{label as string}</dt>
+              <div key={label as string} className="rounded-lg border border-[#E53935]/15 bg-[#111111]/60 p-3">
+                <dd className="font-serif text-2xl text-[#F7F7F7]">{value as number}</dd>
+                <dt className="mt-1 text-[10px] uppercase tracking-wider text-[#7A7A7A]">{label as string}</dt>
               </div>
             ))}
           </dl>
@@ -444,14 +445,14 @@ export default function SuperAdminPage() {
               ['Verified', customers.verified],
               ['Have ordered', customers.withOrders],
             ].map(([label, value]) => (
-              <div key={label as string} className="rounded-lg border border-[#B89A5A]/15 bg-[#131210]/60 p-3">
-                <dd className="font-serif text-2xl text-[#F4F0E6]">{value as number}</dd>
-                <dt className="mt-1 text-[10px] uppercase tracking-wider text-[#827D71]">{label as string}</dt>
+              <div key={label as string} className="rounded-lg border border-[#E53935]/15 bg-[#111111]/60 p-3">
+                <dd className="font-serif text-2xl text-[#F7F7F7]">{value as number}</dd>
+                <dt className="mt-1 text-[10px] uppercase tracking-wider text-[#7A7A7A]">{label as string}</dt>
               </div>
             ))}
           </dl>
           {customers.deactivated > 0 && (
-            <p className="mt-3 text-xs text-[#827D71]">{customers.deactivated} deactivated customer account(s) not counted above.</p>
+            <p className="mt-3 text-xs text-[#7A7A7A]">{customers.deactivated} deactivated customer account(s) not counted above.</p>
           )}
         </Panel>
       </div>

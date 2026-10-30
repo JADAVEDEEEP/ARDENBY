@@ -107,17 +107,17 @@ const emptyForm = {
   variants: [] as Variant[],
 };
 
-/* shared UI tokens (presentation only) — KOVENIK forest green + gold */
+/* shared UI tokens (presentation only) — KOVENIK black / white / red */
 const inputCls =
-  "w-full min-h-11 rounded-xl border border-[#B89A5A]/25 bg-[#131210] px-3.5 py-2.5 text-sm text-[#F4F0E6] outline-none transition duration-200 [color-scheme:dark] placeholder:text-[#706C61] hover:border-[#B89A5A]/50 focus:border-[#C8A96B] focus:ring-4 focus:ring-[#B89A5A]/15";
+  "w-full min-h-11 rounded-xl border border-[#E4E7EC] bg-[#F5F6F8] px-3.5 py-2.5 text-sm text-[#111111] outline-none transition duration-200  placeholder:text-[#626875] hover:border-[#E53935]/50 focus:border-[#E53935] focus:ring-4 focus:ring-[#E53935]/15";
 const labelCls =
-  "mb-1.5 block text-[11px] font-medium tracking-[0.08em] text-[#BEB7A5]";
-const goldBtn =
-  "bg-gradient-to-b from-[#C8A96B] to-[#B89A5A] text-[#131210] shadow-[0_4px_16px_rgba(184,154,90,0.22)] hover:from-[#D6BB84] hover:to-[#C8A96B]";
+  "mb-1.5 block text-[12px] font-medium tracking-[0.08em] text-[#4A5160]";
+const primaryBtn =
+  "bg-[#E53935] text-white shadow-sm hover:bg-[#C62E2B]";
 const panelCls =
-  "rounded-xl border border-[#B89A5A]/20 bg-gradient-to-br from-[#2A2824] via-[#1C1B18] to-[#171614] shadow-[0_8px_30px_-12px_rgba(0,0,0,0.6)]";
+  "rounded-xl border border-[#E4E7EC] bg-white shadow-[0_1px_2px_rgba(16,24,40,0.05)]";
 const selectCls =
-  "h-11 w-full cursor-pointer appearance-none rounded-lg border border-[#B89A5A]/25 bg-[#1C1B18] pl-3.5 pr-9 text-[13px] text-[#F4F0E6] outline-none transition duration-200 [color-scheme:dark] hover:border-[#B89A5A]/55 focus:border-[#C8A96B] focus:ring-4 focus:ring-[#B89A5A]/15";
+  "h-11 w-full cursor-pointer appearance-none rounded-lg border border-[#E4E7EC] bg-white pl-3.5 pr-9 text-[14px] text-[#111111] outline-none transition duration-200  hover:border-[#E53935]/55 focus:border-[#E53935] focus:ring-4 focus:ring-[#E53935]/15";
 
 const tableGrid =
   "grid-cols-[40px_minmax(240px,2.3fr)_minmax(90px,.9fr)_minmax(100px,.9fr)_minmax(64px,.6fr)_minmax(90px,.9fr)_minmax(110px,1fr)_92px]";
@@ -617,13 +617,13 @@ export default function AdminProductsPage() {
     return (
       <div>
         <div className="flex flex-wrap items-baseline gap-x-2">
-          <span className="text-[15px] font-semibold tabular-nums text-[#F4F0E6]">₹{inr(priceOf(p))}</span>
+          <span className="text-[15px] font-semibold tabular-nums text-[#111111]">₹{inr(priceOf(p))}</span>
           {p.mrp && p.mrp > priceOf(p) ? (
-            <span className="text-[11px] text-[#928C7E] line-through tabular-nums">₹{inr(p.mrp)}</span>
+            <span className="text-[12px] text-[#626875] line-through tabular-nums">₹{inr(p.mrp)}</span>
           ) : null}
         </div>
         {off > 0 && (
-          <span className="mt-0.5 inline-block text-[11px] font-medium text-[#C8A96B]">
+          <span className="mt-0.5 inline-block text-[12px] font-medium text-[#E53935]">
             {off}% off
           </span>
         )}
@@ -632,10 +632,10 @@ export default function AdminProductsPage() {
   };
 
   const stockClr = (stock: number) =>
-    stock === 0 ? "text-red-400" : stock <= 5 ? "text-[#E0A24A]" : "text-[#9FD3A8]";
+    stock === 0 ? "text-[#B42318]" : stock <= 5 ? "text-[#E53935]" : "text-[#0F6446]";
 
   const thumb = (p: Product, cls: string) => (
-    <div className={`shrink-0 overflow-hidden rounded-lg border border-[#B89A5A]/30 bg-[#1C1B18] ${cls}`}>
+    <div className={`shrink-0 overflow-hidden rounded-lg border border-[#E4E7EC] bg-white ${cls}`}>
       {p.images?.[0]?.image_url ? (
         <img
           src={p.images[0].image_url}
@@ -643,7 +643,7 @@ export default function AdminProductsPage() {
           className="h-full w-full object-cover"
         />
       ) : (
-        <div className="flex h-full items-center justify-center text-[#706C61]">
+        <div className="flex h-full items-center justify-center text-[#626875]">
           <ImageOff className="h-5 w-5" />
         </div>
       )}
@@ -683,11 +683,11 @@ export default function AdminProductsPage() {
     return (
       <span
         className={`inline-flex items-center gap-1.5 rounded-full border font-medium ${
-          small ? "px-2.5 py-1 text-[11px]" : "px-3 py-1 text-[11px]"
+          small ? "px-2.5 py-1 text-[12px]" : "px-3 py-1 text-[12px]"
         } ${
           active
-            ? "border-[#B89A5A]/35 bg-[#46433C]/70 text-[#E9E0CA]"
-            : "border-[#9C5A4A]/50 bg-[#5A2A25]/60 text-[#F0B7AB]"
+            ? "border-[#D0D5DD] bg-[#E4E7EC]/70 text-[#4A5160]"
+            : "border-[#D92D20]/30 bg-[#D92D20]/10 text-[#B42318]"
         }`}
       >
         <span className={`h-1.5 w-1.5 rounded-full ${active ? "bg-[#7BD18F]" : "bg-[#E58C7B]"}`} />
@@ -705,7 +705,7 @@ export default function AdminProductsPage() {
           e.stopPropagation();
           setMenuId(menuId === p.id ? null : p.id);
         }}
-        className="flex h-10 w-9 items-center justify-center rounded-lg border border-[#B89A5A]/15 bg-[#1C1B18] text-[#BEB7A5] outline-none transition hover:border-[#B89A5A]/45 hover:text-[#F4F0E6] focus-visible:ring-2 focus-visible:ring-[#C8A96B]"
+        className="flex h-10 w-9 items-center justify-center rounded-lg border border-[#E4E7EC] bg-white text-[#4A5160] outline-none transition hover:border-[#D0D5DD] hover:text-[#111111] focus-visible:ring-2 focus-visible:ring-[#E53935]"
       >
         <MoreVertical className="h-4 w-4" />
       </button>
@@ -719,7 +719,7 @@ export default function AdminProductsPage() {
             className="fixed inset-0 z-30 cursor-default"
           />
           <div
-            className={`absolute right-0 z-40 w-44 overflow-hidden rounded-lg border border-[#B89A5A]/35 bg-[#1C1B18] py-1 shadow-[0_16px_40px_-10px_rgba(0,0,0,0.9)] ${
+            className={`absolute right-0 z-40 w-44 overflow-hidden rounded-lg border border-[#E53935]/35 bg-white py-1 shadow-[0_8px_24px_rgba(16,24,40,0.12)] ${
               up ? "bottom-full mb-1.5" : "top-full mt-1.5"
             }`}
           >
@@ -729,9 +729,9 @@ export default function AdminProductsPage() {
                 setMenuId(null);
                 openPreview(p);
               }}
-              className="flex w-full items-center gap-2.5 px-3.5 py-2.5 text-left text-xs text-[#F4F0E6] transition hover:bg-[#B89A5A]/10"
+              className="flex w-full items-center gap-2.5 px-3.5 py-2.5 text-left text-xs text-[#111111] transition hover:bg-[#E53935]/10"
             >
-              <Eye className="h-3.5 w-3.5 text-[#C8A96B]" />
+              <Eye className="h-3.5 w-3.5 text-[#E53935]" />
               View details
             </button>
             <button
@@ -740,7 +740,7 @@ export default function AdminProductsPage() {
                 setMenuId(null);
                 deleteProduct(p.id);
               }}
-              className="flex w-full items-center gap-2.5 px-3.5 py-2.5 text-left text-xs text-red-300 transition hover:bg-red-500/10"
+              className="flex w-full items-center gap-2.5 px-3.5 py-2.5 text-left text-xs text-[#B42318] transition hover:bg-[#D92D20]/8"
             >
               <Trash2 className="h-3.5 w-3.5" />
               Delete product
@@ -757,22 +757,22 @@ export default function AdminProductsPage() {
       onClick={() => openEdit(p)}
       aria-label={`Edit ${p.name}`}
       title="Edit"
-      className="flex h-10 w-10 items-center justify-center rounded-lg border border-[#B89A5A]/55 bg-transparent text-[#C8A96B] outline-none transition hover:bg-[#B89A5A] hover:text-[#131210] focus-visible:ring-2 focus-visible:ring-[#C8A96B]"
+      className="flex h-10 w-10 items-center justify-center rounded-lg border border-[#E53935]/55 bg-transparent text-[#E53935] outline-none transition hover:bg-[#E53935] hover:text-white focus-visible:ring-2 focus-visible:ring-[#E53935]"
     >
       <Pencil className="h-4 w-4" />
     </button>
   );
 
   return (
-    <div className="kv-scope mx-auto w-full max-w-7xl overflow-x-hidden pb-10 text-[#F4F0E6]">
+    <div className="kv-scope mx-auto w-full max-w-7xl overflow-x-hidden pb-10 text-[#111111]">
       <style>{`
         @keyframes kv-pop { from { opacity: 0; transform: translateY(14px) scale(.985); } to { opacity: 1; transform: none; } }
         .kv-pop { animation: kv-pop .35s cubic-bezier(.2,.7,.2,1) both; }
         @media (prefers-reduced-motion: reduce) { .kv-pop { animation: none; } }
-        .kv-scope ::selection { background: rgba(184,154,90,.3); color: #fff; }
-        .kv-scope * { scrollbar-width: thin; scrollbar-color: #514E46 transparent; }
+        .kv-scope ::selection { background: rgba(229, 57, 53,.3); color: #fff; }
+        .kv-scope * { scrollbar-width: thin; scrollbar-color: #4C4C4C transparent; }
         .kv-scope *::-webkit-scrollbar { width: 7px; height: 7px; }
-        .kv-scope *::-webkit-scrollbar-thumb { background: #514E46; border-radius: 999px; }
+        .kv-scope *::-webkit-scrollbar-thumb { background: #4C4C4C; border-radius: 999px; }
         .kv-scope *::-webkit-scrollbar-track { background: transparent; }
         .kv-scope button, .kv-scope a, .kv-scope input, .kv-scope select, .kv-scope textarea { -webkit-tap-highlight-color: transparent; }
         @media (max-width: 639px) {
@@ -783,10 +783,10 @@ export default function AdminProductsPage() {
       {/* PAGE HEADER */}
       <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
         <div>
-          <h2 className="font-serif text-3xl font-semibold leading-tight tracking-tight text-[#F4F0E6] sm:text-4xl">
+          <h2 className="text-3xl font-semibold leading-tight tracking-tight text-[#111111] sm:text-4xl">
             Product Management
           </h2>
-          <p className="mt-1.5 text-sm text-[#BEB7A5]">
+          <p className="mt-1.5 text-sm text-[#4A5160]">
             Manage your products, variants, inventory and more.
           </p>
         </div>
@@ -794,7 +794,7 @@ export default function AdminProductsPage() {
         <button
           type="button"
           onClick={openAdd}
-          className={`flex h-11 w-full items-center justify-center gap-2 rounded-lg px-5 text-[13px] font-semibold outline-none transition active:scale-[.98] focus-visible:ring-2 focus-visible:ring-[#F4F0E6] sm:w-auto ${goldBtn}`}
+          className={`flex h-11 w-full items-center justify-center gap-2 rounded-lg px-5 text-[14px] font-semibold outline-none transition active:scale-[.98] focus-visible:ring-2 focus-visible:ring-[#E53935] sm:w-auto ${primaryBtn}`}
         >
           <Plus className="h-4 w-4" />
           Add Product
@@ -808,17 +808,17 @@ export default function AdminProductsPage() {
           return (
             <div
               key={s.label}
-              className={`${panelCls} flex items-center gap-3 p-3.5 transition-colors duration-300 hover:border-[#C8A96B]/45 sm:gap-4 sm:p-4`}
+              className={`${panelCls} flex items-center gap-3 p-3.5 transition-colors duration-300 hover:border-[#D0D5DD] sm:gap-4 sm:p-4`}
             >
-              <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg border border-[#B89A5A]/40 bg-[#312F2A] text-[#C8A96B] sm:h-12 sm:w-12">
+              <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg border border-[#D0D5DD] bg-[#F2F4F7] text-[#E53935] sm:h-12 sm:w-12">
                 <Icon className="h-5 w-5" />
               </span>
               <div className="min-w-0">
-                <p className="truncate text-[12px] font-medium text-[#F4F0E6]">{s.label}</p>
-                <p className="mt-0.5 font-serif text-3xl font-semibold leading-none tabular-nums text-[#F4F0E6]">
+                <p className="truncate text-[12px] font-medium text-[#111111]">{s.label}</p>
+                <p className="mt-0.5 text-3xl font-semibold leading-none tabular-nums text-[#111111]">
                   {loading && products.length === 0 ? "—" : s.value}
                 </p>
-                <p className="mt-1 hidden truncate text-[11px] text-[#BEB7A5] sm:block">{s.sub}</p>
+                <p className="mt-1 hidden truncate text-[12px] text-[#4A5160] sm:block">{s.sub}</p>
               </div>
             </div>
           );
@@ -828,7 +828,7 @@ export default function AdminProductsPage() {
       {/* TOOLBAR */}
       <div className="mt-5 flex gap-2 lg:hidden">
         <div className="relative min-w-0 flex-1">
-          <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[#C8A96B]" />
+          <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[#E53935]" />
           <input
             value={search}
             onChange={(e) => setSearch(e.target.value)}
@@ -836,14 +836,14 @@ export default function AdminProductsPage() {
               if (e.key === "Enter") loadProducts();
             }}
             placeholder="Search products..."
-            className="h-11 w-full rounded-lg border border-[#B89A5A]/25 bg-[#1C1B18] pl-9 pr-3 text-[13px] text-[#F4F0E6] outline-none transition placeholder:text-[#706C61] hover:border-[#B89A5A]/55 focus:border-[#C8A96B] focus:ring-4 focus:ring-[#B89A5A]/15"
+            className="h-11 w-full rounded-lg border border-[#E4E7EC] bg-white pl-9 pr-3 text-[14px] text-[#111111] outline-none transition placeholder:text-[#626875] hover:border-[#E53935]/55 focus:border-[#E53935] focus:ring-4 focus:ring-[#E53935]/15"
           />
         </div>
         <button
           type="button"
           onClick={() => setFiltersOpen(true)}
           aria-label="Open filters"
-          className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-lg ${goldBtn}`}
+          className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-lg ${primaryBtn}`}
         >
           <Filter className="h-4 w-4" />
         </button>
@@ -851,7 +851,7 @@ export default function AdminProductsPage() {
 
       <div className="mt-5 hidden items-center gap-3 lg:flex">
         <div className="relative min-w-0 flex-1">
-          <Search className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-[#C8A96B]" />
+          <Search className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-[#E53935]" />
           <input
             ref={searchRef}
             value={search}
@@ -860,9 +860,9 @@ export default function AdminProductsPage() {
               if (e.key === "Enter") loadProducts();
             }}
             placeholder="Search products by name, SKU..."
-            className="h-11 w-full rounded-lg border border-[#B89A5A]/25 bg-[#1C1B18] pl-10 pr-10 text-[13px] text-[#F4F0E6] outline-none transition placeholder:text-[#706C61] hover:border-[#B89A5A]/55 focus:border-[#C8A96B] focus:ring-4 focus:ring-[#B89A5A]/15"
+            className="h-11 w-full rounded-lg border border-[#E4E7EC] bg-white pl-10 pr-10 text-[14px] text-[#111111] outline-none transition placeholder:text-[#626875] hover:border-[#E53935]/55 focus:border-[#E53935] focus:ring-4 focus:ring-[#E53935]/15"
           />
-          <kbd className="pointer-events-none absolute right-3 top-1/2 flex h-6 w-6 -translate-y-1/2 items-center justify-center rounded border border-[#B89A5A]/25 text-[11px] text-[#928C7E]">
+          <kbd className="pointer-events-none absolute right-3 top-1/2 flex h-6 w-6 -translate-y-1/2 items-center justify-center rounded border border-[#E4E7EC] text-[12px] text-[#626875]">
             /
           </kbd>
         </div>
@@ -885,7 +885,7 @@ export default function AdminProductsPage() {
               </option>
             ))}
           </select>
-          <ChevronDown className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[#C8A96B]" />
+          <ChevronDown className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[#E53935]" />
         </div>
 
         <div className="relative w-[150px] shrink-0">
@@ -905,7 +905,7 @@ export default function AdminProductsPage() {
             <option value="low">Low Stock</option>
             <option value="out">Out of Stock</option>
           </select>
-          <ChevronDown className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[#C8A96B]" />
+          <ChevronDown className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[#E53935]" />
         </div>
 
         <div className="relative w-[150px] shrink-0">
@@ -925,13 +925,13 @@ export default function AdminProductsPage() {
             <option value="price_desc">Price: high to low</option>
             <option value="stock_asc">Stock: low to high</option>
           </select>
-          <ChevronDown className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[#C8A96B]" />
+          <ChevronDown className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[#E53935]" />
         </div>
 
         <button
           type="button"
           onClick={loadProducts}
-          className={`flex h-11 shrink-0 items-center justify-center gap-2 rounded-lg px-5 text-[13px] font-semibold transition active:scale-[.98] ${goldBtn}`}
+          className={`flex h-11 shrink-0 items-center justify-center gap-2 rounded-lg px-5 text-[14px] font-semibold transition active:scale-[.98] ${primaryBtn}`}
         >
           <Filter className="h-3.5 w-3.5" />
           Filter
@@ -942,39 +942,39 @@ export default function AdminProductsPage() {
       <div className={`${panelCls} mt-4 overflow-hidden`}>
         {/* active filter chips + selection */}
         {(chips.length > 0 || selected.length > 0) && (
-          <div className="flex flex-wrap items-center gap-2 border-b border-[#B89A5A]/15 px-3 py-2.5 sm:px-4">
+          <div className="flex flex-wrap items-center gap-2 border-b border-[#E4E7EC] px-3 py-2.5 sm:px-4">
             {chips.map((chip) => (
               <button
                 key={chip.label}
                 type="button"
                 onClick={chip.clear}
-                className="inline-flex items-center gap-1.5 rounded-full border border-[#B89A5A]/40 bg-[#B89A5A]/10 px-3 py-1 text-[11px] text-[#C8A96B] transition hover:bg-[#B89A5A]/20"
+                className="inline-flex items-center gap-1.5 rounded-full border border-[#D0D5DD] bg-[#E53935]/10 px-3 py-1 text-[12px] text-[#E53935] transition hover:bg-[#E53935]/20"
               >
                 {chip.label}
                 <X className="h-3 w-3" />
               </button>
             ))}
             {selected.length > 0 && (
-              <span className="ml-auto text-[11px] text-[#BEB7A5]">{selected.length} selected</span>
+              <span className="ml-auto text-[12px] text-[#4A5160]">{selected.length} selected</span>
             )}
           </div>
         )}
 
         {/* loading / empty */}
         {loading && products.length === 0 && (
-          <div className="flex items-center justify-center gap-2 py-16 text-sm text-[#BEB7A5]">
-            <Loader2 className="h-4 w-4 animate-spin text-[#C8A96B]" />
+          <div className="flex items-center justify-center gap-2 py-16 text-sm text-[#4A5160]">
+            <Loader2 className="h-4 w-4 animate-spin text-[#E53935]" />
             Loading products...
           </div>
         )}
 
         {!loading && filtered.length === 0 && (
           <div className="flex flex-col items-center justify-center gap-3 px-4 py-16 text-center">
-            <span className="flex h-14 w-14 items-center justify-center rounded-xl border border-[#B89A5A]/35 bg-[#312F2A] text-[#C8A96B]">
+            <span className="flex h-14 w-14 items-center justify-center rounded-xl border border-[#D0D5DD] bg-[#F2F4F7] text-[#E53935]">
               <PackageOpen className="h-6 w-6" />
             </span>
-            <p className="text-sm font-medium text-[#F4F0E6]">No products found</p>
-            <p className="text-xs text-[#928C7E]">
+            <p className="text-sm font-medium text-[#111111]">No products found</p>
+            <p className="text-xs text-[#626875]">
               Try a different search or filter, or add a new product.
             </p>
           </div>
@@ -985,7 +985,7 @@ export default function AdminProductsPage() {
           <div className="hidden overflow-x-auto md:block">
             <div className="min-w-[960px]">
               <div
-                className={`grid ${tableGrid} items-center border-b border-[#B89A5A]/20 bg-[#131210]/50 px-4 py-3 text-[11px] font-semibold tracking-[0.12em] text-[#C8A96B] lg:px-5`}
+                className={`grid ${tableGrid} items-center border-b border-[#E4E7EC] bg-[#F5F6F8] px-4 py-3 text-[12px] font-semibold tracking-[0.12em] text-[#E53935] lg:px-5`}
               >
                 <div>
                   <input
@@ -993,7 +993,7 @@ export default function AdminProductsPage() {
                     checked={allSelected}
                     onChange={toggleAll}
                     aria-label="Select all products"
-                    className="h-4 w-4 accent-[#B89A5A]"
+                    className="h-4 w-4 accent-[#E53935]"
                   />
                 </div>
                 <span>PRODUCT</span>
@@ -1005,7 +1005,7 @@ export default function AdminProductsPage() {
                 <span className="text-right">ACTIONS</span>
               </div>
 
-              <div className="divide-y divide-[#B89A5A]/10">
+              <div className="divide-y divide-[#E4E7EC]">
                 {pageItems.map((product, i) => {
                   const stock = stockOf(product);
                   const isSel = selected.includes(product.id);
@@ -1013,8 +1013,8 @@ export default function AdminProductsPage() {
                   return (
                     <div
                       key={product.id}
-                      className={`grid min-h-[76px] ${tableGrid} items-center px-4 transition-colors hover:bg-[#B89A5A]/[0.05] lg:px-5 ${
-                        isSel ? "bg-[#B89A5A]/[0.08]" : "bg-transparent"
+                      className={`grid min-h-[76px] ${tableGrid} items-center px-4 transition-colors hover:bg-[#E53935]/[0.05] lg:px-5 ${
+                        isSel ? "bg-[#E53935]/[0.08]" : "bg-transparent"
                       }`}
                     >
                       <div>
@@ -1023,27 +1023,27 @@ export default function AdminProductsPage() {
                           checked={isSel}
                           onChange={() => toggleOne(product.id)}
                           aria-label={`Select ${product.name}`}
-                          className="h-4 w-4 accent-[#B89A5A]"
+                          className="h-4 w-4 accent-[#E53935]"
                         />
                       </div>
 
                       <button
                         type="button"
                         onClick={() => openPreview(product)}
-                        className="flex min-w-0 items-center gap-3 py-2 pr-3 text-left outline-none focus-visible:ring-1 focus-visible:ring-[#C8A96B]"
+                        className="flex min-w-0 items-center gap-3 py-2 pr-3 text-left outline-none focus-visible:ring-1 focus-visible:ring-[#E53935]"
                       >
                         {thumb(product, "h-[52px] w-[52px]")}
                         <span className="min-w-0">
-                          <span className="block truncate text-[13px] font-semibold text-[#F4F0E6]">
+                          <span className="block truncate text-[14px] font-semibold text-[#111111]">
                             {product.name}
                           </span>
-                          <span className="mt-1 block truncate text-[11px] text-[#928C7E]">
+                          <span className="mt-1 block truncate text-[12px] text-[#626875]">
                             SKU: {skuOf(product)}
                           </span>
                         </span>
                       </button>
 
-                      <span className="truncate pr-3 text-xs text-[#BEB7A5]">
+                      <span className="truncate pr-3 text-xs text-[#4A5160]">
                         {product.category_label || "Uncategorized"}
                       </span>
 
@@ -1054,16 +1054,16 @@ export default function AdminProductsPage() {
                           {stock}
                         </span>
                         {stock > 0 && stock <= 5 && (
-                          <span className="block text-[10px] text-[#E0A24A]">Low</span>
+                          <span className="block text-[12px] text-[#E53935]">Low</span>
                         )}
                         {stock === 0 && (
-                          <span className="block text-[10px] text-red-400">Out</span>
+                          <span className="block text-[12px] text-[#B42318]">Out</span>
                         )}
                       </div>
 
                       <div>{statusBadge(product)}</div>
 
-                      <span className="text-xs tabular-nums text-[#BEB7A5]">{createdOf(product)}</span>
+                      <span className="text-xs tabular-nums text-[#4A5160]">{createdOf(product)}</span>
 
                       <div className="flex justify-end gap-1.5">
                         {editBtn(product)}
@@ -1089,8 +1089,8 @@ export default function AdminProductsPage() {
                   key={product.id}
                   className={`rounded-xl border p-3.5 transition ${
                     isSel
-                      ? "border-[#C8A96B]/60 bg-[#B89A5A]/[0.08]"
-                      : "border-[#B89A5A]/20 bg-gradient-to-br from-[#2A2824] to-[#1C1B18]"
+                      ? "border-[#E53935]/60 bg-[#E53935]/[0.08]"
+                      : "border-[#E4E7EC] bg-gradient-to-br from-[#F2F4F7] to-white"
                   }`}
                 >
                   <div className="flex gap-3">
@@ -1098,7 +1098,7 @@ export default function AdminProductsPage() {
                       type="button"
                       onClick={() => openPreview(product)}
                       aria-label={`View ${product.name}`}
-                      className="h-[72px] w-[72px] shrink-0 overflow-hidden rounded-lg border border-[#B89A5A]/30 bg-[#1C1B18]"
+                      className="h-[72px] w-[72px] shrink-0 overflow-hidden rounded-lg border border-[#E4E7EC] bg-white"
                     >
                       {product.images?.[0]?.image_url ? (
                         <img
@@ -1107,7 +1107,7 @@ export default function AdminProductsPage() {
                           className="h-full w-full object-cover"
                         />
                       ) : (
-                        <div className="flex h-full items-center justify-center text-[#706C61]">
+                        <div className="flex h-full items-center justify-center text-[#626875]">
                           <ImageOff className="h-5 w-5" />
                         </div>
                       )}
@@ -1120,10 +1120,10 @@ export default function AdminProductsPage() {
                           onClick={() => openPreview(product)}
                           className="min-w-0 text-left"
                         >
-                          <p className="line-clamp-2 text-[13px] font-semibold leading-5 text-[#F4F0E6]">
+                          <p className="line-clamp-2 text-[14px] font-semibold leading-5 text-[#111111]">
                             {product.name}
                           </p>
-                          <p className="mt-0.5 truncate text-[11px] text-[#928C7E]">
+                          <p className="mt-0.5 truncate text-[12px] text-[#626875]">
                             SKU: {skuOf(product)}
                           </p>
                         </button>
@@ -1133,7 +1133,7 @@ export default function AdminProductsPage() {
                             checked={isSel}
                             onChange={() => toggleOne(product.id)}
                             aria-label={`Select ${product.name}`}
-                            className="h-4 w-4 accent-[#B89A5A]"
+                            className="h-4 w-4 accent-[#E53935]"
                           />
                           {moreMenu(product)}
                         </div>
@@ -1141,13 +1141,13 @@ export default function AdminProductsPage() {
                     </div>
                   </div>
 
-                  <div className="mt-3 grid grid-cols-2 items-center gap-x-3 gap-y-2.5 border-t border-[#B89A5A]/15 pt-3">
+                  <div className="mt-3 grid grid-cols-2 items-center gap-x-3 gap-y-2.5 border-t border-[#E4E7EC] pt-3">
                     <div>{priceView(product)}</div>
-                    <p className="text-right text-xs text-[#BEB7A5]">
+                    <p className="text-right text-xs text-[#4A5160]">
                       Stock:{" "}
                       <span className={`font-semibold tabular-nums ${stockClr(stock)}`}>{stock}</span>
                     </p>
-                    <p className="min-w-0 truncate text-xs text-[#BEB7A5]">
+                    <p className="min-w-0 truncate text-xs text-[#4A5160]">
                       {product.category_label || "Uncategorized"}
                     </p>
                     <div className="flex justify-end">{statusBadge(product, true)}</div>
@@ -1156,7 +1156,7 @@ export default function AdminProductsPage() {
                   <button
                     type="button"
                     onClick={() => openEdit(product)}
-                    className="mt-3 flex h-11 w-full items-center justify-center gap-2 rounded-lg border border-[#B89A5A]/55 text-[13px] font-semibold text-[#C8A96B] transition active:scale-[.98] hover:bg-[#B89A5A]/10"
+                    className="mt-3 flex h-11 w-full items-center justify-center gap-2 rounded-lg border border-[#E53935]/55 text-[14px] font-semibold text-[#E53935] transition active:scale-[.98] hover:bg-[#E53935]/10"
                   >
                     <Pencil className="h-3.5 w-3.5" />
                     Edit Product
@@ -1169,8 +1169,8 @@ export default function AdminProductsPage() {
 
         {/* PAGINATION */}
         {!loading && filtered.length > 0 && (
-          <div className="flex flex-col gap-3 border-t border-[#B89A5A]/20 px-4 py-3.5 sm:flex-row sm:items-center sm:justify-between">
-            <span className="text-center text-[12px] text-[#BEB7A5] sm:text-left">
+          <div className="flex flex-col gap-3 border-t border-[#E4E7EC] px-4 py-3.5 sm:flex-row sm:items-center sm:justify-between">
+            <span className="text-center text-[12px] text-[#4A5160] sm:text-left">
               Showing {start + 1} to {Math.min(start + perPage, filtered.length)} of{" "}
               {filtered.length} products
             </span>
@@ -1180,7 +1180,7 @@ export default function AdminProductsPage() {
                 type="button"
                 onClick={() => setPage(Math.max(1, safePage - 1))}
                 disabled={safePage === 1}
-                className="flex h-9 w-9 items-center justify-center rounded-md border border-[#B89A5A]/30 bg-[#312F2A] text-[#C8A96B] transition hover:border-[#C8A96B]/70 disabled:cursor-not-allowed disabled:opacity-35"
+                className="flex h-9 w-9 items-center justify-center rounded-md border border-[#E4E7EC] bg-[#F2F4F7] text-[#E53935] transition hover:border-[#E53935]/70 disabled:cursor-not-allowed disabled:opacity-35"
                 aria-label="Previous page"
               >
                 <ArrowLeft className="h-4 w-4" />
@@ -1193,8 +1193,8 @@ export default function AdminProductsPage() {
                   onClick={() => setPage(n)}
                   className={`h-9 min-w-9 rounded-md border px-2 text-xs font-semibold transition ${
                     n === safePage
-                      ? `border-transparent ${goldBtn}`
-                      : "border-[#B89A5A]/20 bg-[#312F2A] text-[#F4F0E6] hover:border-[#C8A96B]/60"
+                      ? `border-transparent ${primaryBtn}`
+                      : "border-[#E4E7EC] bg-[#F2F4F7] text-[#111111] hover:border-[#E53935]/60"
                   }`}
                 >
                   {n}
@@ -1205,7 +1205,7 @@ export default function AdminProductsPage() {
                 type="button"
                 onClick={() => setPage(Math.min(pageCount, safePage + 1))}
                 disabled={safePage === pageCount}
-                className="flex h-9 w-9 items-center justify-center rounded-md border border-[#B89A5A]/30 bg-[#312F2A] text-[#C8A96B] transition hover:border-[#C8A96B]/70 disabled:cursor-not-allowed disabled:opacity-35"
+                className="flex h-9 w-9 items-center justify-center rounded-md border border-[#E4E7EC] bg-[#F2F4F7] text-[#E53935] transition hover:border-[#E53935]/70 disabled:cursor-not-allowed disabled:opacity-35"
                 aria-label="Next page"
               >
                 <ArrowRight className="h-4 w-4" />
@@ -1223,12 +1223,12 @@ export default function AdminProductsPage() {
             onClick={() => setFiltersOpen(false)}
             className="absolute inset-0 bg-black/80 backdrop-blur-sm"
           />
-          <div className="kv-pop absolute inset-x-0 bottom-0 max-h-[90dvh] overflow-y-auto rounded-t-2xl border border-b-0 border-[#B89A5A]/40 bg-gradient-to-b from-[#2A2824] to-[#131210] p-5 pb-6">
+          <div className="kv-pop absolute inset-x-0 bottom-0 max-h-[90dvh] overflow-y-auto rounded-t-2xl border border-b-0 border-[#D0D5DD] bg-gradient-to-b from-[#F2F4F7] to-white p-5 pb-6">
             <div className="mb-4 flex items-center justify-between">
-              <h3 className="font-serif text-xl font-semibold text-[#F4F0E6]">Filters</h3>
+              <h3 className="text-xl font-semibold text-[#111111]">Filters</h3>
               <button
                 onClick={() => setFiltersOpen(false)}
-                className="rounded-full border border-[#B89A5A]/40 p-2 text-[#C8A96B]"
+                className="rounded-full border border-[#D0D5DD] p-2 text-[#E53935]"
                 aria-label="Close filters"
               >
                 <X className="h-4 w-4" />
@@ -1252,7 +1252,7 @@ export default function AdminProductsPage() {
                   </option>
                 ))}
               </select>
-              <ChevronDown className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[#C8A96B]" />
+              <ChevronDown className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[#E53935]" />
             </div>
 
             <label className={`${labelCls} mt-4`}>Status</label>
@@ -1274,8 +1274,8 @@ export default function AdminProductsPage() {
                   }}
                   className={`h-11 rounded-lg border text-xs font-semibold transition ${
                     statusFilter === opt.v
-                      ? "border-[#C8A96B] bg-[#B89A5A]/20 text-[#F4F0E6]"
-                      : "border-[#B89A5A]/25 bg-[#1C1B18] text-[#BEB7A5]"
+                      ? "border-[#E53935] bg-[#E53935]/20 text-[#111111]"
+                      : "border-[#E4E7EC] bg-white text-[#4A5160]"
                   }`}
                 >
                   {opt.l}
@@ -1300,7 +1300,7 @@ export default function AdminProductsPage() {
                 <option value="price_desc">Price: high to low</option>
                 <option value="stock_asc">Stock: low to high</option>
               </select>
-              <ChevronDown className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[#C8A96B]" />
+              <ChevronDown className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[#E53935]" />
             </div>
 
             <div className="mt-6 grid grid-cols-2 gap-3">
@@ -1313,7 +1313,7 @@ export default function AdminProductsPage() {
                   setSortBy("default");
                   setPage(1);
                 }}
-                className="h-12 rounded-lg border border-[#B89A5A]/50 bg-[#1C1B18] text-sm font-semibold text-[#C8A96B] transition hover:bg-[#B89A5A]/10"
+                className="h-12 rounded-lg border border-[#E53935]/50 bg-white text-sm font-semibold text-[#E53935] transition hover:bg-[#E53935]/10"
               >
                 Reset
               </button>
@@ -1323,7 +1323,7 @@ export default function AdminProductsPage() {
                   loadProducts();
                   setFiltersOpen(false);
                 }}
-                className={`h-12 rounded-lg text-sm font-bold transition active:scale-[.98] ${goldBtn}`}
+                className={`h-12 rounded-lg text-sm font-bold transition active:scale-[.98] ${primaryBtn}`}
               >
                 Apply Filters
               </button>
@@ -1334,19 +1334,19 @@ export default function AdminProductsPage() {
 
       {/* FLOATING SELECTION BAR */}
       {selected.length > 0 && (
-        <div className="fixed inset-x-3 bottom-20 z-40 flex items-center justify-between gap-3 rounded-xl border border-[#B89A5A]/50 bg-[#1C1B18] px-4 py-2.5 text-sm text-[#F4F0E6] shadow-[0_16px_40px_-10px_rgba(0,0,0,0.9)] sm:bottom-3 sm:left-1/2 sm:right-auto sm:inset-x-auto sm:-translate-x-1/2 sm:justify-center sm:rounded-full sm:pl-6 sm:pr-2.5">
+        <div className="fixed inset-x-3 bottom-20 z-40 flex items-center justify-between gap-3 rounded-xl border border-[#E53935]/50 bg-white px-4 py-2.5 text-sm text-[#111111] shadow-[0_8px_24px_rgba(16,24,40,0.12)] sm:bottom-3 sm:left-1/2 sm:right-auto sm:inset-x-auto sm:-translate-x-1/2 sm:justify-center sm:rounded-full sm:pl-6 sm:pr-2.5">
           <span className="tabular-nums">{selected.length} selected</span>
           {selectedOne && (
             <button
               onClick={() => openEdit(selectedOne)}
-              className="rounded-full border border-[#B89A5A]/50 bg-[#B89A5A]/10 px-4 py-1.5 text-[#C8A96B] transition hover:bg-[#B89A5A]/25"
+              className="rounded-full border border-[#E53935]/50 bg-[#E53935]/10 px-4 py-1.5 text-[#E53935] transition hover:bg-[#E53935]/25"
             >
               Edit
             </button>
           )}
           <button
             onClick={() => setSelected([])}
-            className={`rounded-full px-4 py-1.5 font-semibold transition ${goldBtn}`}
+            className={`rounded-full px-4 py-1.5 font-semibold transition ${primaryBtn}`}
           >
             Clear
           </button>
@@ -1363,13 +1363,13 @@ export default function AdminProductsPage() {
           />
 
           <aside
-            className="fixed inset-y-0 right-0 z-[60] flex w-full max-w-[430px] flex-col border-l border-[#B89A5A]/35 bg-gradient-to-b from-[#1C1B18] to-[#131210] shadow-[-24px_0_70px_-20px_rgba(0,0,0,.9)]"
+            className="fixed inset-y-0 right-0 z-[60] flex w-full max-w-[430px] flex-col border-l border-[#D0D5DD] bg-gradient-to-b from-white to-white shadow-[0_8px_24px_rgba(16,24,40,0.12)]"
             aria-label="Product details"
           >
-            <div className="flex items-center justify-between border-b border-[#B89A5A]/20 px-5 py-4">
+            <div className="flex items-center justify-between border-b border-[#E4E7EC] px-5 py-4">
               <div>
-                <p className="font-serif text-lg font-semibold text-[#F4F0E6]">Product details</p>
-                <p className="mt-0.5 text-xs text-[#928C7E]">
+                <p className="text-lg font-semibold text-[#111111]">Product details</p>
+                <p className="mt-0.5 text-xs text-[#626875]">
                   Catalog / {previewProduct.category_label || "Uncategorized"}
                 </p>
               </div>
@@ -1377,7 +1377,7 @@ export default function AdminProductsPage() {
               <button
                 onClick={() => setPreviewProduct(null)}
                 aria-label="Close"
-                className="flex h-9 w-9 items-center justify-center rounded-full border border-[#B89A5A]/40 bg-[#2A2824] text-[#C8A96B] transition hover:bg-[#B89A5A] hover:text-[#131210]"
+                className="flex h-9 w-9 items-center justify-center rounded-full border border-[#D0D5DD] bg-[#F2F4F7] text-[#E53935] transition hover:bg-[#E53935] hover:text-white"
               >
                 <X className="h-4 w-4" />
               </button>
@@ -1385,7 +1385,7 @@ export default function AdminProductsPage() {
 
             <div className="min-h-0 flex-1 overflow-y-auto">
               <div className="p-5">
-                <div className="relative overflow-hidden rounded-xl border border-[#B89A5A]/25 bg-[#131210]">
+                <div className="relative overflow-hidden rounded-xl border border-[#E4E7EC] bg-[#F5F6F8]">
                   {previewImages.length ? (
                     <img
                       src={previewImages[previewImageIndex]?.image_url || previewImages[0].image_url}
@@ -1393,7 +1393,7 @@ export default function AdminProductsPage() {
                       className="aspect-[4/4.35] w-full object-cover"
                     />
                   ) : (
-                    <div className="flex aspect-[4/4.35] items-center justify-center text-[#706C61]">
+                    <div className="flex aspect-[4/4.35] items-center justify-center text-[#626875]">
                       <ImageOff className="h-10 w-10" />
                     </div>
                   )}
@@ -1407,7 +1407,7 @@ export default function AdminProductsPage() {
                           )
                         }
                         aria-label="Previous image"
-                        className="absolute left-3 top-1/2 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full border border-[#B89A5A]/50 bg-black/70 text-[#C8A96B] backdrop-blur"
+                        className="absolute left-3 top-1/2 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full border border-[#E53935]/50 bg-black/70 text-[#E53935] backdrop-blur"
                       >
                         <ChevronLeft className="h-4 w-4" />
                       </button>
@@ -1418,7 +1418,7 @@ export default function AdminProductsPage() {
                           )
                         }
                         aria-label="Next image"
-                        className="absolute right-3 top-1/2 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full border border-[#B89A5A]/50 bg-black/70 text-[#C8A96B] backdrop-blur"
+                        className="absolute right-3 top-1/2 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full border border-[#E53935]/50 bg-black/70 text-[#E53935] backdrop-blur"
                       >
                         <ChevronRight className="h-4 w-4" />
                       </button>
@@ -1432,8 +1432,8 @@ export default function AdminProductsPage() {
                       <button
                         key={image.id || image.image_url}
                         onClick={() => setPreviewImageIndex(index)}
-                        className={`h-16 w-14 shrink-0 overflow-hidden rounded-lg border-2 bg-[#1C1B18] ${
-                          index === previewImageIndex ? "border-[#C8A96B]" : "border-transparent"
+                        className={`h-16 w-14 shrink-0 overflow-hidden rounded-lg border-2 bg-white ${
+                          index === previewImageIndex ? "border-[#E53935]" : "border-transparent"
                         }`}
                       >
                         <img
@@ -1449,14 +1449,14 @@ export default function AdminProductsPage() {
                 <div className="mt-5">
                   <div className="flex items-start justify-between gap-3">
                     <div className="min-w-0">
-                      <h2 className="font-serif text-2xl font-semibold tracking-tight text-[#F4F0E6]">
+                      <h2 className="text-2xl font-semibold tracking-tight text-[#111111]">
                         {previewProduct.name}
                       </h2>
-                      <div className="mt-1 flex items-center gap-2 text-xs text-[#928C7E]">
+                      <div className="mt-1 flex items-center gap-2 text-xs text-[#626875]">
                         <span className="truncate">SKU: {skuOf(previewProduct)}</span>
                         <button
                           onClick={() => navigator.clipboard?.writeText(skuOf(previewProduct))}
-                          className="rounded p-1 transition hover:bg-[#B89A5A]/15"
+                          className="rounded p-1 transition hover:bg-[#E53935]/15"
                           title="Copy SKU"
                           aria-label="Copy SKU"
                         >
@@ -1466,12 +1466,12 @@ export default function AdminProductsPage() {
                     </div>
 
                     <span
-                      className={`shrink-0 rounded-full border px-3 py-1.5 text-[11px] font-semibold ${
+                      className={`shrink-0 rounded-full border px-3 py-1.5 text-[12px] font-semibold ${
                         previewStatus === "Active"
-                          ? "border-[#B89A5A]/35 bg-[#46433C]/70 text-[#E9E0CA]"
+                          ? "border-[#D0D5DD] bg-[#E4E7EC]/70 text-[#4A5160]"
                           : previewStatus === "Low Stock"
-                            ? "border-[#E0A24A]/40 bg-[#E0A24A]/10 text-[#E0A24A]"
-                            : "border-red-400/40 bg-red-500/10 text-red-300"
+                            ? "border-[#D0D5DD] bg-[#E53935]/10 text-[#E53935]"
+                            : "border-[#D92D20]/30 bg-[#D92D20]/8 text-[#B42318]"
                       }`}
                     >
                       {previewStatus}
@@ -1479,48 +1479,48 @@ export default function AdminProductsPage() {
                   </div>
 
                   <div className="mt-3 flex items-end gap-2">
-                    <span className="text-[25px] font-semibold tabular-nums text-[#C8A96B]">₹{inr(previewPrice)}</span>
+                    <span className="text-[25px] font-semibold tabular-nums text-[#E53935]">₹{inr(previewPrice)}</span>
                     {previewProduct.mrp && previewProduct.mrp > previewPrice && (
-                      <span className="pb-1 text-sm text-[#928C7E] line-through">
+                      <span className="pb-1 text-sm text-[#626875] line-through">
                         ₹{inr(previewProduct.mrp)}
                       </span>
                     )}
                   </div>
                 </div>
 
-                <div className="mt-6 divide-y divide-[#B89A5A]/15 rounded-xl border border-[#B89A5A]/20 bg-[#2A2824]/50">
+                <div className="mt-6 divide-y divide-[#E4E7EC] rounded-xl border border-[#E4E7EC] bg-[#F2F4F7]">
                   <div className="flex items-center justify-between gap-3 px-4 py-4">
                     <div className="flex items-center gap-3">
-                      <PackageCheck className="h-5 w-5 text-[#C8A96B]" />
+                      <PackageCheck className="h-5 w-5 text-[#E53935]" />
                       <div>
-                        <p className="text-sm font-medium text-[#F4F0E6]">Inventory</p>
-                        <p className="text-xs text-[#928C7E]">
+                        <p className="text-sm font-medium text-[#111111]">Inventory</p>
+                        <p className="text-xs text-[#626875]">
                           {previewStock === 0 ? "No units available" : `${previewStock} units available`}
                         </p>
                       </div>
                     </div>
                     <button
                       onClick={() => openEdit(previewProduct)}
-                      className="rounded-lg border border-[#B89A5A]/50 px-3 py-2 text-xs font-medium text-[#C8A96B] transition hover:bg-[#B89A5A]/15"
+                      className="rounded-lg border border-[#E53935]/50 px-3 py-2 text-xs font-medium text-[#E53935] transition hover:bg-[#E53935]/15"
                     >
                       Manage
                     </button>
                   </div>
 
                   <div className="flex items-start gap-3 px-4 py-4">
-                    <Tag className="mt-0.5 h-5 w-5 text-[#C8A96B]" />
+                    <Tag className="mt-0.5 h-5 w-5 text-[#E53935]" />
                     <div>
-                      <p className="text-sm font-medium text-[#F4F0E6]">Category</p>
-                      <p className="mt-0.5 text-xs text-[#928C7E]">
+                      <p className="text-sm font-medium text-[#111111]">Category</p>
+                      <p className="mt-0.5 text-xs text-[#626875]">
                         {previewProduct.category_label || "Uncategorized"}
                       </p>
                     </div>
                   </div>
 
                   <div className="flex items-start gap-3 px-4 py-4">
-                    <Layers3 className="mt-0.5 h-5 w-5 text-[#C8A96B]" />
+                    <Layers3 className="mt-0.5 h-5 w-5 text-[#E53935]" />
                     <div className="min-w-0">
-                      <p className="text-sm font-medium text-[#F4F0E6]">Collections & tags</p>
+                      <p className="text-sm font-medium text-[#111111]">Collections & tags</p>
                       <div className="mt-2 flex flex-wrap gap-1.5">
                         {previewProduct.best_seller && <Badge label="Best Seller" tone="amber" />}
                         {previewProduct.new_arrival && <Badge label="New" tone="blue" />}
@@ -1530,7 +1530,7 @@ export default function AdminProductsPage() {
                           !previewProduct.new_arrival &&
                           !previewProduct.trending &&
                           !previewProduct.limited_edition && (
-                            <span className="text-xs text-[#706C61]">No tags assigned</span>
+                            <span className="text-xs text-[#626875]">No tags assigned</span>
                           )}
                       </div>
                     </div>
@@ -1538,8 +1538,8 @@ export default function AdminProductsPage() {
 
                   <div className="px-4 py-4">
                     <div className="flex items-center justify-between">
-                      <p className="text-sm font-medium text-[#F4F0E6]">Variants</p>
-                      <span className="text-xs text-[#928C7E]">
+                      <p className="text-sm font-medium text-[#111111]">Variants</p>
+                      <span className="text-xs text-[#626875]">
                         {previewProduct.variants?.length || 0} variants
                       </span>
                     </div>
@@ -1548,12 +1548,12 @@ export default function AdminProductsPage() {
                       {(previewProduct.variants || []).slice(0, 8).map((variant, index) => (
                         <div
                           key={variant.id || index}
-                          className="min-w-[76px] rounded-lg border border-[#B89A5A]/25 bg-[#131210] px-3 py-2"
+                          className="min-w-[76px] rounded-lg border border-[#E4E7EC] bg-[#F5F6F8] px-3 py-2"
                         >
-                          <p className="text-xs font-semibold text-[#F4F0E6]">
+                          <p className="text-xs font-semibold text-[#111111]">
                             {variant.size || "—"} · {variant.color || "—"}
                           </p>
-                          <p className="mt-0.5 text-[10px] text-[#928C7E]">
+                          <p className="mt-0.5 text-[12px] text-[#626875]">
                             {variant.inventory} stock
                           </p>
                         </div>
@@ -1564,8 +1564,8 @@ export default function AdminProductsPage() {
 
                 {previewProduct.description && (
                   <div className="mt-5">
-                    <p className="text-sm font-medium text-[#C8A96B]">Description</p>
-                    <p className="mt-2 text-sm leading-6 text-[#BEB7A5]">
+                    <p className="text-sm font-medium text-[#E53935]">Description</p>
+                    <p className="mt-2 text-sm leading-6 text-[#4A5160]">
                       {previewProduct.description}
                     </p>
                   </div>
@@ -1573,18 +1573,18 @@ export default function AdminProductsPage() {
               </div>
             </div>
 
-            <div className="border-t border-[#B89A5A]/20 bg-[#131210] p-4">
+            <div className="border-t border-[#E4E7EC] bg-[#F5F6F8] p-4">
               <div className="grid grid-cols-2 gap-2.5">
                 <button
                   onClick={() => openEdit(previewProduct)}
-                  className={`flex h-11 items-center justify-center gap-2 rounded-lg text-sm font-bold transition ${goldBtn}`}
+                  className={`flex h-11 items-center justify-center gap-2 rounded-lg text-sm font-bold transition ${primaryBtn}`}
                 >
                   <Pencil className="h-4 w-4" />
                   Edit Product
                 </button>
                 <button
                   onClick={() => setPreviewProduct(null)}
-                  className="flex h-11 items-center justify-center gap-2 rounded-lg border border-[#B89A5A]/50 bg-transparent text-sm font-medium text-[#C8A96B] transition hover:bg-[#B89A5A]/10"
+                  className="flex h-11 items-center justify-center gap-2 rounded-lg border border-[#E53935]/50 bg-transparent text-sm font-medium text-[#E53935] transition hover:bg-[#E53935]/10"
                 >
                   <ExternalLink className="h-4 w-4" />
                   View Store
@@ -1598,14 +1598,14 @@ export default function AdminProductsPage() {
       {/* ADD / EDIT MODAL */}
       {modal && (
         <div className="fixed inset-0 z-[80] flex items-end justify-center bg-black/80 p-0 backdrop-blur-[3px] sm:items-center sm:p-4">
-          <div className="kv-pop flex h-[100dvh] w-full max-w-5xl flex-col overflow-hidden border border-[#B89A5A]/40 bg-gradient-to-br from-[#1C1B18] via-[#171614] to-[#131210] shadow-[0_30px_100px_-20px_rgba(0,0,0,0.95)] sm:h-auto sm:max-h-[92vh] sm:rounded-2xl">
+          <div className="kv-pop flex h-[100dvh] w-full max-w-5xl flex-col overflow-hidden border border-[#D0D5DD] bg-gradient-to-br from-white via-white to-white shadow-[0_8px_24px_rgba(16,24,40,0.12)] sm:h-auto sm:max-h-[92vh] sm:rounded-2xl">
             {/* header */}
-            <div className="flex items-center justify-between gap-3 border-b border-[#B89A5A]/25 px-4 py-4 sm:px-6">
+            <div className="flex items-center justify-between gap-3 border-b border-[#E4E7EC] px-4 py-4 sm:px-6">
               <div className="min-w-0">
-                <h2 className="truncate font-serif text-2xl font-semibold text-[#F4F0E6]">
+                <h2 className="truncate text-2xl font-semibold text-[#111111]">
                   {editingId ? "Edit Product" : "Add New Product"}
                 </h2>
-                <p className="truncate text-xs text-[#928C7E]">
+                <p className="truncate text-xs text-[#626875]">
                   {editingId
                     ? "Update this product in your store"
                     : "Create a new product for your store"}
@@ -1615,20 +1615,20 @@ export default function AdminProductsPage() {
               <button
                 onClick={() => setModal(false)}
                 aria-label="Close"
-                className="shrink-0 rounded-full border border-[#B89A5A]/30 p-2 text-[#C8A96B] transition hover:bg-[#B89A5A]/15 hover:text-white"
+                className="shrink-0 rounded-full border border-[#E4E7EC] p-2 text-[#E53935] transition hover:bg-[#E53935]/15 hover:text-[#111111]"
               >
                 <X className="h-5 w-5" />
               </button>
             </div>
 
             {/* mobile section chips */}
-            <div className="flex gap-2 overflow-x-auto border-b border-[#B89A5A]/15 px-4 py-2.5 md:hidden">
+            <div className="flex gap-2 overflow-x-auto border-b border-[#E4E7EC] px-4 py-2.5 md:hidden">
               {formSections.map((s) => (
                 <button
                   key={s.id}
                   type="button"
                   onClick={() => jumpTo(s.id)}
-                  className="shrink-0 rounded-full border border-[#B89A5A]/35 bg-[#B89A5A]/[0.07] px-3.5 py-1.5 text-[11px] font-medium text-[#C8A96B] transition active:bg-[#B89A5A]/20"
+                  className="shrink-0 rounded-full border border-[#D0D5DD] bg-[#E53935]/[0.07] px-3.5 py-1.5 text-[12px] font-medium text-[#E53935] transition active:bg-[#E53935]/20"
                 >
                   {s.label}
                 </button>
@@ -1637,23 +1637,23 @@ export default function AdminProductsPage() {
 
             <div className="grid min-h-0 flex-1 md:grid-cols-[200px_1fr]">
               {/* desktop section rail */}
-              <nav className="hidden border-r border-[#B89A5A]/20 bg-[#131210]/60 p-3 md:block">
+              <nav className="hidden border-r border-[#E4E7EC] bg-white/80 p-3 md:block">
                 <div className="space-y-1.5">
                   {formSections.map((s, i) => (
                     <button
                       key={s.id}
                       type="button"
                       onClick={() => jumpTo(s.id)}
-                      className="group flex w-full items-center gap-3 rounded-lg border border-transparent px-3 py-2.5 text-left transition hover:border-[#B89A5A]/35 hover:bg-[#B89A5A]/[0.07]"
+                      className="group flex w-full items-center gap-3 rounded-lg border border-transparent px-3 py-2.5 text-left transition hover:border-[#D0D5DD] hover:bg-[#E53935]/[0.07]"
                     >
-                      <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-md border border-[#B89A5A]/40 text-[10px] font-semibold text-[#C8A96B]">
+                      <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-md border border-[#D0D5DD] text-[12px] font-semibold text-[#E53935]">
                         {i + 1}
                       </span>
                       <span className="min-w-0">
-                        <span className="block truncate text-xs font-medium text-[#F4F0E6]">
+                        <span className="block truncate text-xs font-medium text-[#111111]">
                           {s.label}
                         </span>
-                        <span className="block truncate text-[10px] text-[#928C7E]">
+                        <span className="block truncate text-[12px] text-[#626875]">
                           {s.hint}
                         </span>
                       </span>
@@ -1751,12 +1751,12 @@ export default function AdminProductsPage() {
 
                 {/* 2. IMAGES */}
                 <FormSection id="kv-images" n={2} title="Product Images">
-                  <label className="group flex cursor-pointer flex-col items-center justify-center gap-2 rounded-xl border border-dashed border-[#B89A5A]/45 bg-[#131210] px-4 py-8 text-center transition hover:border-[#C8A96B] hover:bg-[#B89A5A]/[0.05]">
-                    <UploadCloud className="h-8 w-8 text-[#C8A96B] transition group-hover:scale-110" />
-                    <span className="text-sm font-medium text-[#F4F0E6]">
+                  <label className="group flex cursor-pointer flex-col items-center justify-center gap-2 rounded-xl border border-dashed border-[#D0D5DD] bg-[#F5F6F8] px-4 py-8 text-center transition hover:border-[#E53935] hover:bg-[#E53935]/[0.05]">
+                    <UploadCloud className="h-8 w-8 text-[#E53935] transition group-hover:scale-110" />
+                    <span className="text-sm font-medium text-[#111111]">
                       Click to upload images
                     </span>
-                    <span className="text-xs text-[#928C7E]">
+                    <span className="text-xs text-[#626875]">
                       Select multiple images at once, or open the picker again to add more.
                     </span>
                     <input
@@ -1771,7 +1771,7 @@ export default function AdminProductsPage() {
 
                   {files.length > 0 && (
                     <div className="mt-4 space-y-3">
-                      <p className="text-xs font-medium text-[#BEB7A5]">
+                      <p className="text-xs font-medium text-[#4A5160]">
                         {files.length} image{files.length > 1 ? "s" : ""} selected
                       </p>
 
@@ -1779,7 +1779,7 @@ export default function AdminProductsPage() {
                         {files.map((file, index) => (
                           <div
                             key={`${file.name}-${file.size}-${file.lastModified}-${index}`}
-                            className="group relative overflow-hidden rounded-lg border border-[#B89A5A]/30 bg-[#1C1B18]"
+                            className="group relative overflow-hidden rounded-lg border border-[#E4E7EC] bg-white"
                           >
                             <img
                               src={URL.createObjectURL(file)}
@@ -1789,12 +1789,12 @@ export default function AdminProductsPage() {
                             <button
                               type="button"
                               onClick={() => removeImage(index)}
-                              className="absolute right-1.5 top-1.5 flex h-6 w-6 items-center justify-center rounded-full border border-[#B89A5A]/60 bg-black/80 text-[#C8A96B] transition hover:bg-red-500 hover:text-white"
+                              className="absolute right-1.5 top-1.5 flex h-6 w-6 items-center justify-center rounded-full border border-[#E53935]/60 bg-black/80 text-[#E53935] transition hover:bg-[#D92D20] hover:text-white"
                               aria-label={`Remove ${file.name}`}
                             >
                               <X className="h-3.5 w-3.5" />
                             </button>
-                            <p className="truncate bg-black/70 px-2 py-1 text-[10px] text-[#BEB7A5]">
+                            <p className="truncate bg-black/70 px-2 py-1 text-[12px] text-[#4A5160]">
                               {file.name} · {(file.size / 1024 / 1024).toFixed(2)} MB
                             </p>
                           </div>
@@ -1842,17 +1842,17 @@ export default function AdminProductsPage() {
                   </div>
 
                   {/* VARIANTS */}
-                  <div className="mt-5 rounded-xl border border-[#B89A5A]/25 bg-[#2A2824]/40 p-3.5 sm:p-4">
+                  <div className="mt-5 rounded-xl border border-[#E4E7EC] bg-[#F2F4F7] p-3.5 sm:p-4">
                     <div className="mb-4 flex items-center justify-between gap-3">
                       <div>
-                        <h3 className="font-serif text-lg font-semibold text-[#F4F0E6]">Variants</h3>
-                        <p className="text-xs text-[#928C7E]">Size, color and stock</p>
+                        <h3 className="text-lg font-semibold text-[#111111]">Variants</h3>
+                        <p className="text-xs text-[#626875]">Size, color and stock</p>
                       </div>
 
                       <button
                         onClick={addVariant}
                         type="button"
-                        className={`flex shrink-0 items-center gap-1.5 rounded-full px-4 py-2 text-xs font-bold transition active:scale-[0.97] ${goldBtn}`}
+                        className={`flex shrink-0 items-center gap-1.5 rounded-full px-4 py-2 text-xs font-bold transition active:scale-[0.97] ${primaryBtn}`}
                       >
                         <Plus className="h-3.5 w-3.5" />
                         Variant
@@ -1861,7 +1861,7 @@ export default function AdminProductsPage() {
 
                     <div className="space-y-3">
                       {form.variants.length === 0 && (
-                        <p className="rounded-lg border border-dashed border-[#B89A5A]/25 px-3 py-4 text-center text-xs text-[#928C7E]">
+                        <p className="rounded-lg border border-dashed border-[#E4E7EC] px-3 py-4 text-center text-xs text-[#626875]">
                           No variants added yet.
                         </p>
                       )}
@@ -1869,7 +1869,7 @@ export default function AdminProductsPage() {
                       {form.variants.map((variant, index) => (
                         <div
                           key={variant.id || index}
-                          className="grid grid-cols-2 gap-2 rounded-lg border border-[#B89A5A]/15 p-2.5 md:grid-cols-[1fr_1fr_1fr_1fr_auto] md:border-0 md:p-0"
+                          className="grid grid-cols-2 gap-2 rounded-lg border border-[#E4E7EC] p-2.5 md:grid-cols-[1fr_1fr_1fr_1fr_auto] md:border-0 md:p-0"
                         >
                           <input
                             placeholder="Size"
@@ -1912,7 +1912,7 @@ export default function AdminProductsPage() {
                             type="button"
                             onClick={() => removeVariant(index)}
                             aria-label="Remove variant"
-                            className="col-span-2 flex min-h-11 items-center justify-center rounded-xl border border-red-400/40 bg-red-500/10 px-3 py-2 text-red-300 transition hover:bg-red-500/25 md:col-span-1"
+                            className="col-span-2 flex min-h-11 items-center justify-center rounded-xl border border-[#D92D20]/30 bg-[#D92D20]/8 px-3 py-2 text-[#B42318] transition hover:bg-[#D92D20]/8 md:col-span-1"
                           >
                             <Trash2 className="h-4 w-4" />
                           </button>
@@ -1977,11 +1977,11 @@ export default function AdminProductsPage() {
             </div>
 
             {/* ACTIONS */}
-            <div className="flex justify-end gap-2.5 border-t border-[#B89A5A]/25 bg-[#131210] px-4 py-3.5 pb-[max(0.875rem,env(safe-area-inset-bottom))] sm:gap-3 sm:px-6">
+            <div className="flex justify-end gap-2.5 border-t border-[#E4E7EC] bg-[#F5F6F8] px-4 py-3.5 pb-[max(0.875rem,env(safe-area-inset-bottom))] sm:gap-3 sm:px-6">
               <button
                 onClick={() => setModal(false)}
                 disabled={saving}
-                className="min-h-11 flex-1 rounded-lg border border-[#B89A5A]/50 bg-transparent px-5 py-2.5 text-sm font-semibold text-[#C8A96B] transition hover:bg-[#B89A5A]/10 disabled:opacity-50 sm:flex-none sm:px-8"
+                className="min-h-11 flex-1 rounded-lg border border-[#E53935]/50 bg-transparent px-5 py-2.5 text-sm font-semibold text-[#E53935] transition hover:bg-[#E53935]/10 disabled:opacity-50 sm:flex-none sm:px-8"
               >
                 Cancel
               </button>
@@ -1989,7 +1989,7 @@ export default function AdminProductsPage() {
               <button
                 onClick={saveProduct}
                 disabled={saving}
-                className={`flex min-h-11 flex-1 items-center justify-center gap-2 rounded-lg px-5 py-2.5 text-sm font-bold transition active:scale-[0.98] disabled:opacity-60 sm:flex-none sm:px-8 ${goldBtn}`}
+                className={`flex min-h-11 flex-1 items-center justify-center gap-2 rounded-lg px-5 py-2.5 text-sm font-bold transition active:scale-[0.98] disabled:opacity-60 sm:flex-none sm:px-8 ${primaryBtn}`}
               >
                 {saving && <Loader2 className="h-4 w-4 animate-spin" />}
                 {editingId ? "Save Changes" : "Create Product"}
@@ -2005,24 +2005,24 @@ export default function AdminProductsPage() {
         {toasts.map((toast) => (
           <div
             key={toast.id}
-            className={`pointer-events-auto flex w-full max-w-sm items-start gap-2.5 rounded-xl border bg-[#1C1B18] p-3.5 shadow-[0_10px_40px_rgba(0,0,0,0.8)] transition ${
+            className={`pointer-events-auto flex w-full max-w-sm items-start gap-2.5 rounded-xl border bg-white p-3.5 shadow-[0_8px_24px_rgba(16,24,40,0.12)] transition ${
               toast.type === "success"
-                ? "border-emerald-400/40"
-                : "border-red-400/40"
+                ? "border-[#16845B]/30"
+                : "border-[#D92D20]/30"
             }`}
           >
             {toast.type === "success" ? (
-              <CheckCircle2 className="mt-0.5 h-5 w-5 shrink-0 text-emerald-400" />
+              <CheckCircle2 className="mt-0.5 h-5 w-5 shrink-0 text-[#0F6446]" />
             ) : (
-              <XCircle className="mt-0.5 h-5 w-5 shrink-0 text-red-400" />
+              <XCircle className="mt-0.5 h-5 w-5 shrink-0 text-[#B42318]" />
             )}
 
-            <p className="flex-1 text-sm text-[#F4F0E6]">{toast.message}</p>
+            <p className="flex-1 text-sm text-[#111111]">{toast.message}</p>
 
             <button
               onClick={() => dismissToast(toast.id)}
               aria-label="Dismiss"
-              className="text-[#928C7E] transition hover:text-[#F4F0E6]"
+              className="text-[#626875] transition hover:text-[#111111]"
             >
               <X className="h-4 w-4" />
             </button>
@@ -2051,13 +2051,13 @@ function FormSection({
   return (
     <section
       id={id}
-      className="scroll-mt-2 border-b border-[#B89A5A]/15 pb-6 pt-1 first:pt-0 last:border-0 last:pb-2 [&:not(:first-child)]:mt-6"
+      className="scroll-mt-2 border-b border-[#E4E7EC] pb-6 pt-1 first:pt-0 last:border-0 last:pb-2 [&:not(:first-child)]:mt-6"
     >
       <div className="mb-4 flex items-center gap-3">
-        <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-md border border-[#B89A5A]/45 bg-[#B89A5A]/10 text-[11px] font-semibold text-[#C8A96B]">
+        <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-md border border-[#D0D5DD] bg-[#E53935]/10 text-[12px] font-semibold text-[#E53935]">
           {n}
         </span>
-        <h3 className="font-serif text-xl font-semibold text-[#F4F0E6]">{title}</h3>
+        <h3 className="text-xl font-semibold text-[#111111]">{title}</h3>
       </div>
       {children}
     </section>
@@ -2102,8 +2102,8 @@ function Check({
     <label
       className={`flex min-h-10 cursor-pointer items-center justify-center gap-2 rounded-full border px-4 py-2 text-xs font-semibold transition ${
         checked
-          ? "border-[#C8A96B] bg-[#B89A5A]/20 text-[#F4F0E6]"
-          : "border-[#B89A5A]/25 bg-[#131210] text-[#BEB7A5] hover:border-[#B89A5A]/60 hover:text-[#C8A96B]"
+          ? "border-[#E53935] bg-[#E53935]/20 text-[#111111]"
+          : "border-[#E4E7EC] bg-[#F5F6F8] text-[#4A5160] hover:border-[#E53935]/60 hover:text-[#E53935]"
       }`}
     >
       <input
@@ -2124,17 +2124,17 @@ function Badge({
   label: string;
   tone: "amber" | "blue" | "pink" | "violet";
 }) {
-  // palette-safe tones (no blue/purple): gold, green, clay, sand
+  // palette-safe tones: red, green, neutral
   const tones: Record<string, string> = {
-    amber: "border-[#B89A5A]/45 bg-[#B89A5A]/10 text-[#C8A96B]",
-    blue: "border-emerald-300/30 bg-emerald-400/10 text-emerald-200",
-    pink: "border-[#C98B7A]/40 bg-[#C98B7A]/10 text-[#E5B3A5]",
-    violet: "border-[#BEB7A5]/30 bg-[#BEB7A5]/10 text-[#E4DBC5]",
+    amber: "border-[#D0D5DD] bg-[#E53935]/10 text-[#E53935]",
+    blue: "border-[#16845B]/30 bg-[#16845B]/10 text-[#0F6446]",
+    pink: "border-[#C98B7A]/40 bg-[#C98B7A]/10 text-[#B42318]",
+    violet: "border-[#B2B2B2]/30 bg-[#B2B2B2]/10 text-[#4A5160]",
   };
 
   return (
     <span
-      className={`rounded-full border px-2.5 py-1 text-[11px] font-medium ${tones[tone]}`}
+      className={`rounded-full border px-2.5 py-1 text-[12px] font-medium ${tones[tone]}`}
     >
       {label}
     </span>

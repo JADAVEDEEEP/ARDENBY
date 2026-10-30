@@ -15,6 +15,7 @@ import {
   RotateCcw,
   Ruler,
   ShoppingBag,
+  Star,
   Truck,
   X,
 } from 'lucide-react';
@@ -25,6 +26,7 @@ import { useCartStore } from '@/store/cart-store';
 import { MobileShopBar } from '@/components/home/MobileShopBar';
 import { useHeaderHeight } from '@/components/shop/use-header-height';
 import { ProductStage } from './product-stage';
+import { ProductReviews } from '@/components/product/product-reviews';
 
 /* -------------------------------------------------------------------------- */
 /* Types                                                                      */
@@ -218,10 +220,10 @@ function normalizeProduct(input: unknown): ProductData {
 const FADE_CSS = `
 @keyframes kvFade{from{opacity:0}to{opacity:1}}
 .kv-fade{animation:kvFade .35s ease both}
-body:has([data-kovenik-product]){background:#F4F0E8}
+body:has([data-kovenik-product]){background:#F7F7F7}
 
-[data-kovenik-product]{--ivory:#F4F0E8;--ivory-2:#EDE7DC;--ink:#171717;--charcoal:#222222;--gold:#B08D57;
-  --line:#DDD5C7;--line-2:#E9E3D8;--muted:#5F5B55;--soft:#8A847A;--ok:#3E7B4F}
+[data-kovenik-product]{--ivory:#F7F7F7;--ivory-2:#E5E5E5;--ink:#111111;--charcoal:#222222;--gold:#E53935;
+  --line:#D2D2D2;--line-2:#E5E5E5;--muted:#5A5A5A;--soft:#828282;--ok:#3E7B4F}
 [data-kovenik-product] *:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
 
 .kv-zoom-layer{transition:transform .35s cubic-bezier(.2,.8,.2,1);will-change:transform}
@@ -613,15 +615,15 @@ export default function ProductPage() {
 
   if (loading) {
     return (
-      <main className="min-h-screen bg-[#F4F0E8] px-4 py-12">
+      <main className="min-h-screen bg-[#F7F7F7] px-4 py-12">
         <div className="mx-auto max-w-[1500px] animate-pulse">
           <div className="grid gap-8 lg:grid-cols-[1fr_452px] lg:gap-16">
-            <div className="aspect-[4/5] bg-[#EDE7DC]" />
+            <div className="aspect-[4/5] bg-[#E5E5E5]" />
             <div className="space-y-4">
-              <div className="h-4 w-48 bg-[#EDE7DC]" />
-              <div className="h-12 w-3/4 bg-[#EDE7DC]" />
-              <div className="h-8 w-32 bg-[#EDE7DC]" />
-              <div className="h-24 bg-[#EDE7DC]" />
+              <div className="h-4 w-48 bg-[#E5E5E5]" />
+              <div className="h-12 w-3/4 bg-[#E5E5E5]" />
+              <div className="h-8 w-32 bg-[#E5E5E5]" />
+              <div className="h-24 bg-[#E5E5E5]" />
             </div>
           </div>
         </div>
@@ -631,14 +633,14 @@ export default function ProductPage() {
 
   if (!product) {
     return (
-      <main className="flex min-h-screen items-center justify-center bg-[#F4F0E8] px-6 text-center">
+      <main className="flex min-h-screen items-center justify-center bg-[#F7F7F7] px-6 text-center">
         <div>
-          <p className="font-serif text-2xl tracking-[0.12em] text-[#171717]">KOVENIK</p>
-          <h1 className="mt-3 text-3xl text-[#171717]">Product not found</h1>
-          <p className="mt-2 text-sm text-[#5F5B55]">This piece may have been removed or the link is incorrect.</p>
+          <p className="font-serif text-2xl tracking-[0.12em] text-[#111111]">KOVENIK</p>
+          <h1 className="mt-3 text-3xl text-[#111111]">Product not found</h1>
+          <p className="mt-2 text-sm text-[#5A5A5A]">This piece may have been removed or the link is incorrect.</p>
           <Link
             href="/shop"
-            className="mt-6 inline-flex bg-[#171717] px-6 py-3 text-[14px] font-semibold uppercase tracking-[0.16em] text-[#F4F0E8]"
+            className="mt-6 inline-flex bg-[#111111] px-6 py-3 text-[14px] font-semibold uppercase tracking-[0.16em] text-[#F7F7F7]"
           >
             Back to shop
           </Link>
@@ -1056,6 +1058,29 @@ export default function ProductPage() {
                 <h1 className="text-[28px] font-bold leading-[1.05] tracking-[-0.02em] text-[var(--ink)] lg:text-[40px]">
                   {product.name}
                 </h1>
+                {Number(product.review_count) > 0 && Number(product.rating) > 0 && (
+                  <a
+                    href="#reviews"
+                    onClick={(event) => {
+                      event.preventDefault();
+                      document.getElementById('reviews')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                      window.history.replaceState(null, '', '#reviews');
+                    }}
+                    aria-label={`Rated ${Number(product.rating).toFixed(1)} out of 5 from ${product.review_count} reviews. Read reviews`}
+                    className="mt-3 inline-flex items-center gap-2 text-[14px] text-[var(--ink)] hover:underline"
+                  >
+                    <span className="flex items-center" aria-hidden="true">
+                      {[1, 2, 3, 4, 5].map((n) => (
+                        <Star
+                          key={n}
+                          className={`h-4 w-4 ${n <= Math.round(Number(product.rating)) ? 'fill-[#E53935] text-[#E53935]' : 'text-[#D2D2D2]'}`}
+                        />
+                      ))}
+                    </span>
+                    <span className="font-medium">{Number(product.rating).toFixed(1)}</span>
+                    <span className="text-[var(--muted)]">({product.review_count} {Number(product.review_count) === 1 ? 'review' : 'reviews'})</span>
+                  </a>
+                )}
                 {collectionName && (
                   <p className="mt-2 text-[13.5px] text-[var(--muted)] lg:text-[14px]">{collectionName}</p>
                 )}
@@ -1159,7 +1184,7 @@ export default function ProductPage() {
                             className={`kv-opt h-10 border px-4 text-[14px] font-semibold ${
                               active
                                 ? 'border-[var(--ink)] bg-[var(--ink)] text-[var(--ivory)]'
-                                : `border-[#CFC6B6] bg-white text-[var(--ink)] hover:border-[var(--ink)] ${soldOut ? 'opacity-55 line-through' : ''}`
+                                : `border-[#C3C3C3] bg-white text-[var(--ink)] hover:border-[var(--ink)] ${soldOut ? 'opacity-55 line-through' : ''}`
                             }`}
                           >
                             {color}
@@ -1200,8 +1225,8 @@ export default function ProductPage() {
                               active
                                 ? 'border-[var(--ink)] bg-[var(--ink)] text-[var(--ivory)]'
                                 : soldOut
-                                  ? 'border-[var(--line-2)] bg-transparent text-[#B9B2A6]'
-                                  : 'border-[#CFC6B6] bg-white text-[var(--ink)] hover:border-[var(--ink)]'
+                                  ? 'border-[var(--line-2)] bg-transparent text-[#B0B0B0]'
+                                  : 'border-[#C3C3C3] bg-white text-[var(--ink)] hover:border-[var(--ink)]'
                             }`}
                           >
                             {size}
@@ -1211,7 +1236,7 @@ export default function ProductPage() {
                                 className="absolute inset-0"
                                 style={{
                                   background:
-                                    'linear-gradient(to top right, transparent calc(50% - 0.5px), #B9B2A6 calc(50% - 0.5px), #B9B2A6 calc(50% + 0.5px), transparent calc(50% + 0.5px))',
+                                    'linear-gradient(to top right, transparent calc(50% - 0.5px), #B0B0B0 calc(50% - 0.5px), #B0B0B0 calc(50% + 0.5px), transparent calc(50% + 0.5px))',
                                 }}
                               />
                             )}
@@ -1230,7 +1255,7 @@ export default function ProductPage() {
               <div className="flex flex-wrap gap-3 lg:flex-nowrap">
                 {variants.length > 0 && (
                   <div
-                    className="order-1 inline-flex h-[50px] flex-1 items-center justify-between border border-[#CFC6B6] bg-white lg:h-[54px] lg:flex-none"
+                    className="order-1 inline-flex h-[50px] flex-1 items-center justify-between border border-[#C3C3C3] bg-white lg:h-[54px] lg:flex-none"
                     role="group"
                     aria-label="Quantity"
                   >
@@ -1274,7 +1299,7 @@ export default function ProductPage() {
                   aria-pressed={isWishlisted}
                   onClick={handleWishlistToggle}
                   disabled={wishlistBusy}
-                  className={`order-2 flex h-[50px] w-[50px] shrink-0 items-center justify-center border border-[#CFC6B6] bg-white text-[var(--ink)] transition hover:border-[var(--ink)] lg:order-3 lg:h-[54px] lg:w-[54px] ${wishlistBusy ? 'opacity-60' : ''}`}
+                  className={`order-2 flex h-[50px] w-[50px] shrink-0 items-center justify-center border border-[#C3C3C3] bg-white text-[var(--ink)] transition hover:border-[var(--ink)] lg:order-3 lg:h-[54px] lg:w-[54px] ${wishlistBusy ? 'opacity-60' : ''}`}
                 >
                   <Heart className={`h-5 w-5 ${isWishlisted ? 'fill-current' : ''}`} />
                 </button>
@@ -1412,6 +1437,14 @@ export default function ProductPage() {
           </div>
         </div>
       </section>
+
+      {/* CUSTOMER REVIEWS */}
+      <ProductReviews
+        slug={product.slug || slug}
+        productName={product.name}
+        productImage={images[0]}
+        variantLabel={[selectedSize, selectedColor].filter(Boolean).join(' / ')}
+      />
 
       {/* RELATED PRODUCTS */}
       {related.length > 0 && (

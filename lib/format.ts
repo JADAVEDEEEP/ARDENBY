@@ -1,5 +1,10 @@
 export function formatINR(amount: number): string {
-  return '₹' + amount.toLocaleString('en-IN');
+  // Whole rupees stay plain (₹600); paise always show two digits (₹283.50).
+  const whole = Number.isInteger(amount);
+  return (
+    '₹' +
+    amount.toLocaleString('en-IN', whole ? undefined : { minimumFractionDigits: 2, maximumFractionDigits: 2 })
+  );
 }
 
 export function discountPercent(mrp: number, price: number): number {

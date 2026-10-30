@@ -26,11 +26,12 @@ import { AddressManager } from './_components/address-manager';
 import { PaymentSection } from './_components/payment-section';
 import {
   DesktopSummary,
+  MobilePriceDetails,
   MobileSummaryBar,
   PlaceOrderButton,
-  TrustRow,
 } from './_components/order-summary';
 import { SegmentedProgress, StepProgress } from './_components/progress';
+import { AcceptedRow } from './_components/payment-logos';
 import { ConfirmedCard, StatusPanel } from './_components/status-panel';
 import {
   apiRequest,
@@ -62,16 +63,19 @@ function SectionCard({
 }) {
   return (
     <section className="ck-panel p-4 sm:p-6" aria-labelledby={id}>
-      <header className="mb-5 flex items-start justify-between gap-3">
+      <header className="mb-5 flex flex-wrap items-start justify-between gap-3">
         <div className="flex items-center gap-3.5">
-          <span className="ck-chip-chrome flex h-11 w-11 shrink-0 items-center justify-center  text-sm font-semibold">
+          <span
+            aria-hidden
+            className="flex h-12 w-12 shrink-0 items-center justify-center rounded-[2px] bg-[#111111] text-[22px] font-bold text-white"
+          >
             {index}
           </span>
           <div>
-            <h2 id={id} className="text-lg font-semibold leading-tight text-[#171717]">
+            <h2 id={id} className="ck-display text-[24px] sm:text-[30px]">
               {title}
             </h2>
-            <p className="mt-0.5 hidden text-xs text-[#4A4A4A]/70 sm:block">{sub}</p>
+            <p className="mt-0.5 hidden text-[16px] text-[#666666] sm:block">{sub}</p>
           </div>
         </div>
         {badge}
@@ -81,16 +85,8 @@ function SectionCard({
   );
 }
 
-function Badge({ children, tone = 'cyan' }: { children: React.ReactNode; tone?: 'cyan' | 'green' }) {
-  const cls =
-    tone === 'green'
-      ? 'border-[#E2E0DB] text-[#4A4A4A]'
-      : 'border-[#E2E0DB] text-[#4A4A4A]';
-  return (
-    <span className={`inline-flex shrink-0 items-center gap-1.5 border px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.14em] ${cls}`}>
-      {children}
-    </span>
-  );
+function Badge({ children }: { children: React.ReactNode }) {
+  return <span className="ck-chip">{children}</span>;
 }
 
 type PendingOrder = { id: string; number: string; addressId: string };
@@ -302,7 +298,9 @@ function CheckoutPageView() {
 
   const step: 1 | 2 | 3 = placed ? 3 : selectedAddress ? 2 : 1;
   const isOnline = selectedPayment === 'online';
-  const ctaLabel = BUSY_LABEL[phase] ?? (phase === 'failed' ? 'Try again' : 'Place order');
+  const ctaLabel =
+    BUSY_LABEL[phase] ??
+    (phase === 'failed' ? 'Try again' : isOnline ? 'Place order' : 'Place COD order');
   const resumable = Boolean(pendingOrder);
 
   // All hooks are declared above, so these early returns are safe.
@@ -361,7 +359,7 @@ function CheckoutPageView() {
             <span className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full ck-ico">
               <ShoppingBag className="h-6 w-6" />
             </span>
-            <h1 className="mb-2 text-2xl font-semibold text-[#171717]">Your cart is empty</h1>
+            <h1 className="mb-2 text-2xl font-semibold text-[#111111]">Your cart is empty</h1>
             <p className="mb-6 text-sm text-[#4A4A4A]">
               Please add items to your shopping bag before proceeding to checkout.
             </p>
@@ -388,51 +386,29 @@ function CheckoutPageView() {
 
   return (
     <Shell>
-      <div className="mx-auto max-w-[1280px] px-4 pb-[calc(8.5rem+env(safe-area-inset-bottom))] pt-6 sm:px-8 lg:px-12 lg:pb-20 lg:pt-10">
+      <div className="mx-auto max-w-[1280px] px-4 pb-[calc(7.5rem+env(safe-area-inset-bottom))] pt-6 sm:px-8 lg:px-12 lg:pb-20 lg:pt-10">
         {/* ---------- header ---------- */}
         <Link
           href="/cart"
-          className="hidden items-center gap-2 text-xs text-[#4A4A4A] underline underline-offset-2 transition-colors hover:text-[#171717] lg:inline-flex"
+          className="inline-flex min-h-[44px] items-center gap-2 text-[16px] text-[#444444] transition-colors hover:text-[#111111]"
         >
-          <ArrowLeft className="h-3.5 w-3.5" /> <span className="ck-chrome-link">Back to cart</span>
+          <ArrowLeft className="h-4 w-4" /> Back to bag
         </Link>
 
         {/* desktop / tablet-landscape header */}
-        <header className="mb-8 mt-5 hidden items-center justify-between gap-8 lg:flex">
+        <header className="mb-8 mt-2 hidden items-end justify-between gap-8 lg:flex">
           <div>
-            <h1 className="ck-heading text-3xl sm:text-4xl">Checkout</h1>
-            <p className="mt-4 flex items-center gap-3 text-base text-[#4A4A4A]">
-              <Badge>
-                <Lock className="h-3 w-3" /> SECURE
-              </Badge>
-              Complete your order and <strong className="font-semibold text-[#171717]">wear beyond ordinary.</strong>
+            <h1 className="ck-display text-[44px]">Checkout</h1>
+            <p className="mt-3 flex items-center gap-2 text-[17px] text-[#444444]">
+              <Lock className="h-4 w-4 shrink-0" aria-hidden /> Secure checkout. Complete your order and wear beyond ordinary.
             </p>
           </div>
           <StepProgress step={step} />
         </header>
 
         {/* mobile / tablet header */}
-        <header className="mb-5 lg:hidden">
-          <div className="flex items-center justify-between gap-3">
-            <div className="flex min-w-0 items-center gap-3">
-              <Link
-                href="/cart"
-                aria-label="Back to cart"
-                className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-[#E2E0DB] bg-[#171717]/5 text-[#171717]"
-              >
-                <ArrowLeft className="h-4 w-4" />
-              </Link>
-              <h1 className="ck-heading text-2xl sm:text-4xl">Checkout</h1>
-            </div>
-            <div className="text-right">
-              <Badge>
-                <Lock className="h-3 w-3" /> SECURE
-              </Badge>
-              <p className="mt-1.5 text-[11px] font-medium tracking-[0.14em] text-[#4A4A4A]/70">
-                STEP <span className="text-[#4A4A4A]">{step}</span> / 3
-              </p>
-            </div>
-          </div>
+        <header className="mb-5 mt-1 lg:hidden">
+          <h1 className="ck-display text-[34px]">Checkout</h1>
           <div className="mt-4">
             <SegmentedProgress step={step} />
           </div>
@@ -456,57 +432,47 @@ function CheckoutPageView() {
 
             <SectionCard
               id="delivery-heading"
-              index="01"
-              title="Delivery"
+              index="1"
+              title="Delivery address"
               sub="Where should we send your KOVENIK drop?"
               badge={
                 <Badge>
-                  <Truck className="h-3 w-3" /> Pan-India delivery
+                  <Truck className="h-4 w-4" /> Pan-India delivery
                 </Badge>
               }
             >
               <AddressManager selectedAddressId={selectedAddress?.id || null} onSelect={setSelectedAddress} />
 
-              <div className="mt-5">
-                <p className="mb-3 text-[11px] font-medium uppercase tracking-[0.14em] text-[#4A4A4A]/70">
-                  Delivery speed
-                </p>
-                <div className="grid grid-cols-2 gap-3">
-                  <div className="ck-tile flex items-center gap-3 p-3 sm:p-4" data-on="true">
-                    <span className="flex h-10 w-10 shrink-0 items-center justify-center  ck-ico ck-ico-blue">
-                      <Truck className="h-5 w-5" />
+              <div className="mt-6">
+                <h3 className="mb-3 text-[20px] font-bold text-[#111111]">Delivery speed</h3>
+                <div className="grid gap-3 sm:grid-cols-2">
+                  <div className="ck-tile flex items-center gap-3 p-4" data-on="true">
+                    <span aria-hidden className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full border-2 border-[#111111]">
+                      <span className="h-3 w-3 rounded-full bg-[#111111]" />
                     </span>
                     <span className="min-w-0 flex-1">
-                      <span className="block text-sm font-semibold text-[#171717]">Standard</span>
-                      <span className="hidden truncate sm:block text-[11px] text-[#4A4A4A]">
-                        Free above ₹999
-                      </span>
+                      <span className="block text-[18px] font-bold text-[#111111]">Standard delivery</span>
+                      <span className="block text-[15px] text-[#666666]">Free on orders above ₹999</span>
                     </span>
-                    <span className="text-xs font-semibold tracking-wider text-[#4A4A4A]">
+                    <span className="text-[16px] font-bold text-[#111111]">
                       {shipping === 0 ? 'FREE' : formatINR(shipping)}
                     </span>
                   </div>
 
-                  <div
-                    className="ck-tile flex items-center gap-3 p-3 sm:p-4"
-                    data-disabled="true"
-                    aria-disabled="true"
-                  >
-                    <span className="flex h-10 w-10 shrink-0 items-center justify-center  ck-ico ck-ico-pink">
-                      <Zap className="h-5 w-5" />
-                    </span>
+                  <div className="ck-tile flex items-center gap-3 p-4" data-disabled="true" aria-disabled="true">
+                    <span aria-hidden className="flex h-6 w-6 shrink-0 rounded-full border-2 border-[#BDBDBD]" />
                     <span className="min-w-0 flex-1">
-                      <span className="block text-sm font-semibold text-[#171717]">Express</span>
-                      <span className="block truncate text-[11px] text-[#4A4A4A]">Coming soon</span>
+                      <span className="block text-[18px] font-bold">Express delivery</span>
+                      <span className="block text-[15px]">Coming soon</span>
                     </span>
+                    <Zap className="h-5 w-5 shrink-0 text-[#666666]" aria-hidden />
                   </div>
                 </div>
 
                 {selectedAddress && (
-                  <p className="mt-3 flex items-center gap-2 text-xs text-[#4A4A4A]">
-                    <MapPin className="h-3.5 w-3.5 shrink-0 text-[#4A4A4A]" />
-                    Delivering to pincode{' '}
-                    <strong className="font-medium text-[#171717]">{selectedAddress.pincode}</strong> ·{' '}
+                  <p className="mt-3 flex items-center gap-2 text-[15px] text-[#444444]">
+                    <MapPin className="h-4 w-4 shrink-0" aria-hidden />
+                    Delivering to pincode <strong className="font-semibold text-[#111111]">{selectedAddress.pincode}</strong> ·{' '}
                     {selectedAddress.city}, {selectedAddress.state}
                   </p>
                 )}
@@ -515,12 +481,12 @@ function CheckoutPageView() {
 
             <SectionCard
               id="payment-heading"
-              index="02"
+              index="2"
               title="Payment"
               sub="Choose how you’d like to pay"
               badge={
-                <Badge tone="green">
-                  <ShieldCheck className="h-3 w-3" /> <span className="hidden sm:inline">256-bit </span>encrypted
+                <Badge>
+                  <ShieldCheck className="h-4 w-4" /> 256-bit encrypted
                 </Badge>
               }
             >
@@ -541,8 +507,12 @@ function CheckoutPageView() {
               />
             </div>
 
-            <div className="lg:hidden">
-              <TrustRow compact />
+            <div className="space-y-4 lg:hidden">
+              <MobilePriceDetails pricing={pricing} couponCode={coupon.couponCode} />
+              <div className="rounded-[4px] border border-[#E5E5E5] bg-white p-4">
+                <p className="text-center text-[15px] text-[#666666]">{paymentNote}</p>
+                <AcceptedRow />
+              </div>
             </div>
           </div>
 
@@ -561,18 +531,13 @@ function CheckoutPageView() {
       </div>
 
       {/* mobile dock */}
-      <div className="fixed inset-x-0 bottom-0 z-40 border-t border-[#E2E0DB] bg-[#FFFFFF]/95 backdrop-blur lg:hidden">
-        <div className="mx-auto max-w-[640px] px-4 pb-[calc(0.75rem+env(safe-area-inset-bottom))] pt-3">
-          <div className="mb-2.5 flex items-end justify-between">
-            <div>
-              <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-[#4A4A4A]/70">Total payable</p>
-              <p className="text-[11px] text-[#4A4A4A]/70">
-                Incl. GST {formatINR(gst)} · {shipping === 0 ? 'Free shipping' : `Shipping ${formatINR(shipping)}`}
-              </p>
-            </div>
-            <strong className="ck-chrome-text text-3xl font-semibold tabular-nums">{formatINR(total)}</strong>
+      <div className="fixed inset-x-0 bottom-0 z-40 border-t border-[#E5E5E5] bg-white lg:hidden">
+        <div className="mx-auto flex max-w-[640px] items-center gap-4 px-4 pb-[calc(0.75rem+env(safe-area-inset-bottom))] pt-3">
+          <div className="shrink-0">
+            <p className="text-[14px] text-[#666666]">Total payable</p>
+            <strong className="text-[24px] font-bold leading-none tabular-nums text-[#111111]">{formatINR(total)}</strong>
           </div>
-          <PlaceOrderButton label={ctaLabel} busy={busy} total={total} />
+          <PlaceOrderButton label={ctaLabel} busy={busy} total={total} className="!min-h-[52px] min-w-0 flex-1 !px-3" />
         </div>
       </div>
     </Shell>

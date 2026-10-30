@@ -21,7 +21,7 @@ const SLIDES = [
 ] as const;
 
 const BTN =
-  'inline-flex min-h-[48px] flex-1 items-center justify-center whitespace-nowrap px-3 text-[14px] font-bold uppercase tracking-[0.08em] transition-colors sm:flex-none sm:min-h-[52px] sm:px-8 sm:text-[15px]';
+  'inline-flex min-h-[48px] flex-1 items-center justify-center whitespace-nowrap px-3 text-[14px] font-bold uppercase tracking-[0.08em] transition-colors sm:flex-none sm:min-h-[52px] sm:px-6 sm:text-[15px] lg:px-8';
 
 interface HeroCarouselProps {
   /** Real products shown as the three thumbnails. */
@@ -42,7 +42,7 @@ export function HeroCarousel({ products }: HeroCarouselProps) {
   const thumbs = products.filter((p) => p.images?.[0]).slice(0, 3);
 
   const buttons = (
-    <div className="flex gap-3">
+    <div className="flex flex-wrap justify-center gap-3">
       <Link href="/shop" className={cn(BTN, 'bg-kv-ink text-white hover:bg-black')}>
         Shop now
       </Link>
@@ -84,7 +84,7 @@ export function HeroCarousel({ products }: HeroCarouselProps) {
             />
           ))}
 
-          <div className="absolute inset-x-0 bottom-0 bg-kv-ink/90 px-4 py-5 text-white md:hidden">
+          <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black via-black/85 to-transparent px-4 pb-5 pt-16 text-white md:hidden">
             <h1 className="font-oswald text-[40px] font-bold uppercase leading-none tracking-[0.04em]">Art you can wear</h1>
             <p className="mt-2 text-[15px] leading-[1.6] text-kv-mist">
               Heavyweight fabrics, relaxed cuts and a calm, considered finish.

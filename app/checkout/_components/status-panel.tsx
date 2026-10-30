@@ -37,12 +37,12 @@ export function StatusPanel({
     <section
       role={failed ? 'alert' : 'status'}
       aria-live="polite"
-      className={`ck-panel overflow-hidden p-4 sm:p-5 ${failed ? 'border-[#E2E0DB]' : ''}`}
+      className={`ck-panel overflow-hidden p-4 sm:p-5 ${failed ? 'border-[#E5E5E5]' : ''}`}
     >
       <div className="flex flex-wrap items-center gap-4">
         <span
           className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-full ${
-            failed ? 'border border-[#222222] text-[#171717]' : 'border border-[#E2E0DB] text-[#4A4A4A]'
+            failed ? 'border border-[#222222] text-[#111111]' : 'border border-[#E5E5E5] text-[#4A4A4A]'
           }`}
         >
           {failed ? (
@@ -55,7 +55,7 @@ export function StatusPanel({
         </span>
 
         <div className="min-w-0 flex-1">
-          <p className="text-sm font-medium text-[#171717]">
+          <p className="text-sm font-medium text-[#111111]">
             {failed ? 'Something went wrong' : copy[phase]?.title}
             {orderNumber && !failed && (
               <span className="ml-2 text-xs font-semibold text-[#4A4A4A]/70">{orderNumber}</span>

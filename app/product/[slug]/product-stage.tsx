@@ -13,7 +13,7 @@ type ProductStageProps = {
 };
 
 const ZOOM_SCALE = 1.9;
-const OVERLAY = 'bg-white/[0.92] text-[#171717]';
+const OVERLAY = 'bg-white/[0.92] text-[#111111]';
 const SECONDARY_LABELS = ['On model', 'Print detail'];
 
 /**
@@ -235,7 +235,7 @@ export function ProductStage({ images, name, onOpenFullscreen }: ProductStagePro
                 <span
                   key={index}
                   className={`h-1.5 rounded-full transition-all duration-300 ${
-                    active === index ? 'w-5 bg-[#171717]' : 'w-1.5 bg-[#171717]/35'
+                    active === index ? 'w-5 bg-[#111111]' : 'w-1.5 bg-[#111111]/35'
                   }`}
                 />
               ))}

@@ -1,8 +1,10 @@
 /* ---------------------------------------------------------------------------
- *  KOVENIK logo: inline SVG so the CSS animation runs (an <img> would freeze it).
- *  The eyes blink every 4.5s and the pupils glance left and right on a 7s loop.
- *  Both animations are switched off under prefers-reduced-motion.
- *  Size it with `className`, e.g. "h-[46px] w-[184px]" (viewBox is 256 x 64).
+ *  KOVENIK logo: a bold black wordmark with a small Rebel Bunny peeking out from
+ *  behind the last letters (ears and eyes above the letters, paws gripping the top edge).
+ *  Palette: black #111111, white #FFFFFF, red #E53935. Static inline SVG, no animation.
+ *  Size it with `className`, e.g. "h-[46px] w-[131px]" (viewBox is 182 x 64).
+ *  The svg is overflow:visible so the ear tips can rise a few px above the box
+ *  without changing layout.
  * ------------------------------------------------------------------------- */
 
 export type KovenikLogoLayout = 'stacked' | 'horizontal';
@@ -11,47 +13,62 @@ type KovenikLogoProps = {
   /** Kept for call-site compatibility; there is a single artwork. */
   layout?: KovenikLogoLayout;
   className?: string;
+  /** false drops the bunny and shows the wordmark only. */
+  bunny?: boolean;
 };
 
-const LOGO_CSS = `
-.kv-eyes{transform-box:fill-box;transform-origin:center;animation:kvblink 4.5s infinite}
-@keyframes kvblink{0%,90%,100%{transform:scaleY(1)}93%{transform:scaleY(.1)}96%{transform:scaleY(1)}}
-.kv-pupils{animation:kvlook 7s ease-in-out infinite}
-@keyframes kvlook{0%,35%,100%{transform:translateX(0)}45%,55%{transform:translateX(-2.5px)}65%,75%{transform:translateX(2.5px)}}
-@media (prefers-reduced-motion:reduce){.kv-eyes,.kv-pupils{animation:none}}
-`;
+const BLACK = '#111111';
+const WHITE = '#FFFFFF';
+const RED = '#E53935';
 
-export function KovenikLogo({ className }: KovenikLogoProps) {
+export function KovenikLogo({ className, bunny = true }: KovenikLogoProps) {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 256 64"
+      viewBox="0 0 182 64"
       role="img"
       aria-label="KOVENIK"
       className={className}
+      style={{ overflow: 'visible' }}
     >
-      <style>{LOGO_CSS}</style>
-      <path d="M10 60V26L6 4L24 15Q32 13 40 15L58 4L54 26V60Q32 64 10 60Z" fill="#222222" />
-      <g className="kv-eyes">
-        <ellipse cx="23" cy="36" rx="7" ry="6" fill="#C9A86A" />
-        <ellipse cx="41" cy="36" rx="7" ry="6" fill="#C9A86A" />
-        <g className="kv-pupils">
-          <ellipse cx="23" cy="36" rx="2" ry="4.6" fill="#222222" />
-          <ellipse cx="41" cy="36" rx="2" ry="4.6" fill="#222222" />
+      {/* Bunny head + ears sit behind the letters. */}
+      {bunny && (
+        <g stroke={BLACK} strokeWidth="2.2" strokeLinejoin="round">
+          <g transform="rotate(-10 143 18)">
+            <rect x="139" y="-3" width="8" height="22" rx="4" fill={WHITE} />
+            <rect x="141.2" y="0" width="3.6" height="14" rx="1.8" fill={RED} stroke="none" />
+          </g>
+          <g transform="rotate(12 159 18)">
+            <rect x="155" y="-3" width="8" height="22" rx="4" fill={WHITE} />
+            <rect x="157.2" y="0" width="3.6" height="14" rx="1.8" fill={RED} stroke="none" />
+          </g>
+          <ellipse cx="151" cy="26" rx="14" ry="10" fill={WHITE} />
+          {/* Eyes, with a slanted brow for the rebel attitude. */}
+          <circle cx="145.5" cy="25" r="1.9" fill={BLACK} stroke="none" />
+          <circle cx="156.5" cy="25" r="1.9" fill={BLACK} stroke="none" />
+          <path d="M142 20.5L148 22.5M160 20.5L154 22.5" fill="none" stroke={RED} strokeWidth="1.8" strokeLinecap="round" />
         </g>
-      </g>
-      <path d="M30 46H34L32 49Z" fill="#B08D57" />
-      <g fill="none" stroke="#222222" strokeWidth="6" strokeLinecap="square">
-        <path d="M78 15V49M98 15L81 32L98 49" />
-        <rect x="107" y="15" width="20" height="34" rx="8" />
-        <path d="M136 15L146 49L156 15" />
-        <path d="M182 15H165V49H182M165 32H179" />
-        <path d="M191 49V15L211 49V15" />
-        <path d="M220 15V49" />
-        <path d="M229 15V49M249 15L232 32L249 49" />
-      </g>
-      <circle cx="113" cy="6" r="2.6" fill="#B08D57" />
-      <circle cx="121" cy="6" r="2.6" fill="#B08D57" />
+      )}
+      <text
+        x="0"
+        y="56"
+        textLength="182"
+        lengthAdjust="spacingAndGlyphs"
+        fill={BLACK}
+        fontFamily="'Arial Black', 'Helvetica Neue', Arial, sans-serif"
+        fontSize="38"
+        fontWeight="900"
+      >
+        KOVENIK
+      </text>
+      <rect x="0" y="60" width="44" height="3" rx="1.5" fill={RED} />
+      {/* Paws gripping the top edge of the letters. */}
+      {bunny && (
+        <g fill={WHITE} stroke={BLACK} strokeWidth="2">
+          <ellipse cx="143" cy="33" rx="4" ry="3" />
+          <ellipse cx="159" cy="33" rx="4" ry="3" />
+        </g>
+      )}
     </svg>
   );
 }

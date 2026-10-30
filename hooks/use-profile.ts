@@ -504,7 +504,9 @@ if (section === 'addresses' || section === 'overview') {
   // The confirmation modal lives in OrdersSection; this performs the cancel.
   // Resolves true only when the server confirmed the cancellation.
   const cancelOrder = async (
-    id: string
+    id: string,
+    // The server requires a reason for every cancellation.
+    payload?: { reasonCode: string; note?: string }
   ): Promise<boolean> => {
     // Duplicate-submit lock: a double click must not send two requests.
     if (cancelLock.current) return false;
@@ -517,6 +519,7 @@ if (section === 'addresses' || section === 'overview') {
         `/api/orders/${id}/cancel`,
         {
           method: 'PATCH',
+          body: JSON.stringify(payload ?? {}),
         }
       );
       // Refresh in place so the new status shows without a page reload.
@@ -608,7 +611,7 @@ if (section === 'addresses' || section === 'overview') {
       return 'bg-red-50 text-red-700';
     if (status === 'Returned')
       return 'bg-orange-50 text-orange-700';
-    return 'bg-[#EFECE6] text-[#5C554E]';
+    return 'bg-[#F7F7F7] text-[#555555]';
   };
   const displayName =
     user?.full_name || 'KOVENIK Member';

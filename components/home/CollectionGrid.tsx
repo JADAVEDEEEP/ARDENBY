@@ -22,7 +22,7 @@ export function CollectionGrid({ products }: { products: Product[] }) {
 
   return (
     <section aria-labelledby="home-collections" className="bg-kv-bg py-10 md:py-14">
-      <div className="mx-auto w-full max-w-[1280px] px-4 md:px-6">
+      <div className="kv-gutter mx-auto w-full max-w-[1600px]">
         <SectionHeader id="home-collections" title="Collections" />
 
         <ul className="grid grid-cols-2 gap-x-3 gap-y-8 md:grid-cols-3 md:gap-x-6 md:gap-y-12">
@@ -36,7 +36,7 @@ export function CollectionGrid({ products }: { products: Product[] }) {
                     alt=""
                     fill
                     loading="lazy"
-                    sizes="(min-width: 1280px) 400px, (min-width: 768px) 33vw, 50vw"
+                    sizes="(min-width: 1600px) 520px, (min-width: 768px) 33vw, 50vw"
                     className="object-cover transition duration-300 group-hover:scale-105"
                   />
                 </div>

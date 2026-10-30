@@ -1,8 +1,8 @@
 'use client';
 
 import Link from 'next/link';
-import { usePathname, useRouter } from 'next/navigation';
-import { useEffect, useRef, useState } from 'react';
+import { usePathname } from 'next/navigation';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import type { ComponentType, ReactNode } from 'react';
 import {
   BadgePercent,
@@ -11,20 +11,23 @@ import {
   Boxes,
   CalendarDays,
   ChevronDown,
+  Download,
   FolderTree,
+  History,
   LayoutDashboard,
   LogOut,
   Menu,
   PackageCheck,
-  Search,
+  PackageX,
   Settings,
+  ShieldCheck,
   Star,
-  Users,
+  UserCog,
   Warehouse,
   X,
 } from 'lucide-react';
 
-import { AdminUser } from '@/components/admin/admin-auth';
+import { AdminUser, adminApiRequest } from '@/components/admin/admin-auth';
 import {
   AccessDenied,
   AdminChecking,
@@ -37,30 +40,37 @@ type NavItem = {
   href: string;
   label: string;
   icon: ComponentType<{ className?: string }>;
-  /**
-   * Routes that do not exist in the app yet are rendered as disabled
-   * ("Soon") so nothing 404s. Set to false/remove once the page exists.
-   */
-  soon?: boolean;
 };
 
+// Customers (Super Admin only) is intentionally not listed. Reviews, Returns,
+// Stock history, Exports and Security are listed; the backend decides what each
+// role may do on them.
 const adminLinks: NavItem[] = [
   { href: '/admin', label: 'Dashboard', icon: LayoutDashboard },
-  { href: '/admin/analytics', label: 'Analytics', icon: BarChart3, soon: true },
+  { href: '/admin/analytics', label: 'Analytics', icon: BarChart3 },
   { href: '/admin/orders', label: 'Orders', icon: PackageCheck },
   { href: '/admin/products', label: 'Products', icon: Boxes },
   { href: '/admin/categories', label: 'Categories', icon: FolderTree },
-  { href: '/admin/customers', label: 'Customers', icon: Users, soon: true },
   { href: '/admin/inventory', label: 'Inventory', icon: Warehouse },
-  { href: '/admin/reviews', label: 'Reviews', icon: Star, soon: true },
+  { href: '/admin/inventory/history', label: 'Stock history', icon: History },
   { href: '/admin/coupons', label: 'Coupons', icon: BadgePercent },
-  { href: '/admin/settings', label: 'Settings', icon: Settings, soon: true },
+  { href: '/admin/reviews', label: 'Reviews', icon: Star },
+  { href: '/admin/returns', label: 'Returns', icon: PackageX },
+  { href: '/admin/exports', label: 'Exports', icon: Download },
+  { href: '/admin/security', label: 'Security', icon: ShieldCheck },
+  { href: '/admin/settings', label: 'Settings', icon: Settings },
 ];
 
-const bottomLinks = ['/admin', '/admin/orders', '/admin/products'];
+const bottomLinks = ['/admin', '/admin/orders', '/admin/analytics'];
+
+type Alert = { type: string; title: string; href: string };
 
 function isActive(pathname: string, href: string) {
   return href === '/admin' ? pathname === '/admin' : pathname.startsWith(href);
+}
+
+function pageTitle(pathname: string) {
+  return adminLinks.find((l) => isActive(pathname, l.href))?.label ?? 'Admin';
 }
 
 function Wordmark({ size = 'lg' }: { size?: 'lg' | 'sm' }) {
@@ -68,16 +78,16 @@ function Wordmark({ size = 'lg' }: { size?: 'lg' | 'sm' }) {
     <span className="flex flex-col items-center leading-none">
       <span
         className={cn(
-          'font-serif uppercase text-[#F4F0E6]',
-          size === 'lg' ? 'text-[24px] tracking-[0.2em]' : 'text-[18px] tracking-[0.18em]'
+          'font-oswald font-bold uppercase text-white',
+          size === 'lg' ? 'text-[26px] tracking-[0.2em]' : 'text-[20px] tracking-[0.18em]'
         )}
       >
         Kovenik
       </span>
       <span
         className={cn(
-          'font-semibold uppercase text-[#B89A5A]',
-          size === 'lg' ? 'mt-2 text-[9px] tracking-[0.5em]' : 'mt-1 text-[8px] tracking-[0.45em]'
+          'font-semibold uppercase text-[#E53935]',
+          size === 'lg' ? 'mt-2 text-[10px] tracking-[0.5em]' : 'mt-1 text-[9px] tracking-[0.45em]'
         )}
       >
         Admin
@@ -90,7 +100,7 @@ function Avatar({ user, className }: { user: AdminUser | null; className?: strin
   return (
     <span
       className={cn(
-        'flex shrink-0 items-center justify-center rounded-full border border-[#B89A5A]/60 bg-[#2A2824] font-serif text-sm text-[#C8A96B]',
+        'flex shrink-0 items-center justify-center rounded-full bg-[#111111] text-sm font-bold text-white',
         className
       )}
     >
@@ -105,46 +115,6 @@ function NavList({ pathname }: { pathname: string }) {
       {adminLinks.map((item) => {
         const Icon = item.icon;
         const active = isActive(pathname, item.href);
-
-        const inner = (
-          <>
-            <span
-              className={cn(
-                'absolute inset-y-2 left-0 w-[3px] rounded-r bg-[#B89A5A] transition-opacity',
-                active ? 'opacity-100' : 'opacity-0'
-              )}
-            />
-            <Icon
-              className={cn(
-                'h-[18px] w-[18px] shrink-0 transition-colors',
-                active ? 'text-[#C8A96B]' : 'text-[#A19B8C] group-hover:text-[#C8A96B]'
-              )}
-            />
-            <span className="tracking-wide md:hidden lg:inline">{item.label}</span>
-            {item.soon && (
-              <span className="ml-auto rounded border border-[#B89A5A]/30 px-1.5 py-px text-[8px] font-semibold uppercase tracking-widest text-[#B89A5A]/80 md:hidden lg:inline">
-                Soon
-              </span>
-            )}
-          </>
-        );
-
-        const base =
-          'group relative flex items-center gap-3.5 rounded-lg px-4 py-3 text-[13px] font-medium outline-none transition-colors md:justify-center md:px-0 lg:justify-start lg:px-4';
-
-        if (item.soon) {
-          return (
-            <span
-              key={item.href}
-              title={`${item.label} — coming soon`}
-              aria-disabled="true"
-              className={cn(base, 'cursor-not-allowed text-[#827D71]/70')}
-            >
-              {inner}
-            </span>
-          );
-        }
-
         return (
           <Link
             key={item.href}
@@ -152,19 +122,37 @@ function NavList({ pathname }: { pathname: string }) {
             title={item.label}
             aria-current={active ? 'page' : undefined}
             className={cn(
-              base,
-              'focus-visible:ring-1 focus-visible:ring-[#C8A96B]',
+              'group relative flex items-center gap-3.5 rounded-lg px-4 py-3 text-[15px] font-medium outline-none transition-colors focus-visible:ring-2 focus-visible:ring-[#E53935] md:justify-center md:px-0 lg:justify-start lg:px-4',
               active
-                ? 'bg-[#373530]/70 text-[#F4F0E6]'
-                : 'text-[#C8C0AD] hover:bg-[#2A2824]/70 hover:text-[#F4F0E6]'
+                ? 'bg-[#E53935] text-white'
+                : 'text-[#C9CCD3] hover:bg-white/10 hover:text-white'
             )}
           >
-            {inner}
+            <Icon className="h-5 w-5 shrink-0" />
+            <span className="md:hidden lg:inline">{item.label}</span>
           </Link>
         );
       })}
     </nav>
   );
+}
+
+function useDismiss(open: boolean, close: () => void) {
+  const ref = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    if (!open) return;
+    const onDown = (e: MouseEvent) => {
+      if (ref.current && !ref.current.contains(e.target as Node)) close();
+    };
+    const onKey = (e: KeyboardEvent) => e.key === 'Escape' && close();
+    document.addEventListener('mousedown', onDown);
+    document.addEventListener('keydown', onKey);
+    return () => {
+      document.removeEventListener('mousedown', onDown);
+      document.removeEventListener('keydown', onKey);
+    };
+  }, [open, close]);
+  return ref;
 }
 
 function ProfileMenu({
@@ -177,21 +165,7 @@ function ProfileMenu({
   compactName?: boolean;
 }) {
   const [open, setOpen] = useState(false);
-  const ref = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    if (!open) return;
-    const close = (e: MouseEvent) => {
-      if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false);
-    };
-    const esc = (e: KeyboardEvent) => e.key === 'Escape' && setOpen(false);
-    document.addEventListener('mousedown', close);
-    document.addEventListener('keydown', esc);
-    return () => {
-      document.removeEventListener('mousedown', close);
-      document.removeEventListener('keydown', esc);
-    };
-  }, [open]);
+  const ref = useDismiss(open, () => setOpen(false));
 
   return (
     <div ref={ref} className="relative">
@@ -200,19 +174,16 @@ function ProfileMenu({
         onClick={() => setOpen((v) => !v)}
         aria-haspopup="menu"
         aria-expanded={open}
-        className="flex items-center gap-2.5 rounded-full py-1 pl-1 pr-2 outline-none transition hover:bg-[#2A2824]/70 focus-visible:ring-1 focus-visible:ring-[#C8A96B]"
+        className="flex items-center gap-2.5 rounded-full py-1 pl-1 pr-2 outline-none transition hover:bg-[#F2F4F7] focus-visible:ring-2 focus-visible:ring-[#E53935]"
       >
-        <Avatar user={user} className="h-9 w-9" />
+        <Avatar user={user} className="h-10 w-10" />
         {!compactName && (
           <>
-            <span className="hidden max-w-[120px] truncate text-sm font-medium text-[#F4F0E6] lg:block">
+            <span className="hidden max-w-[140px] truncate text-[14px] font-semibold text-[#111111] lg:block">
               {user?.fullName || 'Admin'}
             </span>
             <ChevronDown
-              className={cn(
-                'hidden h-4 w-4 text-[#B89A5A] transition-transform lg:block',
-                open && 'rotate-180'
-              )}
+              className={cn('hidden h-4 w-4 text-[#626875] transition-transform lg:block', open && 'rotate-180')}
             />
           </>
         )}
@@ -221,21 +192,28 @@ function ProfileMenu({
       {open && (
         <div
           role="menu"
-          className="absolute right-0 z-50 mt-2 w-60 overflow-hidden rounded-xl border border-[#B89A5A]/30 bg-[#1C1B18] shadow-[0_20px_50px_rgba(0,0,0,0.5)]"
+          className="absolute right-0 z-50 mt-2 w-64 overflow-hidden rounded-xl border border-[#E4E7EC] bg-white shadow-[0_12px_32px_rgba(16,24,40,0.14)]"
         >
-          <div className="border-b border-[#B89A5A]/20 px-4 py-3">
-            <p className="truncate text-sm font-semibold text-[#F4F0E6]">
-              {user?.fullName || 'Admin'}
-            </p>
-            <p className="truncate text-xs text-[#A19B8C]">{user?.email || ''}</p>
+          <div className="border-b border-[#E4E7EC] px-4 py-3">
+            <p className="truncate text-[14px] font-semibold text-[#111111]">{user?.fullName || 'Admin'}</p>
+            <p className="truncate text-[13px] text-[#626875]">{user?.email || ''}</p>
           </div>
+          <Link
+            href="/admin/settings?tab=account"
+            role="menuitem"
+            onClick={() => setOpen(false)}
+            className="flex w-full items-center gap-2.5 px-4 py-3 text-left text-[14px] text-[#111111] transition hover:bg-[#F5F6F8]"
+          >
+            <UserCog className="h-4 w-4 text-[#626875]" />
+            Profile &amp; security
+          </Link>
           <button
             type="button"
             role="menuitem"
             onClick={onLogout}
-            className="flex w-full items-center gap-2.5 px-4 py-3 text-left text-sm text-[#EAE4D5] transition hover:bg-[#2A2824]"
+            className="flex w-full items-center gap-2.5 px-4 py-3 text-left text-[14px] text-[#111111] transition hover:bg-[#F5F6F8]"
           >
-            <LogOut className="h-4 w-4 text-[#B89A5A]" />
+            <LogOut className="h-4 w-4 text-[#E53935]" />
             Log out
           </button>
         </div>
@@ -244,74 +222,84 @@ function ProfileMenu({
   );
 }
 
+// Alerts are derived live from orders / products on the server and filtered by
+// the notification preferences saved in Settings. Nothing is invented here.
 function NotificationBell() {
   const [open, setOpen] = useState(false);
-  const ref = useRef<HTMLDivElement>(null);
+  const [alerts, setAlerts] = useState<Alert[] | null>(null);
+  const [failed, setFailed] = useState(false);
+  const ref = useDismiss(open, () => setOpen(false));
+
+  const load = useCallback(async () => {
+    try {
+      const res = await adminApiRequest<{ alerts?: Alert[] }>('/api/admin/alerts');
+      setAlerts(res.alerts ?? []);
+      setFailed(false);
+    } catch {
+      setFailed(true);
+    }
+  }, []);
 
   useEffect(() => {
-    if (!open) return;
-    const close = (e: MouseEvent) => {
-      if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false);
-    };
-    document.addEventListener('mousedown', close);
-    return () => document.removeEventListener('mousedown', close);
-  }, [open]);
+    void load();
+  }, [load]);
+
+  const count = alerts?.length ?? 0;
 
   return (
     <div ref={ref} className="relative">
       <button
         type="button"
-        onClick={() => setOpen((v) => !v)}
-        aria-label="Notifications"
+        onClick={() => {
+          setOpen((v) => !v);
+          if (!open) void load();
+        }}
+        aria-label={count ? `Notifications, ${count} alerts` : 'Notifications'}
         aria-expanded={open}
-        className="flex h-10 w-10 items-center justify-center rounded-full border border-[#B89A5A]/25 text-[#EAE4D5] outline-none transition hover:border-[#B89A5A]/60 hover:text-[#C8A96B] focus-visible:ring-1 focus-visible:ring-[#C8A96B]"
+        className="relative flex h-10 w-10 items-center justify-center rounded-full border border-[#E4E7EC] bg-white text-[#111111] outline-none transition hover:border-[#111111] focus-visible:ring-2 focus-visible:ring-[#E53935]"
       >
         <Bell className="h-[18px] w-[18px]" />
+        {count > 0 && (
+          <span className="absolute -right-0.5 -top-0.5 flex h-[18px] min-w-[18px] items-center justify-center rounded-full bg-[#E53935] px-1 text-[11px] font-bold text-white">
+            {count}
+          </span>
+        )}
       </button>
       {open && (
-        <div className="absolute right-0 z-50 mt-2 w-72 max-w-[calc(100vw-2rem)] rounded-xl border border-[#B89A5A]/30 bg-[#1C1B18] p-4 shadow-[0_20px_50px_rgba(0,0,0,0.5)]">
-          <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#B89A5A]">
-            Notifications
+        <div className="absolute right-0 z-50 mt-2 w-80 max-w-[calc(100vw-2rem)] rounded-xl border border-[#E4E7EC] bg-white p-2 shadow-[0_12px_32px_rgba(16,24,40,0.14)]">
+          <p className="px-3 py-2 text-[12px] font-semibold uppercase tracking-wider text-[#626875]">
+            Alerts
           </p>
-          <p className="mt-3 text-sm text-[#C8C0AD]">You&apos;re all caught up.</p>
+          {failed && <p className="px-3 pb-3 text-[14px] text-[#B42318]">Could not load alerts.</p>}
+          {!failed && alerts && alerts.length === 0 && (
+            <p className="px-3 pb-3 text-[14px] text-[#626875]">You&apos;re all caught up.</p>
+          )}
+          {!failed &&
+            alerts?.map((a) => (
+              <Link
+                key={a.type}
+                href={a.href}
+                onClick={() => setOpen(false)}
+                className="block rounded-lg px-3 py-2.5 text-[14px] font-medium text-[#111111] transition hover:bg-[#F5F6F8]"
+              >
+                {a.title}
+              </Link>
+            ))}
+          <Link
+            href="/admin/settings?tab=notifications"
+            onClick={() => setOpen(false)}
+            className="mt-1 block border-t border-[#E4E7EC] px-3 py-2.5 text-[13px] font-semibold text-[#E53935]"
+          >
+            Notification preferences
+          </Link>
         </div>
       )}
     </div>
   );
 }
 
-function CommandSearch() {
-  const router = useRouter();
-  const [query, setQuery] = useState('');
-
-  const submit = (e: React.FormEvent) => {
-    e.preventDefault();
-    const q = query.trim().toLowerCase();
-    if (!q) return;
-    const match = adminLinks.find((l) => !l.soon && l.label.toLowerCase().includes(q));
-    if (match) {
-      router.push(match.href);
-      setQuery('');
-    }
-  };
-
-  return (
-    <form onSubmit={submit} role="search" className="relative w-full max-w-md">
-      <Search className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-[#B89A5A]" />
-      <input
-        value={query}
-        onChange={(e) => setQuery(e.target.value)}
-        placeholder="Search anything… (e.g. orders, products)"
-        className="h-10 w-full rounded-lg border border-[#B89A5A]/25 bg-[#1C1B18]/80 pl-10 pr-3 text-sm text-[#F4F0E6] placeholder:text-[#827D71] outline-none transition focus:border-[#B89A5A]/70"
-      />
-    </form>
-  );
-}
-
 function Frame({ children }: { children: ReactNode }) {
-  return (
-    <main className="min-h-screen bg-[#131210] text-[#F4F0E6]">{children}</main>
-  );
+  return <main className="min-h-screen bg-[#F5F6F8] font-sans text-[#111111]">{children}</main>;
 }
 
 export function AdminShell({ children }: { children: React.ReactNode }) {
@@ -359,10 +347,12 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
 
   const handleLogout = signOut;
   const today = new Date().toLocaleDateString('en-IN', {
+    weekday: 'short',
     day: 'numeric',
     month: 'short',
     year: 'numeric',
   });
+  const title = pageTitle(pathname);
 
   const bottomItems = adminLinks.filter((l) => bottomLinks.includes(l.href));
 
@@ -370,13 +360,13 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
     <Frame>
       <div className="min-h-screen md:grid md:grid-cols-[76px_minmax(0,1fr)] lg:grid-cols-[264px_minmax(0,1fr)]">
         {/* Desktop / tablet sidebar */}
-        <aside className="sticky top-0 hidden h-screen flex-col border-r border-[#B89A5A]/20 bg-gradient-to-b from-[#131210] to-[#1C1B18] md:flex">
+        <aside className="sticky top-0 hidden h-screen flex-col bg-[#111111] md:flex">
           <Link
             href="/admin"
             aria-label="KOVENIK Admin home"
-            className="flex h-[88px] items-center justify-center border-b border-[#B89A5A]/20 outline-none focus-visible:ring-1 focus-visible:ring-[#C8A96B]"
+            className="flex h-[84px] items-center justify-center border-b border-white/10 outline-none focus-visible:ring-2 focus-visible:ring-[#E53935]"
           >
-            <span className="lg:hidden font-serif text-xl tracking-widest text-[#C8A96B]">K</span>
+            <span className="font-oswald text-2xl font-bold tracking-widest text-white lg:hidden">K</span>
             <span className="hidden lg:block">
               <Wordmark />
             </span>
@@ -386,21 +376,19 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
             <NavList pathname={pathname} />
           </div>
 
-          <div className="border-t border-[#B89A5A]/20 p-3">
+          <div className="border-t border-white/10 p-3">
             <div className="flex items-center gap-3 rounded-lg p-2 md:justify-center lg:justify-start">
-              <Avatar user={user} className="h-9 w-9" />
+              <Avatar user={user} className="h-10 w-10 bg-white !text-[#111111]" />
               <div className="min-w-0 flex-1 md:hidden lg:block">
-                <p className="truncate text-[13px] font-medium text-[#F4F0E6]">
-                  {user?.fullName || 'Admin'}
-                </p>
-                <p className="truncate text-[11px] text-[#A19B8C]">{user?.email || 'Administrator'}</p>
+                <p className="truncate text-[14px] font-semibold text-white">{user?.fullName || 'Admin'}</p>
+                <p className="truncate text-[12px] text-[#A3A8B3]">{user?.email || 'Administrator'}</p>
               </div>
               <button
                 type="button"
                 onClick={handleLogout}
                 aria-label="Log out"
                 title="Log out"
-                className="hidden rounded-md p-1.5 text-[#B89A5A] outline-none transition hover:bg-[#2A2824] hover:text-[#C8A96B] focus-visible:ring-1 focus-visible:ring-[#C8A96B] lg:block"
+                className="hidden rounded-md p-2 text-[#C9CCD3] outline-none transition hover:bg-white/10 hover:text-white focus-visible:ring-2 focus-visible:ring-[#E53935] lg:block"
               >
                 <LogOut className="h-4 w-4" />
               </button>
@@ -411,18 +399,16 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
         {/* Main column */}
         <div className="flex min-w-0 flex-col">
           {/* Mobile header */}
-          <header className="sticky top-0 z-40 flex h-16 items-center justify-between border-b border-[#B89A5A]/20 bg-[#131210]/95 px-4 backdrop-blur md:hidden">
+          <header className="sticky top-0 z-40 flex h-16 items-center justify-between border-b border-[#E4E7EC] bg-white px-4 md:hidden">
             <button
               type="button"
               onClick={() => setDrawerOpen(true)}
               aria-label="Open menu"
-              className="flex h-10 w-10 items-center justify-center rounded-lg text-[#EAE4D5] outline-none transition hover:bg-[#2A2824] focus-visible:ring-1 focus-visible:ring-[#C8A96B]"
+              className="flex h-11 w-11 items-center justify-center rounded-lg text-[#111111] outline-none transition hover:bg-[#F2F4F7] focus-visible:ring-2 focus-visible:ring-[#E53935]"
             >
               <Menu className="h-6 w-6" />
             </button>
-            <Link href="/admin" aria-label="KOVENIK Admin home">
-              <Wordmark size="sm" />
-            </Link>
+            <h2 className="text-[17px] font-bold text-[#111111]">{title}</h2>
             <div className="flex items-center gap-1">
               <NotificationBell />
               <ProfileMenu user={user} onLogout={handleLogout} compactName />
@@ -430,11 +416,17 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
           </header>
 
           {/* Desktop / tablet header */}
-          <header className="sticky top-0 z-40 hidden h-[72px] items-center justify-between gap-6 border-b border-[#B89A5A]/20 bg-[#131210]/90 px-6 backdrop-blur md:flex lg:px-8">
-            <CommandSearch />
+          <header className="sticky top-0 z-40 hidden h-[72px] items-center justify-between gap-6 border-b border-[#E4E7EC] bg-white px-6 md:flex lg:px-8">
+            <nav aria-label="Breadcrumb" className="flex items-center gap-2 text-[14px] text-[#626875]">
+              <Link href="/admin" className="hover:text-[#111111]">
+                Admin
+              </Link>
+              <span aria-hidden>/</span>
+              <span className="font-semibold text-[#111111]">{title}</span>
+            </nav>
             <div className="flex items-center gap-3">
-              <span className="hidden items-center gap-2 rounded-lg border border-[#B89A5A]/25 px-3 py-2 text-xs text-[#EAE4D5] xl:flex">
-                <CalendarDays className="h-4 w-4 text-[#B89A5A]" />
+              <span className="hidden items-center gap-2 rounded-lg border border-[#E4E7EC] px-3 py-2 text-[13px] font-medium text-[#111111] xl:flex">
+                <CalendarDays className="h-4 w-4 text-[#E53935]" />
                 {today}
               </span>
               <NotificationBell />
@@ -442,7 +434,7 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
             </div>
           </header>
 
-          <div className="min-w-0 flex-1 bg-[radial-gradient(ellipse_at_top_right,rgba(30,28,24,0.55),transparent_60%)] px-4 pb-28 pt-5 sm:px-6 md:pb-10 md:pt-8 lg:px-8">
+          <div className="min-w-0 flex-1 px-4 pb-28 pt-6 sm:px-6 md:pb-10 md:pt-8 lg:px-8">
             <div className="mx-auto w-full max-w-[1400px]">{children}</div>
           </div>
         </div>
@@ -451,7 +443,7 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
       {/* Mobile bottom navigation */}
       <nav
         aria-label="Quick navigation"
-        className="fixed inset-x-0 bottom-0 z-40 flex border-t border-[#B89A5A]/25 bg-[#131210]/95 pb-[env(safe-area-inset-bottom)] backdrop-blur md:hidden"
+        className="fixed inset-x-0 bottom-0 z-40 flex border-t border-[#E4E7EC] bg-white pb-[env(safe-area-inset-bottom)] md:hidden"
       >
         {bottomItems.map((item) => {
           const Icon = item.icon;
@@ -462,8 +454,8 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
               href={item.href}
               aria-current={active ? 'page' : undefined}
               className={cn(
-                'flex flex-1 flex-col items-center gap-1 py-2.5 text-[11px] font-medium transition-colors',
-                active ? 'text-[#C8A96B]' : 'text-[#A19B8C]'
+                'flex min-h-14 flex-1 flex-col items-center justify-center gap-1 py-2 text-[12px] font-semibold transition-colors',
+                active ? 'text-[#E53935]' : 'text-[#626875]'
               )}
             >
               <Icon className="h-5 w-5" />
@@ -474,7 +466,7 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
         <button
           type="button"
           onClick={() => setDrawerOpen(true)}
-          className="flex flex-1 flex-col items-center gap-1 py-2.5 text-[11px] font-medium text-[#A19B8C]"
+          className="flex min-h-14 flex-1 flex-col items-center justify-center gap-1 py-2 text-[12px] font-semibold text-[#626875]"
         >
           <Menu className="h-5 w-5" />
           More
@@ -483,16 +475,13 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
 
       {/* Mobile drawer */}
       <div
-        className={cn(
-          'fixed inset-0 z-50 md:hidden',
-          drawerOpen ? 'pointer-events-auto' : 'pointer-events-none'
-        )}
+        className={cn('fixed inset-0 z-50 md:hidden', drawerOpen ? 'pointer-events-auto' : 'pointer-events-none')}
         aria-hidden={!drawerOpen}
       >
         <div
           onClick={() => setDrawerOpen(false)}
           className={cn(
-            'absolute inset-0 bg-black/70 transition-opacity duration-300',
+            'absolute inset-0 bg-black/60 transition-opacity duration-300',
             drawerOpen ? 'opacity-100' : 'opacity-0'
           )}
         />
@@ -501,17 +490,17 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
           aria-modal="true"
           aria-label="Navigation menu"
           className={cn(
-            'absolute inset-y-0 left-0 flex h-full w-[300px] max-w-[85vw] flex-col border-r border-[#B89A5A]/30 bg-gradient-to-b from-[#1C1B18] to-[#131210] shadow-2xl transition-transform duration-300 ease-out',
+            'absolute inset-y-0 left-0 flex h-full w-[300px] max-w-[85vw] flex-col bg-[#111111] shadow-2xl transition-transform duration-300 ease-out',
             drawerOpen ? 'translate-x-0' : '-translate-x-full'
           )}
         >
-          <div className="flex h-[88px] items-center justify-between border-b border-[#B89A5A]/20 px-5">
+          <div className="flex h-[84px] items-center justify-between border-b border-white/10 px-5">
             <Wordmark />
             <button
               type="button"
               onClick={() => setDrawerOpen(false)}
               aria-label="Close menu"
-              className="flex h-10 w-10 items-center justify-center rounded-lg border border-[#B89A5A]/30 text-[#C8A96B] outline-none transition hover:bg-[#2A2824] focus-visible:ring-1 focus-visible:ring-[#C8A96B]"
+              className="flex h-11 w-11 items-center justify-center rounded-lg border border-white/20 text-white outline-none transition hover:bg-white/10 focus-visible:ring-2 focus-visible:ring-[#E53935]"
             >
               <X className="h-5 w-5" />
             </button>
@@ -521,20 +510,18 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
             <NavList pathname={pathname} />
           </div>
 
-          <div className="border-t border-[#B89A5A]/20 p-4 pb-[max(1rem,env(safe-area-inset-bottom))]">
+          <div className="border-t border-white/10 p-4 pb-[max(1rem,env(safe-area-inset-bottom))]">
             <div className="mb-3 flex items-center gap-3">
-              <Avatar user={user} className="h-10 w-10" />
+              <Avatar user={user} className="h-10 w-10 bg-white !text-[#111111]" />
               <div className="min-w-0">
-                <p className="truncate text-sm font-medium text-[#F4F0E6]">
-                  {user?.fullName || 'Admin'}
-                </p>
-                <p className="truncate text-xs text-[#A19B8C]">{user?.email || 'Administrator'}</p>
+                <p className="truncate text-[14px] font-semibold text-white">{user?.fullName || 'Admin'}</p>
+                <p className="truncate text-[12px] text-[#A3A8B3]">{user?.email || 'Administrator'}</p>
               </div>
             </div>
             <button
               type="button"
               onClick={handleLogout}
-              className="flex h-10 w-full items-center justify-center gap-2 rounded-lg border border-[#B89A5A]/40 text-sm font-medium text-[#C8A96B] transition hover:bg-[#B89A5A] hover:text-[#131210]"
+              className="flex h-11 w-full items-center justify-center gap-2 rounded-lg border border-white/25 text-[14px] font-semibold text-white transition hover:bg-[#E53935] hover:border-[#E53935]"
             >
               <LogOut className="h-4 w-4" />
               Log out

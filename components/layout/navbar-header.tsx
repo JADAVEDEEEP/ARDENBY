@@ -9,7 +9,7 @@ import { Heart, Menu, Search, ShoppingCart, User } from 'lucide-react';
 
 import { cn } from '@/lib/utils';
 
-import { KovenikLogo } from './kovenik-logo';
+import { KovenikBrand } from './kovenik-brand';
 import type { UserProfile } from './navbar';
 
 type NavbarHeaderProps = {
@@ -41,14 +41,14 @@ const LINKS = [
   { label: 'Epic Thread', href: '/shop?category=epic-thread', key: 'epic-thread' },
   { label: 'Kovenik Premium', href: '/shop?category=ardenby-premium', key: 'ardenby-premium' },
   { label: 'The Print Club', href: '/shop?category=the-print-club', key: 'the-print-club' },
-  { label: 'Best Sellers', href: '/shop?collection=bestSeller', key: 'best', gold: true },
+  { label: 'Best Sellers', href: '/shop?collection=bestSeller', key: 'best' },
   { label: 'About', href: '/about', key: 'about' },
 ] as const;
 
 const ICON_BTN =
   'relative flex h-11 w-11 shrink-0 items-center justify-center text-kv-ink transition-colors hover:text-kv-gold-text';
 const BADGE =
-  'absolute right-0 top-0 flex h-5 min-w-[20px] items-center justify-center rounded-full bg-kv-gold px-1 text-[12px] font-bold leading-none text-kv-ink';
+  'absolute right-0 top-0 flex h-5 min-w-[20px] items-center justify-center rounded-full bg-kv-gold px-1 text-[12px] font-bold leading-none text-white';
 
 /* Reports ?category= / ?collection=. Isolated in a Suspense boundary so
  * useSearchParams never forces the rest of the app into client rendering. */
@@ -142,9 +142,9 @@ export function NavbarHeader({
     </button>
   );
 
-  const logo = (cls: string) => (
+  const logo = (cls: string, bearCls: string) => (
     <Link href="/" aria-label="Kovenik home" className="shrink-0">
-      <KovenikLogo layout="horizontal" className={cls} />
+      <KovenikBrand variant="bust" className={cls} bearClassName={bearCls} />
     </Link>
   );
 
@@ -183,7 +183,7 @@ export function NavbarHeader({
               </nav>
             </div>
 
-            <div className="justify-self-center">{logo('h-[46px] w-[184px]')}</div>
+            <div className="justify-self-center">{logo('h-[46px] w-[131px]', '-my-1 h-[80px] translate-y-[2px]')}</div>
 
             <div className="flex items-center gap-1 justify-self-end">
               <div className="mr-2 w-[170px] xl:mr-3 xl:w-[300px]">{searchForm('d')}</div>
@@ -201,8 +201,7 @@ export function NavbarHeader({
                       href={link.href}
                       aria-current={active ? 'page' : undefined}
                       className={cn(
-                        'relative flex h-full items-center whitespace-nowrap text-[14px] font-bold uppercase tracking-[0.08em] transition-colors hover:text-kv-gold-text xl:text-[15px]',
-                        'gold' in link && link.gold ? 'text-kv-gold-text' : 'text-kv-ink'
+                        'relative flex h-full items-center whitespace-nowrap text-[14px] font-bold uppercase tracking-[0.08em] text-kv-ink transition-colors hover:text-kv-gold-text xl:text-[15px]'
                       )}
                     >
                       {link.label}
@@ -220,7 +219,7 @@ export function NavbarHeader({
           <div className="flex h-14 items-center justify-between pl-1 pr-2">
             <div className="flex min-w-0 items-center">
               {hamburger}
-              {logo('h-[33px] w-[132px]')}
+              {logo('h-[32px] w-[91px]', '-my-1 h-[55px] translate-y-[2px]')}
             </div>
             <div className="flex items-center">{iconButtons(false)}</div>
           </div>
@@ -235,10 +234,7 @@ export function NavbarHeader({
                   key={tab.slug}
                   href={tab.href}
                   aria-current={active ? 'page' : undefined}
-                  className={cn(
-                    'relative flex h-12 shrink-0 items-center px-3.5 font-oswald text-[16px] font-semibold uppercase tracking-[0.06em]',
-                    tab.slug === 'best' ? 'text-kv-gold-text' : 'text-kv-ink'
-                  )}
+                  className="relative flex h-12 shrink-0 items-center px-3.5 font-oswald text-[16px] font-semibold uppercase tracking-[0.06em] text-kv-ink"
                 >
                   {tab.label}
                   {active && <span aria-hidden="true" className="absolute inset-x-3 bottom-0 h-[3px] bg-kv-gold" />}

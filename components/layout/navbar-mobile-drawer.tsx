@@ -14,7 +14,7 @@ import { useHomeProducts } from '@/hooks/use-home-products';
 import { cn } from '@/lib/utils';
 import type { Product } from '@/types';
 
-import { KovenikLogo } from './kovenik-logo';
+import { KovenikBrand } from './kovenik-brand';
 import type { UserProfile } from './navbar';
 import { SocialLinks } from './social-links';
 
@@ -246,7 +246,7 @@ export function NavbarMobileDrawer({
             {/* a) header row */}
             <div className="relative flex flex-wrap items-center justify-between gap-3 p-5 pr-[68px]">
               <Link href="/" onClick={close} aria-label="Kovenik home" className="shrink-0">
-                <KovenikLogo layout="horizontal" className="h-[37px] w-[150px]" />
+                <KovenikBrand variant="bust" className="h-[37px] w-[118px]" bearClassName="h-[56px]" />
               </Link>
 
               {user ? (
@@ -280,7 +280,7 @@ export function NavbarMobileDrawer({
             </div>
 
             {/* b) offer strip */}
-            <p className="rounded-b-[16px] bg-kv-gold px-4 py-3 text-center text-[15px] font-bold leading-5 text-kv-ink">
+            <p className="rounded-b-[16px] bg-kv-gold px-4 py-3 text-center text-[15px] font-bold leading-5 text-white">
               Get 10% off your first order — join the inner circle
             </p>
 
@@ -440,7 +440,7 @@ export function NavbarMobileDrawer({
                   >
                     {l.label}
                     {'badge' in l && wishlistCount > 0 && (
-                      <span className="flex h-6 min-w-[24px] items-center justify-center rounded-full bg-kv-gold px-1.5 text-[13px] font-bold text-kv-ink">
+                      <span className="flex h-6 min-w-[24px] items-center justify-center rounded-full bg-kv-gold px-1.5 text-[13px] font-bold text-white">
                         {wishlistCount}
                       </span>
                     )}

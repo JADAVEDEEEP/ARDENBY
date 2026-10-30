@@ -172,70 +172,70 @@ export default function AdminLoginPage() {
   };
 
   return (
-  <main className="fixed inset-0 h-dvh w-screen overflow-hidden bg-[#131210] text-[#F4F0E6]">
+  <main className="fixed inset-0 h-dvh w-screen overflow-hidden bg-[#111111] text-[#F7F7F7]">
     <div className="grid h-full w-full grid-cols-1 lg:grid-cols-2">
 
       {/* ================= LEFT BRAND PANEL ================= */}
-      <section className="relative hidden h-full overflow-hidden bg-[#131210] lg:block">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_25%_20%,rgba(200,169,107,0.12),transparent_32%),radial-gradient(circle_at_75%_80%,rgba(20,19,17,0.9),transparent_42%)]" />
+      <section className="relative hidden h-full overflow-hidden bg-[#111111] lg:block">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_25%_20%,rgba(229, 57, 53,0.12),transparent_32%),radial-gradient(circle_at_75%_80%,rgba(17, 17, 17,0.9),transparent_42%)]" />
 
-        <div className="absolute inset-0 bg-gradient-to-br from-[#2A2824]/80 via-[#131210] to-[#131210]" />
+        <div className="absolute inset-0 bg-gradient-to-br from-[#272727]/80 via-[#111111] to-[#111111]" />
 
         <div className="absolute left-12 top-12 z-10">
-          <p className="font-serif text-4xl tracking-[0.3em] text-[#F4F0E6]">
+          <p className="font-serif text-4xl tracking-[0.3em] text-[#F7F7F7]">
             KOVENIK
           </p>
 
           <div className="mt-3 flex items-center gap-3">
-            <span className="h-px w-10 bg-[#C8A96B]" />
+            <span className="h-px w-10 bg-[#E53935]" />
 
-            <span className="text-[9px] font-semibold uppercase tracking-[0.4em] text-[#C8A96B]">
+            <span className="text-[9px] font-semibold uppercase tracking-[0.4em] text-[#E53935]">
               Admin
             </span>
 
-            <span className="h-px w-10 bg-[#C8A96B]" />
+            <span className="h-px w-10 bg-[#E53935]" />
           </div>
         </div>
 
         <div className="absolute inset-x-12 top-1/2 z-10 -translate-y-1/2">
           <div className="max-w-xl">
 
-            <p className="text-[10px] font-semibold uppercase tracking-[0.4em] text-[#C8A96B]">
+            <p className="text-[10px] font-semibold uppercase tracking-[0.4em] text-[#E53935]">
               Private Store Administration
             </p>
 
-            <h2 className="mt-5 font-serif text-5xl leading-[1.08] text-[#F4F0E6] xl:text-6xl">
+            <h2 className="mt-5 font-serif text-5xl leading-[1.08] text-[#F7F7F7] xl:text-6xl">
               Crafted for the
               <br />
-              <span className="text-[#C8A96B]">KOVENIK</span> experience.
+              <span className="text-[#E53935]">KOVENIK</span> experience.
             </h2>
 
-            <p className="mt-6 max-w-md text-sm leading-7 text-[#C9C1AE]">
+            <p className="mt-6 max-w-md text-sm leading-7 text-[#BCBCBC]">
               Secure access to your products, orders, customers and store
               operations.
             </p>
 
             <div className="mt-9 flex items-center gap-3">
-              <span className="h-1 w-1 rounded-full bg-[#C8A96B]" />
-              <span className="h-px w-16 bg-[#B89A5A]/40" />
-              <span className="h-1 w-1 rounded-full bg-[#C8A96B]" />
+              <span className="h-1 w-1 rounded-full bg-[#E53935]" />
+              <span className="h-px w-16 bg-[#E53935]/40" />
+              <span className="h-1 w-1 rounded-full bg-[#E53935]" />
             </div>
 
           </div>
         </div>
 
         <div className="absolute bottom-10 left-12 z-10">
-          <p className="text-[9px] uppercase tracking-[0.35em] text-[#807B6F]">
+          <p className="text-[9px] uppercase tracking-[0.35em] text-[#787878]">
             KOVENIK · Private Administration
           </p>
         </div>
       </section>
 
       {/* ================= RIGHT LOGIN PANEL ================= */}
-      <section className="relative flex h-full w-full items-center justify-center overflow-y-auto bg-[#1A1917] px-5 py-3 sm:px-8 lg:px-10">
+      <section className="relative flex h-full w-full items-center justify-center overflow-y-auto bg-[#111111] px-5 py-3 sm:px-8 lg:px-10">
 
         {/* Background lighting */}
-        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_50%_18%,rgba(200,169,107,0.12),transparent_28%),linear-gradient(180deg,#0D2415_0%,#07180D_100%)]" />
+        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_50%_18%,rgba(229, 57, 53,0.12),transparent_28%),linear-gradient(180deg,#0D2415_0%,#07180D_100%)]" />
 
         <div className="relative z-10 flex w-full max-w-[470px] flex-col items-center py-2">
 
@@ -246,18 +246,18 @@ export default function AdminLoginPage() {
             transition={{ duration: 0.5 }}
             className="flex flex-col items-center text-center"
           >
-            <h1 className="font-serif text-[28px] uppercase tracking-[0.28em] text-[#F4F0E6]">
+            <h1 className="font-serif text-[28px] uppercase tracking-[0.28em] text-[#F7F7F7]">
               KOVENIK
             </h1>
 
             <div className="mt-2 flex items-center gap-3">
-              <span className="h-px w-9 bg-[#B89A5A]/55" />
+              <span className="h-px w-9 bg-[#E53935]/55" />
 
-              <span className="text-[9px] font-semibold uppercase tracking-[0.42em] text-[#C8A96B]">
+              <span className="text-[9px] font-semibold uppercase tracking-[0.42em] text-[#E53935]">
                 Admin Portal
               </span>
 
-              <span className="h-px w-9 bg-[#B89A5A]/55" />
+              <span className="h-px w-9 bg-[#E53935]/55" />
             </div>
           </motion.div>
 
@@ -268,13 +268,13 @@ export default function AdminLoginPage() {
             transition={{ duration: 0.5 }}
             className="mt-4 text-center"
           >
-            <h2 className="font-serif text-[30px] leading-tight text-[#F4F0E6]">
+            <h2 className="font-serif text-[30px] leading-tight text-[#F7F7F7]">
               {step === "LOGIN"
                 ? "Welcome Back"
                 : "Verify Your Identity"}
             </h2>
 
-            <p className="mx-auto mt-2 max-w-[350px] text-[12px] leading-6 text-[#AFA897]">
+            <p className="mx-auto mt-2 max-w-[350px] text-[12px] leading-6 text-[#A3A3A3]">
               {step === "LOGIN"
                 ? "Sign in with your Admin or Super Admin account."
                 : `Enter the 6-digit verification code sent to ${email
@@ -291,25 +291,25 @@ export default function AdminLoginPage() {
             className="relative mt-5 w-full"
           >
 
-            <div className="absolute -inset-[1px] rounded-[22px] bg-gradient-to-b from-[#C8A96B]/35 via-[#B89A5A]/10 to-transparent" />
+            <div className="absolute -inset-[1px] rounded-[22px] bg-gradient-to-b from-[#E53935]/35 via-[#E53935]/10 to-transparent" />
 
-            <div className="relative rounded-[21px] border border-[#C8A96B]/20 bg-[#181715]/95 p-6 shadow-[0_25px_70px_rgba(0,0,0,0.35)]">
+            <div className="relative rounded-[21px] border border-[#E53935]/20 bg-[#111111]/95 p-6 shadow-[0_25px_70px_rgba(0,0,0,0.35)]">
 
               {/* CARD HEADER */}
               <div className="mb-5 flex items-center justify-between">
                 <div>
-                  <p className="text-[9px] font-semibold uppercase tracking-[0.28em] text-[#C8A96B]">
+                  <p className="text-[9px] font-semibold uppercase tracking-[0.28em] text-[#E53935]">
                     {step === "LOGIN"
                       ? "Secure Access"
                       : "Two-Step Verification"}
                   </p>
 
-                  <p className="mt-1 text-[11px] text-[#807B6F]">
+                  <p className="mt-1 text-[11px] text-[#787878]">
                     KOVENIK private administration
                   </p>
                 </div>
 
-                <span className="h-2 w-2 rounded-full bg-[#C8A96B] shadow-[0_0_12px_rgba(200,169,107,0.65)]" />
+                <span className="h-2 w-2 rounded-full bg-[#E53935] shadow-[0_0_12px_rgba(229, 57, 53,0.65)]" />
               </div>
 
               {/* ================= LOGIN ================= */}
@@ -322,20 +322,20 @@ export default function AdminLoginPage() {
                   {/* EMAIL */}
                   <label className="block">
 
-                    <span className="mb-2 block text-[10px] font-bold uppercase tracking-[0.24em] text-[#C9C1AE]">
+                    <span className="mb-2 block text-[10px] font-bold uppercase tracking-[0.24em] text-[#BCBCBC]">
                       Email Address
                     </span>
 
-                    <span className="flex h-14 items-center gap-3 rounded-xl border border-[#B89A5A]/25 bg-[#131210] px-4 transition focus-within:border-[#C8A96B] focus-within:ring-1 focus-within:ring-[#C8A96B]/20">
+                    <span className="flex h-14 items-center gap-3 rounded-xl border border-[#E53935]/25 bg-[#111111] px-4 transition focus-within:border-[#E53935] focus-within:ring-1 focus-within:ring-[#E53935]/20">
 
-                      <Mail className="h-5 w-5 shrink-0 text-[#C8A96B]" />
+                      <Mail className="h-5 w-5 shrink-0 text-[#E53935]" />
 
                       <input
                         value={email}
                         onChange={(event) =>
                           setEmail(event.target.value)
                         }
-                        className="min-w-0 flex-1 bg-transparent text-[16px] text-[#F4F0E6] outline-none placeholder:text-[#726E63]"
+                        className="min-w-0 flex-1 bg-transparent text-[16px] text-[#F7F7F7] outline-none placeholder:text-[#6B6B6B]"
                         type="email"
                         autoComplete="email"
                         placeholder="admin@kovenik.com"
@@ -349,26 +349,26 @@ export default function AdminLoginPage() {
 
                     <div className="mb-2 flex items-center justify-between">
 
-                      <span className="text-[10px] font-bold uppercase tracking-[0.24em] text-[#C9C1AE]">
+                      <span className="text-[10px] font-bold uppercase tracking-[0.24em] text-[#BCBCBC]">
                         Password
                       </span>
 
-                      <span className="text-[8px] uppercase tracking-[0.16em] text-[#726E63]">
+                      <span className="text-[8px] uppercase tracking-[0.16em] text-[#6B6B6B]">
                         Protected
                       </span>
 
                     </div>
 
-                    <span className="flex h-14 items-center gap-3 rounded-xl border border-[#B89A5A]/25 bg-[#131210] px-4 transition focus-within:border-[#C8A96B] focus-within:ring-1 focus-within:ring-[#C8A96B]/20">
+                    <span className="flex h-14 items-center gap-3 rounded-xl border border-[#E53935]/25 bg-[#111111] px-4 transition focus-within:border-[#E53935] focus-within:ring-1 focus-within:ring-[#E53935]/20">
 
-                      <LockKeyhole className="h-5 w-5 shrink-0 text-[#C8A96B]" />
+                      <LockKeyhole className="h-5 w-5 shrink-0 text-[#E53935]" />
 
                       <input
                         value={password}
                         onChange={(event) =>
                           setPassword(event.target.value)
                         }
-                        className="min-w-0 flex-1 bg-transparent text-[16px] text-[#F4F0E6] outline-none placeholder:text-[#726E63]"
+                        className="min-w-0 flex-1 bg-transparent text-[16px] text-[#F7F7F7] outline-none placeholder:text-[#6B6B6B]"
                         type="password"
                         autoComplete="current-password"
                         placeholder="Enter your password"
@@ -390,7 +390,7 @@ export default function AdminLoginPage() {
                   <button
                     type="submit"
                     disabled={isLoading}
-                    className="h-14 w-full rounded-xl bg-gradient-to-r from-[#B89A5A] via-[#C8A96B] to-[#B89A5A] text-[11px] font-bold uppercase tracking-[0.3em] text-[#131210] shadow-[0_12px_30px_rgba(184,154,90,0.2)] transition hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-60"
+                    className="h-14 w-full rounded-xl bg-gradient-to-r from-[#E53935] via-[#E53935] to-[#E53935] text-[11px] font-bold uppercase tracking-[0.3em] text-[#111111] shadow-[0_12px_30px_rgba(229, 57, 53,0.2)] transition hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-60"
                   >
                     {isLoading ? "Checking..." : "Sign In →"}
                   </button>
@@ -398,13 +398,13 @@ export default function AdminLoginPage() {
                   {/* FOOTER */}
                   <div className="flex items-center justify-center gap-2 pt-1">
 
-                    <span className="h-px flex-1 bg-[#B89A5A]/10" />
+                    <span className="h-px flex-1 bg-[#E53935]/10" />
 
-                    <span className="text-[8px] uppercase tracking-[0.2em] text-[#676359]">
+                    <span className="text-[8px] uppercase tracking-[0.2em] text-[#606060]">
                       Authorized Personnel Only
                     </span>
 
-                    <span className="h-px flex-1 bg-[#B89A5A]/10" />
+                    <span className="h-px flex-1 bg-[#E53935]/10" />
 
                   </div>
 
@@ -426,14 +426,14 @@ export default function AdminLoginPage() {
                           .slice(0, 6)
                       )
                     }
-                    className="h-14 w-full rounded-xl border border-[#B89A5A]/25 bg-[#131210] px-4 text-center text-xl font-semibold tracking-[0.65em] text-[#F4F0E6] outline-none transition focus:border-[#C8A96B] focus:ring-1 focus:ring-[#C8A96B]/20"
+                    className="h-14 w-full rounded-xl border border-[#E53935]/25 bg-[#111111] px-4 text-center text-xl font-semibold tracking-[0.65em] text-[#F7F7F7] outline-none transition focus:border-[#E53935] focus:ring-1 focus:ring-[#E53935]/20"
                     inputMode="numeric"
                     autoComplete="one-time-code"
                     maxLength={6}
                     placeholder="••••••"
                   />
 
-                  <p className="text-center text-xs leading-5 text-[#9F998A]">
+                  <p className="text-center text-xs leading-5 text-[#949494]">
                     Enter the 6-digit code sent to your registered admin
                     email.
                   </p>
@@ -449,7 +449,7 @@ export default function AdminLoginPage() {
                   <button
                     type="submit"
                     disabled={isLoading || otp.length !== 6}
-                    className="h-14 w-full rounded-xl bg-gradient-to-r from-[#B89A5A] to-[#C8A96B] text-[11px] font-bold uppercase tracking-[0.3em] text-[#131210] shadow-[0_12px_30px_rgba(184,154,90,0.2)] transition hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-60"
+                    className="h-14 w-full rounded-xl bg-gradient-to-r from-[#E53935] to-[#E53935] text-[11px] font-bold uppercase tracking-[0.3em] text-[#111111] shadow-[0_12px_30px_rgba(229, 57, 53,0.2)] transition hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-60"
                   >
                     {isLoading ? "Verifying..." : "Verify OTP →"}
                   </button>
@@ -461,7 +461,7 @@ export default function AdminLoginPage() {
                       setError("");
                       setStep("LOGIN");
                     }}
-                    className="h-9 w-full text-[9px] font-semibold uppercase tracking-[0.2em] text-[#9F998A] transition hover:text-[#C8A96B]"
+                    className="h-9 w-full text-[9px] font-semibold uppercase tracking-[0.2em] text-[#949494] transition hover:text-[#E53935]"
                   >
                     ← Back to Login
                   </button>
@@ -472,7 +472,7 @@ export default function AdminLoginPage() {
             </div>
           </motion.div>
 
-          <p className="mt-4 text-center text-[8px] font-medium uppercase tracking-[0.35em] text-[#676359]">
+          <p className="mt-4 text-center text-[8px] font-medium uppercase tracking-[0.35em] text-[#606060]">
             KOVENIK · Private Administration
           </p>
 

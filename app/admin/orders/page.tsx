@@ -19,6 +19,8 @@ import {
 
 import { apiUrl } from "@/lib/api-url";
 import { getAdminToken } from "@/components/admin/admin-auth";
+import { AdminCancelDialog } from "@/components/admin/cancel-order-dialog";
+import { RefundHistory } from "@/components/admin/refund-history";
 
 /* =========================================================
    TYPES
@@ -410,6 +412,8 @@ function refundState(order: Order) {
   if (status === "cancelled" && payment === "refund pending")
     return "pending";
   if (status === "cancelled" && payment === "refunded") return "refunded";
+  // Some money went back (partial cancellation or return); the rest was kept.
+  if (payment === "partially refunded") return "partial";
   return "none";
 }
 
@@ -417,12 +421,20 @@ function RefundBadge({ order }: { order: Order }) {
   const state = refundState(order);
   if (state === "none") return null;
 
+  if (state === "partial") {
+    return (
+      <span className="ml-1.5 inline-flex items-center gap-1 whitespace-nowrap rounded-full border border-[#2563EB]/30 bg-[#2563EB]/10 px-2 py-1 text-[12px] font-bold uppercase tracking-wide text-[#1D4ED8]">
+        Partially Refunded
+      </span>
+    );
+  }
+
   return state === "pending" ? (
-    <span className="ml-1.5 inline-flex items-center gap-1 whitespace-nowrap rounded-full border border-amber-600/70 bg-amber-950/50 px-2 py-1 text-[9px] font-bold uppercase tracking-wide text-amber-300">
+    <span className="ml-1.5 inline-flex items-center gap-1 whitespace-nowrap rounded-full border border-[#C47A16]/30 bg-[#C47A16]/10 px-2 py-1 text-[12px] font-bold uppercase tracking-wide text-[#8A540C]">
       Refund Pending
     </span>
   ) : (
-    <span className="ml-1.5 inline-flex items-center gap-1 whitespace-nowrap rounded-full border border-emerald-800/60 bg-emerald-950/40 px-2 py-1 text-[9px] font-bold uppercase tracking-wide text-emerald-300">
+    <span className="ml-1.5 inline-flex items-center gap-1 whitespace-nowrap rounded-full border border-[#16845B]/30 bg-[#16845B]/10 px-2 py-1 text-[12px] font-bold uppercase tracking-wide text-[#0F6446]">
       Refunded
     </span>
   );
@@ -439,7 +451,7 @@ function statusStyles(
   if (value.includes("request")) {
     return {
       className:
-        "border-amber-700/60 bg-amber-950/50 text-amber-300",
+        "border-[#C47A16]/30 bg-[#C47A16]/10 text-[#8A540C]",
       icon: Clock3,
     };
   }
@@ -447,7 +459,7 @@ function statusStyles(
   if (value.includes("cancel")) {
     return {
       className:
-        "border-red-900/50 bg-red-950/40 text-red-300",
+        "border-[#D92D20]/30 bg-[#D92D20]/8 text-[#B42318]",
       icon: XCircle,
     };
   }
@@ -455,7 +467,7 @@ function statusStyles(
   if (value.includes("return")) {
     return {
       className:
-        "border-orange-900/50 bg-orange-950/40 text-orange-300",
+        "border-[#C47A16]/30 bg-[#C47A16]/10 text-[#8A540C]",
       icon: Package,
     };
   }
@@ -463,7 +475,7 @@ function statusStyles(
   if (value.includes("deliver")) {
     return {
       className:
-        "border-neutral-800/50 bg-neutral-950/40 text-emerald-300",
+        "border-[#E4E7EC] bg-[#F5F6F8] text-[#0F6446]",
       icon: CheckCircle2,
     };
   }
@@ -471,7 +483,7 @@ function statusStyles(
   if (value.includes("ship")) {
     return {
       className:
-        "border-sky-900/50 bg-sky-950/40 text-sky-300",
+        "border-[#E4E7EC] bg-[#F2F4F7] text-[#475467]",
       icon: Truck,
     };
   }
@@ -483,14 +495,14 @@ function statusStyles(
   ) {
     return {
       className:
-        "border-purple-900/50 bg-purple-950/40 text-purple-300",
+        "border-[#E4E7EC] bg-[#F2F4F7] text-[#475467]",
       icon: PackageCheck,
     };
   }
 
   return {
     className:
-      "border-yellow-900/50 bg-yellow-950/40 text-yellow-300",
+      "border-[#C47A16]/30 bg-[#C47A16]/10 text-[#8A540C]",
     icon: Clock3,
   };
 }
@@ -582,6 +594,10 @@ export default function AdminOrdersPage() {
     useState(true);
 
   const [updating, setUpdating] =
+    useState(false);
+
+  // Cancelling needs a reason (and may be partial), so it has its own dialog.
+  const [cancelDialogOpen, setCancelDialogOpen] =
     useState(false);
 
   const [retrying, setRetrying] =
@@ -910,6 +926,11 @@ export default function AdminOrdersPage() {
       return;
     }
 
+    if (status === "Cancelled") {
+      setCancelDialogOpen(true);
+      return;
+    }
+
     try {
       setUpdating(true);
       setError("");
@@ -1020,7 +1041,21 @@ export default function AdminOrdersPage() {
   ======================================================= */
 
   return (
-    <div className="min-h-full bg-[#151412] text-[#eee8d9]">
+    <div className="min-h-full bg-[#F5F6F8] text-[#4A5160]">
+
+      {cancelDialogOpen && selectedOrderId && (
+        <AdminCancelDialog
+          orderId={selectedOrderId}
+          orderNumber={getOrderNumber(selectedOrder || {})}
+          onClose={() => setCancelDialogOpen(false)}
+          onDone={async (text) => {
+            setCancelDialogOpen(false);
+            setError("");
+            setSuccess(text);
+            await loadOrders();
+          }}
+        />
+      )}
 
       <div className="p-4 sm:p-6 lg:p-8">
 
@@ -1028,19 +1063,19 @@ export default function AdminOrdersPage() {
             HEADER
         ================================================== */}
 
-        <section className="mb-6 flex flex-col gap-4 border-b border-[#3A3832] pb-6 sm:flex-row sm:items-end sm:justify-between">
+        <section className="mb-6 flex flex-col gap-4 border-b border-[#E4E7EC] pb-6 sm:flex-row sm:items-end sm:justify-between">
 
           <div>
 
-            <p className="text-[10px] font-semibold uppercase tracking-[0.32em] text-[#c9a34e]">
+            <p className="text-[12px] font-semibold uppercase tracking-[0.32em] text-[#E53935]">
               Store Management
             </p>
 
-            <h1 className="mt-2 font-serif text-3xl text-[#f3ecdc] sm:text-[2.5rem]">
+            <h1 className="mt-2 text-[32px] font-bold text-[#111111] sm:text-[40px]">
               Orders
             </h1>
 
-            <p className="mt-2 text-[13px] text-[#999384]">
+            <p className="mt-2 text-[14px] text-[#626875]">
               Review customer orders and move each one through fulfilment.
             </p>
 
@@ -1050,7 +1085,7 @@ export default function AdminOrdersPage() {
             type="button"
             onClick={loadOrders}
             disabled={loading}
-            className="flex h-10 w-fit items-center gap-2 rounded-lg border border-[#4D4A43] bg-[#201F1C] px-4 text-[11px] font-semibold text-[#d7c9a7] transition hover:border-[#c9a34e] hover:text-[#c9a34e] disabled:opacity-50"
+            className="flex h-10 w-fit items-center gap-2 rounded-lg border border-[#D0D5DD] bg-white px-4 text-[12px] font-semibold text-[#4A5160] transition hover:border-[#E53935] hover:text-[#E53935] disabled:opacity-50"
           >
             <RefreshCw
               className={`h-3.5 w-3.5 ${
@@ -1070,7 +1105,7 @@ export default function AdminOrdersPage() {
         ================================================== */}
 
         {error && (
-          <div className="mb-4 rounded-lg border border-red-900/50 bg-red-950/30 px-4 py-3 text-xs text-red-300">
+          <div className="mb-4 rounded-lg border border-[#D92D20]/30 bg-[#D92D20]/8 px-4 py-3 text-xs text-[#B42318]">
             {error}
           </div>
         )}
@@ -1080,7 +1115,7 @@ export default function AdminOrdersPage() {
         ================================================== */}
 
         {success && (
-          <div className="mb-4 rounded-lg border border-neutral-800/50 bg-neutral-950/30 px-4 py-3 text-xs text-emerald-300">
+          <div className="mb-4 rounded-lg border border-[#E4E7EC] bg-[#F5F6F8] px-4 py-3 text-xs text-[#0F6446]">
             {success}
           </div>
         )}
@@ -1148,7 +1183,7 @@ export default function AdminOrdersPage() {
         ================================================== */}
 
         {selectedOrder && (
-          <div className="mt-5 flex overflow-hidden rounded-lg border border-[#43403A] bg-[#1F1E1B] xl:hidden">
+          <div className="mt-5 flex overflow-hidden rounded-lg border border-[#E4E7EC] bg-white xl:hidden">
 
             <button
               type="button"
@@ -1159,8 +1194,8 @@ export default function AdminOrdersPage() {
               }
               className={`flex-1 py-3 text-xs font-semibold ${
                 mobilePane === "list"
-                  ? "bg-[#312F2A] text-[#d7b35a]"
-                  : "text-[#A19B8C]"
+                  ? "bg-[#F2F4F7] text-[#E53935]"
+                  : "text-[#626875]"
               }`}
             >
               Order List
@@ -1176,8 +1211,8 @@ export default function AdminOrdersPage() {
               className={`flex-1 py-3 text-xs font-semibold ${
                 mobilePane ===
                 "detail"
-                  ? "bg-[#312F2A] text-[#d7b35a]"
-                  : "text-[#A19B8C]"
+                  ? "bg-[#F2F4F7] text-[#E53935]"
+                  : "text-[#626875]"
               }`}
             >
               Order Details
@@ -1197,7 +1232,7 @@ export default function AdminOrdersPage() {
           ================================================== */}
 
           <div
-            className={`min-w-0 overflow-hidden rounded-xl border border-[#3A3832] bg-[#1E1D1A] ${
+            className={`min-w-0 overflow-hidden rounded-xl border border-[#E4E7EC] bg-white ${
               selectedOrder &&
               mobilePane === "detail"
                 ? "hidden xl:block"
@@ -1207,17 +1242,17 @@ export default function AdminOrdersPage() {
 
             {/* LIST HEADER */}
 
-            <div className="border-b border-[#3A3832] p-4 sm:p-5">
+            <div className="border-b border-[#E4E7EC] p-4 sm:p-5">
 
               <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
 
                 <div>
 
-                  <h2 className="font-serif text-lg text-[#f1eadb]">
+                  <h2 className="font-bold text-lg text-[#4A5160]">
                     All Orders
                   </h2>
 
-                  <p className="mt-1 text-[11px] text-[#908A7C]">
+                  <p className="mt-1 text-[12px] text-[#626875]">
                     {
                       filteredOrders.length
                     }{" "}
@@ -1234,7 +1269,7 @@ export default function AdminOrdersPage() {
 
                 <div className="relative w-full lg:max-w-[280px]">
 
-                  <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[#878275]" />
+                  <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[#626875]" />
 
                   <input
                     value={search}
@@ -1247,7 +1282,7 @@ export default function AdminOrdersPage() {
                       )
                     }
                     placeholder="Search order or customer..."
-                    className="h-10 w-full rounded-lg border border-[#47443D] bg-[#22211E] pl-10 pr-3 text-xs text-[#eee8d9] outline-none placeholder:text-[#767166] focus:border-[#b89548]"
+                    className="h-10 w-full rounded-lg border border-[#D0D5DD] bg-white pl-10 pr-3 text-xs text-[#4A5160] outline-none placeholder:text-[#6E6E6E] focus:border-[#E53935]"
                   />
 
                 </div>
@@ -1256,7 +1291,7 @@ export default function AdminOrdersPage() {
 
               {/* FILTER TABS */}
 
-              <div className="mt-5 flex overflow-x-auto border-b border-[#3A3832]">
+              <div className="mt-5 flex overflow-x-auto border-b border-[#E4E7EC]">
 
                 {[
                   "All",
@@ -1303,25 +1338,25 @@ export default function AdminOrdersPage() {
                         }
                         className={`relative shrink-0 px-5 py-3 text-xs font-semibold ${
                           active
-                            ? "text-[#d7b35a]"
-                            : "text-[#8D887A]"
+                            ? "text-[#E53935]"
+                            : "text-[#848484]"
                         }`}
                       >
 
                         {filter}
 
                         <span
-                          className={`ml-2 rounded-full px-1.5 py-0.5 text-[9px] ${
+                          className={`ml-2 rounded-full px-1.5 py-0.5 text-[12px] ${
                             active
-                              ? "bg-[#5d481d] text-[#e5c875]"
-                              : "bg-[#2B2925] text-[#7E796D]"
+                              ? "bg-[#E53935]/10 text-[#E53935]"
+                              : "bg-[#F2F4F7] text-[#626875]"
                           }`}
                         >
                           {count}
                         </span>
 
                         {active && (
-                          <span className="absolute bottom-[-1px] left-0 right-0 h-[2px] bg-[#c9a34e]" />
+                          <span className="absolute bottom-[-1px] left-0 right-0 h-[2px] bg-[#E53935]" />
                         )}
 
                       </button>
@@ -1344,7 +1379,7 @@ export default function AdminOrdersPage() {
                   (item) => (
                     <div
                       key={item}
-                      className="h-20 animate-pulse rounded-lg bg-[#2A2824]"
+                      className="h-20 animate-pulse rounded-lg bg-[#F2F4F7]"
                     />
                   )
                 )}
@@ -1357,13 +1392,13 @@ export default function AdminOrdersPage() {
 
                 <div>
 
-                  <ShoppingBag className="mx-auto h-8 w-8 text-[#625E55]" />
+                  <ShoppingBag className="mx-auto h-8 w-8 text-[#626875]" />
 
-                  <p className="mt-3 font-serif text-lg text-[#c8c0ae]">
+                  <p className="font-bold mt-3 text-lg text-[#4A5160]">
                     No orders found
                   </p>
 
-                  <p className="mt-1 text-xs text-[#868174]">
+                  <p className="mt-1 text-xs text-[#626875]">
                     {search
                       ? "Try another search."
                       : "Orders will appear here when available."}
@@ -1386,29 +1421,29 @@ export default function AdminOrdersPage() {
 
                     <thead>
 
-                      <tr className="border-b border-[#3A3832] bg-[#1A1917]">
+                      <tr className="border-b border-[#E4E7EC] bg-[#F5F6F8]">
 
-                        <th className="px-4 py-4 text-left text-[10px] font-semibold uppercase tracking-[0.14em] text-[#8A8578]">
+                        <th className="px-4 py-4 text-left text-[12px] font-semibold uppercase tracking-[0.14em] text-[#626875]">
                           Order
                         </th>
 
-                        <th className="px-3 py-4 text-left text-[10px] font-semibold uppercase tracking-[0.14em] text-[#8A8578]">
+                        <th className="px-3 py-4 text-left text-[12px] font-semibold uppercase tracking-[0.14em] text-[#626875]">
                           Customer
                         </th>
 
-                        <th className="px-3 py-4 text-left text-[10px] font-semibold uppercase tracking-[0.14em] text-[#8A8578]">
+                        <th className="px-3 py-4 text-left text-[12px] font-semibold uppercase tracking-[0.14em] text-[#626875]">
                           Date
                         </th>
 
-                        <th className="px-3 py-4 text-center text-[10px] font-semibold uppercase tracking-[0.14em] text-[#8A8578]">
+                        <th className="px-3 py-4 text-center text-[12px] font-semibold uppercase tracking-[0.14em] text-[#626875]">
                           Items
                         </th>
 
-                        <th className="px-3 py-4 text-left text-[10px] font-semibold uppercase tracking-[0.14em] text-[#8A8578]">
+                        <th className="px-3 py-4 text-left text-[12px] font-semibold uppercase tracking-[0.14em] text-[#626875]">
                           Status
                         </th>
 
-                        <th className="px-4 py-4 text-right text-[10px] font-semibold uppercase tracking-[0.14em] text-[#8A8578]">
+                        <th className="px-4 py-4 text-right text-[12px] font-semibold uppercase tracking-[0.14em] text-[#626875]">
                           Total
                         </th>
 
@@ -1469,11 +1504,11 @@ export default function AdminOrdersPage() {
                                     databaseId
                                   )
                                 }
-                                className={`cursor-pointer border-b border-[#3A3832] transition ${
+                                className={`cursor-pointer border-b border-[#E4E7EC] transition ${
                                   selectedOrderId ===
                                   databaseId
-                                    ? "bg-[#2C2A26]"
-                                    : "hover:bg-[#22211E]"
+                                    ? "bg-[#F2F4F7]"
+                                    : "hover:bg-white"
                                 }`}
                               >
 
@@ -1483,20 +1518,20 @@ export default function AdminOrdersPage() {
 
                                   <div className="flex min-w-0 items-center gap-3">
 
-                                    <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-[#524F47] bg-[#2C2A26] text-[#c9a34e]">
+                                    <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-[#D0D5DD] bg-[#F2F4F7] text-[#E53935]">
                                       <ShoppingBag className="h-4 w-4" />
                                     </div>
 
                                     <div className="min-w-0">
 
-                                      <p className="truncate text-sm font-semibold text-[#eee8d9]">
+                                      <p className="truncate text-sm font-semibold text-[#4A5160]">
                                         #
                                         {
                                           orderNumber
                                         }
                                       </p>
 
-                                      <p className="mt-1 truncate text-[10px] text-[#878275]">
+                                      <p className="mt-1 truncate text-[12px] text-[#626875]">
                                         Order{" "}
                                         #
                                         {
@@ -1515,13 +1550,13 @@ export default function AdminOrdersPage() {
 
                                 <td className="max-w-[160px] px-3 py-5">
 
-                                  <p className="truncate text-sm font-semibold text-[#e6dfd0]">
+                                  <p className="truncate text-sm font-semibold text-[#4A5160]">
                                     {getCustomer(
                                       order
                                     )}
                                   </p>
 
-                                  <p className="mt-1 truncate text-[10px] text-[#878275]">
+                                  <p className="mt-1 truncate text-[12px] text-[#626875]">
                                     {getPhone(
                                       order
                                     ) ||
@@ -1534,7 +1569,7 @@ export default function AdminOrdersPage() {
 
                                 <td className="whitespace-nowrap px-3 py-5">
 
-                                  <span className="text-xs text-[#B3AC9B]">
+                                  <span className="text-xs text-[#626875]">
                                     {shortDate(
                                       getDate(
                                         order
@@ -1563,7 +1598,7 @@ export default function AdminOrdersPage() {
                                       );
 
                                     }}
-                                    className="inline-flex h-8 min-w-[34px] items-center justify-center rounded-lg border border-[#4B4841] bg-[#2A2824] px-2 text-xs font-bold text-[#d5b45e] hover:border-[#c9a34e]"
+                                    className="inline-flex h-8 min-w-[34px] items-center justify-center rounded-lg border border-[#D0D5DD] bg-[#F2F4F7] px-2 text-xs font-bold text-[#E53935] hover:border-[#E53935]"
                                   >
                                     {
                                       items.length
@@ -1577,7 +1612,7 @@ export default function AdminOrdersPage() {
                                 <td className="px-3 py-5">
 
                                   <span
-                                    className={`inline-flex items-center gap-1.5 whitespace-nowrap rounded-full border px-2.5 py-1.5 text-[10px] font-semibold ${style.className}`}
+                                    className={`inline-flex items-center gap-1.5 whitespace-nowrap rounded-full border px-2.5 py-1.5 text-[12px] font-semibold ${style.className}`}
                                   >
 
                                     <StatusIcon className="h-3 w-3" />
@@ -1595,7 +1630,7 @@ export default function AdminOrdersPage() {
 
                                 <td className="whitespace-nowrap px-4 py-5 text-right">
 
-                                  <span className="text-sm font-bold text-[#d9b75d]">
+                                  <span className="text-sm font-bold text-[#E53935]">
                                     {formatMoney(
                                       getAmount(
                                         order
@@ -1613,22 +1648,22 @@ export default function AdminOrdersPage() {
 
                               {expanded && (
 
-                                <tr className="border-b border-[#3A3832] bg-[#171614]">
+                                <tr className="border-b border-[#E4E7EC] bg-[#F5F6F8]">
 
                                   <td
                                     colSpan={6}
                                     className="px-4 py-4"
                                   >
 
-                                    <div className="rounded-xl border border-[#43403A] bg-[#1F1E1B] p-4">
+                                    <div className="rounded-xl border border-[#E4E7EC] bg-white p-4">
 
                                       <div className="mb-3 flex items-center justify-between">
 
-                                        <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-[#979183]">
+                                        <p className="text-[12px] font-semibold uppercase tracking-[0.18em] text-[#8D8D8D]">
                                           Order Items
                                         </p>
 
-                                        <span className="text-[10px] text-[#7F7A6E]">
+                                        <span className="text-[12px] text-[#777777]">
                                           {
                                             items.length
                                           }{" "}
@@ -1648,7 +1683,7 @@ export default function AdminOrdersPage() {
                                         {items.length ===
                                         0 ? (
 
-                                          <div className="rounded-lg border border-dashed border-[#504D45] p-5 text-center text-xs text-[#908A7C]">
+                                          <div className="rounded-lg border border-dashed border-[#D0D5DD] p-5 text-center text-xs text-[#626875]">
                                             No item details returned by the API.
                                           </div>
 
@@ -1700,12 +1735,12 @@ export default function AdminOrdersPage() {
                                                     item.id ||
                                                     `${name}-${itemIndex}`
                                                   }
-                                                  className="flex items-center gap-4 rounded-lg border border-[#3D3B35] bg-[#262521] p-3"
+                                                  className="flex items-center gap-4 rounded-lg border border-[#D0D5DD] bg-[#242424] p-3"
                                                 >
 
                                                   {/* IMAGE */}
 
-                                                  <div className="h-16 w-16 shrink-0 overflow-hidden rounded-lg border border-[#4B4841] bg-[#2E2C28]">
+                                                  <div className="h-16 w-16 shrink-0 overflow-hidden rounded-lg border border-[#D0D5DD] bg-[#F2F4F7]">
 
                                                     {image ? (
 
@@ -1723,7 +1758,7 @@ export default function AdminOrdersPage() {
 
                                                       <div className="flex h-full w-full items-center justify-center">
 
-                                                        <Package className="h-5 w-5 text-[#706C61]" />
+                                                        <Package className="h-5 w-5 text-[#626875]" />
 
                                                       </div>
 
@@ -1735,13 +1770,13 @@ export default function AdminOrdersPage() {
 
                                                   <div className="min-w-0 flex-1">
 
-                                                    <p className="truncate text-sm font-semibold text-[#f0eadc]">
+                                                    <p className="truncate text-sm font-semibold text-[#4A5160]">
                                                       {
                                                         name
                                                       }
                                                     </p>
 
-                                                    <div className="mt-1 flex flex-wrap gap-x-4 gap-y-1 text-[11px] text-[#A19B8C]">
+                                                    <div className="mt-1 flex flex-wrap gap-x-4 gap-y-1 text-[12px] text-[#626875]">
 
                                                       <span>
                                                         Qty:{" "}
@@ -1776,13 +1811,13 @@ export default function AdminOrdersPage() {
 
                                                   <div className="shrink-0 text-right">
 
-                                                    <p className="text-sm font-bold text-[#d9b75d]">
+                                                    <p className="text-sm font-bold text-[#E53935]">
                                                       {formatMoney(
                                                         total
                                                       )}
                                                     </p>
 
-                                                    <p className="mt-1 text-[10px] text-[#878275]">
+                                                    <p className="mt-1 text-[12px] text-[#626875]">
                                                       {formatMoney(
                                                         unitPrice
                                                       )}{" "}
@@ -1826,7 +1861,7 @@ export default function AdminOrdersPage() {
                     MOBILE
                 ================================================== */}
 
-                <div className="divide-y divide-[#3A3832] md:hidden">
+                <div className="divide-y divide-[#E4E7EC] md:hidden">
 
                   {filteredOrders.map(
                     (
@@ -1867,27 +1902,27 @@ export default function AdminOrdersPage() {
                           className={`flex w-full items-center justify-between gap-3 px-4 py-5 text-left ${
                             selectedOrderId ===
                             databaseId
-                              ? "bg-[#2C2A26]"
+                              ? "bg-[#F2F4F7]"
                               : ""
                           }`}
                         >
 
                           <div className="flex min-w-0 items-center gap-3">
 
-                            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg border border-[#524F47] bg-[#2C2A26] text-[#c9a34e]">
+                            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg border border-[#D0D5DD] bg-[#F2F4F7] text-[#E53935]">
                               <ShoppingBag className="h-4 w-4" />
                             </div>
 
                             <div className="min-w-0">
 
-                              <p className="truncate text-sm font-semibold text-[#eee8d9]">
+                              <p className="truncate text-sm font-semibold text-[#4A5160]">
                                 #
                                 {
                                   orderNumber
                                 }
                               </p>
 
-                              <p className="mt-1 truncate text-[10px] text-[#878275]">
+                              <p className="mt-1 truncate text-[12px] text-[#626875]">
                                 {getCustomer(
                                   order
                                 )}{" "}
@@ -1900,7 +1935,7 @@ export default function AdminOrdersPage() {
                               </p>
 
                               <span
-                                className={`mt-2 inline-flex items-center gap-1 rounded-full border px-2 py-1 text-[9px] font-semibold ${style.className}`}
+                                className={`mt-2 inline-flex items-center gap-1 rounded-full border px-2 py-1 text-[12px] font-semibold ${style.className}`}
                               >
 
                                 <StatusIcon className="h-2.5 w-2.5" />
@@ -1918,7 +1953,7 @@ export default function AdminOrdersPage() {
 
                           <div className="flex shrink-0 items-center gap-2">
 
-                            <span className="text-sm font-bold text-[#d9b75d]">
+                            <span className="text-sm font-bold text-[#E53935]">
                               {formatMoney(
                                 getAmount(
                                   order
@@ -1926,7 +1961,7 @@ export default function AdminOrdersPage() {
                               )}
                             </span>
 
-                            <ChevronRight className="h-4 w-4 text-[#706C61]" />
+                            <ChevronRight className="h-4 w-4 text-[#626875]" />
 
                           </div>
 
@@ -1948,7 +1983,7 @@ export default function AdminOrdersPage() {
           ================================================== */}
 
           <div
-            className={`min-w-0 overflow-hidden rounded-xl border border-[#3A3832] bg-[#1E1D1A] ${
+            className={`min-w-0 overflow-hidden rounded-xl border border-[#E4E7EC] bg-white ${
               selectedOrder &&
               mobilePane === "list"
                 ? "hidden xl:block"
@@ -1958,7 +1993,7 @@ export default function AdminOrdersPage() {
 
             {/* DETAIL HEADER */}
 
-            <div className="border-b border-[#3A3832] p-5">
+            <div className="border-b border-[#E4E7EC] p-5">
 
               <button
                 type="button"
@@ -1967,7 +2002,7 @@ export default function AdminOrdersPage() {
                     "list"
                   )
                 }
-                className="mb-4 flex items-center gap-1.5 text-[11px] font-semibold text-[#c9a34e] xl:hidden"
+                className="mb-4 flex items-center gap-1.5 text-[12px] font-semibold text-[#E53935] xl:hidden"
               >
 
                 <ArrowLeft className="h-3.5 w-3.5" />
@@ -1976,7 +2011,7 @@ export default function AdminOrdersPage() {
 
               </button>
 
-              <p className="text-[10px] font-semibold uppercase tracking-[0.24em] text-[#c9a34e]">
+              <p className="text-[12px] font-semibold uppercase tracking-[0.24em] text-[#E53935]">
                 Order Details
               </p>
 
@@ -1984,14 +2019,14 @@ export default function AdminOrdersPage() {
 
                 <div className="min-w-0">
 
-                  <h2 className="font-serif text-xl text-[#f1eadb]">
+                  <h2 className="font-bold text-xl text-[#4A5160]">
                     {selectedOrder
                       ? "Order Summary"
                       : "Select an order"}
                   </h2>
 
                   {selectedOrder && (
-                    <p className="mt-1 truncate text-[10px] text-[#868174]">
+                    <p className="mt-1 truncate text-[12px] text-[#626875]">
                       #
                       {
                         getOrderNumber(
@@ -2005,7 +2040,7 @@ export default function AdminOrdersPage() {
 
                 {selectedOrder && (
                   <span
-                    className={`shrink-0 rounded-full border px-3 py-1.5 text-[10px] font-semibold ${
+                    className={`shrink-0 rounded-full border px-3 py-1.5 text-[12px] font-semibold ${
                       statusStyles(
                         selectedOrder.status
                       ).className
@@ -2030,7 +2065,7 @@ export default function AdminOrdersPage() {
 
             {!selectedOrder ? (
 
-              <div className="flex min-h-[350px] items-center justify-center px-6 text-center text-xs text-[#878275]">
+              <div className="flex min-h-[350px] items-center justify-center px-6 text-center text-xs text-[#626875]">
                 Select an order to view its details.
               </div>
 
@@ -2042,11 +2077,11 @@ export default function AdminOrdersPage() {
 
                 <div>
 
-                  <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-[#878275]">
+                  <p className="text-[12px] font-semibold uppercase tracking-[0.18em] text-[#626875]">
                     Customer
                   </p>
 
-                  <p className="mt-2 text-base font-semibold text-[#eee8d9]">
+                  <p className="mt-2 text-base font-semibold text-[#4A5160]">
                     {
                       getCustomer(
                         selectedOrder
@@ -2057,7 +2092,7 @@ export default function AdminOrdersPage() {
                   {getCustomerEmail(
                     selectedOrder
                   ) && (
-                    <p className="mt-1 break-all text-xs text-[#A09A8B]">
+                    <p className="mt-1 break-all text-xs text-[#626875]">
                       {
                         getCustomerEmail(
                           selectedOrder
@@ -2069,7 +2104,7 @@ export default function AdminOrdersPage() {
                   {getPhone(
                     selectedOrder
                   ) && (
-                    <p className="mt-1 text-xs text-[#A09A8B]">
+                    <p className="mt-1 text-xs text-[#626875]">
                       {
                         getPhone(
                           selectedOrder
@@ -2128,11 +2163,11 @@ export default function AdminOrdersPage() {
 
                   <div className="flex items-center justify-between">
 
-                    <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-[#878275]">
+                    <p className="text-[12px] font-semibold uppercase tracking-[0.18em] text-[#626875]">
                       Order Items
                     </p>
 
-                    <span className="text-[10px] text-[#878275]">
+                    <span className="text-[12px] text-[#626875]">
                       {
                         getItems(
                           selectedOrder
@@ -2157,7 +2192,7 @@ export default function AdminOrdersPage() {
                       selectedOrder
                     ).length === 0 ? (
 
-                      <div className="rounded-lg border border-dashed border-[#504D45] p-5 text-center text-xs text-[#878275]">
+                      <div className="rounded-lg border border-dashed border-[#D0D5DD] p-5 text-center text-xs text-[#626875]">
                         No item details returned by the API.
                       </div>
 
@@ -2211,12 +2246,12 @@ export default function AdminOrdersPage() {
                                 item.id ||
                                 `${name}-${index}`
                               }
-                              className="flex gap-3 rounded-xl border border-[#3E3C36] bg-[#22211E] p-3"
+                              className="flex gap-3 rounded-xl border border-[#E4E7EC] bg-white p-3"
                             >
 
                               {/* IMAGE */}
 
-                              <div className="h-[68px] w-[68px] shrink-0 overflow-hidden rounded-lg border border-[#4E4B44] bg-[#2E2C28]">
+                              <div className="h-[68px] w-[68px] shrink-0 overflow-hidden rounded-lg border border-[#D0D5DD] bg-[#F2F4F7]">
 
                                 {image ? (
 
@@ -2233,7 +2268,7 @@ export default function AdminOrdersPage() {
                                 ) : (
 
                                   <div className="flex h-full w-full items-center justify-center">
-                                    <Package className="h-5 w-5 text-[#706C61]" />
+                                    <Package className="h-5 w-5 text-[#626875]" />
                                   </div>
 
                                 )}
@@ -2244,13 +2279,13 @@ export default function AdminOrdersPage() {
 
                               <div className="min-w-0 flex-1">
 
-                                <p className="text-sm font-semibold text-[#eee8d9]">
+                                <p className="text-sm font-semibold text-[#4A5160]">
                                   {
                                     name
                                   }
                                 </p>
 
-                                <div className="mt-2 flex flex-wrap gap-x-3 gap-y-1 text-[10px] text-[#999384]">
+                                <div className="mt-2 flex flex-wrap gap-x-3 gap-y-1 text-[12px] text-[#626875]">
 
                                   <span>
                                     Qty:{" "}
@@ -2279,7 +2314,7 @@ export default function AdminOrdersPage() {
 
                                 </div>
 
-                                <p className="mt-2 text-sm font-bold text-[#d9b75d]">
+                                <p className="mt-2 text-sm font-bold text-[#E53935]">
                                   {formatMoney(
                                     total
                                   )}
@@ -2298,6 +2333,14 @@ export default function AdminOrdersPage() {
 
                 </div>
 
+                {/* REFUND HISTORY (cancellations and returns, with the safe Razorpay status check) */}
+
+                <RefundHistory
+                  orderId={selectedOrderId ?? selectedOrder.id ?? ""}
+                  reloadKey={`${selectedOrder.status}-${selectedOrder.payment_status ?? selectedOrder.paymentStatus ?? ""}-${selectedOrder.updated_at ?? ""}`}
+                  onChanged={loadOrders}
+                />
+
                 {/* SHIPPING ADDRESS */}
 
                 {getAddress(
@@ -2306,13 +2349,13 @@ export default function AdminOrdersPage() {
 
                   <div>
 
-                    <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-[#878275]">
+                    <p className="text-[12px] font-semibold uppercase tracking-[0.18em] text-[#626875]">
                       Shipping Address
                     </p>
 
-                    <div className="mt-3 rounded-xl border border-[#3E3C36] bg-[#22211E] p-4">
+                    <div className="mt-3 rounded-xl border border-[#E4E7EC] bg-white p-4">
 
-                      <p className="text-xs leading-6 text-[#C0B9A7]">
+                      <p className="text-xs leading-6 text-[#4A5160]">
                         {
                           getAddress(
                             selectedOrder
@@ -2332,13 +2375,13 @@ export default function AdminOrdersPage() {
 
                 {refundState(selectedOrder) ===
                   "pending" && (
-                  <div className="rounded-lg border border-amber-700/60 bg-amber-950/30 p-4">
+                  <div className="rounded-lg border border-[#C47A16]/30 bg-[#C47A16]/10 p-4">
 
-                    <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-amber-300">
+                    <p className="text-[12px] font-semibold uppercase tracking-[0.18em] text-[#8A540C]">
                       Refund pending
                     </p>
 
-                    <p className="mt-2 text-xs leading-5 text-[#d8d2c4]">
+                    <p className="mt-2 text-xs leading-5 text-[#4A5160]">
                       The customer sees this order as
                       Cancelled. The Razorpay refund is
                       not confirmed yet: it could not be
@@ -2360,7 +2403,7 @@ export default function AdminOrdersPage() {
                       disabled={
                         retrying
                       }
-                      className="mt-3 h-10 rounded-lg border border-amber-600 bg-amber-600/90 px-5 text-xs font-bold text-[#151412] transition hover:bg-amber-500 disabled:cursor-not-allowed disabled:opacity-50"
+                      className="mt-3 h-10 rounded-lg border border-[#C47A16]/30 bg-amber-600/90 px-5 text-xs font-bold text-[#111111] transition hover:bg-amber-500 disabled:cursor-not-allowed disabled:opacity-50"
                     >
                       {retrying
                         ? "Checking refund..."
@@ -2374,9 +2417,9 @@ export default function AdminOrdersPage() {
                     UPDATE STATUS
                 ================================================== */}
 
-                <div className="border-t border-[#3A3832] pt-5">
+                <div className="border-t border-[#E4E7EC] pt-5">
 
-                  <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-[#878275]">
+                  <p className="text-[12px] font-semibold uppercase tracking-[0.18em] text-[#626875]">
                     Update Status
                   </p>
 
@@ -2394,7 +2437,7 @@ export default function AdminOrdersPage() {
                               .value
                           )
                         }
-                        className="h-11 w-full appearance-none rounded-lg border border-[#4C4942] bg-[#22211E] px-3 pr-9 text-xs font-medium text-[#eee8d9] outline-none focus:border-[#c9a34e]"
+                        className="h-11 w-full appearance-none rounded-lg border border-[#D0D5DD] bg-white px-3 pr-9 text-xs font-medium text-[#4A5160] outline-none focus:border-[#E53935]"
                       >
 
                         {STATUS_OPTIONS.map(
@@ -2408,7 +2451,7 @@ export default function AdminOrdersPage() {
                               value={
                                 option
                               }
-                              className="bg-[#22211E]"
+                              className="bg-white"
                             >
                               {
                                 option
@@ -2419,7 +2462,7 @@ export default function AdminOrdersPage() {
 
                       </select>
 
-                      <ChevronDown className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[#958F81]" />
+                      <ChevronDown className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[#8B8B8B]" />
 
                     </div>
 
@@ -2439,7 +2482,7 @@ export default function AdminOrdersPage() {
                         ).toLowerCase() ===
                           "cancellation requested"
                       }
-                      className="h-11 rounded-lg border border-[#b38d3e] bg-[#b08b3d] px-6 text-xs font-bold text-[#151412] transition hover:bg-[#d0ad5b] disabled:cursor-not-allowed disabled:opacity-40"
+                      className="h-11 rounded-lg border border-[#E53935] bg-[#E53935] px-6 text-xs font-bold text-white transition hover:bg-[#E53935] disabled:cursor-not-allowed disabled:opacity-40"
                     >
                       {updating
                         ? "Updating..."
@@ -2478,19 +2521,19 @@ function OrderStat({
   icon: any;
 }) {
   return (
-    <div className="rounded-xl border border-[#3A3832] bg-[#1E1D1A] p-4 sm:p-5">
+    <div className="rounded-xl border border-[#E4E7EC] bg-white p-4 sm:p-5">
 
       <div className="flex items-center justify-between">
 
-        <p className="text-[10px] font-semibold uppercase tracking-[0.12em] text-[#8E897B]">
+        <p className="text-[12px] font-semibold uppercase tracking-[0.12em] text-[#858585]">
           {title}
         </p>
 
-        <Icon className="h-4 w-4 text-[#c9a34e]" />
+        <Icon className="h-4 w-4 text-[#E53935]" />
 
       </div>
 
-      <p className="mt-3 font-serif text-2xl text-[#eee8d9]">
+      <p className="font-bold mt-3 text-2xl text-[#4A5160]">
         {value}
       </p>
 
@@ -2510,13 +2553,13 @@ function InfoBox({
   value: string;
 }) {
   return (
-    <div className="rounded-xl border border-[#423F39] bg-[#22211E] p-4">
+    <div className="rounded-xl border border-[#D0D5DD] bg-white p-4">
 
-      <p className="text-[9px] font-semibold uppercase tracking-[0.12em] text-[#878275]">
+      <p className="text-[12px] font-semibold uppercase tracking-[0.12em] text-[#626875]">
         {label}
       </p>
 
-      <p className="mt-2 truncate text-sm font-semibold text-[#e9e2d3]">
+      <p className="mt-2 truncate text-sm font-semibold text-[#4A5160]">
         {value}
       </p>
 

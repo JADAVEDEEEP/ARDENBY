@@ -28,12 +28,12 @@ export default function InformationalPage({ params }: { params: { slug: string[]
 
   return (
     <main
-      className="min-h-[70vh] bg-white px-4 py-16 text-[#171717] sm:px-8 lg:py-24"
+      className="min-h-[70vh] bg-white px-4 py-16 text-[#111111] sm:px-8 lg:py-24"
     >
       <div className="mx-auto max-w-3xl">
         <div className="mb-4 flex items-center gap-2">
-          <span className="h-1.5 w-1.5 rotate-45 bg-[#B08D57]" />
-          <p className="text-[10px] font-semibold uppercase tracking-[0.25em] text-[#8C6D3A]">
+          <span className="h-1.5 w-1.5 rotate-45 bg-[#E53935]" />
+          <p className="text-[10px] font-semibold uppercase tracking-[0.25em] text-[#E53935]">
             KOVENIK
           </p>
         </div>
@@ -45,13 +45,13 @@ export default function InformationalPage({ params }: { params: { slug: string[]
           {page.title}
         </h1>
 
-        <div className="my-7 h-px w-24 bg-gradient-to-r from-[#B08D57] to-transparent" />
+        <div className="my-7 h-px w-24 bg-gradient-to-r from-[#E53935] to-transparent" />
 
-        <p className="max-w-2xl text-[16px] leading-8 text-[#171717]/75">{page.text}</p>
+        <p className="max-w-2xl text-[16px] leading-8 text-[#111111]/75">{page.text}</p>
 
         <Link
           href="/shop"
-          className={"mt-10 inline-flex min-h-[48px] items-center rounded-lg px-8 text-[11px] font-bold uppercase tracking-[0.16em]  transition hover:brightness-110 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#B08D57]/70 " + GOLD_SURFACE}
+          className={"mt-10 inline-flex min-h-[48px] items-center rounded-lg px-8 text-[11px] font-bold uppercase tracking-[0.16em]  transition hover:brightness-110 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#E53935]/70 " + GOLD_SURFACE}
         >
           Back to shop
         </Link>

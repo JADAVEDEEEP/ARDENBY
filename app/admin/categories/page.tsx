@@ -405,13 +405,13 @@ export default function AdminCategoriesPage() {
 
   const inputClass =
 
-    'mt-2 w-full rounded-lg border border-[#49463F] bg-[#11100E] px-4 py-3 text-sm text-white outline-none placeholder:text-[#938D7F] focus:border-[#D8B85A] focus:ring-1 focus:ring-[#D8B85A]/40';
+    'mt-2 w-full rounded-lg border border-[#D0D5DD] bg-[#F5F6F8] px-4 py-3 text-sm text-[#111111] outline-none placeholder:text-[#626875] focus:border-[#E53935] focus:ring-1 focus:ring-[#E53935]/40';
 
 
 
   return (
 
-    <section className="min-h-screen space-y-6 rounded-2xl border border-[#B99A43]/30 bg-[#0E0D0C] p-4 text-white sm:p-6 lg:p-8">
+    <section className="min-h-screen space-y-6 rounded-2xl border border-[#E4E7EC] bg-[#F5F6F8] p-4 text-[#111111] sm:p-6 lg:p-8">
 
       
 
@@ -419,7 +419,7 @@ export default function AdminCategoriesPage() {
 
         <div>
 
-          <p className="text-xs font-semibold uppercase tracking-[0.24em] text-[#D8B85A]">
+          <p className="text-xs font-semibold uppercase tracking-[0.24em] text-[#E53935]">
 
             Admin / Categories
 
@@ -427,7 +427,7 @@ export default function AdminCategoriesPage() {
 
 
 
-          <h1 className="mt-3 font-serif text-3xl font-semibold text-[#F1D989] sm:text-4xl">
+          <h1 className="mt-3 text-[32px] font-bold text-[#111111] sm:text-[40px]">
 
             Categories
 
@@ -435,7 +435,7 @@ export default function AdminCategoriesPage() {
 
 
 
-          <p className="mt-2 text-sm leading-6 text-[#C6BEAB] sm:text-base">
+          <p className="mt-2 text-sm leading-6 text-[#4A5160] sm:text-base">
 
             Manage your product categories and organize your collection.
 
@@ -451,7 +451,7 @@ export default function AdminCategoriesPage() {
 
           onClick={openCreate}
 
-          className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-[#D5B454] via-[#F4D983] to-[#B18A2E] px-5 py-3 text-sm font-bold text-[#151412] shadow-lg shadow-black/20 transition hover:brightness-110 sm:min-w-44"
+          className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-[#E53935] via-[#FFFFFF] to-[#E53935] px-5 py-3 text-sm font-bold text-[#111111] shadow-lg shadow-black/20 transition hover:brightness-110 sm:min-w-44"
 
         >
 
@@ -469,7 +469,7 @@ export default function AdminCategoriesPage() {
 
       {notice && (
 
-        <div className="flex items-center gap-2 rounded-lg border border-stone-700/50 bg-neutral-950/40 p-3 text-sm text-emerald-300">
+        <div className="flex items-center gap-2 rounded-lg border border-[#E4E7EC] bg-[#F5F6F8] p-3 text-sm text-[#0F6446]">
 
           <CheckCircle2 className="h-5 w-5 shrink-0" />
 
@@ -499,7 +499,7 @@ export default function AdminCategoriesPage() {
 
       {error && !modalOpen && !deleteTarget && (
 
-        <div className="flex items-start gap-2 rounded-lg border border-red-800/60 bg-red-950/30 p-3 text-sm text-red-300">
+        <div className="flex items-start gap-2 rounded-lg border border-[#D92D20]/30 bg-[#D92D20]/8 p-3 text-sm text-[#B42318]">
 
           <AlertCircle className="mt-0.5 h-4 w-4 shrink-0" />
 
@@ -531,9 +531,9 @@ export default function AdminCategoriesPage() {
 
       <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
 
-        <div className="flex items-center gap-4 rounded-xl border border-[#B99A43]/40 bg-gradient-to-br from-[#1E1D1A] to-[#100F0E] p-4 sm:p-5">
+        <div className="flex items-center gap-4 rounded-xl border border-[#D0D5DD] bg-gradient-to-br from-white to-white p-4 sm:p-5">
 
-          <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl border border-stone-600/50 bg-neutral-900/40 text-[#E2C568]">
+          <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl border border-[#E4E7EC] bg-[#F5F6F8] text-[#E53935]">
 
             <Tag className="h-6 w-6" />
 
@@ -541,13 +541,13 @@ export default function AdminCategoriesPage() {
 
           <div>
 
-            <p className="text-2xl font-bold text-[#F1D989]">
+            <p className="text-2xl font-bold text-[#111111]">
 
               {categories.length}
 
             </p>
 
-            <p className="mt-1 text-sm text-[#C6BEAB]">Total Categories</p>
+            <p className="mt-1 text-sm text-[#4A5160]">Total Categories</p>
 
           </div>
 
@@ -555,9 +555,9 @@ export default function AdminCategoriesPage() {
 
 
 
-        <div className="flex items-center gap-4 rounded-xl border border-neutral-800/60 bg-gradient-to-br from-[#1E1D1A] to-[#100F0E] p-4 sm:p-5">
+        <div className="flex items-center gap-4 rounded-xl border border-[#E4E7EC] bg-gradient-to-br from-white to-white p-4 sm:p-5">
 
-          <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl border border-stone-600/50 bg-neutral-900/40 text-emerald-300">
+          <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl border border-[#E4E7EC] bg-[#F5F6F8] text-[#0F6446]">
 
             <Layers3 className="h-6 w-6" />
 
@@ -565,13 +565,13 @@ export default function AdminCategoriesPage() {
 
           <div>
 
-            <p className="text-2xl font-bold text-white">
+            <p className="text-2xl font-bold text-[#111111]">
 
               {filteredCategories.length}
 
             </p>
 
-            <p className="mt-1 text-sm text-[#C6BEAB]">
+            <p className="mt-1 text-sm text-[#4A5160]">
 
               {search ? 'Matching Categories' : 'Categories Displayed'}
 
@@ -591,7 +591,7 @@ export default function AdminCategoriesPage() {
 
         <div className="relative flex-1">
 
-          <Search className="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-[#B99A43]" />
+          <Search className="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-[#E53935]" />
 
           <input
 
@@ -605,7 +605,7 @@ export default function AdminCategoriesPage() {
 
             aria-label="Search categories"
 
-            className="min-h-12 w-full rounded-xl border border-[#49463F] bg-[#151412] py-3 pl-12 pr-4 text-sm text-white outline-none placeholder:text-[#938D7F] focus:border-[#D8B85A]"
+            className="min-h-12 w-full rounded-xl border border-[#D0D5DD] bg-[#F5F6F8] py-3 pl-12 pr-4 text-sm text-[#111111] outline-none placeholder:text-[#626875] focus:border-[#E53935]"
 
           />
 
@@ -621,7 +621,7 @@ export default function AdminCategoriesPage() {
 
           disabled={loading}
 
-          className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl border border-[#8D7434] bg-[#1E1D1A] px-5 py-3 text-sm font-semibold text-[#F1D989] transition hover:bg-[#2D2B27] disabled:opacity-50"
+          className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl border border-[#E53935] bg-white px-5 py-3 text-sm font-semibold text-[#111111] transition hover:bg-[#2A2A2A] disabled:opacity-50"
 
         >
 
@@ -637,15 +637,15 @@ export default function AdminCategoriesPage() {
 
       
 
-      <div className="hidden overflow-hidden rounded-xl border border-[#49463F] lg:block">
+      <div className="hidden overflow-hidden rounded-xl border border-[#D0D5DD] lg:block">
 
         <div className="overflow-x-auto">
 
           <table className="w-full min-w-[760px] text-left">
 
-            <thead className="bg-[#201F1C]">
+            <thead className="bg-white">
 
-              <tr className="text-xs uppercase tracking-wider text-[#E1C96E]">
+              <tr className="text-xs uppercase tracking-wider text-[#E53935]">
 
                 <th className="px-5 py-4 font-semibold">#</th>
 
@@ -665,15 +665,15 @@ export default function AdminCategoriesPage() {
 
 
 
-            <tbody className="divide-y divide-[#383631]">
+            <tbody className="divide-y divide-[#E4E7EC]">
 
               {loading ? (
 
                 <tr>
 
-                  <td colSpan={6} className="px-5 py-16 text-center text-[#C6BEAB]">
+                  <td colSpan={6} className="px-5 py-16 text-center text-[#4A5160]">
 
-                    <LoaderCircle className="mx-auto mb-3 h-6 w-6 animate-spin text-[#D8B85A]" />
+                    <LoaderCircle className="mx-auto mb-3 h-6 w-6 animate-spin text-[#E53935]" />
 
                     Loading categories...
 
@@ -687,11 +687,11 @@ export default function AdminCategoriesPage() {
 
                   <td colSpan={6} className="px-5 py-16 text-center">
 
-                    <Tag className="mx-auto mb-3 h-8 w-8 text-[#B99A43]" />
+                    <Tag className="mx-auto mb-3 h-8 w-8 text-[#E53935]" />
 
-                    <p className="font-medium text-white">No categories found</p>
+                    <p className="font-medium text-[#111111]">No categories found</p>
 
-                    <p className="mt-1 text-sm text-[#B7B09E]">
+                    <p className="mt-1 text-sm text-[#626875]">
 
                       Try another search or create a category.
 
@@ -709,11 +709,11 @@ export default function AdminCategoriesPage() {
 
                     key={category.slug}
 
-                    className="bg-[#12110F] transition hover:bg-[#201F1C]/80"
+                    className="bg-[#F5F6F8] transition hover:bg-white"
 
                   >
 
-                    <td className="px-5 py-4 text-sm text-[#C6BEAB]">
+                    <td className="px-5 py-4 text-sm text-[#4A5160]">
 
                       {index + 1}
 
@@ -721,7 +721,7 @@ export default function AdminCategoriesPage() {
 
 
 
-                    <td className="px-5 py-4 text-sm font-semibold text-white">
+                    <td className="px-5 py-4 text-sm font-semibold text-[#111111]">
 
                       {category.name}
 
@@ -731,7 +731,7 @@ export default function AdminCategoriesPage() {
 
                     <td className="px-5 py-4">
 
-                      <span className="inline-block max-w-44 break-all rounded-md border border-neutral-800/60 bg-neutral-950/40 px-2.5 py-1.5 text-xs text-emerald-200">
+                      <span className="inline-block max-w-44 break-all rounded-md border border-[#E4E7EC] bg-[#F5F6F8] px-2.5 py-1.5 text-xs text-[#0F6446]">
 
                         {category.slug}
 
@@ -741,7 +741,7 @@ export default function AdminCategoriesPage() {
 
 
 
-                    <td className="max-w-64 px-5 py-4 text-sm text-[#C6BEAB]">
+                    <td className="max-w-64 px-5 py-4 text-sm text-[#4A5160]">
 
                       <span className="line-clamp-2">
 
@@ -753,7 +753,7 @@ export default function AdminCategoriesPage() {
 
 
 
-                    <td className="whitespace-nowrap px-5 py-4 text-sm text-[#C6BEAB]">
+                    <td className="whitespace-nowrap px-5 py-4 text-sm text-[#4A5160]">
 
                       {formatDate(category.created_at)}
 
@@ -773,7 +773,7 @@ export default function AdminCategoriesPage() {
 
                           aria-label={`Edit ${category.name}`}
 
-                          className="flex h-10 w-10 items-center justify-center rounded-lg border border-[#A88936] text-[#F1D989] transition hover:bg-[#A88936]/15"
+                          className="flex h-10 w-10 items-center justify-center rounded-lg border border-[#E53935] text-[#111111] transition hover:bg-[#E53935]/15"
 
                         >
 
@@ -797,7 +797,7 @@ export default function AdminCategoriesPage() {
 
                           aria-label={`Delete ${category.name}`}
 
-                          className="flex h-10 w-10 items-center justify-center rounded-lg border border-red-800 text-red-400 transition hover:bg-red-950/50"
+                          className="flex h-10 w-10 items-center justify-center rounded-lg border border-[#D92D20]/30 text-[#B42318] transition hover:bg-[#D92D20]/8"
 
                         >
 
@@ -823,7 +823,7 @@ export default function AdminCategoriesPage() {
 
 
 
-        <div className="border-t border-[#49463F] bg-[#151412] px-5 py-3 text-xs text-[#B7B09E]">
+        <div className="border-t border-[#D0D5DD] bg-[#F5F6F8] px-5 py-3 text-xs text-[#626875]">
 
           Showing {filteredCategories.length} of {categories.length} categories
 
@@ -839,9 +839,9 @@ export default function AdminCategoriesPage() {
 
         {loading ? (
 
-          <div className="rounded-xl border border-[#49463F] bg-[#151412] py-12 text-center text-[#C6BEAB]">
+          <div className="rounded-xl border border-[#D0D5DD] bg-[#F5F6F8] py-12 text-center text-[#4A5160]">
 
-            <LoaderCircle className="mx-auto mb-3 h-6 w-6 animate-spin text-[#D8B85A]" />
+            <LoaderCircle className="mx-auto mb-3 h-6 w-6 animate-spin text-[#E53935]" />
 
             Loading categories...
 
@@ -849,13 +849,13 @@ export default function AdminCategoriesPage() {
 
         ) : filteredCategories.length === 0 ? (
 
-          <div className="rounded-xl border border-[#49463F] bg-[#151412] px-4 py-12 text-center">
+          <div className="rounded-xl border border-[#D0D5DD] bg-[#F5F6F8] px-4 py-12 text-center">
 
-            <Tag className="mx-auto mb-3 h-8 w-8 text-[#B99A43]" />
+            <Tag className="mx-auto mb-3 h-8 w-8 text-[#E53935]" />
 
-            <p className="font-semibold text-white">No categories found</p>
+            <p className="font-semibold text-[#111111]">No categories found</p>
 
-            <p className="mt-1 text-sm text-[#B7B09E]">
+            <p className="mt-1 text-sm text-[#626875]">
 
               Try another search or add a category.
 
@@ -871,13 +871,13 @@ export default function AdminCategoriesPage() {
 
               key={category.slug}
 
-              className="rounded-xl border border-[#49463F] bg-gradient-to-br from-[#1B1A17] to-[#100F0E] p-4 shadow-lg shadow-black/10"
+              className="rounded-xl border border-[#D0D5DD] bg-gradient-to-br from-white to-white p-4 shadow-lg shadow-black/10"
 
             >
 
               <div className="flex items-start gap-3">
 
-                <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-[#8D7434]/60 bg-[#A88936]/10 text-[#E1C96E]">
+                <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-[#E53935]/60 bg-[#E53935]/10 text-[#E53935]">
 
                   <Tag className="h-5 w-5" />
 
@@ -887,7 +887,7 @@ export default function AdminCategoriesPage() {
 
                 <div className="min-w-0 flex-1">
 
-                  <h3 className="break-words text-base font-semibold text-white sm:text-lg">
+                  <h3 className="break-words text-base font-semibold text-[#111111] sm:text-lg">
 
                     {category.name}
 
@@ -895,7 +895,7 @@ export default function AdminCategoriesPage() {
 
 
 
-                  <p className="mt-1 break-all text-xs text-emerald-300">
+                  <p className="mt-1 break-all text-xs text-[#0F6446]">
 
                     {category.slug}
 
@@ -907,7 +907,7 @@ export default function AdminCategoriesPage() {
 
 
 
-              <p className="mt-3 break-words text-sm leading-6 text-[#C6BEAB]">
+              <p className="mt-3 break-words text-sm leading-6 text-[#4A5160]">
 
                 {category.description || 'No description provided.'}
 
@@ -915,9 +915,9 @@ export default function AdminCategoriesPage() {
 
 
 
-              <div className="mt-3 flex items-center gap-2 border-t border-[#49463F]/70 pt-3 text-xs text-[#B7B09E]">
+              <div className="mt-3 flex items-center gap-2 border-t border-[#D0D5DD] pt-3 text-xs text-[#626875]">
 
-                <CalendarDays className="h-4 w-4 shrink-0 text-[#D8B85A]" />
+                <CalendarDays className="h-4 w-4 shrink-0 text-[#E53935]" />
 
                 <span>Created {formatDate(category.created_at)}</span>
 
@@ -933,7 +933,7 @@ export default function AdminCategoriesPage() {
 
                   onClick={() => openEdit(category)}
 
-                  className="inline-flex min-h-11 items-center justify-center gap-2 rounded-lg border border-[#A88936] px-3 py-2.5 text-sm font-semibold text-[#F1D989] transition hover:bg-[#A88936]/15"
+                  className="inline-flex min-h-11 items-center justify-center gap-2 rounded-lg border border-[#E53935] px-3 py-2.5 text-sm font-semibold text-[#111111] transition hover:bg-[#E53935]/15"
 
                 >
 
@@ -957,7 +957,7 @@ export default function AdminCategoriesPage() {
 
                   }}
 
-                  className="inline-flex min-h-11 items-center justify-center gap-2 rounded-lg border border-red-800 px-3 py-2.5 text-sm font-semibold text-red-400 transition hover:bg-red-950/40"
+                  className="inline-flex min-h-11 items-center justify-center gap-2 rounded-lg border border-[#D92D20]/30 px-3 py-2.5 text-sm font-semibold text-[#B42318] transition hover:bg-[#D92D20]/8"
 
                 >
 
@@ -977,7 +977,7 @@ export default function AdminCategoriesPage() {
 
 
 
-        <p className="px-1 py-1 text-xs text-[#B7B09E]">
+        <p className="px-1 py-1 text-xs text-[#626875]">
 
           Showing {filteredCategories.length} of {categories.length} categories
 
@@ -1003,13 +1003,13 @@ export default function AdminCategoriesPage() {
 
         >
 
-          <div className="max-h-[92dvh] w-full overflow-y-auto rounded-t-2xl border border-[#A88936]/60 bg-[#100F0E] p-5 shadow-2xl sm:max-w-xl sm:rounded-2xl sm:p-7">
+          <div className="max-h-[92dvh] w-full overflow-y-auto rounded-t-2xl border border-[#E53935]/60 bg-[#F5F6F8] p-5 shadow-2xl sm:max-w-xl sm:rounded-2xl sm:p-7">
 
             <div className="flex items-start justify-between gap-4">
 
               <div className="flex items-start gap-3">
 
-                <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-stone-700 bg-neutral-950/60 text-[#E1C96E]">
+                <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-[#E4E7EC] bg-[#F5F6F8] text-[#E53935]">
 
                   <Tag className="h-5 w-5" />
 
@@ -1019,13 +1019,13 @@ export default function AdminCategoriesPage() {
 
                 <div>
 
-                  <h2 className="font-serif text-2xl font-semibold text-[#F1D989]">
+                  <h2 className="text-2xl font-semibold text-[#111111]">
 
                     {editingSlug ? 'Edit Category' : 'Add Category'}
 
                   </h2>
 
-                  <p className="mt-1 text-sm text-[#B7B09E]">
+                  <p className="mt-1 text-sm text-[#626875]">
 
                     {editingSlug
 
@@ -1051,7 +1051,7 @@ export default function AdminCategoriesPage() {
 
                 aria-label="Close modal"
 
-                className="rounded-lg p-2 text-[#C6BEAB] transition hover:bg-white/5 hover:text-white"
+                className="rounded-lg p-2 text-[#4A5160] transition hover:bg-[#111111]/5 hover:text-[#111111]"
 
               >
 
@@ -1067,9 +1067,9 @@ export default function AdminCategoriesPage() {
 
               <div>
 
-                <label htmlFor="category-name" className="text-sm font-semibold text-white">
+                <label htmlFor="category-name" className="text-sm font-semibold text-[#111111]">
 
-                  Category Name <span className="text-red-400">*</span>
+                  Category Name <span className="text-[#B42318]">*</span>
 
                 </label>
 
@@ -1127,9 +1127,9 @@ export default function AdminCategoriesPage() {
 
               <div>
 
-                <label htmlFor="category-slug" className="text-sm font-semibold text-white">
+                <label htmlFor="category-slug" className="text-sm font-semibold text-[#111111]">
 
-                  Slug <span className="text-red-400">*</span>
+                  Slug <span className="text-[#B42318]">*</span>
 
                 </label>
 
@@ -1173,7 +1173,7 @@ export default function AdminCategoriesPage() {
 
                 {editingSlug && (
 
-                  <p className="mt-1.5 text-xs text-[#B7B09E]">
+                  <p className="mt-1.5 text-xs text-[#626875]">
 
                     Slug editing is disabled because the existing API updates by slug.
 
@@ -1187,7 +1187,7 @@ export default function AdminCategoriesPage() {
 
               <div>
 
-                <label htmlFor="category-description" className="text-sm font-semibold text-white">
+                <label htmlFor="category-description" className="text-sm font-semibold text-[#111111]">
 
                   Description
 
@@ -1227,7 +1227,7 @@ export default function AdminCategoriesPage() {
 
               {error && (
 
-                <div className="flex items-start gap-2 rounded-lg border border-red-800/60 bg-red-950/30 p-3 text-sm text-red-300">
+                <div className="flex items-start gap-2 rounded-lg border border-[#D92D20]/30 bg-[#D92D20]/8 p-3 text-sm text-[#B42318]">
 
                   <AlertCircle className="mt-0.5 h-4 w-4 shrink-0" />
 
@@ -1239,7 +1239,7 @@ export default function AdminCategoriesPage() {
 
 
 
-              <div className="grid grid-cols-2 gap-3 border-t border-[#49463F] pt-5">
+              <div className="grid grid-cols-2 gap-3 border-t border-[#D0D5DD] pt-5">
 
                 <button
 
@@ -1249,7 +1249,7 @@ export default function AdminCategoriesPage() {
 
                   disabled={saving}
 
-                  className="min-h-12 rounded-xl border border-[#656157] px-4 py-3 text-sm font-semibold text-[#E5DCC6] transition hover:bg-white/5 disabled:opacity-50"
+                  className="min-h-12 rounded-xl border border-[#D0D5DD] px-4 py-3 text-sm font-semibold text-[#4A5160] transition hover:bg-[#111111]/5 disabled:opacity-50"
 
                 >
 
@@ -1265,7 +1265,7 @@ export default function AdminCategoriesPage() {
 
                   disabled={saving}
 
-                  className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-[#D5B454] via-[#F4D983] to-[#B18A2E] px-4 py-3 text-sm font-bold text-[#151412] transition hover:brightness-110 disabled:opacity-60"
+                  className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-[#E53935] via-[#FFFFFF] to-[#E53935] px-4 py-3 text-sm font-bold text-[#111111] transition hover:brightness-110 disabled:opacity-60"
 
                 >
 
@@ -1292,9 +1292,9 @@ export default function AdminCategoriesPage() {
 
         <div className="fixed inset-0 z-[60] flex items-end justify-center bg-black/75 p-0 backdrop-blur-sm sm:items-center sm:p-4">
 
-          <div className="w-full rounded-t-2xl border border-red-900/60 bg-[#12110F] p-5 shadow-2xl sm:max-w-md sm:rounded-2xl sm:p-6">
+          <div className="w-full rounded-t-2xl border border-[#D92D20]/30 bg-[#F5F6F8] p-5 shadow-2xl sm:max-w-md sm:rounded-2xl sm:p-6">
 
-            <div className="flex h-12 w-12 items-center justify-center rounded-xl border border-red-800/60 bg-red-950/40 text-red-400">
+            <div className="flex h-12 w-12 items-center justify-center rounded-xl border border-[#D92D20]/30 bg-[#D92D20]/8 text-[#B42318]">
 
               <Trash2 className="h-6 w-6" />
 
@@ -1302,7 +1302,7 @@ export default function AdminCategoriesPage() {
 
 
 
-            <h2 className="mt-4 text-xl font-semibold text-white">
+            <h2 className="mt-4 text-xl font-semibold text-[#111111]">
 
               Delete category?
 
@@ -1310,11 +1310,11 @@ export default function AdminCategoriesPage() {
 
 
 
-            <p className="mt-2 break-words text-sm leading-6 text-[#C6BEAB]">
+            <p className="mt-2 break-words text-sm leading-6 text-[#4A5160]">
 
               Are you sure you want to delete{' '}
 
-              <span className="font-semibold text-[#F1D989]">
+              <span className="font-semibold text-[#111111]">
 
                 {deleteTarget.name}
 
@@ -1328,7 +1328,7 @@ export default function AdminCategoriesPage() {
 
             {error && (
 
-              <p className="mt-3 rounded-lg border border-red-800/60 bg-red-950/30 p-3 text-sm text-red-300">
+              <p className="mt-3 rounded-lg border border-[#D92D20]/30 bg-[#D92D20]/8 p-3 text-sm text-[#B42318]">
 
                 {error}
 
@@ -1354,7 +1354,7 @@ export default function AdminCategoriesPage() {
 
                 }}
 
-                className="min-h-12 rounded-xl border border-[#656157] px-4 py-3 text-sm font-semibold text-white hover:bg-white/5 disabled:opacity-50"
+                className="min-h-12 rounded-xl border border-[#D0D5DD] px-4 py-3 text-sm font-semibold text-[#111111] hover:bg-[#111111]/5 disabled:opacity-50"
 
               >
 
@@ -1372,7 +1372,7 @@ export default function AdminCategoriesPage() {
 
                 onClick={() => void handleDelete()}
 
-                className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl bg-red-700 px-4 py-3 text-sm font-bold text-white transition hover:bg-red-600 disabled:opacity-50"
+                className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl bg-[#D92D20] px-4 py-3 text-sm font-bold text-white transition hover:bg-[#D92D20] disabled:opacity-50"
 
               >
 

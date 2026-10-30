@@ -41,10 +41,10 @@ const TOAST_STYLE: Record<
   { bg: string; border: string; accent: string; bar: string }
 > = {
   stock: { bg: '#FDECEA', border: 'rgba(179,38,30,.4)', accent: '#B3261E', bar: '#B3261E' },
-  low: { bg: '#FFF6E5', border: 'rgba(176,141,87,.55)', accent: '#8C6D3A', bar: '#B08D57' },
-  bag: { bg: '#FFFFFF', border: '#E2E0DB', accent: '#171717', bar: '#B08D57' },
-  filter: { bg: '#FFFFFF', border: '#E2E0DB', accent: '#171717', bar: '#B08D57' },
-  wish: { bg: '#FFFFFF', border: '#E2E0DB', accent: '#171717', bar: '#B08D57' },
+  low: { bg: '#FDECEA', border: 'rgba(229, 57, 53,.55)', accent: '#E53935', bar: '#E53935' },
+  bag: { bg: '#FFFFFF', border: '#E5E5E5', accent: '#111111', bar: '#E53935' },
+  filter: { bg: '#FFFFFF', border: '#E5E5E5', accent: '#111111', bar: '#E53935' },
+  wish: { bg: '#FFFFFF', border: '#E5E5E5', accent: '#111111', bar: '#E53935' },
 };
 
 export function useToasts() {
@@ -97,7 +97,7 @@ function ToastItem({ toast, onDismiss }: { toast: KvToast; onDismiss: (id: numbe
   return (
     <div
       role="status"
-      className="kv-toast pointer-events-auto w-full p-3.5 pr-11 text-[#171717]"
+      className="kv-toast pointer-events-auto w-full p-3.5 pr-11 text-[#111111]"
       style={{ background: s.bg, border: `1px solid ${s.border}` }}
     >
       <div className="flex items-start gap-3">
@@ -106,12 +106,12 @@ function ToastItem({ toast, onDismiss }: { toast: KvToast; onDismiss: (id: numbe
           <img
             src={toast.thumb}
             alt=""
-            className="h-11 w-11 shrink-0 rounded-[10px] border border-[#171717]/20 object-cover"
+            className="h-11 w-11 shrink-0 rounded-[10px] border border-[#111111]/20 object-cover"
           />
         ) : (
           <span
             className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border"
-            style={{ borderColor: s.border, color: s.accent, background: 'rgba(23,23,23,.06)' }}
+            style={{ borderColor: s.border, color: s.accent, background: 'rgba(17, 17, 17,.06)' }}
           >
             <ToastIcon variant={toast.variant} />
           </span>
@@ -123,7 +123,7 @@ function ToastItem({ toast, onDismiss }: { toast: KvToast; onDismiss: (id: numbe
           >
             {TOAST_LABEL[toast.variant]}
           </p>
-          <p className="mt-1 text-[13px] leading-snug text-[#171717]">{toast.message}</p>
+          <p className="mt-1 text-[13px] leading-snug text-[#111111]">{toast.message}</p>
           {toast.actions && toast.actions.length > 0 && (
             <div className="mt-2.5 flex flex-wrap gap-2">
               {toast.actions.map((a) => {
@@ -131,7 +131,7 @@ function ToastItem({ toast, onDismiss }: { toast: KvToast; onDismiss: (id: numbe
                   'inline-flex min-h-[32px] items-center rounded-full border px-3.5 text-[10px] font-extrabold uppercase tracking-[0.14em] transition hover:brightness-125',
                   a.primary
                     ? 'border-transparent bg-[#222222] text-[#FFFFFF]'
-                    : 'border-[#171717]/25 bg-transparent text-[#171717]'
+                    : 'border-[#111111]/25 bg-transparent text-[#111111]'
                 );
                 return a.href ? (
                   <Link key={a.label} href={a.href} className={cls} onClick={() => onDismiss(toast.id)}>
@@ -159,7 +159,7 @@ function ToastItem({ toast, onDismiss }: { toast: KvToast; onDismiss: (id: numbe
         type="button"
         aria-label="Dismiss notification"
         onClick={() => onDismiss(toast.id)}
-        className="absolute right-1 top-1 flex h-11 w-11 items-center justify-center rounded-full text-[#171717]/70 transition hover:text-[#171717]"
+        className="absolute right-1 top-1 flex h-11 w-11 items-center justify-center rounded-full text-[#111111]/70 transition hover:text-[#111111]"
       >
         <X className="h-4 w-4" />
       </button>

@@ -77,12 +77,12 @@ const config: Config = {
         // Light retail theme
         store: {
           bg: '#FFFFFF',
-          alt: '#F5F5F5',
-          text: '#222222',
-          sub: '#707070',
+          alt: '#F7F7F7',
+          text: '#111111',
+          sub: '#777777',
           line: '#E5E5E5',
-          gold: '#B89548',
-          sale: '#C62828',
+          gold: '#E53935',
+          sale: '#E53935',
         },
         // Brand palette
         ink: {
@@ -91,18 +91,18 @@ const config: Config = {
           muted: '#3a3a3a',
         },
         cream: {
-          DEFAULT: '#F7F5F2',
-          dark: '#EFE9E1',
+          DEFAULT: '#F7F7F7',
+          dark: '#E5E5E5',
         },
         sand: {
-          DEFAULT: '#D8C3A5',
-          dark: '#C4A87A',
-          light: '#E8DCC8',
+          DEFAULT: '#E5E5E5',
+          dark: '#BDBDBD',
+          light: '#F7F7F7',
         },
         olive: {
-          DEFAULT: '#6B705C',
-          dark: '#4A4E3D',
-          light: '#8A8F7A',
+          DEFAULT: '#777777',
+          dark: '#4A4A4A',
+          light: '#9A9A9A',
         },
       },
       borderRadius: {

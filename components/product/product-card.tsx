@@ -30,6 +30,8 @@ import { cn } from '@/lib/utils';
 
 import { toast } from 'sonner';
 
+import { RatingLink } from '@/components/product/rating-link';
+
 /* ------------------------------------------------------------------
    CONFIG
    - LOGIN_ROUTE / REGISTER_ROUTE: set these to your real auth routes.
@@ -195,7 +197,7 @@ export function WishlistLoginModal({
         aria-modal="true"
         aria-labelledby={titleId}
         aria-describedby={descId}
-        className="relative max-h-[calc(100dvh-2rem)] w-full max-w-[420px] overflow-hidden rounded-2xl border border-[#B08D57]/30 bg-[#F4F0E8] px-6 pb-8 pt-10 text-center  sm:px-8"
+        className="relative max-h-[calc(100dvh-2rem)] w-full max-w-[420px] overflow-hidden rounded-2xl border border-[#E53935]/30 bg-[#F7F7F7] px-6 pb-8 pt-10 text-center  sm:px-8"
       >
         {/* animated cosmos: stars, planet, orbital rings (decorative only) */}
         <div aria-hidden="true" className="pointer-events-none absolute inset-0 overflow-hidden rounded-2xl">
@@ -210,38 +212,38 @@ export function WishlistLoginModal({
             <div className="absolute inset-[22%] rounded-full bg-[#222222] " />
             <div className="absolute inset-0 rotate-[-18deg]">
               <div
-                className="kv-orbit h-full w-full rounded-full border border-[#B08D57]/45"
+                className="kv-orbit h-full w-full rounded-full border border-[#E53935]/45"
                 style={{ ['--kv-d' as string]: '28s', transform: 'scaleY(0.38)' }}
               />
             </div>
             <div className="absolute inset-[-12%] rotate-[14deg]">
               <div
-                className="kv-orbit h-full w-full rounded-[50%] border border-[#171717]/20"
+                className="kv-orbit h-full w-full rounded-[50%] border border-[#111111]/20"
                 style={{ ['--kv-d' as string]: '44s' }}
               >
-                <span className="absolute left-1/2 top-0 h-1.5 w-1.5 -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#B08D57] " />
+                <span className="absolute left-1/2 top-0 h-1.5 w-1.5 -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#E53935] " />
               </div>
             </div>
           </div>
-          <div className="kv-float absolute -bottom-8 -left-8 h-24 w-24 rounded-full bg-[#E8E6E1] opacity-80" />
-          <div className="absolute inset-x-8 top-0 h-px bg-gradient-to-r from-transparent via-[#B08D57] to-transparent" />
+          <div className="kv-float absolute -bottom-8 -left-8 h-24 w-24 rounded-full bg-[#E5E5E5] opacity-80" />
+          <div className="absolute inset-x-8 top-0 h-px bg-gradient-to-r from-transparent via-[#E53935] to-transparent" />
         </div>
 
         <div className="relative">
-          <span className="mx-auto mb-5 flex h-14 w-14 items-center justify-center rounded-full border border-[#B08D57]/60 bg-[#FFFFFF] ">
-            <Heart className="h-6 w-6 text-[#8C6D3A]" />
+          <span className="mx-auto mb-5 flex h-14 w-14 items-center justify-center rounded-full border border-[#E53935]/60 bg-[#FFFFFF] ">
+            <Heart className="h-6 w-6 text-[#E53935]" />
           </span>
 
           <h2
             id={titleId}
-            className="font-serif text-[24px] font-bold leading-tight text-[#171717] sm:text-[26px]"
+            className="font-serif text-[24px] font-bold leading-tight text-[#111111] sm:text-[26px]"
           >
             Sign in to save your favourites
           </h2>
 
           <p
             id={descId}
-            className="mx-auto mt-3 max-w-[320px] text-[15px] leading-relaxed text-[#171717]/80"
+            className="mx-auto mt-3 max-w-[320px] text-[15px] leading-relaxed text-[#111111]/80"
           >
             Keep the pieces you love in one place, come back to them on any
             device, and never lose track of a drop you want.
@@ -252,7 +254,7 @@ export function WishlistLoginModal({
           type="button"
           onClick={onClose}
           aria-label="Close"
-          className="absolute right-2 top-2 z-10 flex h-11 w-11 items-center justify-center rounded-full text-[#171717]/70 transition hover:text-[#171717] focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#B08D57]"
+          className="absolute right-2 top-2 z-10 flex h-11 w-11 items-center justify-center rounded-full text-[#111111]/70 transition hover:text-[#111111] focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#E53935]"
         >
           <X className="h-5 w-5" />
         </button>
@@ -410,8 +412,7 @@ export function ProductCard({
         ? { label: 'New', tone: 'emerald' as const }
         : null;
 
-  const hasRating = Number(product.rating) > 0;
-
+  
   /* ---------- handlers ---------- */
   const handleWishlist = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -499,7 +500,7 @@ export function ProductCard({
           'group relative flex w-full min-w-0 flex-col',
           compact
             ? 'h-auto rounded-2xl'
-            : 'h-full overflow-hidden rounded-md border border-[#1B7A43] bg-gradient-to-b from-[#F4F0E8] to-[#FFFFFF]  transition-[border-color,box-shadow] duration-200 hover:border-[#1B7A43] '
+            : 'h-full overflow-hidden rounded-md border border-[#1B7A43] bg-gradient-to-b from-[#F7F7F7] to-[#FFFFFF]  transition-[border-color,box-shadow] duration-200 hover:border-[#1B7A43] '
         )}
       >
         {/* Image + overlays (wishlist is a sibling of the link, not nested) */}
@@ -511,7 +512,7 @@ export function ProductCard({
           >
             <div
               className={cn(
-                'relative w-full overflow-hidden bg-[#F4F0E8]',
+                'relative w-full overflow-hidden bg-[#F7F7F7]',
                 compact ? 'aspect-[4/5] rounded-2xl' : 'aspect-[10/9]'
               )}
             >
@@ -526,14 +527,14 @@ export function ProductCard({
                   )}
                 />
               ) : (
-                <div className="h-full w-full bg-gradient-to-br from-[#F4F0E8] to-[#F4F0E8]" />
+                <div className="h-full w-full bg-gradient-to-br from-[#F7F7F7] to-[#F7F7F7]" />
               )}
             </div>
           </Link>
 
           {/* Single primary badge */}
           {compact && hasDiscount ? (
-            <span className="pointer-events-none absolute left-2 top-2 z-10 rounded-full bg-[#F4F0E8]/75 px-2.5 py-1 text-[10px] font-semibold uppercase leading-none tracking-wider text-[#171717] backdrop-blur-sm">
+            <span className="pointer-events-none absolute left-2 top-2 z-10 rounded-full bg-[#F7F7F7]/75 px-2.5 py-1 text-[10px] font-semibold uppercase leading-none tracking-wider text-[#111111] backdrop-blur-sm">
               {discountPct}% off
             </span>
           ) : primaryBadge && (
@@ -541,7 +542,7 @@ export function ProductCard({
               className={cn(
                 'pointer-events-none absolute left-1.5 top-1.5 z-10 max-w-[calc(100%-3rem)] truncate rounded-[3px] px-1.5 py-1 text-[10px] font-bold uppercase leading-none tracking-wider',
                 primaryBadge.tone === 'gold'
-                  ? 'bg-[#B08D57] text-[#FFFFFF]'
+                  ? 'bg-[#E53935] text-[#FFFFFF]'
                   : 'border border-[#1B7A43] bg-[#1B7A43] text-[#FFFFFF]'
               )}
             >
@@ -557,14 +558,14 @@ export function ProductCard({
               isWishlisted ? 'Remove from wishlist' : 'Add to wishlist'
             }
             aria-pressed={isWishlisted}
-            className="absolute right-1.5 top-1.5 z-10 flex h-8 w-8 items-center justify-center rounded-full border border-[#171717]/10 bg-[#FFFFFF]/70 backdrop-blur-md transition-all duration-300 hover:scale-105 hover:border-[#B08D57]/70 active:scale-95 focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#B08D57]"
+            className="absolute right-1.5 top-1.5 z-10 flex h-8 w-8 items-center justify-center rounded-full border border-[#111111]/10 bg-[#FFFFFF]/70 backdrop-blur-md transition-all duration-300 hover:scale-105 hover:border-[#E53935]/70 active:scale-95 focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#E53935]"
           >
             <Heart
               className={cn(
                 'h-4 w-4 transition-all duration-300',
                 isWishlisted
                   ? 'fill-rose-500 text-rose-500'
-                  : 'text-[#171717]'
+                  : 'text-[#111111]'
               )}
             />
           </button>
@@ -585,9 +586,9 @@ export function ProductCard({
             <h3
               title={product.name}
               className={cn(
-                'line-clamp-1 text-[14px] font-medium leading-snug tracking-tight text-[#171717] transition-colors group-hover:text-[#1B7A43] sm:text-[15px]',
+                'line-clamp-1 text-[14px] font-medium leading-snug tracking-tight text-[#111111] transition-colors group-hover:text-[#1B7A43] sm:text-[15px]',
                 compact &&
-                  'font-semibold uppercase tracking-[0.02em] group-hover:text-[#8C6D3A]'
+                  'font-semibold uppercase tracking-[0.02em] group-hover:text-[#E53935]'
               )}
             >
               {product.name}
@@ -597,7 +598,7 @@ export function ProductCard({
           {/* Price + cart button */}
           <div className="flex items-center justify-between gap-2">
             <div className="flex min-w-0 flex-wrap items-center gap-x-1.5 gap-y-0.5">
-              <span className="text-[16px] font-semibold leading-none tracking-tight text-[#171717] sm:text-[17px]">
+              <span className="text-[16px] font-semibold leading-none tracking-tight text-[#111111] sm:text-[17px]">
                 {formatINR(price)}
               </span>
 
@@ -618,34 +619,15 @@ export function ProductCard({
           </div>
 
           {showBestPrice && (
-            <p className="text-[12px] font-medium text-[#8C6D3A]">
+            <p className="text-[12px] font-medium text-[#E53935]">
               Best Price:{' '}
               <span className="font-semibold">{formatINR(bestPrice)}</span>
             </p>
           )}
 
-          {/* Rating (only with real data) */}
-          {hasRating && !compact && (
-            <div className="flex items-center gap-1">
-              <span className="flex items-center" aria-label={`Rated ${Number(product.rating).toFixed(1)} out of 5`}>
-                {[1, 2, 3, 4, 5].map((n) => (
-                  <Star
-                    key={n}
-                    className={cn(
-                      'h-3.5 w-3.5',
-                      n <= Math.round(Number(product.rating))
-                        ? 'fill-[#B08D57] text-[#8C6D3A]'
-                        : 'text-[#8C6D3A]/60'
-                    )}
-                  />
-                ))}
-              </span>
-              {Number(product.reviewCount) > 0 && (
-                <span className="text-[12px] text-[#5C5C5C]">
-                  ({product.reviewCount})
-                </span>
-              )}
-            </div>
+          {/* Rating (live review data only) */}
+          {!compact && (
+            <RatingLink slug={product.slug} rating={product.rating} reviewCount={product.reviewCount} />
           )}
 
           {/* Colour swatches (real variant colours only) */}
@@ -675,7 +657,7 @@ export function ProductCard({
                   >
                     <span
                       className={cn(
-                        'relative block h-4 w-4 overflow-hidden rounded-full border border-[#171717]/25 transition-all',
+                        'relative block h-4 w-4 overflow-hidden rounded-full border border-[#111111]/25 transition-all',
                         active &&
                           'ring-2 ring-[#1B7A43] ring-offset-1 ring-offset-[#0a1812]',
                         !available && 'opacity-40'
@@ -683,7 +665,7 @@ export function ProductCard({
                       style={{ backgroundColor: colorToHex(color) }}
                     >
                       {!available && (
-                        <span className="absolute left-1/2 top-1/2 h-px w-5 -translate-x-1/2 -translate-y-1/2 rotate-45 bg-[#171717]/80" />
+                        <span className="absolute left-1/2 top-1/2 h-px w-5 -translate-x-1/2 -translate-y-1/2 rotate-45 bg-[#111111]/80" />
                       )}
                     </span>
                   </button>
@@ -718,10 +700,10 @@ export function ProductCard({
                     className={cn(
                       'h-7 min-w-[30px] rounded-[4px] border px-1.5 text-[12px] font-semibold transition-colors disabled:cursor-not-allowed',
                       active
-                        ? 'border-[#1B7A43] bg-[#1B7A43]/15 text-[#171717]'
-                        : 'border-[#D6D0C2] text-[#4A4A4A] hover:border-[#1B7A43]',
+                        ? 'border-[#1B7A43] bg-[#1B7A43]/15 text-[#111111]'
+                        : 'border-[#CCCCCC] text-[#4A4A4A] hover:border-[#1B7A43]',
                       !available &&
-                        'border-[#E2E0DB] text-[#5C5C5C] line-through hover:border-[#E2E0DB]'
+                        'border-[#E5E5E5] text-[#5C5C5C] line-through hover:border-[#E5E5E5]'
                     )}
                   >
                     {size}
@@ -738,7 +720,7 @@ export function ProductCard({
                 disabled
                 aria-label="Out of stock"
                 title="Out of stock"
-                className="flex h-9 w-9 shrink-0 cursor-not-allowed items-center justify-center rounded-[5px] border border-[#D6D0C2] bg-[#F4F0E8] text-[#5C5C5C]"
+                className="flex h-9 w-9 shrink-0 cursor-not-allowed items-center justify-center rounded-[5px] border border-[#CCCCCC] bg-[#F7F7F7] text-[#5C5C5C]"
               >
                 <ShoppingCart className="h-4 w-4" />
               </button>
@@ -750,7 +732,7 @@ export function ProductCard({
                 aria-busy={addStatus === 'adding'}
                 aria-label={addStatus === 'added' ? 'Added to cart' : 'Add to cart'}
                 title={addStatus === 'added' ? 'Added' : 'Add to cart'}
-                className="flex h-9 w-9 shrink-0 items-center justify-center rounded-[5px] border border-[#B08D57] bg-[#F4F0E8] text-[#8C6D3A] transition hover:bg-[#B08D57]/15 active:scale-95 disabled:cursor-not-allowed disabled:opacity-60 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#B08D57]"
+                className="flex h-9 w-9 shrink-0 items-center justify-center rounded-[5px] border border-[#E53935] bg-[#F7F7F7] text-[#E53935] transition hover:bg-[#E53935]/15 active:scale-95 disabled:cursor-not-allowed disabled:opacity-60 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#E53935]"
               >
                 <ShoppingCart className="h-4 w-4" />
               </button>
@@ -761,7 +743,7 @@ export function ProductCard({
                 href={`/product/${product.slug}`}
                 aria-label="View details"
                 title="View details"
-                className="flex h-9 w-9 shrink-0 items-center justify-center rounded-[5px] border border-[#B08D57]/70 text-[#8C6D3A] transition hover:bg-[#B08D57]/10"
+                className="flex h-9 w-9 shrink-0 items-center justify-center rounded-[5px] border border-[#E53935]/70 text-[#E53935] transition hover:bg-[#E53935]/10"
               >
                 <ShoppingCart className="h-4 w-4" />
               </Link>
@@ -774,7 +756,7 @@ export function ProductCard({
               className={cn(
                 'flex items-center gap-1.5 text-[12px] font-medium leading-tight',
                 stockState === 'out' && 'text-[#B3261E]',
-                stockState === 'low' && 'text-[#8C6D3A]'
+                stockState === 'low' && 'text-[#E53935]'
               )}
             >
               <span
@@ -782,7 +764,7 @@ export function ProductCard({
                 className={cn(
                   'h-1.5 w-1.5 shrink-0 rounded-full',
                   stockState === 'out' && 'bg-[#B3261E]',
-                  stockState === 'low' && 'bg-[#B08D57]'
+                  stockState === 'low' && 'bg-[#E53935]'
                 )}
               />
               <span>

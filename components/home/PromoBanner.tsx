@@ -64,7 +64,7 @@ export function PromoBanner({ products }: { products: Product[] }) {
           <div className="mt-7 flex flex-col gap-3 sm:flex-row">
             <Link
               href="/shop?category=the-print-club"
-              className="inline-flex min-h-[48px] items-center justify-center bg-kv-gold px-8 text-[14px] font-bold uppercase tracking-[0.1em] text-kv-ink transition-colors hover:bg-kv-gold-dark md:min-h-[52px] md:text-[15px]"
+              className="inline-flex min-h-[48px] items-center justify-center bg-kv-gold px-8 text-[14px] font-bold uppercase tracking-[0.1em] text-white transition-colors hover:bg-kv-gold-dark md:min-h-[52px] md:text-[15px]"
             >
               Shop the drop
             </Link>
@@ -105,14 +105,14 @@ export function PromoBanner({ products }: { products: Product[] }) {
       </div>
 
       {/* Gold marquee strip: scrolls left forever; static for reduced motion */}
-      <div className="w-full overflow-hidden bg-kv-gold" role="marquee" aria-label={MARQUEE_TEXT}>
+      <div className="w-full overflow-hidden bg-kv-ink" role="marquee" aria-label={MARQUEE_TEXT}>
         <div className="kv-marquee flex w-max" aria-hidden="true">
           {[0, 1].map((group) => (
             <div key={group} className="flex shrink-0">
               {Array.from({ length: MARQUEE_REPEAT }).map((_, i) => (
                 <span
                   key={i}
-                  className="whitespace-nowrap px-3 py-3 font-oswald text-[16px] font-semibold uppercase tracking-[0.14em] text-kv-ink md:text-[18px]"
+                  className="whitespace-nowrap px-3 py-3 font-oswald text-[16px] font-semibold uppercase tracking-[0.14em] text-white md:text-[18px]"
                 >
                   {MARQUEE_TEXT}
                 </span>

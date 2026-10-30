@@ -1014,7 +1014,7 @@ export function Navbar() {
               exit={{ opacity: 0 }}
               transition={{ duration: 0.2 }}
               onClick={() => setIsOpen(false)}
-              className="absolute inset-0 bg-[#090807]/75 backdrop-blur-sm"
+              className="absolute inset-0 bg-[#111111]/75 backdrop-blur-sm"
             />
 
             <motion.div
@@ -1022,13 +1022,13 @@ export function Navbar() {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: 14 }}
               transition={{ duration: 0.28, ease: [0.16, 1, 0.3, 1] }}
-              className="relative z-10 grid h-[100dvh] w-full overflow-hidden bg-[#F7F4EE] text-[#181614] shadow-[0_28px_90px_rgba(0,0,0,0.4)] sm:h-[min(640px,calc(100dvh-28px))] sm:max-w-[980px] lg:grid-cols-[39%_61%]"
+              className="relative z-10 grid h-[100dvh] w-full overflow-hidden bg-[#F7F7F7] text-[#111111] shadow-[0_28px_90px_rgba(0,0,0,0.4)] sm:h-[min(640px,calc(100dvh-28px))] sm:max-w-[980px] lg:grid-cols-[39%_61%]"
             >
               {/* Close */}
               <button
                 type="button"
                 onClick={() => setIsOpen(false)}
-                className="absolute right-4 top-4 z-40 flex h-9 w-9 items-center justify-center border border-black/10 bg-white/95 text-[#28231F] transition hover:bg-[#181614] hover:text-white sm:right-5 sm:top-5"
+                className="absolute right-4 top-4 z-40 flex h-9 w-9 items-center justify-center border border-black/10 bg-white/95 text-[#242424] transition hover:bg-[#111111] hover:text-white sm:right-5 sm:top-5"
                 aria-label="Close"
               >
                 <X className="h-4 w-4" />
@@ -1037,8 +1037,8 @@ export function Navbar() {
               {/* =====================================================
                   BRAND SIDE
               ====================================================== */}
-              <div className="relative hidden overflow-hidden bg-[#211A14] lg:flex lg:flex-col lg:justify-between">
-                <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_15%,rgba(190,150,95,0.28),transparent_38%)]" />
+              <div className="relative hidden overflow-hidden bg-[#1B1B1B] lg:flex lg:flex-col lg:justify-between">
+                <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_15%,rgba(229, 57, 53,0.28),transparent_38%)]" />
                 <div className="absolute bottom-0 left-0 right-0 h-[55%] bg-gradient-to-t from-black/70 to-transparent" />
 
                 <div className="relative p-8 xl:p-10">
@@ -1049,7 +1049,7 @@ export function Navbar() {
                     >
                       ARDENBY
                     </span>
-                    <span className="h-px w-7 bg-[#C7A675]" />
+                    <span className="h-px w-7 bg-[#E53935]" />
                   </div>
                   <p className="mt-1 text-[7px] uppercase tracking-[0.38em] text-white/45">
                     Wear Your Essence
@@ -1057,7 +1057,7 @@ export function Navbar() {
                 </div>
 
                 <div className="relative px-8 pb-9 xl:px-10">
-                  <p className="mb-3 text-[8px] font-bold uppercase tracking-[0.32em] text-[#D3B487]">
+                  <p className="mb-3 text-[8px] font-bold uppercase tracking-[0.32em] text-[#E53935]">
                     Private Access
                   </p>
                   <h3 className="font-serif text-[52px] font-normal leading-[0.84] tracking-[-0.045em] text-white xl:text-[60px]">
@@ -1067,7 +1067,7 @@ export function Navbar() {
                     <br />
                     Essence.
                   </h3>
-                  <div className="mt-6 h-px w-12 bg-[#C7A675]" />
+                  <div className="mt-6 h-px w-12 bg-[#E53935]" />
                   <p className="mt-4 max-w-[245px] text-[12px] leading-5 text-white/55">
                     A considered wardrobe for people who choose to stand apart.
                   </p>
@@ -1083,21 +1083,21 @@ export function Navbar() {
               {/* =====================================================
                   FORM SIDE
               ====================================================== */}
-              <div className="flex min-h-0 flex-col overflow-y-auto bg-[#F7F4EE] px-5 pb-7 pt-16 sm:px-9 sm:py-10 md:px-12 lg:px-14">
+              <div className="flex min-h-0 flex-col overflow-y-auto bg-[#F7F7F7] px-5 pb-7 pt-16 sm:px-9 sm:py-10 md:px-12 lg:px-14">
 
                 {/* Mobile brand */}
                 <div className="mb-7 lg:hidden">
                   <div className="flex items-center justify-center gap-3">
-                    <span className="h-px w-7 bg-[#B28A56]" />
+                    <span className="h-px w-7 bg-[#E53935]" />
                     <span
                       className="text-[27px] font-bold tracking-[-0.07em]"
                       style={{ fontFamily: 'Bodoni MT, Didot, Times New Roman, serif' }}
                     >
                       ARDENBY
                     </span>
-                    <span className="h-px w-7 bg-[#B28A56]" />
+                    <span className="h-px w-7 bg-[#E53935]" />
                   </div>
-                  <p className="mt-1 text-center text-[7px] uppercase tracking-[0.38em] text-[#9B9185]">
+                  <p className="mt-1 text-center text-[7px] uppercase tracking-[0.38em] text-[#909090]">
                     Wear Your Essence
                   </p>
                 </div>
@@ -1115,13 +1115,13 @@ export function Navbar() {
                       className="mx-auto w-full max-w-[430px] lg:flex lg:flex-1 lg:flex-col lg:justify-center"
                     >
                       <div className="mb-6">
-                        <p className="text-[8px] font-bold uppercase tracking-[0.3em] text-[#A07845]">
+                        <p className="text-[8px] font-bold uppercase tracking-[0.3em] text-[#E53935]">
                           Welcome Back
                         </p>
                         <h2 className="mt-2 font-serif text-[34px] font-normal leading-none tracking-[-0.035em] sm:text-[38px]">
                           Sign in to ARDENBY
                         </h2>
-                        <p className="mt-2 text-[12px] leading-5 text-[#81796F]">
+                        <p className="mt-2 text-[12px] leading-5 text-[#787878]">
                           Continue to your account and discover your collection.
                         </p>
                       </div>
@@ -1138,40 +1138,40 @@ export function Navbar() {
 
                       <form onSubmit={handleEmailAuth} className="space-y-4">
                         <label className="block">
-                          <span className="mb-1.5 block text-[8px] font-bold uppercase tracking-[0.22em] text-[#70685E]">
+                          <span className="mb-1.5 block text-[8px] font-bold uppercase tracking-[0.22em] text-[#676767]">
                             Email Address
                           </span>
                           <div className="relative">
-                            <Mail className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-[#A79D91]" />
+                            <Mail className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-[#9C9C9C]" />
                             <input
                               type="email"
                               value={email}
                               onChange={(e) => setEmail(e.target.value)}
                               placeholder="you@example.com"
                               autoComplete="email"
-                              className="h-[50px] w-full border border-[#D6CDC0] bg-white pl-10 pr-4 text-[14px] text-[#181614] outline-none transition placeholder:text-[#ADA49A] focus:border-[#A07845] focus:ring-1 focus:ring-[#A07845]"
+                              className="h-[50px] w-full border border-[#CBCBCB] bg-white pl-10 pr-4 text-[14px] text-[#111111] outline-none transition placeholder:text-[#A3A3A3] focus:border-[#E53935] focus:ring-1 focus:ring-[#E53935]"
                             />
                           </div>
                         </label>
 
                         <label className="block">
-                          <span className="mb-1.5 block text-[8px] font-bold uppercase tracking-[0.22em] text-[#70685E]">
+                          <span className="mb-1.5 block text-[8px] font-bold uppercase tracking-[0.22em] text-[#676767]">
                             Password
                           </span>
                           <div className="relative">
-                            <Lock className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-[#A79D91]" />
+                            <Lock className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-[#9C9C9C]" />
                             <input
                               type={showPassword ? 'text' : 'password'}
                               value={password}
                               onChange={(e) => setPassword(e.target.value)}
                               placeholder="Enter your password"
                               autoComplete="current-password"
-                              className="h-[50px] w-full border border-[#D6CDC0] bg-white pl-10 pr-11 text-[14px] text-[#181614] outline-none transition placeholder:text-[#ADA49A] focus:border-[#A07845] focus:ring-1 focus:ring-[#A07845]"
+                              className="h-[50px] w-full border border-[#CBCBCB] bg-white pl-10 pr-11 text-[14px] text-[#111111] outline-none transition placeholder:text-[#A3A3A3] focus:border-[#E53935] focus:ring-1 focus:ring-[#E53935]"
                             />
                             <button
                               type="button"
                               onClick={() => setShowPassword((v) => !v)}
-                              className="absolute right-2.5 top-1/2 flex h-8 w-8 -translate-y-1/2 items-center justify-center text-[#999087] hover:text-[#181614]"
+                              className="absolute right-2.5 top-1/2 flex h-8 w-8 -translate-y-1/2 items-center justify-center text-[#909090] hover:text-[#111111]"
                               aria-label={showPassword ? 'Hide password' : 'Show password'}
                               tabIndex={-1}
                             >
@@ -1181,19 +1181,19 @@ export function Navbar() {
                         </label>
 
                         <div className="flex items-center justify-between">
-                          <label className="flex items-center gap-2 text-[11px] text-[#746C63]">
+                          <label className="flex items-center gap-2 text-[11px] text-[#6C6C6C]">
                             <input
                               type="checkbox"
                               checked={rememberMe}
                               onChange={(e) => setRememberMe(e.target.checked)}
-                              className="h-3.5 w-3.5 rounded-none border-[#CFC5B8] text-[#A07845] focus:ring-1 focus:ring-[#A07845]"
+                              className="h-3.5 w-3.5 rounded-none border-[#C3C3C3] text-[#E53935] focus:ring-1 focus:ring-[#E53935]"
                             />
                             Remember me
                           </label>
 
                           <button
                             type="button"
-                            className="text-[11px] font-semibold text-[#A07845] hover:text-[#181614]"
+                            className="text-[11px] font-semibold text-[#E53935] hover:text-[#111111]"
                           >
                             Forgot password?
                           </button>
@@ -1202,7 +1202,7 @@ export function Navbar() {
                         <button
                           type="submit"
                           disabled={isLoading}
-                          className="flex h-[50px] w-full items-center justify-center gap-3 bg-[#181614] text-[9px] font-bold tracking-[0.22em] text-white transition hover:bg-[#302C28] disabled:cursor-not-allowed disabled:opacity-50"
+                          className="flex h-[50px] w-full items-center justify-center gap-3 bg-[#111111] text-[9px] font-bold tracking-[0.22em] text-white transition hover:bg-[#2C2C2C] disabled:cursor-not-allowed disabled:opacity-50"
                         >
                           {isLoading ? (
                             <>
@@ -1219,9 +1219,9 @@ export function Navbar() {
                       </form>
 
                       <div className="my-5 flex items-center gap-3">
-                        <div className="h-px flex-1 bg-[#DDD4C8]" />
-                        <span className="text-[7px] font-bold uppercase tracking-[0.3em] text-[#9B9185]">OR</span>
-                        <div className="h-px flex-1 bg-[#DDD4C8]" />
+                        <div className="h-px flex-1 bg-[#D3D3D3]" />
+                        <span className="text-[7px] font-bold uppercase tracking-[0.3em] text-[#909090]">OR</span>
+                        <div className="h-px flex-1 bg-[#D3D3D3]" />
                       </div>
 
                       <div className="w-full overflow-hidden">
@@ -1234,18 +1234,18 @@ export function Navbar() {
                         />
                       </div>
 
-                      <div className="mt-5 grid grid-cols-3 border-t border-[#DDD4C8] pt-4">
+                      <div className="mt-5 grid grid-cols-3 border-t border-[#D3D3D3] pt-4">
                         <div className="text-center">
-                          <Truck className="mx-auto h-3.5 w-3.5 text-[#A07845]" />
-                          <p className="mt-1.5 text-[7px] font-bold uppercase tracking-[0.1em] text-[#70685E]">Free Shipping</p>
+                          <Truck className="mx-auto h-3.5 w-3.5 text-[#E53935]" />
+                          <p className="mt-1.5 text-[7px] font-bold uppercase tracking-[0.1em] text-[#676767]">Free Shipping</p>
                         </div>
-                        <div className="border-x border-[#DDD4C8] text-center">
-                          <ShieldCheck className="mx-auto h-3.5 w-3.5 text-[#A07845]" />
-                          <p className="mt-1.5 text-[7px] font-bold uppercase tracking-[0.1em] text-[#70685E]">Secure</p>
+                        <div className="border-x border-[#D3D3D3] text-center">
+                          <ShieldCheck className="mx-auto h-3.5 w-3.5 text-[#E53935]" />
+                          <p className="mt-1.5 text-[7px] font-bold uppercase tracking-[0.1em] text-[#676767]">Secure</p>
                         </div>
                         <div className="text-center">
-                          <RotateCcw className="mx-auto h-3.5 w-3.5 text-[#A07845]" />
-                          <p className="mt-1.5 text-[7px] font-bold uppercase tracking-[0.1em] text-[#70685E]">Easy Returns</p>
+                          <RotateCcw className="mx-auto h-3.5 w-3.5 text-[#E53935]" />
+                          <p className="mt-1.5 text-[7px] font-bold uppercase tracking-[0.1em] text-[#676767]">Easy Returns</p>
                         </div>
                       </div>
                     </motion.div>
@@ -1262,11 +1262,11 @@ export function Navbar() {
                       className="mx-auto w-full max-w-[430px] lg:flex lg:flex-1 lg:flex-col lg:justify-center"
                     >
                       <div className="mb-7 text-center">
-                        <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center border border-[#D6CDC0] bg-white">
-                          <Mail className="h-5 w-5 text-[#A07845]" />
+                        <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center border border-[#CBCBCB] bg-white">
+                          <Mail className="h-5 w-5 text-[#E53935]" />
                         </div>
 
-                        <p className="text-[8px] font-bold uppercase tracking-[0.3em] text-[#A07845]">
+                        <p className="text-[8px] font-bold uppercase tracking-[0.3em] text-[#E53935]">
                           Secure Verification
                         </p>
 
@@ -1274,11 +1274,11 @@ export function Navbar() {
                           Verify Your Email
                         </h2>
 
-                        <p className="mx-auto mt-2 max-w-[330px] text-[12px] leading-5 text-[#81796F]">
+                        <p className="mx-auto mt-2 max-w-[330px] text-[12px] leading-5 text-[#787878]">
                           Enter the six-digit code sent to your email.
                         </p>
 
-                        <p className="mt-1 break-all text-xs font-bold text-[#27231F]">
+                        <p className="mt-1 break-all text-xs font-bold text-[#232323]">
                           {email}
                         </p>
                       </div>
@@ -1311,25 +1311,25 @@ export function Navbar() {
                               value={digit}
                               onChange={(e) => handleOtpChange(e.target.value, index)}
                               onKeyDown={(e) => handleOtpKeyDown(e, index)}
-                              className="h-11 w-11 min-w-0 border border-[#D6CDC0] bg-white text-center text-base font-bold text-[#181614] outline-none transition focus:border-[#A07845] focus:ring-1 focus:ring-[#A07845] sm:h-13 sm:w-12 sm:text-lg"
+                              className="h-11 w-11 min-w-0 border border-[#CBCBCB] bg-white text-center text-base font-bold text-[#111111] outline-none transition focus:border-[#E53935] focus:ring-1 focus:ring-[#E53935] sm:h-13 sm:w-12 sm:text-lg"
                               aria-label={`OTP digit ${index + 1}`}
                             />
                           ))}
                         </div>
 
-                        <div className="flex items-center justify-between gap-3 text-[11px] text-[#746C63]">
+                        <div className="flex items-center justify-between gap-3 text-[11px] text-[#6C6C6C]">
                           {canResend ? (
                             <button
                               type="button"
                               onClick={handleResendOtp}
                               disabled={isLoading}
-                              className="font-bold text-[#A07845] underline underline-offset-2 disabled:opacity-50"
+                              className="font-bold text-[#E53935] underline underline-offset-2 disabled:opacity-50"
                             >
                               RESEND OTP
                             </button>
                           ) : (
                             <span>
-                              Resend in <strong className="text-[#181614]">00:{otpTimer < 10 ? `0${otpTimer}` : otpTimer}</strong>
+                              Resend in <strong className="text-[#111111]">00:{otpTimer < 10 ? `0${otpTimer}` : otpTimer}</strong>
                             </span>
                           )}
 
@@ -1340,7 +1340,7 @@ export function Navbar() {
                               setOtp(Array(6).fill(''));
                               setStep('LOGIN');
                             }}
-                            className="underline underline-offset-2 hover:text-[#181614]"
+                            className="underline underline-offset-2 hover:text-[#111111]"
                           >
                             ← Back to login
                           </button>
@@ -1349,7 +1349,7 @@ export function Navbar() {
                         <button
                           type="submit"
                           disabled={otp.join('').length !== 6 || isLoading}
-                          className="flex h-[50px] w-full items-center justify-center gap-2 bg-[#181614] text-[9px] font-bold tracking-[0.2em] text-white transition hover:bg-[#302C28] disabled:cursor-not-allowed disabled:opacity-50"
+                          className="flex h-[50px] w-full items-center justify-center gap-2 bg-[#111111] text-[9px] font-bold tracking-[0.2em] text-white transition hover:bg-[#2C2C2C] disabled:cursor-not-allowed disabled:opacity-50"
                         >
                           {isLoading ? (
                             <>
@@ -1365,18 +1365,18 @@ export function Navbar() {
                         </button>
                       </form>
 
-                      <div className="mt-7 grid grid-cols-3 border-y border-[#DDD4C8] py-4 text-center">
+                      <div className="mt-7 grid grid-cols-3 border-y border-[#D3D3D3] py-4 text-center">
                         <div>
-                          <ShieldCheck className="mx-auto h-3.5 w-3.5 text-[#A07845]" />
-                          <p className="mt-1.5 text-[7px] font-bold uppercase tracking-[0.1em] text-[#70685E]">Secure</p>
+                          <ShieldCheck className="mx-auto h-3.5 w-3.5 text-[#E53935]" />
+                          <p className="mt-1.5 text-[7px] font-bold uppercase tracking-[0.1em] text-[#676767]">Secure</p>
                         </div>
-                        <div className="border-x border-[#DDD4C8]">
-                          <Clock3 className="mx-auto h-3.5 w-3.5 text-[#A07845]" />
-                          <p className="mt-1.5 text-[7px] font-bold uppercase tracking-[0.1em] text-[#70685E]">Expires</p>
+                        <div className="border-x border-[#D3D3D3]">
+                          <Clock3 className="mx-auto h-3.5 w-3.5 text-[#E53935]" />
+                          <p className="mt-1.5 text-[7px] font-bold uppercase tracking-[0.1em] text-[#676767]">Expires</p>
                         </div>
                         <div>
-                          <Inbox className="mx-auto h-3.5 w-3.5 text-[#A07845]" />
-                          <p className="mt-1.5 text-[7px] font-bold uppercase tracking-[0.1em] text-[#70685E]">Check Spam</p>
+                          <Inbox className="mx-auto h-3.5 w-3.5 text-[#E53935]" />
+                          <p className="mt-1.5 text-[7px] font-bold uppercase tracking-[0.1em] text-[#676767]">Check Spam</p>
                         </div>
                       </div>
                     </motion.div>

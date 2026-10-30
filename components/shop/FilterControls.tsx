@@ -28,7 +28,7 @@ export function CheckRow({
         aria-hidden
         className={cn(
           'flex h-4 w-4 shrink-0 items-center justify-center rounded-[3px] border-[1.2px] transition-colors',
-          checked ? 'border-[var(--ink)] bg-[var(--ink)]' : 'border-[#BDB4A5] group-hover:border-[var(--ink)]'
+          checked ? 'border-[var(--ink)] bg-[var(--ink)]' : 'border-[#B1B1B1] group-hover:border-[var(--ink)]'
         )}
       >
         {checked && <Check className="h-3 w-3 stroke-[3] text-[var(--ivory)]" />}

@@ -11,6 +11,7 @@ import { formatINR } from '@/lib/format';
 import { useWishlistStore } from '@/store/wishlist-store';
 import { useCartStore } from '@/store/cart-store';
 import { WishlistLoginModal } from '@/components/product/product-card';
+import { RatingLink } from '@/components/product/rating-link';
 import type { ToastPush } from '@/app/shop/shop-ui';
 import {
   focusQty,
@@ -301,7 +302,7 @@ export function ProductCard({
         {/* Quick add: slides up on hover / keyboard focus (hover devices) or via the "+" (touch) */}
         <div
           className={cn(
-            'absolute inset-x-0 bottom-0 z-10 border-t border-[#DDD5C7] bg-[#F4F0E8]/[0.96] p-3 transition duration-200',
+            'absolute inset-x-0 bottom-0 z-10 border-t border-[#D2D2D2] bg-[#F7F7F7]/[0.96] p-3 transition duration-200',
             panelOpen
               ? 'translate-y-0 opacity-100'
               : 'pointer-events-none translate-y-full opacity-0 [@media(hover:hover)]:group-focus-within:pointer-events-auto [@media(hover:hover)]:group-focus-within:translate-y-0 [@media(hover:hover)]:group-focus-within:opacity-100 [@media(hover:hover)]:group-hover:pointer-events-auto [@media(hover:hover)]:group-hover:translate-y-0 [@media(hover:hover)]:group-hover:opacity-100'
@@ -311,7 +312,7 @@ export function ProductCard({
             <button
               type="button"
               onClick={() => notify()}
-              className="h-11 w-full border border-[#171717] text-[13px] font-semibold uppercase tracking-[0.16em] text-[#171717]"
+              className="h-11 w-full border border-[#111111] text-[13px] font-semibold uppercase tracking-[0.16em] text-[#111111]"
             >
               Notify me
             </button>
@@ -332,10 +333,10 @@ export function ProductCard({
                       className={cn(
                         'relative h-9 min-w-[44px] overflow-hidden border px-2 text-[13px] font-semibold',
                         out
-                          ? 'cursor-not-allowed border-[#CFC6B6] bg-[#F4F0E8] text-[#B9B2A6]'
+                          ? 'cursor-not-allowed border-[#C3C3C3] bg-[#F7F7F7] text-[#B0B0B0]'
                           : on
-                            ? 'border-[#171717] bg-[#171717] text-[#F4F0E8]'
-                            : 'border-[#CFC6B6] bg-white text-[#171717] hover:border-[#171717]'
+                            ? 'border-[#111111] bg-[#111111] text-[#F7F7F7]'
+                            : 'border-[#C3C3C3] bg-white text-[#111111] hover:border-[#111111]'
                       )}
                     >
                       {s}
@@ -345,7 +346,7 @@ export function ProductCard({
                           className="absolute inset-0"
                           style={{
                             background:
-                              'linear-gradient(to top right, transparent calc(50% - 0.5px), #B9B2A6 calc(50% - 0.5px), #B9B2A6 calc(50% + 0.5px), transparent calc(50% + 0.5px))',
+                              'linear-gradient(to top right, transparent calc(50% - 0.5px), #B0B0B0 calc(50% - 0.5px), #B0B0B0 calc(50% + 0.5px), transparent calc(50% + 0.5px))',
                           }}
                         />
                       )}
@@ -357,7 +358,7 @@ export function ProductCard({
                 type="button"
                 onClick={handleAdd}
                 disabled={adding || !size}
-                className="h-11 w-full bg-[#171717] text-[13px] font-semibold uppercase tracking-[0.16em] text-[#F4F0E8] disabled:cursor-not-allowed disabled:bg-[#8F897F]"
+                className="h-11 w-full bg-[#111111] text-[13px] font-semibold uppercase tracking-[0.16em] text-[#F7F7F7] disabled:cursor-not-allowed disabled:bg-[#878787]"
               >
                 {adding ? 'Checking stock…' : 'Add to bag'}
               </button>
@@ -376,6 +377,7 @@ export function ProductCard({
         >
           {product.name}
         </Link>
+        <RatingLink slug={product.slug} rating={product.rating} reviewCount={product.reviewCount} />
         <p className="flex flex-wrap items-baseline gap-x-2 text-[15px] lg:text-[17px]">
           <span className={cn('font-semibold', unavailable ? 'text-[var(--muted)]' : 'text-[var(--ink)]')}>{formatINR(price)}</span>
           {mrp && <span className="text-[12px] text-[var(--soft)] line-through lg:text-[14px]">{formatINR(mrp)}</span>}

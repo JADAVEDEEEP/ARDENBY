@@ -40,24 +40,9 @@ const SORT_OPTIONS: { value: SortKey; label: string }[] = [
 
 const REMOVE_FADE_MS = 200;
 
-function useIsMobile() {
-  const [mobile, setMobile] = useState(false);
-
-  useEffect(() => {
-    const mq = window.matchMedia('(max-width: 639px)');
-    const sync = () => setMobile(mq.matches);
-    sync();
-    mq.addEventListener('change', sync);
-    return () => mq.removeEventListener('change', sync);
-  }, []);
-
-  return mobile;
-}
-
 function WishlistPageView() {
   const { items, remove, clear, syncFromApi } = useWishlistStore();
   const addItem = useCartStore((s) => s.addItem);
-  const isMobile = useIsMobile();
 
   const [status, setStatus] = useState<'loading' | 'ready' | 'error'>('loading');
   const [sort, setSort] = useState<SortKey>('recent');
@@ -245,7 +230,7 @@ function WishlistPageView() {
   const isEmpty = status === 'ready' && items.length === 0;
 
   return (
-    <div className="kv-page text-[#171717]">
+    <div className="kv-page text-[#111111]">
       <WishlistHero
         count={live.length}
         total={totalValue}
@@ -266,14 +251,14 @@ function WishlistPageView() {
             {/* Toolbar */}
             <div className="flex items-center justify-between gap-4 pb-[14px] pt-4 sm:pb-6 sm:pt-8">
               <div className="flex flex-wrap items-center gap-x-5 gap-y-1 sm:gap-x-7">
-                <p className="text-[13px] font-bold uppercase tracking-[0.16em] text-[#171717]">
+                <p className="text-[13px] font-bold uppercase tracking-[0.16em] text-[#111111]">
                   {live.length} {live.length === 1 ? 'ITEM' : 'ITEMS'}
                 </p>
 
                 {live.length > 0 &&
                   (confirmClear ? (
                     <div className="flex items-center gap-3 text-[12px] font-bold uppercase tracking-[0.16em]" role="alert">
-                      <span className="text-[#5E5A53]">Clear all?</span>
+                      <span className="text-[#595959]">Clear all?</span>
                       <button
                         type="button"
                         onClick={clearAll}
@@ -286,7 +271,7 @@ function WishlistPageView() {
                         type="button"
                         onClick={() => setConfirmClear(false)}
                         disabled={clearing}
-                        className={`min-h-[44px] text-[#171717] ${FOCUS}`}
+                        className={`min-h-[44px] text-[#111111] ${FOCUS}`}
                       >
                         Cancel
                       </button>
@@ -295,7 +280,7 @@ function WishlistPageView() {
                     <button
                       type="button"
                       onClick={() => setConfirmClear(true)}
-                      className={`min-h-[44px] border-b border-[#E2DBCF] text-[12px] font-bold uppercase tracking-[0.16em] text-[#8A847A] hover:text-[#171717] ${FOCUS}`}
+                      className={`min-h-[44px] border-b border-[#E5E5E5] text-[12px] font-bold uppercase tracking-[0.16em] text-[#828282] hover:text-[#111111] ${FOCUS}`}
                     >
                       Clear all
                     </button>
@@ -304,11 +289,11 @@ function WishlistPageView() {
 
               {live.length > 0 && (
                 <label className="relative flex min-h-[44px] shrink-0 cursor-pointer items-center gap-2 text-[15px]">
-                  <span className="hidden text-[#8A847A] sm:inline">Sort by</span>
-                  <span className="font-semibold text-[#171717]">
+                  <span className="hidden text-[#828282] sm:inline">Sort by</span>
+                  <span className="font-semibold text-[#111111]">
                     {SORT_OPTIONS.find((o) => o.value === sort)?.label}
                   </span>
-                  <ChevronDown className="h-4 w-4 text-[#171717]" aria-hidden />
+                  <ChevronDown className="h-4 w-4 text-[#111111]" aria-hidden />
                   <select
                     aria-label="Sort wishlist"
                     value={sort}
@@ -335,7 +320,6 @@ function WishlistPageView() {
                     item={item}
                     product={details[item.productId]}
                     size={sizeFor(item.productId)}
-                    isMobile={isMobile}
                     removing={removing.includes(item.productId)}
                     onSize={(size) => setChosenSizes((s) => ({ ...s, [item.productId]: size }))}
                     onRemove={() => removeItem(item.productId)}

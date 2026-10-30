@@ -38,7 +38,7 @@ export function Newsletter() {
             <button
               type="submit"
               disabled={subscribed}
-              className="inline-flex h-12 shrink-0 items-center justify-center bg-kv-gold px-8 text-[14px] font-bold uppercase tracking-[0.1em] text-kv-ink transition-colors hover:bg-kv-gold-dark disabled:opacity-80 md:h-[52px] md:text-[15px]"
+              className="inline-flex h-12 shrink-0 items-center justify-center bg-kv-gold px-8 text-[14px] font-bold uppercase tracking-[0.1em] text-white transition-colors hover:bg-kv-gold-dark disabled:opacity-80 md:h-[52px] md:text-[15px]"
             >
               {subscribed ? 'Joined' : 'Join'}
             </button>

@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { Heart } from 'lucide-react';
 
 import { WishlistLoginModal } from '@/components/product/product-card';
+import { RatingLink } from '@/components/product/rating-link';
 import { useWishlistToggle } from '@/hooks/use-wishlist-toggle';
 import { discountPercent, formatINR } from '@/lib/format';
 import { cn } from '@/lib/utils';
@@ -49,7 +50,7 @@ export function ProductCard({ product, variant = 'arrival', priority = false, cl
 
   return (
     <>
-      <article className={cn('group relative flex min-w-0 flex-col', className)}>
+      <article className={cn('group relative flex h-full min-w-0 flex-col', className)}>
         <div className="relative aspect-[3/4] overflow-hidden bg-kv-img">
           <Link href={`/product/${product.slug}`} aria-label={product.name} className="absolute inset-0 block">
             <SafeImage
@@ -79,7 +80,7 @@ export function ProductCard({ product, variant = 'arrival', priority = false, cl
           </Link>
 
           {grid && discount > 0 && (
-            <span className="pointer-events-none absolute left-0 top-3 bg-kv-gold px-2.5 py-1 text-[12px] font-bold uppercase tracking-[0.06em] text-kv-ink">
+            <span className="pointer-events-none absolute left-0 top-3 bg-kv-gold px-2.5 py-1 text-[12px] font-bold uppercase tracking-[0.06em] text-white">
               {discount}% off
             </span>
           )}
@@ -109,7 +110,7 @@ export function ProductCard({ product, variant = 'arrival', priority = false, cl
           )}
         </div>
 
-        <div className="pt-3.5">
+        <div className="flex flex-1 flex-col pt-3.5">
           <p className="mb-1 text-[12px] font-bold uppercase tracking-[0.24em] text-kv-gold-text">Kovenik</p>
           <Link href={`/product/${product.slug}`} className="block transition-colors hover:text-kv-gold-text">
             <h3 title={product.name} className="line-clamp-2 text-[14px] font-semibold leading-[1.35] text-kv-ink md:text-[16px]">
@@ -120,12 +121,14 @@ export function ProductCard({ product, variant = 'arrival', priority = false, cl
             <p className="mt-1 line-clamp-1 text-[13px] leading-5 text-kv-sub md:text-[14px]">{product.categoryLabel}</p>
           )}
 
-          <div className="mt-2 flex flex-wrap items-baseline gap-x-2.5 gap-y-0.5">
+          <RatingLink slug={product.slug} rating={product.rating} reviewCount={product.reviewCount} className="mt-1" />
+
+          <div className="mt-auto flex flex-wrap items-baseline gap-x-1.5 gap-y-0.5 pt-2 md:gap-x-2.5">
             <span className="text-[16px] font-bold leading-6 text-kv-ink md:text-[18px]">{formatINR(price)}</span>
             {onSale && (
               <>
-                <span className="text-[14px] leading-6 text-kv-sub line-through">{formatINR(mrp)}</span>
-                {!grid && <span className="text-[14px] font-bold uppercase leading-6 text-kv-gold-text">{discount}% off</span>}
+                <span className="text-[12px] leading-6 text-kv-sub line-through md:text-[14px]">{formatINR(mrp)}</span>
+                {!grid && <span className="text-[12px] font-bold uppercase leading-6 text-kv-gold-text md:text-[14px]">{discount}% off</span>}
               </>
             )}
           </div>

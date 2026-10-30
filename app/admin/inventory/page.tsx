@@ -53,16 +53,16 @@ export default function InventoryPage() {
   );
 
   const cell = (q: number | null) => {
-    if (q === null) return <span className="text-white/30">—</span>;
+    if (q === null) return <span className="text-[#98A0AE]">—</span>;
     const st = stateOfQty(q);
     return (
       <span
         className={
           st === 'out'
-            ? 'rounded-md bg-red-500/20 px-2 py-1 font-bold text-red-300'
+            ? 'rounded-md bg-[#D92D20]/8 px-2 py-1 font-bold text-[#B42318]'
             : st === 'low'
-              ? 'rounded-md bg-amber-500/20 px-2 py-1 font-bold text-amber-300'
-              : 'px-2 py-1 text-white/90'
+              ? 'rounded-md bg-[#C47A16]/15 px-2 py-1 font-bold text-[#8A540C]'
+              : 'px-2 py-1 text-[#111111]'
         }
       >
         {q}
@@ -72,16 +72,22 @@ export default function InventoryPage() {
   };
 
   return (
-    <main className="min-h-screen bg-[#0c0c0e] text-[#f4f2ec]">
+    <main className="min-h-screen bg-transparent text-[#111111]">
       <div className="mx-auto max-w-[1200px] space-y-5 p-4 md:p-8">
         <div className="flex flex-wrap items-end justify-between gap-4">
           <div>
-            <h1 className="text-3xl font-bold tracking-tight">Inventory</h1>
-            <p className="mt-1 text-sm text-white/60">
+            <h1 className="text-[32px] font-bold tracking-tight text-[#111111] sm:text-[40px]">Inventory</h1>
+            <p className="mt-1 text-sm text-[#626875]">
               Stock per product and size. Low = {LOW_STOCK_THRESHOLD} or fewer pieces.
             </p>
           </div>
           <div className="flex items-center gap-2">
+            <a
+              href="/admin/inventory/history"
+              className="inline-flex min-h-[44px] items-center rounded-full border border-[#E4E7EC] px-4 text-sm font-semibold text-[#111111] hover:border-[#111111]"
+            >
+              Stock history
+            </a>
             {(['all', 'attention'] as const).map((f) => (
               <button
                 key={f}
@@ -89,7 +95,7 @@ export default function InventoryPage() {
                 aria-pressed={filter === f}
                 onClick={() => setFilter(f)}
                 className={`min-h-[44px] rounded-full border px-4 text-sm font-semibold ${
-                  filter === f ? 'border-amber-300 bg-amber-300/15 text-amber-200' : 'border-white/15 text-white/80'
+                  filter === f ? 'border-[#E53935] bg-[#E53935]/15 text-[#111111]' : 'border-[#E4E7EC] text-[#111111]'
                 }`}
               >
                 {f === 'all' ? 'All products' : 'Needs attention'}
@@ -98,7 +104,7 @@ export default function InventoryPage() {
             <button
               type="button"
               onClick={() => void load()}
-              className="min-h-[44px] rounded-full border border-white/15 px-4 text-sm font-semibold"
+              className="min-h-[44px] rounded-full border border-[#E4E7EC] px-4 text-sm font-semibold"
             >
               Refresh
             </button>
@@ -106,14 +112,14 @@ export default function InventoryPage() {
         </div>
 
         {error && (
-          <p role="alert" className="rounded-lg border border-red-400/40 bg-red-500/10 p-3 text-sm text-red-200">
+          <p role="alert" className="rounded-lg border border-[#D92D20]/30 bg-[#D92D20]/8 p-3 text-sm text-[#B42318]">
             {error}
           </p>
         )}
 
-        <div className="overflow-x-auto rounded-2xl border border-white/10 bg-[#141416]">
+        <div className="overflow-x-auto rounded-2xl border border-[#E4E7EC] bg-white">
           <table className="w-full min-w-[640px] text-left text-sm">
-            <thead className="border-b border-white/10 text-xs uppercase tracking-wider text-white/60">
+            <thead className="border-b border-[#E4E7EC] text-xs uppercase tracking-wider text-[#626875]">
               <tr>
                 <th className="px-4 py-3">Product</th>
                 {SIZES.map((s) => (
@@ -124,16 +130,16 @@ export default function InventoryPage() {
                 <th className="px-3 py-3 text-center">Total</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-white/5">
+            <tbody className="divide-y divide-[#E4E7EC]">
               {loading ? (
                 <tr>
-                  <td colSpan={SIZES.length + 2} className="px-4 py-8 text-center text-white/60">
+                  <td colSpan={SIZES.length + 2} className="px-4 py-8 text-center text-[#626875]">
                     Loading…
                   </td>
                 </tr>
               ) : shown.length === 0 ? (
                 <tr>
-                  <td colSpan={SIZES.length + 2} className="px-4 py-8 text-center text-white/60">
+                  <td colSpan={SIZES.length + 2} className="px-4 py-8 text-center text-[#626875]">
                     Nothing to show.
                   </td>
                 </tr>

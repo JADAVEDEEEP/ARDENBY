@@ -1,6 +1,8 @@
 'use client';
 
+import { useState } from 'react';
 import {
+  ChevronDown,
   User,
   Package,
   Heart,
@@ -12,14 +14,13 @@ import {
   Star,
   Mail,
   BadgeCheck,
-  Pencil,
   LifeBuoy,
 } from 'lucide-react';
 
 import { ProfileFeedback } from '../../components/profile/ProfileHeader';
 import { ProfileContent } from '../../components/profile/ProfileContent';
 import { DeleteAccountModal } from '../../components/profile/DeleteAccountModal';
-import { MembershipCard, MetalCard, SERIF_STYLE } from '../../components/profile/metal';
+import { MembershipCard, SERIF_STYLE, memberCode } from '../../components/profile/metal';
 import { useProfile } from '../../hooks/use-profile';
 import { CustomerAuthGate } from '@/components/auth/customer-auth-gate';
 
@@ -33,15 +34,11 @@ const NAV_ITEMS = [
   { id: 'security', label: 'Security', icon: ShieldCheck, count: null },
 ] as const;
 
-const MOBILE_TABS = [
-  { id: 'overview', label: 'Overview' },
-  { id: 'orders', label: 'Orders' },
-  { id: 'wishlist', label: 'Saved' },
-  { id: 'account', label: 'Profile' },
-] as const;
+type NavId = (typeof NAV_ITEMS)[number]['id'];
 
 function ProfilePageView() {
   const profile = useProfile();
+  const [menuOpen, setMenuOpen] = useState(false);
 
   /* ---------------- LOADING ---------------- */
 
@@ -49,10 +46,10 @@ function ProfilePageView() {
     return (
       <main className="kv-page min-h-screen">
         <div className="mx-auto max-w-[1280px] px-4 py-8 lg:px-8">
-          <div className="h-[260px] animate-pulse rounded-[20px] bg-[#F4F0E8] lg:h-[360px]" />
-          <div className="mt-6 grid gap-6 lg:grid-cols-[248px_minmax(0,1fr)]">
-            <div className="hidden h-[480px] animate-pulse rounded-[20px] bg-[#F4F0E8] lg:block" />
-            <div className="h-[480px] animate-pulse rounded-[20px] bg-[#F4F0E8]" />
+          <div className="h-[200px] animate-pulse rounded bg-[#F5F5F5] lg:h-[300px]" />
+          <div className="mt-6 grid gap-6 lg:grid-cols-[280px_minmax(0,1fr)]">
+            <div className="hidden h-[480px] animate-pulse rounded bg-[#F5F5F5] lg:block" />
+            <div className="h-[480px] animate-pulse rounded bg-[#F5F5F5]" />
           </div>
         </div>
       </main>
@@ -61,10 +58,11 @@ function ProfilePageView() {
 
   if (!profile.user) return null;
 
-  const handleSectionChange = (section: typeof profile.activeSection) => {
+  const handleSectionChange = (section: NavId) => {
     profile.setError('');
     profile.setMessage('');
     profile.setActiveSection(section);
+    setMenuOpen(false);
   };
 
   const counts: Record<string, number> = {
@@ -74,225 +72,230 @@ function ProfilePageView() {
     coupons: profile.coupons.length,
   };
 
-  const firstName = profile.displayName.split(' ')[0];
   const email = profile.user.email;
   const verified = Boolean(profile.user.email_verified);
   const goContact = () => profile.router.push('/contact');
   const isOverview = profile.activeSection === 'overview';
+  const activeItem = NAV_ITEMS.find((n) => n.id === profile.activeSection) ?? NAV_ITEMS[0];
 
   const memberSinceText = profile.user.created_at
     ? new Date(profile.user.created_at).toLocaleDateString('en-IN', { month: 'short', year: 'numeric' })
     : null;
 
-  const Tags = () => (
+  const tags = (
     <div className="flex flex-wrap gap-2">
       <span className="kv-pill">
-        <Star className="h-3.5 w-3.5 fill-[#B08D57] text-[#8C6D3A]" strokeWidth={1.7} /> Inner Circle Member
+        <Star className="h-4 w-4 fill-[#EF3535] text-[#EF3535]" strokeWidth={1.7} /> Inner Circle Member
       </span>
       {verified && (
-        <span className="kv-pill !text-[#1B7A43]">
-          <BadgeCheck className="h-3.5 w-3.5" strokeWidth={1.7} /> Verified
+        <span className="kv-pill">
+          <BadgeCheck className="h-4 w-4" strokeWidth={1.7} /> Email verified
         </span>
       )}
       {email && (
-        <span className="kv-pill hidden lg:inline-flex">
-          <Mail className="h-3.5 w-3.5" strokeWidth={1.7} />
+        <span className="kv-pill">
+          <Mail className="h-4 w-4 shrink-0" strokeWidth={1.7} />
           <span className="truncate">{email}</span>
         </span>
       )}
     </div>
   );
 
+  const nav = (
+    <nav aria-label="My account" className="space-y-1">
+      {NAV_ITEMS.map((item) => {
+        const Icon = item.icon;
+        const active = profile.activeSection === item.id;
+        const count = item.count ? counts[item.count] : null;
+        return (
+          <button
+            key={item.id}
+            type="button"
+            onClick={() => handleSectionChange(item.id)}
+            aria-current={active ? 'page' : undefined}
+            className={`relative flex min-h-[48px] w-full items-center gap-3 rounded-[2px] px-4 text-left text-[16px] transition ${
+              active ? 'bg-[#F5F5F5] font-bold text-[#111111]' : 'font-medium text-[#444444] hover:bg-[#F5F5F5]'
+            }`}
+          >
+            {active && <span className="absolute inset-y-0 left-0 w-[3px] bg-[#EF3535]" aria-hidden />}
+            <Icon className="h-[18px] w-[18px] shrink-0" strokeWidth={1.7} />
+            <span className="flex-1 truncate">{item.label}</span>
+            {count !== null && count > 0 &&
+              (item.id === 'coupons' ? (
+                <span className="flex h-6 min-w-6 items-center justify-center rounded-full bg-[#111111] px-1.5 text-[13px] font-bold text-white">
+                  {count}
+                </span>
+              ) : (
+                <span className="text-[15px] font-medium text-[#666666]">{count}</span>
+              ))}
+          </button>
+        );
+      })}
+    </nav>
+  );
+
   return (
     <>
-
-      <main className="kv-page min-h-screen pb-14 pt-5 text-[#171717] lg:pt-8">
+      <main className="kv-page min-h-screen pb-16 pt-5 text-[#111111] lg:pt-8">
         <div className="mx-auto max-w-[1280px] px-4 lg:px-8">
-          {/* ================= HERO (DESKTOP) ================= */}
-          <MetalCard className="hidden min-h-[360px] lg:block">
-            <span
-              className="kv-wordmark absolute -bottom-6 left-6 text-[200px]"
-              style={SERIF_STYLE}
-              aria-hidden
-            >
-              KOVENIK
-            </span>
-            <div className="relative grid min-h-[360px] grid-cols-[1fr_auto] items-center gap-8 px-12 py-10">
-              <div className="min-w-0">
-                <p className="kv-label">KOVENIK — MY ACCOUNT</p>
-                <p className="mt-5 text-[18px] text-[#4A4A4A]">Welcome back,</p>
-                <h1 className="truncate text-[84px] font-normal leading-[1.05] text-[#171717]" style={SERIF_STYLE}>
-                  {firstName}.
-                </h1>
-                <p className="mt-3 max-w-md text-[14px] leading-6 text-[#4A4A4A]">
-                  Your orders, saved pieces and Inner Circle privileges — all in one place.
-                </p>
-                <div className="mt-6">
-                  <Tags />
+          {isOverview ? (
+            <>
+              {/* ================= BANNER (DESKTOP) ================= */}
+              <div className="kv-metal hidden min-h-[280px] overflow-hidden lg:block">
+                <span
+                  className="kv-wordmark absolute -bottom-5 right-[-20px] text-[240px]"
+                  style={SERIF_STYLE}
+                  aria-hidden
+                >
+                  KOVENIK
+                </span>
+                <div className="relative grid min-h-[280px] grid-cols-[1fr_auto] items-center gap-10 px-12 py-10">
+                  <div className="min-w-0">
+                    <p className="text-[16px] font-bold text-[#C8211F]">My Account</p>
+                    <h1 className="kv-display mt-2 text-[44px] xl:text-[52px]">Welcome back, {profile.displayName}</h1>
+                    <p className="mt-3 max-w-xl text-[17px] leading-7 text-[#666666]">
+                      Your orders, saved pieces and Inner Circle privileges — all in one place.
+                    </p>
+                    <div className="mt-6">{tags}</div>
+                  </div>
+                  <MembershipCard name={profile.displayName} userId={profile.user.id} createdAt={profile.user.created_at} />
                 </div>
               </div>
-              <div className="pr-10">
-                <MembershipCard name={profile.displayName} userId={profile.user.id} createdAt={profile.user.created_at} />
+
+              {/* ================= WELCOME CARD (MOBILE) ================= */}
+              <div className="rounded bg-[#111111] p-5 text-white lg:hidden">
+                <div className="flex items-start justify-between gap-3">
+                  <p className="text-[15px] text-[#D1D1D1]">Welcome back</p>
+                  <span className="text-[13px] font-bold tracking-[0.08em] text-[#EF3535]">INNER CIRCLE</span>
+                </div>
+                <h1 className="mt-1 text-[32px] font-bold uppercase leading-[1.1]" style={SERIF_STYLE}>
+                  {profile.displayName}
+                </h1>
+                <p className="mt-2 text-[15px] text-[#D1D1D1]">
+                  {[memberSinceText && `Member since ${memberSinceText}`, memberCode(profile.user.id, profile.user.created_at)]
+                    .filter(Boolean)
+                    .join(' · ')}
+                </p>
+                {email && (
+                  <p className="mt-2 flex items-center gap-2 break-all text-[15px]">
+                    {verified && <BadgeCheck className="h-4 w-4 shrink-0" />}
+                    <span>
+                      {email}
+                      {verified ? ' · Verified' : ''}
+                    </span>
+                  </p>
+                )}
+              </div>
+            </>
+          ) : (
+            /* ================= COMPACT STRIP ================= */
+            <div className="hidden border-b border-[#E5E5E5] pb-5 lg:block">
+              <nav aria-label="Breadcrumb" className="text-[15px] text-[#666666]">
+                <button type="button" onClick={() => profile.router.push('/')} className="hover:text-[#111111]">
+                  Home
+                </button>
+                <span className="mx-2">/</span>
+                <button type="button" onClick={() => handleSectionChange('overview')} className="hover:text-[#111111]">
+                  My Account
+                </button>
+                <span className="mx-2">/</span>
+                <span className="font-semibold text-[#111111]">{activeItem.label}</span>
+              </nav>
+              <div className="mt-1 flex items-center justify-between gap-4">
+                <h1 className="kv-display text-[40px]">My Account</h1>
+                <span className="kv-pill !bg-[#111111] !text-white">
+                  <Star className="h-4 w-4 fill-[#EF3535] text-[#EF3535]" strokeWidth={1.7} /> Inner Circle Member
+                </span>
               </div>
             </div>
-          </MetalCard>
+          )}
 
-          {/* ================= HERO (MOBILE) ================= */}
-          <MetalCard className="lg:hidden">
-            <span
-              className="kv-wordmark absolute -bottom-3 left-2 text-[84px]"
-              style={SERIF_STYLE}
-              aria-hidden
+          {/* ================= MOBILE ACCOUNT MENU ================= */}
+          <div className="relative mt-4 lg:hidden">
+            <button
+              type="button"
+              aria-expanded={menuOpen}
+              aria-controls="account-menu"
+              onClick={() => setMenuOpen((v) => !v)}
+              className="flex min-h-[56px] w-full items-center justify-between rounded-[4px] border border-[#E5E5E5] bg-[#F5F5F5] px-4 text-left"
             >
-              KOVENIK
-            </span>
-            <div className="relative p-5">
-              <div className="flex items-start justify-between">
-                <p className="kv-label">KOVENIK — MY ACCOUNT</p>
+              <span className="min-w-0">
+                <span className="block text-[13px] text-[#666666]">My Account</span>
+                <span className="block truncate text-[16px] font-bold text-[#111111]">{activeItem.label}</span>
+              </span>
+              <span className="flex items-center gap-1 text-[16px] font-semibold text-[#111111]">
+                Menu <ChevronDown className={`h-4 w-4 transition-transform ${menuOpen ? 'rotate-180' : ''}`} />
+              </span>
+            </button>
+            {menuOpen && (
+              <div id="account-menu" className="mt-2 rounded-[4px] border border-[#E5E5E5] bg-white p-2">
+                {nav}
+                <div className="my-2 h-px bg-[#E5E5E5]" />
                 <button
                   type="button"
-                  onClick={() => handleSectionChange('account')}
-                  aria-label="Edit account details"
-                  className="kv-disc -mt-1 h-11 w-11"
+                  onClick={profile.logout}
+                  className="flex min-h-[48px] w-full items-center gap-3 px-4 text-[16px] font-semibold text-[#C8211F]"
                 >
-                  <Pencil className="h-4 w-4" strokeWidth={1.7} />
+                  <LogOut className="h-[18px] w-[18px]" strokeWidth={1.7} /> Log out
                 </button>
               </div>
-              <p className="mt-3 text-[15px] text-[#4A4A4A]">Welcome back,</p>
-              <h1 className="truncate text-[44px] font-normal leading-[1.1] text-[#171717]" style={SERIF_STYLE}>
-                {firstName}.
-              </h1>
-              <div className="mt-5 flex justify-center overflow-hidden py-3 pr-10">
-                <MembershipCard
-                  compact
-                  name={profile.displayName}
-                  userId={profile.user.id}
-                  createdAt={profile.user.created_at}
-                />
-              </div>
-              <div className="mt-4">
-                <Tags />
-              </div>
-            </div>
-          </MetalCard>
-
-          {/* ================= MOBILE TABS ================= */}
-          <div
-            role="tablist"
-            aria-label="Account sections"
-            className="mt-4 grid grid-cols-4 gap-1 rounded-full border border-[#E2E0DB] bg-[#F4F0E8] p-1 lg:hidden"
-          >
-            {MOBILE_TABS.map((tab) => {
-              const active = profile.activeSection === tab.id;
-              return (
-                <button
-                  key={tab.id}
-                  type="button"
-                  role="tab"
-                  aria-selected={active}
-                  onClick={() => handleSectionChange(tab.id)}
-                  className={`min-h-[44px] rounded-full text-[12px] font-semibold transition ${
-                    active ? 'bg-gradient-to-b from-[#222222] to-[#222222] text-[#FFFFFF]' : 'text-[#4A4A4A]'
-                  }`}
-                >
-                  {tab.label}
-                </button>
-              );
-            })}
+            )}
           </div>
 
           {/* ================= BODY ================= */}
-          <div className="mt-5 grid items-start gap-6 lg:mt-6 lg:grid-cols-[248px_minmax(0,1fr)]">
+          <div className="mt-5 grid items-start gap-8 lg:mt-8 lg:grid-cols-[280px_minmax(0,1fr)]">
             {/* SIDEBAR (desktop only) */}
             <aside className="hidden space-y-5 lg:sticky lg:top-24 lg:block">
-              <MetalCard className="p-4">
-                <div className="flex items-center gap-3 px-1 pb-4">
-                  <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border-2 border-[#B08D57] bg-[#F4F0E8] text-[15px] text-[#171717]" style={SERIF_STYLE}>
+              <div className="rounded-[4px] border border-[#E5E5E5] bg-white p-4">
+                <div className="flex items-center gap-3 border-b border-[#E5E5E5] px-1 pb-4">
+                  <span
+                    className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full border-2 border-[#EF3535] bg-white text-[18px] font-bold text-[#111111]"
+                    style={SERIF_STYLE}
+                  >
                     {profile.initial}
                   </span>
                   <div className="min-w-0">
-                    <p className="truncate text-[14px] font-semibold text-[#171717]">{profile.displayName}</p>
-                    {memberSinceText && <p className="text-[11px] text-[#5C5C5C]">Member since {memberSinceText}</p>}
+                    <p className="truncate text-[17px] font-bold text-[#111111]">{profile.displayName}</p>
+                    {memberSinceText && <p className="text-[14px] text-[#666666]">Member since {memberSinceText}</p>}
                   </div>
                 </div>
 
-                <nav className="space-y-1">
-                  {NAV_ITEMS.map((item) => {
-                    const Icon = item.icon;
-                    const active = profile.activeSection === item.id;
-                    const count = item.count ? counts[item.count] : null;
-                    return (
-                      <button
-                        key={item.id}
-                        type="button"
-                        onClick={() => handleSectionChange(item.id)}
-                        aria-current={active ? 'page' : undefined}
-                        className={`flex min-h-[42px] w-full items-center gap-3 rounded-xl border px-3 text-left transition ${
-                          active
-                            ? 'border-[#D6D0C2] bg-gradient-to-b from-[#EAE5DA] to-[#EAE5DA] text-[#171717] '
-                            : 'border-transparent text-[#4A4A4A] hover:bg-[#171717]/[0.04] hover:text-[#171717]'
-                        }`}
-                      >
-                        <Icon className="h-4 w-4 shrink-0" strokeWidth={1.7} />
-                        <span className="flex-1 truncate text-[13px] font-medium">{item.label}</span>
-                        {active ? (
-                          <span className="h-1.5 w-1.5 rounded-full bg-[#B08D57]" />
-                        ) : count !== null && count > 0 ? (
-                          <span className="text-[11px] text-[#5C5C5C]">{count}</span>
-                        ) : null}
-                      </button>
-                    );
-                  })}
-                </nav>
+                <div className="mt-3">{nav}</div>
 
-                <div className="my-3 h-px bg-[#EAE5DA]" />
+                <div className="my-3 h-px bg-[#E5E5E5]" />
 
                 <button
                   type="button"
                   onClick={profile.logout}
-                  className="flex min-h-[42px] w-full items-center gap-3 rounded-xl px-3 text-[13px] font-medium text-[#B3261E] transition hover:bg-[#F4F0E8]"
+                  className="flex min-h-[48px] w-full items-center gap-3 rounded-[2px] px-4 text-[16px] font-semibold text-[#C8211F] transition hover:bg-[#F5F5F5]"
                 >
-                  <LogOut className="h-4 w-4" strokeWidth={1.7} />
+                  <LogOut className="h-[18px] w-[18px]" strokeWidth={1.7} />
                   Log out
                 </button>
-              </MetalCard>
+              </div>
 
-              <MetalCard className="p-5">
-                <p className="kv-label">Concierge</p>
-                <p className="mt-3 text-[17px] leading-snug text-[#171717]" style={SERIF_STYLE}>
-                  Need a hand with an order?
-                </p>
-                <p className="mt-2 text-[11px] leading-5 text-[#5C5C5C]">
+              <div className="rounded-[4px] border border-[#E5E5E5] bg-[#F5F5F5] p-5">
+                <p className="kv-display text-[22px]">Need a hand?</p>
+                <p className="mt-2 text-[15px] leading-6 text-[#666666]">
                   Sizing, exchanges or delivery — reach our team any time.
                 </p>
                 <button type="button" onClick={goContact} className="kv-btn-ghost mt-4 w-full">
-                  <LifeBuoy className="h-4 w-4" /> Contact Support
+                  <LifeBuoy className="h-4 w-4" /> Contact support
                 </button>
-              </MetalCard>
+              </div>
             </aside>
 
             {/* MAIN */}
             <section className="min-w-0">
-              <div className="kv-scope">
-                <ProfileFeedback
-                  error={profile.error}
-                  message={profile.message}
-                  onClear={() => {
-                    profile.setError('');
-                    profile.setMessage('');
-                  }}
-                />
-              </div>
-
-              {isOverview ? (
-                <ProfileContent profile={profile} />
-              ) : (
-                <MetalCard>
-                  <div className="kv-scope p-4 sm:p-6 lg:p-7">
-                    <ProfileContent profile={profile} />
-                  </div>
-                </MetalCard>
-              )}
+              <ProfileFeedback
+                error={profile.error}
+                message={profile.message}
+                onClear={() => {
+                  profile.setError('');
+                  profile.setMessage('');
+                }}
+              />
+              <ProfileContent profile={profile} />
             </section>
           </div>
         </div>

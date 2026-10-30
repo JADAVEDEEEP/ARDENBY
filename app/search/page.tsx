@@ -40,12 +40,12 @@ export default async function SearchPage({ searchParams }: { searchParams: { q?:
 
   return (
     <main
-      className="min-h-[70vh] bg-white px-4 py-12 text-[#171717] sm:px-8 lg:px-10 lg:py-16"
+      className="min-h-[70vh] bg-white px-4 py-12 text-[#111111] sm:px-8 lg:px-10 lg:py-16"
     >
       <div className="mx-auto max-w-[1360px]">
         <div className="mb-3 flex items-center gap-2">
-          <span className="h-1.5 w-1.5 rotate-45 bg-[#B08D57]" />
-          <p className="text-[10px] font-semibold uppercase tracking-[0.25em] text-[#8C6D3A]">
+          <span className="h-1.5 w-1.5 rotate-45 bg-[#E53935]" />
+          <p className="text-[10px] font-semibold uppercase tracking-[0.25em] text-[#E53935]">
             Search
           </p>
         </div>
@@ -55,7 +55,7 @@ export default async function SearchPage({ searchParams }: { searchParams: { q?:
         </h1>
 
         {!failed && (
-          <p className="mt-2 text-[13px] text-[#171717]/60">
+          <p className="mt-2 text-[13px] text-[#111111]/60">
             {results.length} {results.length === 1 ? 'product' : 'products'} found
           </p>
         )}
@@ -67,8 +67,8 @@ export default async function SearchPage({ searchParams }: { searchParams: { q?:
             ))}
           </div>
         ) : (
-          <div className="mt-12 rounded-2xl border border-dashed border-[#B08D57]/30 bg-[#FFFFFF] px-6 py-16 text-center">
-            <p className="text-[15px] text-[#171717]/70">
+          <div className="mt-12 rounded-2xl border border-dashed border-[#E53935]/30 bg-[#FFFFFF] px-6 py-16 text-center">
+            <p className="text-[15px] text-[#111111]/70">
               {failed
                 ? 'Search is temporarily unavailable. Please try again shortly.'
                 : 'No products matched your search.'}

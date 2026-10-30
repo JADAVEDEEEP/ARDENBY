@@ -2,46 +2,74 @@
 
 import { useState } from 'react';
 import type { useProfile } from '../../hooks/use-profile';
-import { CheckCircle2, LockKeyhole, Trash2, AlertCircle, Loader2, ShieldCheck } from 'lucide-react';
+import { AlertCircle, Check, CheckCircle2, Eye, EyeOff, Loader2, LockKeyhole, ShieldCheck } from 'lucide-react';
 import { apiUrl } from '@/lib/api-url';
 import { IconDisc, SectionTitle } from './metal';
 
 type ProfileState = ReturnType<typeof useProfile>;
 
 function PasswordField({
+  id,
   label,
   value,
   onChange,
   placeholder,
   disabled,
-  hint,
   autoComplete,
 }: {
+  id: string;
   label: string;
   value: string;
   onChange: (v: string) => void;
   placeholder: string;
   disabled: boolean;
-  hint?: string;
   autoComplete: string;
 }) {
+  const [show, setShow] = useState(false);
   return (
     <div>
-      <label className="kv-field-label">{label}</label>
+      <label htmlFor={id} className="kv-field-label">
+        {label}
+      </label>
       <div className="relative">
-        <LockKeyhole className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-[#5C5C5C]" strokeWidth={1.7} />
         <input
-          type="password"
+          id={id}
+          type={show ? 'text' : 'password'}
           value={value}
           onChange={(e) => onChange(e.target.value)}
           placeholder={placeholder}
           disabled={disabled}
           autoComplete={autoComplete}
-          className="kv-input !pl-11"
+          className="kv-input !pr-14"
         />
+        <button
+          type="button"
+          onClick={() => setShow((v) => !v)}
+          aria-label={show ? `Hide ${label.toLowerCase()}` : `Show ${label.toLowerCase()}`}
+          aria-pressed={show}
+          className="absolute right-0 top-0 flex h-[52px] w-12 items-center justify-center text-[#444444]"
+        >
+          {show ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
+        </button>
       </div>
-      {hint && <p className="mt-1.5 text-[11px] text-[#5C5C5C]">{hint}</p>}
     </div>
+  );
+}
+
+function Rule({ ok, children }: { ok: boolean; children: React.ReactNode }) {
+  return (
+    <li className="flex items-center gap-2 text-[15px] text-[#111111]">
+      <span
+        aria-hidden
+        className={`flex h-5 w-5 items-center justify-center rounded-full border ${
+          ok ? 'border-[#111111] bg-[#111111] text-white' : 'border-[#BDBDBD]'
+        }`}
+      >
+        {ok && <Check className="h-3 w-3" strokeWidth={3} />}
+      </span>
+      {children}
+      <span className="sr-only">{ok ? ' — met' : ' — not met yet'}</span>
+    </li>
   );
 }
 
@@ -99,97 +127,110 @@ export function SecuritySection({ profile }: { profile: ProfileState }) {
   };
 
   return (
-    <section className="space-y-6">
-      <SectionTitle label="KOVENIK — SECURITY" title="Security" sub="Protect your KOVENIK account." />
+    <section className="space-y-8">
+      <SectionTitle title="Security" sub="Keep your KOVENIK account protected." />
 
       {profile.isGoogleAccount ? (
         <div className="kv-inner flex items-start gap-4 p-5">
-          <IconDisc icon={ShieldCheck} size={42} />
+          <IconDisc icon={ShieldCheck} size={44} />
           <div>
-            <p className="text-[14px] font-semibold text-[#171717]">Signed in with Google</p>
-            <p className="mt-1 text-[13px] leading-6 text-[#5C5C5C]">
+            <p className="text-[18px] font-bold text-[#111111]">Signed in with Google</p>
+            <p className="mt-1 text-[16px] leading-6 text-[#666666]">
               Your password is managed by Google, so there is nothing to change here.
             </p>
           </div>
         </div>
       ) : (
-        <div className="kv-inner p-5 sm:p-6">
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+            void handleChangePassword();
+          }}
+          className="kv-inner p-5 sm:p-8"
+        >
           <div className="flex items-start gap-4">
-            <IconDisc icon={LockKeyhole} size={42} />
+            <IconDisc icon={LockKeyhole} size={44} className="!bg-[#F5F5F5]" />
             <div>
-              <p className="kv-label">Password</p>
-              <h3 className="mt-1.5 text-[22px] text-[#171717]" style={{ fontFamily: 'Bodoni MT, Didot, serif' }}>
-                Change password
-              </h3>
-              <p className="mt-1 text-[13px] text-[#5C5C5C]">Update your password to keep your account secure.</p>
+              <h2 className="kv-display text-[26px]">Change password</h2>
+              <p className="mt-1 text-[16px] text-[#666666]">Use a password you don&apos;t use anywhere else.</p>
             </div>
           </div>
 
-          <div className="mt-6 grid max-w-3xl gap-x-5 gap-y-5 md:grid-cols-2">
+          <div className="mt-6 grid max-w-3xl gap-x-6 gap-y-5 md:grid-cols-2">
+            <div className="md:col-span-1">
+              <PasswordField
+                id="sec-current"
+                label="Current password"
+                value={currentPassword}
+                onChange={setCurrentPassword}
+                placeholder="Enter current password"
+                disabled={isChangingPassword}
+                autoComplete="current-password"
+              />
+            </div>
+            <div className="hidden md:block" />
             <PasswordField
-              label="Current Password"
-              value={currentPassword}
-              onChange={setCurrentPassword}
-              placeholder="Enter current password"
-              disabled={isChangingPassword}
-              autoComplete="current-password"
-            />
-            <PasswordField
-              label="New Password"
+              id="sec-new"
+              label="New password"
               value={newPassword}
               onChange={setNewPassword}
               placeholder="Enter new password"
               disabled={isChangingPassword}
-              hint="Minimum 8 characters."
               autoComplete="new-password"
             />
-            <div className="md:col-span-1">
-              <PasswordField
-                label="Confirm New Password"
-                value={confirmPassword}
-                onChange={setConfirmPassword}
-                placeholder="Confirm new password"
-                disabled={isChangingPassword}
-                autoComplete="new-password"
-              />
-            </div>
+            <PasswordField
+              id="sec-confirm"
+              label="Confirm new password"
+              value={confirmPassword}
+              onChange={setConfirmPassword}
+              placeholder="Re-enter new password"
+              disabled={isChangingPassword}
+              autoComplete="new-password"
+            />
+
+            <ul className="flex flex-wrap gap-x-6 gap-y-2 rounded-[4px] bg-[#F5F5F5] px-4 py-3 md:col-span-2" aria-label="Password requirements">
+              <Rule ok={newPassword.length >= 8}>At least 8 characters</Rule>
+              <Rule ok={newPassword.length > 0 && newPassword === confirmPassword}>New passwords match</Rule>
+            </ul>
 
             <div className="md:col-span-2">
               {passwordError && (
-                <div role="alert" className="flex items-start gap-2 rounded-xl border border-[#B3261E] bg-[#F4F0E8] px-4 py-3">
-                  <AlertCircle className="mt-0.5 h-4 w-4 shrink-0 text-[#B3261E]" />
-                  <p className="text-[12px] leading-5 text-[#B3261E]">{passwordError}</p>
+                <div role="alert" className="flex items-start gap-2 rounded-[4px] border border-[#C8211F] px-4 py-3">
+                  <AlertCircle className="mt-0.5 h-4 w-4 shrink-0 text-[#C8211F]" />
+                  <p className="text-[15px] leading-5 text-[#C8211F]">{passwordError}</p>
                 </div>
               )}
               {passwordMessage && (
-                <div role="status" className="flex items-start gap-2 rounded-xl border border-[#1B7A43] bg-[#EAE5DA] px-4 py-3">
-                  <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-[#1B7A43]" />
-                  <p className="text-[12px] leading-5 text-[#1B7A43]">{passwordMessage}</p>
+                <div role="status" className="flex items-start gap-2 rounded-[4px] border border-[#111111] bg-[#F5F5F5] px-4 py-3">
+                  <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-[#111111]" />
+                  <p className="text-[15px] leading-5 text-[#111111]">{passwordMessage}</p>
                 </div>
               )}
             </div>
 
             <div className="md:col-span-2">
-              <button type="button" onClick={handleChangePassword} disabled={isChangingPassword} className="kv-btn-primary">
+              <button type="submit" disabled={isChangingPassword} className="kv-btn-primary w-full sm:w-auto">
                 {isChangingPassword ? <Loader2 className="h-4 w-4 animate-spin" /> : <LockKeyhole className="h-4 w-4" />}
-                {isChangingPassword ? 'Changing…' : 'Change Password'}
+                {isChangingPassword ? 'Changing…' : 'Change password'}
               </button>
             </div>
           </div>
-        </div>
+        </form>
       )}
 
-      <div className="kv-inner !border-[#E2E0DB] p-5 sm:p-6">
-        <p className="text-[10px] font-semibold uppercase tracking-[0.24em] text-[#B3261E]">Danger zone</p>
-        <h3 className="mt-2 text-[22px] text-[#171717]" style={{ fontFamily: 'Bodoni MT, Didot, serif' }}>
-          Delete account
-        </h3>
-        <p className="mt-2 max-w-xl text-[13px] leading-6 text-[#5C5C5C]">
-          Permanently remove your KOVENIK customer access and associated account.
-        </p>
-        <button type="button" onClick={profile.openDeleteModal} className="kv-btn-danger mt-5">
-          <Trash2 className="h-4 w-4" /> Delete Account
-        </button>
+      <div className="rounded-[4px] border border-[#C8211F] bg-white p-5 sm:p-8">
+        <h2 className="text-[22px] font-bold text-[#C8211F]">Danger zone</h2>
+        <div className="mt-3 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+          <div>
+            <p className="text-[18px] font-bold text-[#111111]">Delete account</p>
+            <p className="mt-1 max-w-xl text-[16px] leading-6 text-[#666666]">
+              Permanently removes your KOVENIK account, order history, wishlist and saved addresses. This can&apos;t be undone.
+            </p>
+          </div>
+          <button type="button" onClick={profile.openDeleteModal} className="kv-btn-danger shrink-0">
+            Delete account…
+          </button>
+        </div>
       </div>
     </section>
   );

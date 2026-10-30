@@ -42,11 +42,11 @@ export function EmptyState({
 }) {
   return (
     <div className="py-14 text-center border border-dashed border-[#222222] rounded-xl">
-      <Icon className="w-8 h-8 mx-auto text-[#8C6D3A]" />
+      <Icon className="w-8 h-8 mx-auto text-[#E53935]" />
       <h3 className="font-serif text-xl mt-4">{title}</h3>
       <p className="text-xs text-[#5C5C5C] mt-2">{text}</p>
       {action && onAction && (
-        <button onClick={onAction} className="mt-5 bg-[#F4F0E8] text-[#171717] px-5 py-2.5 rounded-lg text-xs">
+        <button onClick={onAction} className="mt-5 bg-[#F7F7F7] text-[#111111] px-5 py-2.5 rounded-lg text-xs">
           {action}
         </button>
       )}
@@ -57,7 +57,7 @@ export function EmptyState({
 export function Stat({ label, value }: { label: string; value: string }) {
   return (
     <div>
-      <p className="text-[9px] uppercase tracking-wider text-[#8C6D3A]">{label}</p>
+      <p className="text-[9px] uppercase tracking-wider text-[#E53935]">{label}</p>
       <p className="text-xs font-semibold mt-1 break-words">{value}</p>
     </div>
   );
@@ -66,7 +66,7 @@ export function Stat({ label, value }: { label: string; value: string }) {
 export function Info({ label, value }: { label: string; value: string }) {
   return (
     <div>
-      <p className="text-[10px] uppercase tracking-wider text-[#8C6D3A]">{label}</p>
+      <p className="text-[10px] uppercase tracking-wider text-[#E53935]">{label}</p>
       <p className="text-sm mt-1">{value}</p>
     </div>
   );

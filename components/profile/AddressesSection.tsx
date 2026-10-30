@@ -1,218 +1,427 @@
 'use client';
 
+import { useState } from 'react';
+import { AlertCircle, Check, ChevronDown, MapPin, Plus, X } from 'lucide-react';
 import type { useProfile } from '../../hooks/use-profile';
-import { MapPin, Plus, X, Pencil, Trash2, Check, Home, Briefcase } from 'lucide-react';
-import { EmptyPanel, IconDisc, SectionTitle } from './metal';
+import { EmptyPanel, SectionTitle } from './metal';
 
 type ProfileState = ReturnType<typeof useProfile>;
 
-const TEXT_FIELDS: [string, string][] = [
-  ['name', 'Full Name'],
-  ['phone', 'Phone'],
-  ['pincode', 'Pincode'],
-  ['city', 'City'],
-  ['state', 'State'],
+const STATES = [
+  'Andaman and Nicobar Islands', 'Andhra Pradesh', 'Arunachal Pradesh', 'Assam', 'Bihar', 'Chandigarh',
+  'Chhattisgarh', 'Dadra and Nagar Haveli and Daman and Diu', 'Delhi', 'Goa', 'Gujarat', 'Haryana',
+  'Himachal Pradesh', 'Jammu and Kashmir', 'Jharkhand', 'Karnataka', 'Kerala', 'Ladakh', 'Lakshadweep',
+  'Madhya Pradesh', 'Maharashtra', 'Manipur', 'Meghalaya', 'Mizoram', 'Nagaland', 'Odisha', 'Puducherry',
+  'Punjab', 'Rajasthan', 'Sikkim', 'Tamil Nadu', 'Telangana', 'Tripura', 'Uttar Pradesh', 'Uttarakhand',
+  'West Bengal',
 ];
 
+const TYPES = ['Home', 'Work', 'Other'] as const;
+
+const tenDigits = (value: string) => value.replace(/\D/g, '').slice(-10);
+
+const maskPhone = (value: string) => {
+  const d = tenDigits(value);
+  return d.length === 10 ? `+91 ${d.slice(0, 2)}•••• ••${d.slice(8)}` : value;
+};
+
+type Errors = Partial<Record<'name' | 'phone' | 'pincode' | 'flat' | 'area' | 'city' | 'state', string>>;
+
+function FieldError({ id, message }: { id: string; message?: string }) {
+  if (!message) return null;
+  return (
+    <p id={id} role="alert" className="kv-error">
+      <AlertCircle className="h-4 w-4 shrink-0" aria-hidden /> {message}
+    </p>
+  );
+}
+
 export function AddressesSection({ profile }: { profile: ProfileState }) {
-  const dismiss = () => {
-    profile.setError('');
-    profile.setMessage('');
+  const [flat, setFlat] = useState('');
+  const [area, setArea] = useState('');
+  const [landmark, setLandmark] = useState('');
+  const [errors, setErrors] = useState<Errors>({});
+  const [deleteId, setDeleteId] = useState<string | null>(null);
+
+  const form = profile.addressForm;
+  const deleteTarget = profile.addresses.find((a) => a.id === deleteId) ?? null;
+
+  const setField = (patch: Partial<typeof form>) => profile.setAddressForm((prev) => ({ ...prev, ...patch }));
+
+  // The API stores one address line, so compose it from the three address inputs.
+  const compose = (f: string, a: string, l: string) =>
+    [f, a, l].map((part) => part.trim()).filter(Boolean).join(', ');
+
+  const updateLines = (next: { flat?: string; area?: string; landmark?: string }) => {
+    const f = next.flat ?? flat;
+    const a = next.area ?? area;
+    const l = next.landmark ?? landmark;
+    if (next.flat !== undefined) setFlat(next.flat);
+    if (next.area !== undefined) setArea(next.area);
+    if (next.landmark !== undefined) setLandmark(next.landmark);
+    setField({ address: compose(f, a, l) });
+    setErrors((e) => ({ ...e, flat: undefined, area: undefined }));
   };
+
+  const closeForm = () => {
+    profile.setShowAddressForm(false);
+    profile.resetAddressForm();
+    setFlat('');
+    setArea('');
+    setLandmark('');
+    setErrors({});
+  };
+
+  const openAdd = () => {
+    profile.resetAddressForm();
+    setFlat('');
+    setArea('');
+    setLandmark('');
+    setErrors({});
+    profile.setShowAddressForm(true);
+  };
+
+  const openEdit = (address: ProfileState['addresses'][number]) => {
+    profile.editAddress(address);
+    // A saved address is one string: first part is the building, the rest is the area.
+    const [first, ...rest] = String(address.address).split(',').map((p) => p.trim());
+    setFlat(first || '');
+    setArea(rest.join(', '));
+    setLandmark('');
+    setErrors({});
+  };
+
+  const submit = (e: React.FormEvent) => {
+    e.preventDefault();
+    const next: Errors = {};
+    if (form.name.trim().length < 2) next.name = 'Enter the recipient’s full name.';
+    if (tenDigits(form.phone).length !== 10) next.phone = 'Enter a 10-digit mobile number.';
+    if (!/^[1-9]\d{5}$/.test(form.pincode.trim())) next.pincode = 'Enter a valid 6-digit PIN code';
+    if (!flat.trim()) next.flat = 'Enter your flat, house no. or building.';
+    if (!area.trim()) next.area = 'Enter your area, street or locality.';
+    if (!form.city.trim()) next.city = 'Enter your city.';
+    if (!form.state.trim()) next.state = 'Select your state.';
+    setErrors(next);
+    if (Object.keys(next).length > 0) return;
+    void profile.saveAddress(e);
+  };
+
+  const describe = (id: string) => (errors[id as keyof Errors] ? `err-${id}` : undefined);
 
   return (
     <section>
-      {/* Toast — uses the existing profile message/error state */}
-      {(profile.message || profile.error) && (
-        <div className="pointer-events-none fixed right-4 top-24 z-[9999] w-[min(380px,calc(100vw-2rem))] sm:right-6">
-          <div
-            role="status"
-            className={`pointer-events-auto flex items-start gap-3 rounded-2xl border bg-[#F4F0E8] px-4 py-3.5  ${
-              profile.error ? 'border-[#B3261E]' : 'border-[#D6D0C2]'
-            }`}
-          >
-            <span
-              className={`mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-full ${
-                profile.error ? 'bg-[#F4F0E8] text-[#B3261E]' : 'bg-[#EAE5DA] text-[#1B7A43]'
-              }`}
-            >
-              {profile.error ? <X className="h-4 w-4" /> : <Check className="h-4 w-4" />}
-            </span>
-            <p className="min-w-0 flex-1 text-[13px] leading-5 text-[#171717]">{profile.error || profile.message}</p>
-            <button
-              type="button"
-              aria-label="Dismiss notification"
-              onClick={dismiss}
-              className="flex h-8 w-8 shrink-0 items-center justify-center text-[#5C5C5C] hover:text-[#171717]"
-            >
-              <X className="h-4 w-4" />
-            </button>
-          </div>
-        </div>
-      )}
-
       <SectionTitle
-        label="KOVENIK — ACCOUNT"
-        title="Saved Addresses"
-        sub="Your preferred delivery destinations."
+        title="Saved addresses"
+        sub="Your delivery destinations for a faster checkout."
         action={
-          <button
-            type="button"
-            onClick={() => {
-              profile.resetAddressForm();
-              profile.setShowAddressForm(true);
-            }}
-            className="kv-btn-primary"
-          >
-            <Plus className="h-4 w-4" /> Add Address
-          </button>
+          !profile.showAddressForm && (
+            <button type="button" onClick={openAdd} className="kv-btn-primary">
+              <Plus className="h-4 w-4" /> Add new address
+            </button>
+          )
         }
       />
 
-      {profile.showAddressForm && (
-        <form onSubmit={profile.saveAddress} className="kv-inner mb-6 overflow-hidden">
-          <div className="flex items-center justify-between border-b border-[#E2E0DB] px-4 py-4 sm:px-6">
-            <div>
-              <p className="kv-label">{profile.editingAddressId ? 'Update destination' : 'New destination'}</p>
-              <h3 className="mt-1 text-[20px] text-[#171717]" style={{ fontFamily: 'Bodoni MT, Didot, serif' }}>
-                {profile.editingAddressId ? 'Edit Address' : 'Add Address'}
-              </h3>
-            </div>
-            <button
-              type="button"
-              onClick={() => {
-                profile.setShowAddressForm(false);
-                profile.resetAddressForm();
-              }}
-              className="kv-disc h-11 w-11"
-              aria-label="Close address form"
-            >
-              <X className="h-4 w-4" />
-            </button>
-          </div>
-
-          <div className="grid gap-x-6 gap-y-5 px-4 py-5 sm:grid-cols-2 sm:px-6 sm:py-6">
-            {TEXT_FIELDS.map(([key, label]) => (
-              <label key={key} className="block">
-                <span className="kv-field-label">{label}</span>
-                <input
-                  required
-                  value={profile.addressForm[key as keyof typeof profile.addressForm] as string}
-                  onChange={(e) => profile.setAddressForm((prev) => ({ ...prev, [key]: e.target.value }))}
-                  className="kv-input"
-                />
-              </label>
-            ))}
-
-            <label className="block">
-              <span className="kv-field-label">Address Type</span>
-              <select
-                value={profile.addressForm.address_type}
-                onChange={(e) => profile.setAddressForm((prev) => ({ ...prev, address_type: e.target.value }))}
-                className="kv-input"
-              >
-                <option>Home</option>
-                <option>Work</option>
-                <option>Other</option>
-              </select>
-            </label>
-
-            <label className="block sm:col-span-2">
-              <span className="kv-field-label">Address</span>
-              <textarea
-                required
-                rows={3}
-                value={profile.addressForm.address}
-                onChange={(e) => profile.setAddressForm((prev) => ({ ...prev, address: e.target.value }))}
-                className="kv-input"
-              />
-            </label>
-
-            <label className="flex min-h-[44px] cursor-pointer items-center gap-3 text-[13px] text-[#4A4A4A] sm:col-span-2">
-              <input
-                type="checkbox"
-                checked={profile.addressForm.is_default}
-                onChange={(e) => profile.setAddressForm((prev) => ({ ...prev, is_default: e.target.checked }))}
-                className="h-4 w-4 accent-[#B08D57]"
-              />
-              Make this my default address
-            </label>
-          </div>
-
-          <div className="flex justify-end border-t border-[#E2E0DB] px-4 py-4 sm:px-6">
-            <button disabled={profile.sectionLoading} className="kv-btn-primary min-w-[160px]">
-              <Check className="h-4 w-4" />
-              {profile.sectionLoading ? 'Saving…' : 'Save Address'}
-            </button>
-          </div>
-        </form>
-      )}
-
-      {profile.addresses.length === 0 ? (
+      {profile.addresses.length === 0 && !profile.showAddressForm ? (
         <EmptyPanel icon={MapPin} title="No saved addresses" text="Add an address for a faster checkout." />
       ) : (
         <div className="grid gap-4 md:grid-cols-2">
           {profile.addresses.map((address) => {
             const isDefault = Boolean(address.is_default);
-            const isHome = address.address_type?.toLowerCase() === 'home';
-            const Icon = isHome ? Home : Briefcase;
-
             return (
               <article
                 key={address.id}
-                className={`kv-inner relative flex min-w-0 flex-col p-5 ${isDefault ? '!border-[#B08D57]/60' : ''}`}
+                className={`flex min-w-0 flex-col rounded-[4px] bg-white p-5 ${
+                  isDefault ? 'border-2 border-[#111111]' : 'border border-[#E5E5E5]'
+                }`}
               >
-                <div className="flex items-start justify-between gap-3">
-                  <div className="flex min-w-0 items-center gap-3">
-                    <IconDisc icon={Icon} size={38} />
-                    <p className="truncate text-[12px] font-semibold uppercase tracking-[0.16em] text-[#171717]">
-                      {address.address_type || 'Address'}
-                    </p>
-                  </div>
+                <div className="flex flex-wrap items-center gap-2">
+                  <span className="rounded-[2px] border border-[#E5E5E5] bg-[#F5F5F5] px-2.5 py-1 text-[14px] font-semibold text-[#111111]">
+                    {address.address_type || 'Address'}
+                  </span>
                   {isDefault && (
-                    <span className="inline-flex shrink-0 items-center gap-1.5 rounded-full border border-[#B08D57] bg-[#F4F0E8] px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.12em] text-[#8C6D3A]">
-                      <Check className="h-3 w-3" /> Default
+                    <span className="inline-flex items-center gap-1 rounded-[2px] bg-[#111111] px-2.5 py-1 text-[14px] font-semibold text-white">
+                      <Check className="h-3.5 w-3.5" /> Default
                     </span>
                   )}
                 </div>
 
-                <div className="mt-5 flex-1">
-                  <p className="text-[15px] font-semibold text-[#171717]">{address.name}</p>
-                  <p className="mt-0.5 text-[12px] text-[#5C5C5C]">{address.phone}</p>
-                  <p className="mt-3 break-words border-l border-[#D6D0C2] pl-3 text-[13px] leading-6 text-[#4A4A4A]">
-                    {address.address}, {address.city}, {address.state} — {address.pincode}
+                <div className="mt-4 flex-1">
+                  <p className="text-[19px] font-bold text-[#111111]">{address.name}</p>
+                  <p className="mt-2 break-words text-[16px] leading-6 text-[#444444]">
+                    {address.address}
+                    <br />
+                    {address.city}, {address.state} {address.pincode}
                   </p>
+                  <p className="mt-2 text-[16px] text-[#666666]">Phone: {maskPhone(address.phone)}</p>
                 </div>
 
-                <div className="mt-5 flex flex-wrap items-center gap-x-5 border-t border-[#E2E0DB] pt-2">
-                  <button
-                    type="button"
-                    onClick={() => profile.editAddress(address)}
-                    className="inline-flex min-h-[44px] items-center gap-1.5 text-[11px] font-semibold uppercase tracking-[0.14em] text-[#171717] hover:text-[#8C6D3A]"
-                  >
-                    <Pencil className="h-3.5 w-3.5" /> Edit
+                <div className="mt-5 flex flex-wrap items-center gap-3 border-t border-[#E5E5E5] pt-4">
+                  <button type="button" onClick={() => openEdit(address)} className="kv-btn-ghost kv-btn-sm">
+                    Edit
                   </button>
                   {!isDefault && (
-                    <button
-                      type="button"
-                      onClick={() => profile.setDefaultAddress(address.id)}
-                      className="min-h-[44px] text-[11px] font-semibold uppercase tracking-[0.14em] text-[#4A4A4A] hover:text-[#8C6D3A]"
-                    >
-                      Make Default
+                    <button type="button" onClick={() => profile.setDefaultAddress(address.id)} className="kv-btn-ghost kv-btn-sm">
+                      Set as default
                     </button>
                   )}
                   <button
                     type="button"
-                    onClick={() => profile.deleteAddress(address.id)}
-                    className="ml-auto inline-flex min-h-[44px] items-center gap-1.5 text-[11px] font-semibold uppercase tracking-[0.14em] text-[#B3261E] hover:text-[#B3261E]"
+                    onClick={() => setDeleteId(address.id)}
+                    className="kv-link-danger min-h-[44px] px-2"
                   >
-                    <Trash2 className="h-3.5 w-3.5" /> Delete
+                    Delete
                   </button>
                 </div>
               </article>
             );
           })}
         </div>
+      )}
+
+      {deleteTarget && (
+        <div
+          role="alertdialog"
+          aria-label="Confirm delete address"
+          className="mt-5 flex flex-wrap items-center justify-between gap-4 rounded-[4px] border border-[#E5E5E5] bg-[#F5F5F5] px-5 py-4"
+        >
+          <div>
+            <p className="text-[18px] font-bold text-[#111111]">
+              Delete your {deleteTarget.address_type || 'saved'} address?
+            </p>
+            <p className="text-[15px] text-[#666666]">You can add it again any time.</p>
+          </div>
+          <div className="flex gap-3">
+            <button type="button" onClick={() => setDeleteId(null)} className="kv-btn-ghost kv-btn-sm">
+              Cancel
+            </button>
+            <button
+              type="button"
+              onClick={async () => {
+                const id = deleteTarget.id;
+                setDeleteId(null);
+                await profile.deleteAddress(id);
+              }}
+              className="kv-btn-sm inline-flex items-center justify-center rounded-[2px] bg-[#C8211F] px-4 text-[15px] font-semibold text-white hover:bg-[#a51a18]"
+            >
+              Delete address
+            </button>
+          </div>
+        </div>
+      )}
+
+      {profile.showAddressForm && (
+        <form
+          onSubmit={submit}
+          noValidate
+          aria-labelledby="address-form-title"
+          className="mt-8 rounded-[4px] border border-[#E5E5E5] bg-white p-5 sm:p-8"
+        >
+          <div className="flex items-start justify-between gap-3">
+            <div>
+              <h2 id="address-form-title" className="kv-display text-[28px] sm:text-[32px]">
+                {profile.editingAddressId ? 'Edit address' : 'Add a new address'}
+              </h2>
+              <p className="mt-1 text-[16px] text-[#666666]">All fields are required unless marked optional.</p>
+            </div>
+            <button type="button" onClick={closeForm} aria-label="Close address form" className="kv-disc h-11 w-11">
+              <X className="h-4 w-4" />
+            </button>
+          </div>
+
+          <div className="mt-6 grid gap-x-6 gap-y-5 sm:grid-cols-2">
+            <div>
+              <label htmlFor="addr-name" className="kv-field-label">Full name</label>
+              <input
+                id="addr-name"
+                value={form.name}
+                onChange={(e) => {
+                  setField({ name: e.target.value });
+                  setErrors((x) => ({ ...x, name: undefined }));
+                }}
+                aria-invalid={Boolean(errors.name)}
+                aria-describedby={describe('name')}
+                autoComplete="name"
+                className="kv-input"
+              />
+              <FieldError id="err-name" message={errors.name} />
+            </div>
+
+            <div>
+              <label htmlFor="addr-phone" className="kv-field-label">Mobile number</label>
+              <div className="flex">
+                <span className="flex min-h-[52px] items-center rounded-l-[2px] border border-r-0 border-[#BDBDBD] bg-[#F5F5F5] px-4 text-[16px]">
+                  +91
+                </span>
+                <input
+                  id="addr-phone"
+                  inputMode="numeric"
+                  value={tenDigits(form.phone)}
+                  onChange={(e) => {
+                    setField({ phone: e.target.value.replace(/\D/g, '').slice(0, 10) });
+                    setErrors((x) => ({ ...x, phone: undefined }));
+                  }}
+                  placeholder="10-digit mobile number"
+                  aria-invalid={Boolean(errors.phone)}
+                  aria-describedby={describe('phone')}
+                  autoComplete="tel-national"
+                  className="kv-input !rounded-l-none"
+                />
+              </div>
+              <FieldError id="err-phone" message={errors.phone} />
+            </div>
+
+            <div>
+              <label htmlFor="addr-pin" className="kv-field-label">PIN code</label>
+              <input
+                id="addr-pin"
+                inputMode="numeric"
+                value={form.pincode}
+                onChange={(e) => {
+                  setField({ pincode: e.target.value.replace(/\D/g, '').slice(0, 6) });
+                  setErrors((x) => ({ ...x, pincode: undefined }));
+                }}
+                aria-invalid={Boolean(errors.pincode)}
+                aria-describedby={describe('pincode')}
+                autoComplete="postal-code"
+                className="kv-input"
+              />
+              <FieldError id="err-pincode" message={errors.pincode} />
+            </div>
+
+            <div>
+              <label htmlFor="addr-flat" className="kv-field-label">Flat, house no., building</label>
+              <input
+                id="addr-flat"
+                value={flat}
+                onChange={(e) => updateLines({ flat: e.target.value })}
+                placeholder="e.g. B-204, Shivalik Residency"
+                aria-invalid={Boolean(errors.flat)}
+                aria-describedby={describe('flat')}
+                className="kv-input"
+              />
+              <FieldError id="err-flat" message={errors.flat} />
+            </div>
+
+            <div className="sm:col-span-2">
+              <label htmlFor="addr-area" className="kv-field-label">Area, street, locality</label>
+              <input
+                id="addr-area"
+                value={area}
+                onChange={(e) => updateLines({ area: e.target.value })}
+                placeholder="e.g. Satellite Road"
+                aria-invalid={Boolean(errors.area)}
+                aria-describedby={describe('area')}
+                className="kv-input"
+              />
+              <FieldError id="err-area" message={errors.area} />
+            </div>
+
+            <div>
+              <label htmlFor="addr-landmark" className="kv-field-label">
+                Landmark <span className="font-normal text-[#666666]">(optional)</span>
+              </label>
+              <input
+                id="addr-landmark"
+                value={landmark}
+                onChange={(e) => updateLines({ landmark: e.target.value })}
+                placeholder="e.g. near Jodhpur Cross Road"
+                className="kv-input"
+              />
+            </div>
+
+            <div>
+              <label htmlFor="addr-city" className="kv-field-label">City</label>
+              <input
+                id="addr-city"
+                value={form.city}
+                onChange={(e) => {
+                  setField({ city: e.target.value });
+                  setErrors((x) => ({ ...x, city: undefined }));
+                }}
+                aria-invalid={Boolean(errors.city)}
+                aria-describedby={describe('city')}
+                autoComplete="address-level2"
+                className="kv-input"
+              />
+              <FieldError id="err-city" message={errors.city} />
+            </div>
+
+            <div>
+              <label htmlFor="addr-state" className="kv-field-label">State</label>
+              <div className="relative">
+                <select
+                  id="addr-state"
+                  value={form.state}
+                  onChange={(e) => {
+                    setField({ state: e.target.value });
+                    setErrors((x) => ({ ...x, state: undefined }));
+                  }}
+                  aria-invalid={Boolean(errors.state)}
+                  aria-describedby={describe('state')}
+                  autoComplete="address-level1"
+                  className="kv-input appearance-none !pr-10"
+                >
+                  <option value="">Select state</option>
+                  {form.state && !STATES.includes(form.state) && <option value={form.state}>{form.state}</option>}
+                  {STATES.map((s) => (
+                    <option key={s} value={s}>
+                      {s}
+                    </option>
+                  ))}
+                </select>
+                <ChevronDown className="pointer-events-none absolute right-4 top-1/2 h-4 w-4 -translate-y-1/2" aria-hidden />
+              </div>
+              <FieldError id="err-state" message={errors.state} />
+            </div>
+
+            <fieldset>
+              <legend className="kv-field-label">Address type</legend>
+              <div className="flex flex-wrap gap-2">
+                {TYPES.map((t) => {
+                  const on = (form.address_type || 'Home').toLowerCase() === t.toLowerCase();
+                  return (
+                    <label
+                      key={t}
+                      className={`flex min-h-[52px] cursor-pointer items-center gap-2 rounded-full border px-5 text-[16px] font-semibold ${
+                        on ? 'border-2 border-[#111111] text-[#111111]' : 'border-[#BDBDBD] text-[#444444]'
+                      }`}
+                    >
+                      <input
+                        type="radio"
+                        name="address-type"
+                        value={t}
+                        checked={on}
+                        onChange={() => setField({ address_type: t })}
+                        className="h-4 w-4 accent-[#111111]"
+                      />
+                      {t}
+                    </label>
+                  );
+                })}
+              </div>
+            </fieldset>
+
+            <label className="flex min-h-[48px] cursor-pointer items-center gap-3 text-[16px] text-[#111111] sm:col-span-2">
+              <input
+                type="checkbox"
+                checked={form.is_default}
+                onChange={(e) => setField({ is_default: e.target.checked })}
+                className="h-5 w-5 accent-[#111111]"
+              />
+              Make this my default address
+            </label>
+          </div>
+
+          <div className="mt-6 flex flex-col gap-3 sm:flex-row">
+            <button disabled={profile.sectionLoading} className="kv-btn-primary sm:min-w-[180px]">
+              {profile.sectionLoading ? 'Saving…' : 'Save address'}
+            </button>
+            <button type="button" onClick={closeForm} className="kv-btn-ghost">
+              Cancel
+            </button>
+          </div>
+        </form>
       )}
     </section>
   );

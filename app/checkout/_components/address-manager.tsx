@@ -3,19 +3,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { motion } from 'framer-motion';
-import {
-  AlertCircle,
-  Building2,
-  Home,
-  Loader2,
-  MapPin,
-  Pencil,
-  Plus,
-  RotateCcw,
-  Star,
-  Trash2,
-  X,
-} from 'lucide-react';
+import { AlertCircle, Loader2, Plus, RotateCcw, X } from 'lucide-react';
 import {
   apiRequest,
   friendlyError,
@@ -37,17 +25,11 @@ const EMPTY_FORM: AddressForm = {
   is_default: false,
 };
 
-function TypeIcon({ type, className }: { type: string; className?: string }) {
-  const t = (type || '').toLowerCase();
-  if (t === 'home') return <Home className={className} />;
-  if (t === 'work') return <Building2 className={className} />;
-  return <MapPin className={className} />;
+/** Masked phone, e.g. +91 98•••• ••10. Falls back to the stored value if it is not 10 digits. */
+function maskPhone(value: string) {
+  const d = value.replace(/\D/g, '').slice(-10);
+  return d.length === 10 ? `+91 ${d.slice(0, 2)}•••• ••${d.slice(8)}` : value;
 }
-
-const ICON_TONE: Record<string, string> = {
-  home: 'ck-ico-blue',
-  work: 'ck-ico-violet',
-};
 
 function Field({
   label,
@@ -60,11 +42,11 @@ function Field({
 }) {
   return (
     <label className="block space-y-1.5">
-      <span className="text-xs font-semibold tracking-wide text-[#4A4A4A]">{label}</span>
+      <span className="text-[15px] font-semibold text-[#111111]">{label}</span>
       {children}
       {error && (
-        <span role="alert" className="flex items-center gap-1 text-xs text-[#171717]">
-          <AlertCircle className="h-3 w-3" /> {error}
+        <span role="alert" className="flex items-center gap-1.5 text-[14px] font-medium text-[#C8211F]">
+          <AlertCircle className="h-4 w-4 shrink-0" /> {error}
         </span>
       )}
     </label>
@@ -132,16 +114,13 @@ function AddressModal({
         role="dialog"
         aria-modal="true"
         aria-labelledby="address-modal-title"
-        className="ck-panel flex w-full max-w-xl flex-col overflow-hidden"
+        className="flex w-full max-w-xl flex-col overflow-hidden rounded-[4px] border border-[#E5E5E5] bg-white"
         style={{ maxHeight: 'calc(100dvh - 1.5rem)' }}
       >
-        <div className="flex shrink-0 items-center justify-between border-b border-[#E2E0DB] px-5 py-4 sm:px-6">
+        <div className="flex shrink-0 items-center justify-between border-b border-[#E5E5E5] px-5 py-4 sm:px-6">
           <div>
-            <p className="text-[10px] font-medium tracking-[0.14em] text-[#4A4A4A]">
-              {editingId ? 'UPDATE ADDRESS' : 'NEW ADDRESS'}
-            </p>
-            <h3 id="address-modal-title" className="mt-0.5 text-xl font-medium text-[#171717]">
-              {editingId ? 'Edit address' : 'Add address'}
+            <h3 id="address-modal-title" className="ck-display text-[26px]">
+              {editingId ? 'Edit address' : 'Add new address'}
             </h3>
           </div>
           <button
@@ -149,7 +128,7 @@ function AddressModal({
             onClick={onClose}
             disabled={saving}
             aria-label="Close"
-            className="flex h-9 w-9 items-center justify-center rounded-full border border-[#E2E0DB] text-[#4A4A4A] hover:border-[#222222] hover:text-[#171717] disabled:opacity-50"
+            className="flex h-11 w-11 items-center justify-center rounded-full border border-[#E5E5E5] text-[#111111] hover:border-[#111111] disabled:opacity-50"
           >
             <X className="h-4 w-4" />
           </button>
@@ -210,12 +189,12 @@ function AddressModal({
             />
           </Field>
 
-          <label className="flex items-center gap-3 text-sm text-[#4A4A4A]">
+          <label className="flex min-h-[44px] items-center gap-3 text-[16px] text-[#111111]">
             <input
               type="checkbox"
               checked={form.is_default}
               onChange={(e) => set({ is_default: e.target.checked })}
-              className="h-4 w-4 accent-[#222222]"
+              className="h-5 w-5 accent-[#111111]"
             />
             Make this my default address
           </label>
@@ -223,7 +202,7 @@ function AddressModal({
           {error && (
             <div
               role="alert"
-              className="flex items-start gap-2  border border-[#E2E0DB] bg-[#FFFFFF] px-4 py-3 text-sm text-[#171717]"
+              className="flex items-start gap-2 rounded-[4px] border border-[#C8211F] bg-white px-4 py-3 text-[15px] text-[#C8211F]"
             >
               <AlertCircle className="mt-0.5 h-4 w-4 shrink-0" />
               {error}
@@ -232,14 +211,14 @@ function AddressModal({
 
          </div>
 
-          <div className="flex shrink-0 flex-col-reverse gap-3 border-t border-[#E2E0DB] bg-[#FFFFFF] px-5 py-4 sm:flex-row sm:justify-end sm:px-6">
+          <div className="flex shrink-0 flex-col-reverse gap-3 border-t border-[#E5E5E5] bg-[#FFFFFF] px-5 py-4 sm:flex-row sm:justify-end sm:px-6">
             <button type="button" onClick={onClose} disabled={saving} className="ck-ghost">
               Cancel
             </button>
             <button
               type="submit"
               disabled={saving}
-              className="inline-flex items-center justify-center gap-2  ck-cta !w-auto ! !px-6 !py-3 !text-xs hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-60"
+              className="ck-cta !w-auto !px-6"
             >
               {saving && <Loader2 className="h-4 w-4 animate-spin" />}
               {saving ? 'Saving…' : error ? 'Retry save' : editingId ? 'Save changes' : 'Save address'}
@@ -419,14 +398,11 @@ export function AddressManager({
   return (
     <>
       <div className="space-y-3">
-        <p className="text-[11px] font-medium uppercase tracking-[0.14em] text-[#4A4A4A]/70">
-          Saved addresses
-        </p>
 
         {error && (
           <div
             role="alert"
-            className="flex flex-wrap items-center justify-between gap-3  border border-[#E2E0DB] bg-[#FFFFFF] px-4 py-3 text-sm text-[#171717]"
+            className="flex flex-wrap items-center justify-between gap-3 rounded-[4px] border border-[#C8211F] bg-white px-4 py-3 text-[15px] text-[#C8211F]"
           >
             <span className="flex items-center gap-2">
               <AlertCircle className="h-4 w-4 shrink-0" />
@@ -455,17 +431,16 @@ export function AddressManager({
 
         {loading ? (
           <div
-            className="flex min-h-[140px] items-center justify-center  border border-[#E2E0DB] bg-[#171717]/[0.03]"
+            className="flex min-h-[140px] items-center justify-center rounded-[4px] border border-[#E5E5E5] bg-[#F5F5F5]"
             aria-busy="true"
             aria-label="Loading addresses"
           >
             <Loader2 className="h-6 w-6 animate-spin text-[#4A4A4A]" />
           </div>
         ) : (
-          <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-[1fr_1fr_0.7fr]">
+          <div className="grid gap-3 md:grid-cols-2">
             {addresses.map((a) => {
               const on = selectedAddressId === a.id;
-              const tone = ICON_TONE[(a.address_type || '').toLowerCase()] || 'ck-ico-cyan';
 
               return (
                 <div key={a.id} className="ck-tile flex flex-col" data-on={on}>
@@ -474,73 +449,62 @@ export function AddressManager({
                     onClick={() => onSelect(a)}
                     role="radio"
                     aria-checked={on}
-                    className="flex-1  p-4 text-left"
+                    className="flex-1 p-4 text-left"
                   >
                     <div className="flex items-start gap-3">
                       <span
-                        className={`ck-ico flex h-10 w-10 shrink-0 items-center justify-center rounded-full ${tone}`}
+                        aria-hidden
+                        className={`mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full border-2 ${
+                          on ? 'border-[#111111]' : 'border-[#BDBDBD]'
+                        }`}
                       >
-                        <TypeIcon type={a.address_type} className="h-5 w-5" />
+                        {on && <span className="h-3 w-3 rounded-full bg-[#111111]" />}
                       </span>
 
                       <div className="min-w-0 flex-1">
-                        <p className="truncate text-sm font-medium text-[#171717]">{a.name}</p>
-                        <p className="mt-0.5 text-[10px] font-medium uppercase tracking-[0.16em] text-[#4A4A4A]/70">
-                          {a.address_type || 'Address'}
-                          {a.is_default && ' · Default'}
+                        <div className="flex flex-wrap items-center gap-2">
+                          <p className="text-[18px] font-bold text-[#111111]">{a.name}</p>
+                          <span className="rounded-[2px] border border-[#E5E5E5] bg-[#F5F5F5] px-2 py-0.5 text-[14px] font-semibold text-[#111111]">
+                            {a.address_type || 'Address'}
+                          </span>
+                          {a.is_default && <span className="text-[14px] font-bold text-[#C8211F]">Default</span>}
+                        </div>
+                        <p className="mt-2 text-[16px] leading-6 text-[#444444]">
+                          {a.address}
+                          <br />
+                          {a.city}, {a.state} {a.pincode}
                         </p>
+                        <p className="mt-1.5 text-[16px] text-[#444444]">{maskPhone(a.phone)}</p>
                       </div>
-
-                      <span
-                        aria-hidden
-                        className={`mt-1 flex h-5 w-5 shrink-0 items-center justify-center rounded-full border ${
-                          on ? 'border-[#222222] bg-[#171717]/15' : 'border-[#E2E0DB]'
-                        }`}
-                      >
-                        {on && <span className="ck-radio-dot h-2.5 w-2.5 rounded-full" />}
-                      </span>
                     </div>
-
-                    <p className="mt-3 text-[13px] leading-relaxed text-[#4A4A4A]">
-                      {a.address}
-                      <br />
-                      {a.city}, {a.state} {a.pincode}
-                    </p>
-                    <p className="mt-1.5 text-xs text-[#4A4A4A]/70">{a.phone}</p>
                   </button>
 
-                  <div className="flex items-center justify-between gap-2 border-t border-[#E2E0DB] px-4 py-2">
+                  <div className="flex flex-wrap items-center gap-x-5 border-t border-[#E5E5E5] px-4 pl-[52px]">
                     <button
                       type="button"
                       onClick={() => openEdit(a)}
-                      className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#4A4A4A] hover:text-[#171717]"
+                      className="min-h-[44px] text-[16px] font-semibold text-[#111111] underline underline-offset-4"
                     >
-                      <Pencil className="h-3.5 w-3.5" /> Edit
+                      Edit address
                     </button>
-                    <span className="flex items-center gap-1">
-                      {!a.is_default && (
-                        <button
-                          type="button"
-                          onClick={() => void makeDefault(a.id)}
-                          disabled={saving}
-                          aria-label="Make default address"
-                          title="Make default"
-                          className=" p-1.5 text-[#4A4A4A]/70 hover:bg-[#171717]/10 hover:text-[#171717] disabled:opacity-40"
-                        >
-                          <Star className="h-3.5 w-3.5" />
-                        </button>
-                      )}
+                    {!a.is_default && (
                       <button
                         type="button"
-                        onClick={() => void removeAddress(a.id)}
+                        onClick={() => void makeDefault(a.id)}
                         disabled={saving}
-                        aria-label="Delete address"
-                        title="Delete"
-                        className=" p-1.5 text-[#4A4A4A]/70 hover:bg-[#171717]/15 hover:text-[#171717] disabled:opacity-40"
+                        className="min-h-[44px] text-[16px] font-medium text-[#444444] underline underline-offset-4 disabled:opacity-40"
                       >
-                        <Trash2 className="h-3.5 w-3.5" />
+                        Set as default
                       </button>
-                    </span>
+                    )}
+                    <button
+                      type="button"
+                      onClick={() => void removeAddress(a.id)}
+                      disabled={saving}
+                      className="min-h-[44px] text-[16px] font-semibold text-[#C8211F] underline underline-offset-4 disabled:opacity-40"
+                    >
+                      Delete
+                    </button>
                   </div>
                 </div>
               );
@@ -549,9 +513,9 @@ export function AddressManager({
             <button
               type="button"
               onClick={openAdd}
-              className="group flex min-h-[120px] flex-col items-center justify-center gap-2  border border-dashed border-[#E2E0DB] text-[11px] font-medium uppercase tracking-[0.14em] text-[#4A4A4A] transition hover:border-[#222222] hover:text-[#171717]"
+              className="group flex min-h-[120px] flex-col items-center justify-center gap-2 rounded-[4px] border-2 border-dashed border-[#BDBDBD] bg-white text-[17px] font-bold text-[#111111] transition hover:border-[#111111]"
             >
-              <span className="ck-chip-chrome flex h-9 w-9 items-center justify-center rounded-full transition group-hover:rotate-90">
+              <span className="flex h-11 w-11 items-center justify-center rounded-full bg-[#111111] text-white">
                 <Plus className="h-5 w-5" />
               </span>
               Add new address

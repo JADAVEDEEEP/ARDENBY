@@ -41,7 +41,7 @@ export function DeleteAccountModal({ profile }: { profile: ProfileState }) {
           <p className="text-[10px] font-semibold uppercase tracking-[0.24em] text-[#B3261E]">KOVENIK — Danger zone</p>
           <h2
             id="kv-delete-title"
-            className="mt-3 text-[28px] font-normal leading-tight text-[#171717]"
+            className="mt-3 text-[28px] font-normal leading-tight text-[#111111]"
             style={{ fontFamily: 'Bodoni MT, Didot, serif' }}
           >
             Delete your account?
@@ -50,11 +50,11 @@ export function DeleteAccountModal({ profile }: { profile: ProfileState }) {
             This will permanently remove your KOVENIK account access and cannot be reversed.
           </p>
 
-          <div className="my-6 h-px bg-[#EAE5DA]" />
+          <div className="my-6 h-px bg-[#E5E5E5]" />
 
           {profile.isGoogleAccount ? (
             <div className="kv-inner flex items-start gap-3 p-4">
-              <ShieldAlert className="mt-0.5 h-4 w-4 shrink-0 text-[#8C6D3A]" strokeWidth={1.7} />
+              <ShieldAlert className="mt-0.5 h-4 w-4 shrink-0 text-[#E53935]" strokeWidth={1.7} />
               <div>
                 <p className="kv-label">Google account</p>
                 <p className="mt-2 text-[13px] leading-5 text-[#4A4A4A]">
@@ -86,7 +86,7 @@ export function DeleteAccountModal({ profile }: { profile: ProfileState }) {
                   onClick={() => profile.setShowDeletePassword((prev) => !prev)}
                   disabled={profile.deleteLoading}
                   aria-label={profile.showDeletePassword ? 'Hide password' : 'Show password'}
-                  className="absolute right-1 top-1/2 flex h-11 w-11 -translate-y-1/2 items-center justify-center text-[#5C5C5C] hover:text-[#171717]"
+                  className="absolute right-1 top-1/2 flex h-11 w-11 -translate-y-1/2 items-center justify-center text-[#5C5C5C] hover:text-[#111111]"
                 >
                   {profile.showDeletePassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                 </button>
@@ -95,7 +95,7 @@ export function DeleteAccountModal({ profile }: { profile: ProfileState }) {
           )}
 
           {profile.error && (
-            <div role="alert" className="mt-5 flex items-start gap-3 rounded-xl border border-[#B3261E] bg-[#F4F0E8] px-4 py-3 text-[12px] text-[#B3261E]">
+            <div role="alert" className="mt-5 flex items-start gap-3 rounded-xl border border-[#B3261E] bg-[#F7F7F7] px-4 py-3 text-[12px] text-[#B3261E]">
               <AlertCircle className="mt-0.5 h-4 w-4 shrink-0" />
               <span className="leading-5">{profile.error}</span>
             </div>

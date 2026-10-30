@@ -3,57 +3,40 @@
 import { Check } from 'lucide-react';
 
 // step: 1 = delivery in progress, 2 = payment in progress, 3 = confirmed.
-const LABELS = [
-  { label: 'Delivery', done: 'Completed', active: 'In progress', todo: 'Next' },
-  { label: 'Payment', done: 'Completed', active: 'In progress', todo: 'Next' },
-  { label: 'Confirmed', done: 'Done', active: 'Done', todo: 'Next' },
-];
+const LABELS = ['Delivery', 'Payment', 'Confirmation'] as const;
 
-/** Desktop: three nodes joined by an progress track. */
+/** Desktop: three numbered circles joined by lines. The active step is black with a red ring. */
 export function StepProgress({ step }: { step: 1 | 2 | 3 }) {
   return (
-    <ol
-      aria-label="Checkout progress"
-      className="ck-panel flex w-full max-w-[400px] items-start px-6 py-4"
-    >
-      {LABELS.map((s, i) => {
+    <ol aria-label="Checkout progress" className="flex items-center gap-3">
+      {LABELS.map((label, i) => {
         const n = i + 1;
         const done = n < step || step === 3;
         const active = n === step && step !== 3;
-        const state = done ? s.done : active ? s.active : s.todo;
-
         return (
-          <li
-            key={s.label}
-            aria-current={active ? 'step' : undefined}
-            className="relative flex flex-1 flex-col items-center"
-          >
+          <li key={label} aria-current={active ? 'step' : undefined} className="flex items-center gap-3">
             {i > 0 && (
               <span
                 aria-hidden
-                className="absolute right-1/2 top-[15px] h-[3px] w-full overflow-hidden rounded-full bg-[#171717]/10"
-              >
-                <span
-                  className="ck-fill"
-                  style={{ width: n <= step ? '100%' : '0%' }}
-                />
-              </span>
+                className={`h-[2px] w-10 xl:w-14 ${done || active ? 'bg-[#111111]' : 'bg-[#E5E5E5]'}`}
+              />
             )}
-            <span
-              className={`relative z-10 flex h-[34px] w-[34px] items-center justify-center rounded-full text-sm font-medium transition-all duration-500 ${
-                done
-                  ? 'bg-[#222222] text-[#FFFFFF]'
-                  : active
-                    ? 'ck-node-active bg-[#222222] text-[#FFFFFF]'
-                    : 'border border-[#E2E0DB] bg-[#FFFFFF] text-[#4A4A4A]/70'
-              }`}
-            >
-              {done ? <Check className="h-4 w-4" strokeWidth={3} /> : n}
+            <span className="flex items-center gap-2.5">
+              <span
+                className={`flex h-10 w-10 items-center justify-center rounded-full text-[16px] font-bold ${
+                  active
+                    ? 'bg-[#111111] text-white ring-[3px] ring-[#EF3535]/60 ring-offset-2'
+                    : done
+                      ? 'bg-[#111111] text-white'
+                      : 'border-2 border-[#BDBDBD] bg-white text-[#666666]'
+                }`}
+              >
+                {done ? <Check className="h-4 w-4" strokeWidth={3} /> : n}
+              </span>
+              <span className={`text-[16px] ${active || done ? 'font-bold text-[#111111]' : 'text-[#666666]'}`}>
+                {label}
+              </span>
             </span>
-            <span className={`mt-1.5 text-xs font-semibold ${done || active ? 'text-[#171717]' : 'text-[#4A4A4A]/70'}`}>
-              {s.label}
-            </span>
-            <span className="text-[10px] text-[#4A4A4A]/70">{state}</span>
           </li>
         );
       })}
@@ -61,38 +44,24 @@ export function StepProgress({ step }: { step: 1 | 2 | 3 }) {
   );
 }
 
-/** Mobile: segmented bar + labels. */
+/** Mobile: "Step 1 of 3 · Delivery / Next: Payment" + a 3-segment bar. */
 export function SegmentedProgress({ step }: { step: 1 | 2 | 3 }) {
+  const current = LABELS[step - 1];
+  const next: string | null = (LABELS as readonly string[])[step] ?? null;
   return (
     <div aria-label="Checkout progress" role="group">
-      <div className="flex gap-1.5">
-        {[1, 2, 3].map((n) => {
-          const filled = n < step || step === 3 ? 100 : n === step ? 55 : 0;
-          return (
-            <span key={n} className="ck-track flex-1">
-              <span className="ck-fill" style={{ width: `${filled}%` }} />
-            </span>
-          );
-        })}
+      <div className="mb-2 flex items-baseline justify-between gap-3">
+        <p className="text-[16px] font-bold text-[#111111]">
+          Step {step} of 3 · {current}
+        </p>
+        {next && <p className="text-[15px] text-[#666666]">Next: {next}</p>}
       </div>
-      <div className="mt-2 flex justify-between text-xs font-semibold">
-        {LABELS.map((s, i) => {
-          const n = i + 1;
-          const done = n < step || step === 3;
-          const active = n === step && step !== 3;
-          return (
-            <span
-              key={s.label}
-              aria-current={active ? 'step' : undefined}
-              className={`flex flex-1 items-center gap-1 ${i === 1 ? 'justify-center' : i === 2 ? 'justify-end' : ''} ${
-                done ? 'text-[#4A4A4A]' : active ? 'text-[#171717]' : 'text-[#4A4A4A]/70'
-              }`}
-            >
-              {done && <Check className="h-3 w-3" strokeWidth={3} />}
-              {s.label}
-            </span>
-          );
-        })}
+      <div className="flex gap-1.5">
+        {[1, 2, 3].map((n) => (
+          <span key={n} className="ck-track flex-1">
+            <span className="ck-fill" style={{ width: n <= step ? '100%' : '0%' }} />
+          </span>
+        ))}
       </div>
     </div>
   );

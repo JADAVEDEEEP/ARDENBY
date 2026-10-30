@@ -26,7 +26,7 @@ export function SocialLinks({ className }: { className?: string }) {
           key={label}
           href={href}
           aria-label={label}
-          className="flex h-11 w-11 items-center justify-center rounded-full bg-kv-ink text-white transition-colors hover:bg-kv-gold hover:text-kv-ink"
+          className="flex h-11 w-11 items-center justify-center rounded-full bg-kv-ink text-white transition-colors hover:bg-kv-gold hover:text-white"
         >
           {icon}
         </a>

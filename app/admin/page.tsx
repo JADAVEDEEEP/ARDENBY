@@ -319,14 +319,14 @@ function growth(current: number, previous: number): number | null {
 /* ------------------------------------------------------------------ */
 
 const STATUS_META: Record<StatusKey, { label: string; chip: string; bar: string }> = {
-  pending: { label: 'Pending', chip: 'bg-[#B89A5A]/20 text-[#C8A96B] border-[#B89A5A]/50', bar: '#B89A5A' },
-  confirmed: { label: 'Confirmed', chip: 'bg-[#C8A96B]/15 text-[#C8A96B] border-[#C8A96B]/40', bar: '#C8A96B' },
-  processing: { label: 'Processing', chip: 'bg-[#6FA383]/15 text-[#CAC2AF] border-[#6FA383]/40', bar: '#6FA383' },
-  packed: { label: 'Packed', chip: 'bg-[#A19B8C]/15 text-[#C9C1AE] border-[#A19B8C]/40', bar: '#A19B8C' },
-  shipped: { label: 'Shipped', chip: 'bg-[#AFA897]/20 text-[#E2D9C3] border-[#AFA897]/50', bar: '#AFA897' },
-  delivered: { label: 'Delivered', chip: 'bg-[#C8A96B] text-[#131210] border-[#C8A96B]', bar: '#CAC2AF' },
-  cancelled: { label: 'Cancelled', chip: 'bg-[#C46B6B]/15 text-[#E5A3A3] border-[#C46B6B]/40', bar: '#C46B6B' },
-  returned: { label: 'Returned', chip: 'bg-[#B89A5A]/10 text-[#C8A96B] border-[#B89A5A]/40', bar: '#9A7B3A' },
+  pending: { label: 'Pending', chip: 'bg-[#E53935]/20 text-[#E53935] border-[#E53935]/50', bar: '#E53935' },
+  confirmed: { label: 'Confirmed', chip: 'bg-[#E53935]/15 text-[#E53935] border-[#D0D5DD]', bar: '#E53935' },
+  processing: { label: 'Processing', chip: 'bg-[#6FA383]/15 text-[#4A5160] border-[#6FA383]/40', bar: '#6FA383' },
+  packed: { label: 'Packed', chip: 'bg-[#979797]/15 text-[#4A5160] border-[#979797]/40', bar: '#979797' },
+  shipped: { label: 'Shipped', chip: 'bg-[#A3A3A3]/20 text-[#4A5160] border-[#A3A3A3]/50', bar: '#A3A3A3' },
+  delivered: { label: 'Delivered', chip: 'bg-[#E53935] text-white border-[#E53935]', bar: '#BDBDBD' },
+  cancelled: { label: 'Cancelled', chip: 'bg-[#D92D20]/10 text-[#B42318] border-[#D92D20]/30', bar: '#C46B6B' },
+  returned: { label: 'Returned', chip: 'bg-[#E53935]/10 text-[#E53935] border-[#D0D5DD]', bar: '#E53935' },
 };
 const STATUS_ORDER: StatusKey[] = [
   'pending',
@@ -343,14 +343,14 @@ type StockLevel = 'Normal' | 'Low' | 'Critical' | 'Out of Stock';
 const stockLevel = (n: number): StockLevel =>
   n <= 0 ? 'Out of Stock' : n <= 5 ? 'Critical' : n <= 10 ? 'Low' : 'Normal';
 const STOCK_CHIP: Record<StockLevel, string> = {
-  Normal: 'bg-[#AFA897]/15 text-[#CAC2AF] border-[#AFA897]/40',
-  Low: 'bg-[#B89A5A]/20 text-[#C8A96B] border-[#B89A5A]/50',
-  Critical: 'bg-[#C46B6B]/15 text-[#E5A3A3] border-[#C46B6B]/40',
-  'Out of Stock': 'bg-[#131210] text-[#F4F0E6] border-[#C8A96B]/30',
+  Normal: 'bg-[#A3A3A3]/15 text-[#4A5160] border-[#A3A3A3]/40',
+  Low: 'bg-[#E53935]/20 text-[#E53935] border-[#E53935]/50',
+  Critical: 'bg-[#D92D20]/10 text-[#B42318] border-[#D92D20]/30',
+  'Out of Stock': 'bg-[#F5F6F8] text-[#111111] border-[#E4E7EC]',
 };
 
-const FOREST_CARD =
-  'min-w-0 rounded-2xl border border-[#C8A96B]/25 bg-[#2A2824] text-[#F4F0E6] shadow-[0_10px_30px_rgba(0,0,0,0.3)]';
+const CARD =
+  'min-w-0 rounded-2xl border border-[#E4E7EC] bg-white text-[#111111] shadow-[0_1px_2px_rgba(16,24,40,0.05)]';
 
 /* ------------------------------------------------------------------ */
 /* Date range                                                          */
@@ -679,19 +679,19 @@ export default function AdminDashboardPage() {
   /* ---------------------------------------------------------------- */
 
   return (
-    <div className="w-full space-y-5 pb-4 font-sans text-[#F4F0E6] selection:bg-[#B89A5A]/30 sm:space-y-6">
+    <div className="w-full space-y-5 pb-4 font-sans text-[#111111] selection:bg-[#E53935]/30 sm:space-y-6">
       {/* Header */}
       <header className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
         <div>
-          <h1 className="font-serif text-3xl tracking-tight text-[#F4F0E6] sm:text-4xl">Dashboard</h1>
-          <p className="mt-1.5 text-sm text-[#C9C1AE]">Overview of your KOVENIK store performance</p>
+          <h1 className="text-[32px] font-bold tracking-tight text-[#111111] sm:text-[40px]">Dashboard</h1>
+          <p className="mt-1.5 text-sm text-[#4A5160]">Overview of your KOVENIK store performance</p>
         </div>
 
         <div className="flex flex-wrap items-center gap-2.5">
           <div
             role="tablist"
             aria-label="Date range"
-            className="flex max-w-full overflow-x-auto rounded-lg border border-[#C8A96B]/25 bg-[#1C1B18]/80 p-1"
+            className="flex max-w-full overflow-x-auto rounded-lg border border-[#E4E7EC] bg-white p-1"
           >
             {PRESETS.map((p) => (
               <button
@@ -700,7 +700,7 @@ export default function AdminDashboardPage() {
                 aria-selected={preset === p.key}
                 onClick={() => setPreset(p.key)}
                 className={`shrink-0 whitespace-nowrap rounded-md px-3 py-1.5 text-xs font-medium transition ${
-                  preset === p.key ? 'bg-[#B89A5A] text-[#131210]' : 'text-[#EAE4D5] hover:bg-[#2A2824]'
+                  preset === p.key ? 'bg-[#E53935] text-white' : 'text-[#4A5160] hover:bg-[#F2F4F7]'
                 }`}
               >
                 {p.label}
@@ -714,7 +714,7 @@ export default function AdminDashboardPage() {
             disabled={loading || refreshing}
             aria-label="Refresh dashboard data"
             title="Refresh"
-            className="flex h-9 w-9 items-center justify-center rounded-lg border border-[#C8A96B]/25 text-[#C8A96B] transition hover:bg-[#2A2824] disabled:opacity-50"
+            className="flex h-9 w-9 items-center justify-center rounded-lg border border-[#E4E7EC] text-[#E53935] transition hover:bg-[#F2F4F7] disabled:opacity-50"
           >
             <RefreshCw className={`h-4 w-4 ${refreshing ? 'animate-spin' : ''}`} />
           </button>
@@ -722,8 +722,8 @@ export default function AdminDashboardPage() {
       </header>
 
       {preset === 'custom' && (
-        <div className="flex flex-wrap items-center gap-3 rounded-xl border border-[#C8A96B]/25 bg-[#1C1B18]/70 p-3 text-xs text-[#EAE4D5]">
-          <CalendarDays className="h-4 w-4 text-[#B89A5A]" />
+        <div className="flex flex-wrap items-center gap-3 rounded-xl border border-[#E4E7EC] bg-white p-3 text-xs text-[#4A5160]">
+          <CalendarDays className="h-4 w-4 text-[#E53935]" />
           <label className="flex items-center gap-2">
             From
             <input
@@ -731,7 +731,7 @@ export default function AdminDashboardPage() {
               value={customFrom}
               max={customTo}
               onChange={(e) => setCustomFrom(e.target.value)}
-              className="rounded-md border border-[#C8A96B]/25 bg-[#131210] px-2 py-1 text-[#F4F0E6] [color-scheme:dark]"
+              className="rounded-md border border-[#E4E7EC] bg-[#F5F6F8] px-2 py-1 text-[#111111] "
             />
           </label>
           <label className="flex items-center gap-2">
@@ -741,7 +741,7 @@ export default function AdminDashboardPage() {
               value={customTo}
               min={customFrom}
               onChange={(e) => setCustomTo(e.target.value)}
-              className="rounded-md border border-[#C8A96B]/25 bg-[#131210] px-2 py-1 text-[#F4F0E6] [color-scheme:dark]"
+              className="rounded-md border border-[#E4E7EC] bg-[#F5F6F8] px-2 py-1 text-[#111111] "
             />
           </label>
         </div>
@@ -810,8 +810,8 @@ export default function AdminDashboardPage() {
             <TrendChart
               labels={series.map((s) => s.label)}
               lines={[
-                { values: series.map((s) => s.revenue), stroke: '#C8A96B', fill: true },
-                { values: series.map((s) => s.count), stroke: '#AFA897', dashed: true },
+                { values: series.map((s) => s.revenue), stroke: '#E53935', fill: true },
+                { values: series.map((s) => s.count), stroke: '#A3A3A3', dashed: true },
               ]}
               yFormat={compact}
               tooltip={(i) => (
@@ -822,7 +822,7 @@ export default function AdminDashboardPage() {
                 </>
               )}
             />
-            <Legend items={[{ label: 'Revenue', color: '#C8A96B' }, { label: 'Orders', color: '#AFA897' }]} />
+            <Legend items={[{ label: 'Revenue', color: '#E53935' }, { label: 'Orders', color: '#A3A3A3' }]} />
           </State>
         </Card>
 
@@ -861,7 +861,7 @@ export default function AdminDashboardPage() {
                   highlight={i === 0 && c.revenue > 0}
                   right={
                     <>
-                      {money(c.revenue)} <span className="text-[#C9C1AE]">· {c.pct.toFixed(0)}%</span>
+                      {money(c.revenue)} <span className="text-[#4A5160]">· {c.pct.toFixed(0)}%</span>
                     </>
                   }
                   sub={`${c.units} ${c.units === 1 ? 'unit' : 'units'} sold · ${c.orders} ${
@@ -871,7 +871,7 @@ export default function AdminDashboardPage() {
               ))}
             </ul>
             {!categoryHasSales && (
-              <p className="mt-3 text-[10px] text-[#C9C1AE]">No category sales in this period.</p>
+              <p className="mt-3 text-[12px] text-[#4A5160]">No category sales in this period.</p>
             )}
           </State>
         </Card>
@@ -889,8 +889,8 @@ export default function AdminDashboardPage() {
               labels={customerGrowth.map((m) => m.label)}
               shared
               lines={[
-                { values: customerGrowth.map((m) => m.added), stroke: '#C8A96B', fill: true },
-                { values: customerGrowth.map((m) => m.returning), stroke: '#AFA897', fill: true },
+                { values: customerGrowth.map((m) => m.added), stroke: '#E53935', fill: true },
+                { values: customerGrowth.map((m) => m.returning), stroke: '#A3A3A3', fill: true },
               ]}
               yFormat={(v) => String(Math.round(v))}
               tooltip={(i) => (
@@ -903,11 +903,11 @@ export default function AdminDashboardPage() {
             />
             <Legend
               items={[
-                { label: 'New Customers', color: '#C8A96B' },
-                { label: 'Returning Customers', color: '#AFA897' },
+                { label: 'New Customers', color: '#E53935' },
+                { label: 'Returning Customers', color: '#A3A3A3' },
               ]}
             />
-            <p className="mt-2 text-[10px] text-[#C9C1AE]">Derived from order history.</p>
+            <p className="mt-2 text-[12px] text-[#4A5160]">Derived from order history.</p>
           </State>
         </Card>
       </section>
@@ -916,7 +916,7 @@ export default function AdminDashboardPage() {
       <Card
         title="Recent Orders"
         subtitle="Latest orders from your customers"
-        action={<GoldLink href="/admin/orders">View All</GoldLink>}
+        action={<AccentLink href="/admin/orders">View All</AccentLink>}
       >
         <State
           loading={loading}
@@ -929,7 +929,7 @@ export default function AdminDashboardPage() {
           <div className="hidden overflow-x-auto md:block">
             <table className="w-full text-left text-sm">
               <thead>
-                <tr className="border-b border-[#C8A96B]/20 text-[11px] font-semibold uppercase tracking-wider text-[#C8A96B]">
+                <tr className="border-b border-[#E4E7EC] text-[12px] font-semibold uppercase tracking-wider text-[#E53935]">
                   <th className="py-2.5 pr-3">Order ID</th>
                   <th className="px-3 py-2.5">Customer</th>
                   <th className="px-3 py-2.5">Product</th>
@@ -940,23 +940,23 @@ export default function AdminDashboardPage() {
                   <th className="py-2.5 pl-3 text-right">Action</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-[#C8A96B]/15">
+              <tbody className="divide-y divide-[#E4E7EC]">
                 {recentOrders.map((o, i) => (
-                  <tr key={`${o.id}-${i}`} className="transition-colors hover:bg-[#F4F0E6]/[0.04]">
+                  <tr key={`${o.id}-${i}`} className="transition-colors hover:bg-[#111111]/5">
                     <td className="py-3 pr-3 font-semibold">#{o.id}</td>
                     <td className="max-w-[160px] truncate px-3 py-3">{o.name}</td>
-                    <td className="max-w-[180px] truncate px-3 py-3 text-[#F4F0E6]">
+                    <td className="max-w-[180px] truncate px-3 py-3 text-[#111111]">
                       {o.items[0]?.name || '—'}
                       {o.items.length > 1 ? ` +${o.items.length - 1}` : ''}
                     </td>
                     <td className="px-3 py-3 text-right font-semibold">{money(o.amount)}</td>
-                    <td className="px-3 py-3 capitalize text-[#C9C1AE]">{o.payment}</td>
+                    <td className="px-3 py-3 capitalize text-[#4A5160]">{o.payment}</td>
                     <td className="px-3 py-3">
                       <StatusChip status={o.status} label={o.statusRaw} />
                     </td>
-                    <td className="whitespace-nowrap px-3 py-3 text-[#C9C1AE]">{fmtDate(o.ts)}</td>
+                    <td className="whitespace-nowrap px-3 py-3 text-[#4A5160]">{fmtDate(o.ts)}</td>
                     <td className="py-3 pl-3 text-right">
-                      <Link href="/admin/orders" className="text-xs font-semibold text-[#C8A96B] hover:underline">
+                      <Link href="/admin/orders" className="text-xs font-semibold text-[#E53935] hover:underline">
                         View
                       </Link>
                     </td>
@@ -968,21 +968,21 @@ export default function AdminDashboardPage() {
 
           <ul className="space-y-3 md:hidden">
             {recentOrders.map((o, i) => (
-              <li key={`${o.id}-${i}`} className="rounded-xl border border-[#C8A96B]/20 bg-[#1C1B18]/50 p-4">
+              <li key={`${o.id}-${i}`} className="rounded-xl border border-[#E4E7EC] bg-white p-4">
                 <div className="flex items-start justify-between gap-3">
                   <div className="min-w-0">
                     <p className="text-sm font-semibold">#{o.id}</p>
-                    <p className="truncate text-xs text-[#C9C1AE]">{o.name}</p>
+                    <p className="truncate text-xs text-[#4A5160]">{o.name}</p>
                   </div>
-                  <p className="shrink-0 font-serif text-lg">{money(o.amount)}</p>
+                  <p className="font-bold shrink-0 text-lg">{money(o.amount)}</p>
                 </div>
                 <div className="mt-3 flex items-center justify-between gap-2">
                   <StatusChip status={o.status} label={o.statusRaw} />
-                  <span className="text-[11px] text-[#C9C1AE]">{fmtDate(o.ts)}</span>
+                  <span className="text-[12px] text-[#4A5160]">{fmtDate(o.ts)}</span>
                 </div>
                 <Link
                   href="/admin/orders"
-                  className="mt-3 inline-flex items-center gap-1 text-xs font-semibold text-[#C8A96B]"
+                  className="mt-3 inline-flex items-center gap-1 text-xs font-semibold text-[#E53935]"
                 >
                   View Order <ArrowRight className="h-3.5 w-3.5" />
                 </Link>
@@ -997,7 +997,7 @@ export default function AdminDashboardPage() {
         <Card
           title="Low Stock Alert"
           subtitle="Products running low"
-          action={<GoldLink href="/admin/products">View All</GoldLink>}
+          action={<AccentLink href="/admin/products">View All</AccentLink>}
         >
           <State
             loading={loading}
@@ -1007,7 +1007,7 @@ export default function AdminDashboardPage() {
             onRetry={retry}
             skeleton={<Skel className="h-44 w-full" />}
           >
-            <ul className="divide-y divide-[#C8A96B]/15">
+            <ul className="divide-y divide-[#E4E7EC]">
               {lowStock.slice(0, 6).map(({ product, stock }) => {
                 const level = stockLevel(stock);
                 return (
@@ -1015,10 +1015,10 @@ export default function AdminDashboardPage() {
                     <Thumb product={product} />
                     <div className="min-w-0 flex-1">
                       <p className="truncate text-sm font-semibold">{product.name}</p>
-                      <p className="text-[11px] text-[#C9C1AE]">{stock} in stock</p>
+                      <p className="text-[12px] text-[#4A5160]">{stock} in stock</p>
                     </div>
                     <span
-                      className={`shrink-0 rounded-full border px-2.5 py-0.5 text-[11px] font-semibold ${STOCK_CHIP[level]}`}
+                      className={`shrink-0 rounded-full border px-2.5 py-0.5 text-[12px] font-semibold ${STOCK_CHIP[level]}`}
                     >
                       {level}
                     </span>
@@ -1038,19 +1038,19 @@ export default function AdminDashboardPage() {
             onRetry={retry}
             skeleton={<Skel className="h-44 w-full" />}
           >
-            <ul className="divide-y divide-[#C8A96B]/15">
+            <ul className="divide-y divide-[#E4E7EC]">
               {recentCustomers.map((c) => (
                 <li key={c.key} className="flex items-center gap-3 py-3">
-                  <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-[#C8A96B]/60 bg-[#131210] font-serif text-sm text-[#C8A96B]">
+                  <span className="font-bold flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-[#E53935]/60 bg-[#F5F6F8] text-sm text-[#E53935]">
                     {c.name.charAt(0).toUpperCase()}
                   </span>
                   <div className="min-w-0 flex-1">
                     <p className="truncate text-sm font-semibold">{c.name}</p>
-                    <p className="truncate text-[11px] text-[#C9C1AE]">{c.email || '—'}</p>
+                    <p className="truncate text-[12px] text-[#4A5160]">{c.email || '—'}</p>
                   </div>
                   <div className="shrink-0 text-right">
-                    <p className="text-sm font-semibold text-[#C8A96B]">{money(c.spent)}</p>
-                    <p className="text-[11px] text-[#C9C1AE]">
+                    <p className="text-sm font-semibold text-[#E53935]">{money(c.spent)}</p>
+                    <p className="text-[12px] text-[#4A5160]">
                       {c.orders} {c.orders === 1 ? 'order' : 'orders'} · {fmtDate(c.last)}
                     </p>
                   </div>
@@ -1071,7 +1071,7 @@ export default function AdminDashboardPage() {
 type Icon = ComponentType<{ className?: string }>;
 
 function Skel({ className = '' }: { className?: string }) {
-  return <div className={`animate-pulse rounded-xl bg-[#F4F0E6]/10 ${className}`} />;
+  return <div className={`animate-pulse rounded-xl bg-[#111111]/5 ${className}`} />;
 }
 
 function Kpi({
@@ -1093,28 +1093,28 @@ function Kpi({
 }) {
   const up = (change ?? 0) >= 0;
   return (
-    <div className="group relative min-w-0 overflow-hidden rounded-2xl border border-[#C8A96B]/25 bg-gradient-to-br from-[#312F2A] to-[#2A2824] p-4 shadow-[0_10px_30px_rgba(0,0,0,0.25)] transition duration-300 hover:-translate-y-0.5 hover:border-[#C8A96B]/70 sm:p-5">
+    <div className="group relative min-w-0 overflow-hidden rounded-2xl border border-[#E4E7EC] bg-gradient-to-br from-[#F2F4F7] to-[#F2F4F7] p-4 shadow-[0_10px_30px_rgba(0,0,0,0.25)] transition duration-300 hover:-translate-y-0.5 hover:border-[#E53935]/70 sm:p-5">
       <div className="flex items-start justify-between gap-2">
-        <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-[#C9C1AE] sm:text-[11px]">{label}</p>
-        <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border border-[#B89A5A]/40 bg-[#131210]/60 text-[#C8A96B] sm:h-9 sm:w-9">
+        <p className="text-[12px] font-semibold uppercase tracking-[0.16em] text-[#4A5160] sm:text-[12px]">{label}</p>
+        <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border border-[#D0D5DD] bg-white/80 text-[#E53935] sm:h-9 sm:w-9">
           <Icon className="h-4 w-4" />
         </span>
       </div>
 
       {loading ? (
         <div className="mt-4 space-y-2">
-          <div className="h-7 w-24 animate-pulse rounded bg-[#F4F0E6]/10" />
-          <div className="h-3 w-20 animate-pulse rounded bg-[#F4F0E6]/10" />
+          <div className="h-7 w-24 animate-pulse rounded bg-[#111111]/5" />
+          <div className="h-3 w-20 animate-pulse rounded bg-[#111111]/5" />
         </div>
       ) : failed ? (
-        <p className="mt-4 text-xs text-[#E5A3A3]">Unavailable</p>
+        <p className="mt-4 text-xs text-[#B42318]">Unavailable</p>
       ) : (
         <>
-          <p className="mt-3 truncate font-serif text-2xl text-[#F4F0E6] sm:text-[28px]">{value}</p>
+          <p className="font-bold mt-3 truncate text-2xl text-[#111111] sm:text-[28px]">{value}</p>
           {change !== undefined ? (
             <p
-              className={`mt-2 flex items-center gap-1 text-[11px] font-semibold ${
-                change === null ? 'text-[#C9C1AE]' : up ? 'text-[#7FD1A0]' : 'text-[#E5A3A3]'
+              className={`mt-2 flex items-center gap-1 text-[12px] font-semibold ${
+                change === null ? 'text-[#4A5160]' : up ? 'text-[#7FD1A0]' : 'text-[#B42318]'
               }`}
             >
               {change === null ? null : up ? (
@@ -1123,10 +1123,10 @@ function Kpi({
                 <TrendingDown className="h-3.5 w-3.5" />
               )}
               {change === null ? 'New activity' : `${up ? '+' : ''}${change.toFixed(1)}%`}
-              <span className="font-normal text-[#A19B8C]">vs previous period</span>
+              <span className="font-normal text-[#626875]">vs previous period</span>
             </p>
           ) : (
-            <p className="mt-2 text-[11px] text-[#A19B8C]">{note}</p>
+            <p className="mt-2 text-[12px] text-[#626875]">{note}</p>
           )}
         </>
       )}
@@ -1150,17 +1150,17 @@ function MiniStat({
   return (
     <Link
       href={href}
-      className="flex min-w-0 items-center gap-3 rounded-xl border border-[#C8A96B]/25 bg-[#2A2824] p-3.5 transition hover:border-[#B89A5A]/60"
+      className="flex min-w-0 items-center gap-3 rounded-xl border border-[#E4E7EC] bg-[#F2F4F7] p-3.5 transition hover:border-[#E53935]/60"
     >
-      <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-[#B89A5A]/40 text-[#C8A96B]">
+      <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-[#D0D5DD] text-[#E53935]">
         <Icon className="h-4 w-4" />
       </span>
       <div className="min-w-0">
-        <p className="truncate text-[10px] font-semibold uppercase tracking-[0.16em] text-[#C9C1AE]">{label}</p>
+        <p className="truncate text-[12px] font-semibold uppercase tracking-[0.16em] text-[#4A5160]">{label}</p>
         {loading ? (
-          <div className="mt-1 h-5 w-10 animate-pulse rounded bg-[#F4F0E6]/10" />
+          <div className="mt-1 h-5 w-10 animate-pulse rounded bg-[#111111]/5" />
         ) : (
-          <p className="font-serif text-xl text-[#F4F0E6]">{value}</p>
+          <p className="font-bold text-xl text-[#111111]">{value}</p>
         )}
       </div>
     </Link>
@@ -1181,11 +1181,11 @@ function Card({
   className?: string;
 }) {
   return (
-    <section className={`${FOREST_CARD} p-4 sm:p-5 ${className}`}>
+    <section className={`${CARD} p-4 sm:p-5 ${className}`}>
       <div className="mb-4 flex flex-wrap items-start justify-between gap-3">
         <div className="min-w-0">
-          <h2 className="font-serif text-lg text-[#F4F0E6] sm:text-xl">{title}</h2>
-          {subtitle && <p className="mt-0.5 text-[11px] text-[#C9C1AE]">{subtitle}</p>}
+          <h2 className="font-bold text-lg text-[#111111] sm:text-xl">{title}</h2>
+          {subtitle && <p className="mt-0.5 text-[12px] text-[#4A5160]">{subtitle}</p>}
         </div>
         {action}
       </div>
@@ -1214,12 +1214,12 @@ function State({
   if (loading) return <>{skeleton}</>;
   if (error) {
     return (
-      <div className="flex min-h-[110px] flex-col items-center justify-center gap-2 rounded-xl border border-dashed border-[#9B2C2C]/40 bg-[#9B2C2C]/5 px-4 py-5 text-center">
-        <p className="text-xs text-[#E5A3A3]">{error}</p>
+      <div className="flex min-h-[110px] flex-col items-center justify-center gap-2 rounded-xl border border-dashed border-[#D92D20]/30 bg-[#9B2C2C]/5 px-4 py-5 text-center">
+        <p className="text-xs text-[#B42318]">{error}</p>
         <button
           type="button"
           onClick={onRetry}
-          className="rounded-md border border-[#9B2C2C]/40 px-3 py-1 text-xs font-semibold text-[#E5A3A3] hover:bg-[#9B2C2C]/10"
+          className="rounded-md border border-[#D92D20]/30 px-3 py-1 text-xs font-semibold text-[#B42318] hover:bg-[#9B2C2C]/10"
         >
           Try again
         </button>
@@ -1228,8 +1228,8 @@ function State({
   }
   if (empty) {
     return (
-      <div className="flex min-h-[110px] flex-col items-center justify-center gap-2 rounded-xl border border-dashed border-[#B89A5A]/50 px-4 py-5 text-center text-xs text-[#C9C1AE]">
-        <PackageX className="h-5 w-5 text-[#B89A5A]" />
+      <div className="flex min-h-[110px] flex-col items-center justify-center gap-2 rounded-xl border border-dashed border-[#E53935]/50 px-4 py-5 text-center text-xs text-[#4A5160]">
+        <PackageX className="h-5 w-5 text-[#E53935]" />
         {emptyText}
       </div>
     );
@@ -1237,11 +1237,11 @@ function State({
   return <>{children}</>;
 }
 
-function GoldLink({ href, children }: { href: string; children: ReactNode }) {
+function AccentLink({ href, children }: { href: string; children: ReactNode }) {
   return (
     <Link
       href={href}
-      className="inline-flex shrink-0 items-center gap-1 text-xs font-semibold text-[#C8A96B] underline-offset-4 outline-none transition hover:underline focus-visible:ring-1 focus-visible:ring-[#B89A5A]"
+      className="inline-flex shrink-0 items-center gap-1 text-xs font-semibold text-[#E53935] underline-offset-4 outline-none transition hover:underline focus-visible:ring-1 focus-visible:ring-[#E53935]"
     >
       {children}
       <ArrowRight className="h-3.5 w-3.5" />
@@ -1259,15 +1259,15 @@ function Segmented({
   onChange: (v: string) => void;
 }) {
   return (
-    <div className="flex rounded-lg border border-[#C8A96B]/25 bg-[#131210]/60 p-0.5">
+    <div className="flex rounded-lg border border-[#E4E7EC] bg-white/80 p-0.5">
       {options.map((o) => (
         <button
           key={o}
           type="button"
           onClick={() => onChange(o)}
           aria-pressed={value === o}
-          className={`rounded-md px-2.5 py-1 text-[11px] font-semibold transition ${
-            value === o ? 'bg-[#C8A96B] text-[#131210]' : 'text-[#C9C1AE] hover:bg-[#F4F0E6]/10'
+          className={`rounded-md px-2.5 py-1 text-[12px] font-semibold transition ${
+            value === o ? 'bg-[#E53935] text-white' : 'text-[#4A5160] hover:bg-[#111111]/5'
           }`}
         >
           {o}
@@ -1279,7 +1279,7 @@ function Segmented({
 
 function Legend({ items }: { items: { label: string; color: string }[] }) {
   return (
-    <div className="mt-3 flex flex-wrap items-center gap-x-5 gap-y-1 text-[11px] text-[#C9C1AE]">
+    <div className="mt-3 flex flex-wrap items-center gap-x-5 gap-y-1 text-[12px] text-[#4A5160]">
       {items.map((i) => (
         <span key={i.label} className="flex items-center gap-1.5">
           <span className="h-2.5 w-2.5 rounded-full" style={{ backgroundColor: i.color }} />
@@ -1293,7 +1293,7 @@ function Legend({ items }: { items: { label: string; color: string }[] }) {
 function StatusChip({ status, label }: { status: StatusKey; label: string }) {
   return (
     <span
-      className={`inline-block whitespace-nowrap rounded-full border px-2.5 py-0.5 text-[11px] font-semibold capitalize ${STATUS_META[status].chip}`}
+      className={`inline-block whitespace-nowrap rounded-full border px-2.5 py-0.5 text-[12px] font-semibold capitalize ${STATUS_META[status].chip}`}
     >
       {label || STATUS_META[status].label}
     </span>
@@ -1304,13 +1304,13 @@ function Thumb({ product, size = 'md' }: { product?: Product; size?: 'md' | 'lg'
   const image = product?.images?.[0]?.image_url;
   const dim = size === 'lg' ? 'h-14 w-14' : 'h-10 w-10';
   return (
-    <div className={`${dim} shrink-0 overflow-hidden rounded-lg border border-[#C8A96B]/25 bg-[#131210]`}>
+    <div className={`${dim} shrink-0 overflow-hidden rounded-lg border border-[#E4E7EC] bg-[#F5F6F8]`}>
       {image ? (
         // eslint-disable-next-line @next/next/no-img-element
         <img src={image} alt={product?.name || ''} className="h-full w-full object-cover" loading="lazy" />
       ) : (
         <div className="flex h-full items-center justify-center">
-          <Boxes className="h-4 w-4 text-[#A19B8C]" />
+          <Boxes className="h-4 w-4 text-[#626875]" />
         </div>
       )}
     </div>
@@ -1341,13 +1341,13 @@ function HBar({
         </span>
         <span className="shrink-0 font-semibold">{right}</span>
       </div>
-      <div className="h-2.5 w-full overflow-hidden rounded-full bg-[#F4F0E6]/10">
+      <div className="h-2.5 w-full overflow-hidden rounded-full bg-[#111111]/5">
         <div
           className="h-full rounded-full transition-all duration-500"
-          style={{ width: `${width}%`, backgroundColor: highlight ? '#C8A96B' : '#6FA383' }}
+          style={{ width: `${width}%`, backgroundColor: highlight ? '#E53935' : '#6FA383' }}
         />
       </div>
-      {sub && <p className="mt-1 text-[11px] text-[#C9C1AE]">{sub}</p>}
+      {sub && <p className="mt-1 text-[12px] text-[#4A5160]">{sub}</p>}
     </li>
   );
 }
@@ -1414,7 +1414,7 @@ function TrendChart({
 
   return (
     <div className="flex gap-2">
-      <div className="flex h-[200px] w-10 shrink-0 flex-col justify-between pb-0 text-right text-[10px] text-[#C9C1AE] sm:w-12">
+      <div className="flex h-[200px] w-10 shrink-0 flex-col justify-between pb-0 text-right text-[12px] text-[#4A5160] sm:w-12">
         {ticks.map((t) => (
           <span key={t}>{yFormat(primaryMax * t)}</span>
         ))}
@@ -1428,7 +1428,7 @@ function TrendChart({
         >
           <div className="pointer-events-none absolute inset-0 flex flex-col justify-between">
             {ticks.map((t) => (
-              <div key={t} className="border-t border-[#F4F0E6]/10" />
+              <div key={t} className="border-t border-[#F7F7F7]/10" />
             ))}
           </div>
 
@@ -1461,13 +1461,13 @@ function TrendChart({
           {hover !== null && (
             <>
               <div
-                className="pointer-events-none absolute inset-y-0 w-px bg-[#B89A5A]/60"
+                className="pointer-events-none absolute inset-y-0 w-px bg-[#E53935]/60"
                 style={{ left: `${n === 1 ? 50 : (hover / (n - 1)) * 100}%` }}
               />
               {lines.map((l, i) => (
                 <span
                   key={i}
-                  className="pointer-events-none absolute h-2.5 w-2.5 -translate-x-1/2 -translate-y-1/2 rounded-full border-2 border-[#F4F0E6]"
+                  className="pointer-events-none absolute h-2.5 w-2.5 -translate-x-1/2 -translate-y-1/2 rounded-full border-2 border-[#F7F7F7]"
                   style={{
                     left: `${n === 1 ? 50 : (hover / (n - 1)) * 100}%`,
                     top: `${(paths[i].pts[hover]?.y / H) * 100}%`,
@@ -1476,7 +1476,7 @@ function TrendChart({
                 />
               ))}
               <div
-                className="pointer-events-none absolute top-1 z-10 w-36 rounded-lg bg-[#C8A96B] p-2.5 text-[11px] leading-relaxed text-[#131210] shadow-lg"
+                className="pointer-events-none absolute top-1 z-10 w-36 rounded-lg bg-[#E53935] p-2.5 text-[12px] leading-relaxed text-white shadow-lg"
                 style={{
                   left: `${n === 1 ? 50 : (hover / (n - 1)) * 100}%`,
                   transform: hover > n / 2 ? 'translateX(calc(-100% - 10px))' : 'translateX(10px)',
@@ -1488,7 +1488,7 @@ function TrendChart({
           )}
         </div>
 
-        <div className="mt-2 flex justify-between text-[10px] text-[#C9C1AE]">
+        <div className="mt-2 flex justify-between text-[12px] text-[#4A5160]">
           {labels.map((l, i) => (
             <span key={`${l}-${i}`} className={i % step === 0 ? '' : 'invisible'}>
               {l}
@@ -1518,7 +1518,7 @@ function StatusBars({ counts }: { counts: Record<StatusKey, number> }) {
               }}
             />
           </div>
-          <span className="w-full truncate text-center text-[9px] text-[#C9C1AE] sm:text-[10px]">
+          <span className="w-full truncate text-center text-[12px] text-[#4A5160] sm:text-[12px]">
             {STATUS_META[k].label}
           </span>
         </div>

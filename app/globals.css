@@ -9,71 +9,71 @@
 
 @layer base {
   :root {
-    --background: 40 20% 98%;
-    --foreground: 20 10% 8%;
+    --background: 0 0% 97%;
+    --foreground: 0 0% 7%;
 
-    --card: 40 20% 99%;
-    --card-foreground: 20 10% 8%;
+    --card: 0 0% 100%;
+    --card-foreground: 0 0% 7%;
 
-    --popover: 40 20% 99%;
-    --popover-foreground: 20 10% 8%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 0 0% 7%;
 
-    --primary: 20 8% 8%;
-    --primary-foreground: 40 20% 98%;
+    --primary: 0 0% 7%;
+    --primary-foreground: 0 0% 100%;
 
-    --secondary: 38 22% 94%;
-    --secondary-foreground: 20 10% 10%;
+    --secondary: 0 0% 97%;
+    --secondary-foreground: 0 0% 7%;
 
-    --muted: 38 16% 94%;
-    --muted-foreground: 25 8% 42%;
+    --muted: 0 0% 97%;
+    --muted-foreground: 0 0% 47%;
 
-    --accent: 35 28% 72%;
-    --accent-foreground: 20 10% 10%;
+    --accent: 0 0% 94%;
+    --accent-foreground: 0 0% 7%;
 
     --destructive: 0 65% 48%;
     --destructive-foreground: 0 0% 98%;
 
-    --border: 35 14% 87%;
-    --input: 35 14% 87%;
-    --ring: 35 22% 55%;
+    --border: 0 0% 90%;
+    --input: 0 0% 90%;
+    --ring: 1 77% 55%;
 
     --radius: 14px;
 
-    --chart-1: 35 28% 58%;
-    --chart-2: 78 10% 38%;
-    --chart-3: 20 8% 18%;
-    --chart-4: 35 20% 78%;
-    --chart-5: 25 7% 48%;
+    --chart-1: 1 77% 55%;
+    --chart-2: 0 0% 47%;
+    --chart-3: 0 0% 13%;
+    --chart-4: 0 0% 90%;
+    --chart-5: 0 0% 30%;
   }
 
   .dark {
-    --background: 20 8% 7%;
-    --foreground: 40 20% 96%;
+    --background: 0 0% 7%;
+    --foreground: 0 0% 98%;
 
-    --card: 20 8% 10%;
-    --card-foreground: 40 20% 96%;
+    --card: 0 0% 9%;
+    --card-foreground: 0 0% 98%;
 
-    --popover: 20 8% 10%;
-    --popover-foreground: 40 20% 96%;
+    --popover: 0 0% 9%;
+    --popover-foreground: 0 0% 98%;
 
-    --primary: 40 20% 96%;
-    --primary-foreground: 20 8% 7%;
+    --primary: 0 0% 98%;
+    --primary-foreground: 0 0% 7%;
 
-    --secondary: 20 7% 15%;
-    --secondary-foreground: 40 20% 96%;
+    --secondary: 0 0% 15%;
+    --secondary-foreground: 0 0% 98%;
 
-    --muted: 20 7% 15%;
-    --muted-foreground: 35 8% 65%;
+    --muted: 0 0% 15%;
+    --muted-foreground: 0 0% 65%;
 
-    --accent: 35 20% 22%;
-    --accent-foreground: 40 20% 96%;
+    --accent: 0 0% 18%;
+    --accent-foreground: 0 0% 98%;
 
     --destructive: 0 55% 42%;
-    --destructive-foreground: 40 20% 96%;
+    --destructive-foreground: 0 0% 98%;
 
-    --border: 20 7% 20%;
-    --input: 20 7% 20%;
-    --ring: 35 18% 72%;
+    --border: 0 0% 20%;
+    --input: 0 0% 20%;
+    --ring: 1 77% 55%;
   }
 
   *,
@@ -120,7 +120,7 @@
     background: rgba(255, 255, 255, 0.78);
     backdrop-filter: blur(22px) saturate(150%);
     -webkit-backdrop-filter: blur(22px) saturate(150%);
-    border-bottom: 1px solid rgba(20, 18, 15, 0.06);
+    border-bottom: 1px solid rgba(17, 17, 17, 0.06);
   }
 
   .glass-nav-dark {
@@ -190,10 +190,10 @@
   }
 
   .ardenby-card:hover {
-    border-color: hsl(35 14% 78%);
+    border-color: hsl(0 0% 80%);
     box-shadow:
-      0 12px 35px rgba(20, 18, 15, 0.06),
-      0 2px 8px rgba(20, 18, 15, 0.03);
+      0 12px 35px rgba(17, 17, 17, 0.06),
+      0 2px 8px rgba(17, 17, 17, 0.03);
   }
 
   /*
@@ -409,13 +409,13 @@
   --kv-body: #b8bdc4;
   --kv-head: #eef0f2;
   --kv-muted: #b0b5bc;
-  --kv-gold-1: #ecd189;
-  --kv-gold-2: #c9a24a;
-  --kv-gold-3: #9e7a2c;
+  --kv-gold-1: #E53935;
+  --kv-gold-2: #E53935;
+  --kv-gold-3: #E53935;
   --kv-chrome: linear-gradient(180deg, #ffffff 0%, #dfe3e8 40%, #8a9098 55%, #f1f3f5 72%, #b4b9c0 100%);
   --kv-chrome-ring: conic-gradient(from 210deg, #fff, #5a5f67, #eff1f4, #34373c, #c7ccd2, #fff);
   --kv-glass: linear-gradient(160deg, rgba(255, 255, 255, 0.10), rgba(255, 255, 255, 0.02));
-  --kv-gold: linear-gradient(135deg, #ecd189 0%, #c9a24a 55%, #9e7a2c 100%);
+  --kv-gold: linear-gradient(135deg, #E53935 0%, #E53935 55%, #C62828 100%);
 }
 
 /* Chrome gradient text */
@@ -459,7 +459,7 @@
 /* Gold fill (CTAs only) */
 .gold-fill {
   background-image: var(--kv-gold);
-  color: #17120a;
+  color: #111111;
 }
 .gold-sheen { position: relative; overflow: hidden; isolation: isolate; }
 .gold-sheen::after {
@@ -518,7 +518,7 @@
   --kv-ease: cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
-.kv-shop { background-image: var(--kv-metal); background-color: #121214; color: #f4f2ec; font-family: var(--font-manrope), Inter, system-ui, sans-serif; }
+.kv-shop { background-image: var(--kv-metal); background-color: #121214; color: #F7F7F7; font-family: var(--font-manrope), Inter, system-ui, sans-serif; }
 .kv-panel {
   background: var(--kv-panel);
   border: 1px solid rgba(255, 255, 255, 0.12);
@@ -612,13 +612,13 @@
   --kv-body: #b8bdc4;
   --kv-head: #eef0f2;
   --kv-muted: #b0b5bc;
-  --kv-gold-1: #ecd189;
-  --kv-gold-2: #c9a24a;
-  --kv-gold-3: #9e7a2c;
+  --kv-gold-1: #E53935;
+  --kv-gold-2: #E53935;
+  --kv-gold-3: #E53935;
   --kv-chrome: linear-gradient(180deg, #ffffff 0%, #dfe3e8 40%, #8a9098 55%, #f1f3f5 72%, #b4b9c0 100%);
   --kv-chrome-ring: conic-gradient(from 210deg, #fff, #5a5f67, #eff1f4, #34373c, #c7ccd2, #fff);
   --kv-glass: linear-gradient(160deg, rgba(255, 255, 255, 0.10), rgba(255, 255, 255, 0.02));
-  --kv-gold: linear-gradient(135deg, #ecd189 0%, #c9a24a 55%, #9e7a2c 100%);
+  --kv-gold: linear-gradient(135deg, #E53935 0%, #E53935 55%, #C62828 100%);
 }
 
 /* Chrome gradient text */
@@ -662,7 +662,7 @@
 /* Gold fill (CTAs only) */
 .gold-fill {
   background-image: var(--kv-gold);
-  color: #17120a;
+  color: #111111;
 }
 .gold-sheen { position: relative; overflow: hidden; isolation: isolate; }
 .gold-sheen::after {
@@ -721,7 +721,7 @@
   --kv-ease: cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
-.kv-shop { background-image: var(--kv-metal); background-color: #121214; color: #f4f2ec; font-family: var(--font-manrope), Inter, system-ui, sans-serif; }
+.kv-shop { background-image: var(--kv-metal); background-color: #121214; color: #F7F7F7; font-family: var(--font-manrope), Inter, system-ui, sans-serif; }
 .kv-panel {
   background: var(--kv-panel);
   border: 1px solid rgba(255, 255, 255, 0.12);
@@ -780,7 +780,7 @@
 
 /* /shop: no gold in the footer or newsletter (navbar gold badges/search icon stay). */
 .kv-shop-shell footer .gold-fill { background-image: var(--kv-chrome-metal) !important; color: #0c0c0e !important; }
-.kv-shop-shell footer [class*='text-[#c9a24a]'] { color: #d2d2d7 !important; }
+.kv-shop-shell footer [class*='text-[#E53935]'] { color: #d2d2d7 !important; }
 @keyframes kv-float {
   0%, 100% { transform: translateY(0); }
   50%      { transform: translateY(-2.5px); }
@@ -791,77 +791,6 @@
 }
 
 
-/* =========================================================
-   KOVENIK black-metal account / wishlist styles
-   (static CSS lives here so it is never HTML-escaped by React)
-   ========================================================= */
-.kv-page { background-color:#08080A;
-  background-image: radial-gradient(ellipse 55% 35% at 90% 0%, rgba(214,176,106,.07), transparent 70%); }
-.kv-metal { position:relative; overflow:hidden; border:1px solid #33363D; border-radius:20px;
-  background: linear-gradient(170deg,#26282E 0%,#1C1E22 38%,#16171B 70%,#1B1C21 100%);
-  box-shadow: inset 0 1px 0 rgba(255,255,255,.12), 0 24px 48px -22px rgba(0,0,0,.9); }
-.kv-metal::before { content:""; position:absolute; inset:0; pointer-events:none; z-index:0;
-  background: linear-gradient(115deg, transparent 38%, rgba(255,255,255,.035) 46%, rgba(255,255,255,.015) 52%, transparent 60%); }
-.kv-metal > * { position:relative; z-index:1; }
-.kv-stat::after { content:""; position:absolute; left:18px; right:18px; top:0; height:1px; z-index:2;
-  background: linear-gradient(90deg, transparent, rgba(214,176,106,.75), transparent); }
-.kv-disc { display:inline-flex; align-items:center; justify-content:center; flex-shrink:0; border-radius:9999px;
-  background: radial-gradient(circle at 35% 28%, #6A6E77 0%, #363940 55%, #1C1D21 100%);
-  border:1px solid #474B53; box-shadow: inset 0 1px 1px rgba(255,255,255,.28), 0 4px 8px -2px rgba(0,0,0,.7); color:#fff; }
-.kv-btn-primary { display:inline-flex; align-items:center; justify-content:center; gap:8px; min-height:44px; padding:0 22px;
-  border-radius:9999px; background: linear-gradient(180deg,#fff,#E9E9E6); color:#0A0A0A; font-size:11px; font-weight:700;
-  letter-spacing:.14em; text-transform:uppercase; white-space:nowrap; transition:filter .15s; }
-.kv-btn-primary:hover { filter:brightness(.94); }
-.kv-btn-ghost { display:inline-flex; align-items:center; justify-content:center; gap:8px; min-height:44px; padding:0 18px;
-  border-radius:9999px; background:#1E2024; border:1px solid #42454C; color:#fff; font-size:11px; font-weight:600;
-  letter-spacing:.08em; white-space:nowrap; transition:border-color .15s; }
-.kv-btn-ghost:hover { border-color:#6a6e77; }
-.kv-label { font-size:10px; font-weight:600; letter-spacing:.24em; text-transform:uppercase; color:#D6B06A; }
-.kv-pill { display:inline-flex; align-items:center; gap:6px; min-height:30px; padding:0 12px; border-radius:9999px;
-  border:1px solid #3a3d44; background:rgba(255,255,255,.04); font-size:11px; color:#C6C9CF; max-width:100%; }
-.kv-wordmark { font-weight:700; letter-spacing:.04em; color:transparent; -webkit-text-stroke:1px rgba(255,255,255,.07);
-  line-height:1; white-space:nowrap; pointer-events:none; user-select:none; }
-.kv-scene { perspective:1100px; }
-.kv-card3d { transform: rotateY(-20deg) rotateX(9deg); transform-style:preserve-3d; }
-.kv-card-face { position:relative; border-radius:16px; border:1px solid #4a4d55; overflow:hidden;
-  background: repeating-linear-gradient(90deg, rgba(255,255,255,.02) 0 1px, transparent 1px 3px),
-              linear-gradient(150deg,#41444b 0%,#24262b 45%,#17181c 70%,#2b2d33 100%);
-  box-shadow: inset 0 1px 0 rgba(255,255,255,.22), 0 30px 50px -20px rgba(0,0,0,.95); }
-.kv-card-face::after { content:""; position:absolute; inset:0; pointer-events:none;
-  background: linear-gradient(115deg, transparent 35%, rgba(255,255,255,.09) 47%, transparent 58%); }
-.kv-chip { background: linear-gradient(135deg,#f0d79c,#c49a4e 55%,#e2c27e); border-radius:6px; border:1px solid rgba(0,0,0,.35); }
-.kv-ticket { background: linear-gradient(170deg,#26282E,#17181c); }
-.kv-scroll-hide::-webkit-scrollbar { display:none; }
-/* Existing (non-overview) sections keep their own markup; map light utility classes onto the dark scheme. */
-.kv-scope [class*="bg-white"], .kv-scope [class*="bg-[#FCFBF8]"], .kv-scope [class*="bg-[#FAF9F6]"],
-.kv-scope [class*="bg-[#F5F3EE]"], .kv-scope [class*="bg-[#F7F5F0]"], .kv-scope [class*="bg-stone-"],
-.kv-scope [class*="bg-neutral-50"], .kv-scope [class*="bg-neutral-100"] { background: linear-gradient(180deg,#1f2126,#17181c) !important; }
-.kv-scope [class*="border-[#DED9D0]"], .kv-scope [class*="border-[#E7E2DA]"], .kv-scope [class*="border-[#E8E2D8]"],
-.kv-scope [class*="border-stone-"], .kv-scope [class*="border-neutral-"], .kv-scope .border { border-color:#33363D !important; }
-.kv-scope [class*="text-[#171717]"], .kv-scope [class*="text-neutral-9"], .kv-scope [class*="text-black"] { color:#fff !important; }
-.kv-scope [class*="text-[#756E65]"], .kv-scope [class*="text-[#5C554E]"], .kv-scope [class*="text-[#6F6962]"],
-.kv-scope [class*="text-neutral-4"], .kv-scope [class*="text-neutral-5"], .kv-scope [class*="text-neutral-6"] { color:#C6C9CF !important; }
-.kv-scope [class*="text-[#A08C75]"] { color:#D6B06A !important; }
-.kv-scope button[class*="bg-[#171717]"], .kv-scope button[class*="bg-[#1A1A1A]"], .kv-scope a[class*="bg-[#171717]"] {
-  background: linear-gradient(180deg,#fff,#E9E9E6) !important; color:#0A0A0A !important; }
-.kv-scope input, .kv-scope textarea, .kv-scope select { background:#121316 !important; color:#fff !important; border-color:#42454C !important; }
-.kv-scope input::placeholder, .kv-scope textarea::placeholder { color:#9296A0 !important; }
-
-/* ---- KOVENIK metal form + inset helpers ---- */
-.kv-inner { border:1px solid #2f3238; border-radius:16px; background: linear-gradient(170deg,#1b1d21,#141518);
-  box-shadow: inset 0 1px 0 rgba(255,255,255,.06); }
-.kv-field-label { display:block; margin-bottom:8px; font-size:10px; font-weight:600; letter-spacing:.2em; text-transform:uppercase; color:#D6B06A; }
-.kv-input { width:100%; min-height:48px; border-radius:12px; border:1px solid #42454C; background:#121316; padding:0 16px;
-  font-size:14px; color:#fff; outline:none; transition:border-color .15s, box-shadow .15s; }
-textarea.kv-input { padding-top:12px; padding-bottom:12px; resize:none; line-height:1.5; }
-.kv-input::placeholder { color:#9296A0; }
-.kv-input:focus { border-color:#D6B06A; box-shadow:0 0 0 3px rgba(214,176,106,.14); }
-.kv-input:disabled { opacity:.5; cursor:not-allowed; }
-.kv-btn-danger { display:inline-flex; align-items:center; justify-content:center; gap:8px; min-height:44px; padding:0 20px;
-  border-radius:9999px; border:1px solid #6a2f31; background:#2a1517; color:#EF7B7B; font-size:11px; font-weight:700;
-  letter-spacing:.12em; text-transform:uppercase; white-space:nowrap; transition:background .15s, border-color .15s; }
-.kv-btn-danger:hover:not(:disabled) { background:#3a1b1e; border-color:#8a3d40; }
-.kv-btn-primary:disabled, .kv-btn-ghost:disabled, .kv-btn-danger:disabled { opacity:.5; cursor:not-allowed; }
 
 /* =========================================================
    KOVENIK light retail skin: homepage, header and footer.
@@ -885,16 +814,16 @@ textarea.kv-input { padding-top:12px; padding-bottom:12px; resize:none; line-hei
    ========================================================= */
 :root {
   --c-white: #FFFFFF;
-  --c-band: #F4F0E8;
-  --c-footer: #EAE5DA;
-  --c-img: #E8E6E1;
-  --c-line: #E2E0DB;
-  --c-ink: #222222;
-  --c-sub: #4A4A4A;
-  --c-gold: #B08D57;
-  --c-gold-text: #8C6D3A;
-  --c-gold-on-dark: #C9A86A;
-  --c-mist: #D6D3CC;
+  --c-band: #F7F7F7;
+  --c-footer: #F7F7F7;
+  --c-img: #F7F7F7;
+  --c-line: #E5E5E5;
+  --c-ink: #111111;
+  --c-sub: #666666;
+  --c-gold: #E53935;
+  --c-gold-text: #E53935;
+  --c-gold-on-dark: #E53935;
+  --c-mist: #D1D1D1;
 }
 
 .kv-flat {
@@ -943,18 +872,18 @@ textarea.kv-input { padding-top:12px; padding-bottom:12px; resize:none; line-hei
 :root {
   --kv-metal: none;
   --kv-chrome-metal: linear-gradient(#222222, #222222);
-  --kv-panel: #f4f0e8;
+  --kv-panel: #F7F7F7;
 }
 
 .kv-shop {
   background: #ffffff;
   background-image: none;
-  color: #171717;
+  color: #111111;
   font-family: var(--font-archivo), Arial, sans-serif;
 }
 .kv-panel {
-  background: #f4f0e8;
-  border: 1px solid #e2e0db;
+  background: #F7F7F7;
+  border: 1px solid #E5E5E5;
   box-shadow: none;
 }
 .kv-chrome-bg { background: #222222; background-image: none; color: #ffffff; box-shadow: none; }
@@ -963,7 +892,7 @@ textarea.kv-input { padding-top:12px; padding-bottom:12px; resize:none; line-hei
   background: none;
   -webkit-background-clip: border-box;
   background-clip: border-box;
-  color: #171717;
+  color: #111111;
   -webkit-text-fill-color: currentColor;
 }
 .kv-sheen::after { display: none; }
@@ -974,20 +903,20 @@ textarea.kv-input { padding-top:12px; padding-bottom:12px; resize:none; line-hei
   background: none;
   -webkit-background-clip: border-box;
   background-clip: border-box;
-  color: #171717;
+  color: #111111;
   -webkit-text-fill-color: currentColor;
   animation: none;
 }
 .chrome-glass {
   background: #ffffff;
-  border: 1px solid #e2e0db;
+  border: 1px solid #E5E5E5;
   box-shadow: none;
   backdrop-filter: none;
   -webkit-backdrop-filter: none;
 }
 .gold-fill { background: #222222; background-image: none; color: #ffffff; }
 .gold-sheen::after { display: none; }
-.chrome-outline { color: transparent; -webkit-text-stroke: 1px #e2e0db; }
+.chrome-outline { color: transparent; -webkit-text-stroke: 1px #E5E5E5; }
 .chrome-focus:focus-visible,
 .chrome-scope :focus-visible { outline: 2px solid #222222; outline-offset: 2px; }
 
@@ -996,70 +925,78 @@ textarea.kv-input { padding-top:12px; padding-bottom:12px; resize:none; line-hei
   backdrop-filter: none;
   -webkit-backdrop-filter: none;
   box-shadow: none;
-  border: 1px solid #e2e0db;
+  border: 1px solid #E5E5E5;
   border-radius: 4px;
 }
 
 
 /* =========================================================
-   Account / wishlist set (kv-page, kv-metal, kv-btn-*, kv-input...)
-   Same class names as the old black-metal design, now light and flat.
-   The membership card stays charcoal as the one selective dark element.
+   KOVENIK account + wishlist system (kv-*)
+   Flat and light: white page, #F5F5F5 panels, #E5E5E5 borders,
+   #111 buttons, red (#EF3535 / #C8211F for small text) only for meaning.
    ========================================================= */
 .kv-page { background-color: #ffffff; background-image: none; }
-.kv-metal {
-  position: relative; overflow: hidden; border: 1px solid #e2e0db; border-radius: 4px;
-  background: #f4f0e8; box-shadow: none;
+.kv-display {
+  font-family: var(--font-oswald), Impact, sans-serif; font-weight: 700; text-transform: uppercase;
+  line-height: 1.05; color: #111111; letter-spacing: 0;
 }
-.kv-metal::before { display: none; }
-.kv-stat::after { content: ""; position: absolute; left: 18px; right: 18px; top: 0; height: 2px; z-index: 2; background: #b08d57; }
+.kv-metal { position: relative; border: 1px solid #E5E5E5; border-radius: 4px; background: #F5F5F5; }
+.kv-inner { border: 1px solid #E5E5E5; border-radius: 4px; background: #ffffff; }
 .kv-disc {
   display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; border-radius: 9999px;
-  background: #ffffff; border: 1px solid #e2e0db; box-shadow: none; color: #171717;
+  background: #ffffff; border: 1px solid #E5E5E5; color: #111111;
 }
-.kv-btn-primary {
-  display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 44px; padding: 0 22px;
-  border-radius: 2px; background: #222222; color: #ffffff; font-size: 12px; font-weight: 700;
-  letter-spacing: .1em; text-transform: uppercase; white-space: nowrap; transition: background .15s;
-}
-.kv-btn-primary:hover { background: #000000; filter: none; }
-.kv-btn-ghost {
-  display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 44px; padding: 0 18px;
-  border-radius: 2px; background: transparent; border: 1px solid #222222; color: #171717; font-size: 12px; font-weight: 600;
-  letter-spacing: .06em; white-space: nowrap; transition: background .15s, color .15s;
-}
-.kv-btn-ghost:hover { border-color: #222222; background: #222222; color: #ffffff; }
+.kv-btn-primary,
+.kv-btn-ghost,
 .kv-btn-danger {
-  display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 44px; padding: 0 20px;
-  border-radius: 2px; border: 1px solid #b3261e; background: #fdecea; color: #b3261e; font-size: 12px; font-weight: 700;
-  letter-spacing: .1em; text-transform: uppercase; white-space: nowrap; transition: background .15s;
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 48px; padding: 0 22px;
+  border-radius: 2px; font-size: 16px; font-weight: 600; line-height: 1; white-space: nowrap;
+  transition: background .15s, color .15s, border-color .15s;
 }
-.kv-btn-danger:hover:not(:disabled) { background: #f9d6d2; border-color: #b3261e; }
-.kv-label { font-size: 12px; font-weight: 700; letter-spacing: .18em; text-transform: uppercase; color: #8c6d3a; }
+.kv-btn-primary { background: #111111; color: #ffffff; border: 1px solid #111111; }
+.kv-btn-primary:hover:not(:disabled) { background: #000000; }
+.kv-btn-ghost { background: #ffffff; color: #111111; border: 1px solid #111111; }
+.kv-btn-ghost:hover:not(:disabled) { background: #111111; color: #ffffff; }
+.kv-btn-danger { background: #ffffff; color: #C8211F; border: 1px solid #C8211F; }
+.kv-btn-danger:hover:not(:disabled) { background: #C8211F; color: #ffffff; }
+.kv-btn-primary:disabled, .kv-btn-ghost:disabled, .kv-btn-danger:disabled { opacity: .5; cursor: not-allowed; }
+.kv-btn-sm { min-height: 44px; padding: 0 16px; font-size: 15px; }
+.kv-link-danger { color: #C8211F; font-weight: 600; text-decoration: underline; text-underline-offset: 3px; }
+.kv-label { font-size: 14px; font-weight: 600; color: #666666; }
 .kv-pill {
-  display: inline-flex; align-items: center; gap: 6px; min-height: 30px; padding: 0 12px; border-radius: 9999px;
-  border: 1px solid #e2e0db; background: #ffffff; font-size: 12px; color: #4a4a4a; max-width: 100%;
+  display: inline-flex; align-items: center; gap: 6px; min-height: 36px; padding: 0 14px; border-radius: 9999px;
+  border: 1px solid #E5E5E5; background: #ffffff; font-size: 14px; font-weight: 500; color: #111111; max-width: 100%;
 }
 .kv-wordmark {
-  font-weight: 700; letter-spacing: .04em; color: transparent; -webkit-text-stroke: 1px #e2e0db;
+  font-weight: 700; letter-spacing: .02em; color: transparent; -webkit-text-stroke: 1px #E5E5E5;
   line-height: 1; white-space: nowrap; pointer-events: none; user-select: none;
 }
-.kv-scene { perspective: none; }
-.kv-card3d { transform: none; transform-style: flat; }
 .kv-card-face {
-  position: relative; border-radius: 8px; border: 1px solid #222222; overflow: hidden; background: #222222; color: #ffffff; box-shadow: none;
+  position: relative; border-radius: 6px; overflow: hidden; background: #111111; color: #ffffff;
 }
-.kv-card-face::after { display: none; }
-.kv-chip { background: #b08d57; border-radius: 4px; border: 0; }
-.kv-ticket { background: #ffffff; border: 1px solid #e2e0db; }
-.kv-inner { border: 1px solid #e2e0db; border-radius: 4px; background: #ffffff; box-shadow: none; }
-.kv-field-label { display: block; margin-bottom: 8px; font-size: 12px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: #4a4a4a; }
+.kv-chip { background: #EF3535; border-radius: 4px; }
+.kv-field-label { display: block; margin-bottom: 8px; font-size: 15px; font-weight: 600; color: #111111; }
 .kv-input {
-  width: 100%; min-height: 48px; border-radius: 2px; border: 1px solid #d6d0c2; background: #ffffff; padding: 0 16px;
-  font-size: 16px; color: #171717; outline: none; transition: border-color .15s;
+  width: 100%; min-height: 52px; border-radius: 2px; border: 1px solid #BDBDBD; background: #ffffff; padding: 0 16px;
+  font-size: 16px; color: #111111; outline: none; transition: border-color .15s;
 }
-.kv-input::placeholder { color: #5c5c5c; }
-.kv-input:focus { border-color: #222222; box-shadow: none; }
+textarea.kv-input { padding-top: 14px; padding-bottom: 14px; resize: none; line-height: 1.5; }
+.kv-input::placeholder { color: #767676; }
+.kv-input:focus { border-color: #111111; box-shadow: 0 0 0 1px #111111; }
+.kv-input[aria-invalid='true'] { border-color: #C8211F; box-shadow: 0 0 0 1px #C8211F; }
+.kv-input:disabled, .kv-input[readonly] { background: #F5F5F5; color: #666666; cursor: not-allowed; }
+.kv-error { display: flex; align-items: center; gap: 6px; margin-top: 6px; font-size: 14px; font-weight: 500; color: #C8211F; }
+/* status chips always pair an icon with text */
+.kv-status {
+  display: inline-flex; align-items: center; gap: 6px; min-height: 32px; padding: 0 12px; border-radius: 9999px;
+  border: 1px solid #111111; background: #ffffff; color: #111111; font-size: 14px; font-weight: 600;
+}
+.kv-status[data-tone='dark'] { background: #111111; color: #ffffff; }
+.kv-status[data-tone='dashed'] { border-style: dashed; }
+.kv-status[data-tone='danger'] { border-color: #C8211F; color: #C8211F; }
+.kv-status[data-tone='muted'] { border-color: #BDBDBD; color: #666666; }
+.kv-page :focus-visible { outline: 2px solid #111111; outline-offset: 2px; }
+@media (prefers-reduced-motion: reduce) { .kv-page * { transition: none !important; } }
 
 /* ---------------------------------------------------------------------------
    Listing page (/shop) design tokens. Scoped to .kvl so the shadcn --muted
@@ -1067,15 +1004,15 @@ textarea.kv-input { padding-top:12px; padding-bottom:12px; resize:none; line-hei
    portalled sheets) that needs them.
 --------------------------------------------------------------------------- */
 .kvl {
-  --ivory: #F4F0E8;
-  --ivory-2: #EDE7DC;
-  --ink: #171717;
+  --ivory: #F7F7F7;
+  --ivory-2: #E5E5E5;
+  --ink: #111111;
   --charcoal: #222222;
-  --gold: #B08D57;
-  --line: #DDD5C7;
-  --line-2: #E7E0D3;
-  --muted: #6E6A63;
-  --soft: #8F897F;
+  --gold: #E53935;
+  --line: #D2D2D2;
+  --line-2: #E5E5E5;
+  --muted: #696969;
+  --soft: #878787;
   font-family: var(--font-inter), system-ui, sans-serif;
   color: var(--charcoal);
   line-height: 1.4;
@@ -1085,3 +1022,18 @@ textarea.kv-input { padding-top:12px; padding-bottom:12px; resize:none; line-hei
 @keyframes kvl-pulse { 0%, 100% { opacity: 1; } 50% { opacity: .55; } }
 .kvl-skeleton { background: var(--ivory-2); animation: kvl-pulse 1.4s ease-in-out infinite; }
 @media (prefers-reduced-motion: reduce) { .kvl-skeleton { animation: none; } }
+
+/* Admin products page (.kv-scope) still maps light utility classes onto a dark scheme. */
+.kv-scope [class*="bg-white"], .kv-scope [class*="bg-[#FFFFFF]"], .kv-scope [class*="bg-[#FFFFFF]"],
+.kv-scope [class*="bg-[#F7F7F7]"], .kv-scope [class*="bg-[#F7F7F7]"], .kv-scope [class*="bg-neutral-"],
+.kv-scope [class*="bg-neutral-50"], .kv-scope [class*="bg-neutral-100"] { background: linear-gradient(180deg,#1f2126,#17181c) !important; }
+.kv-scope [class*="border-[#E5E5E5]"], .kv-scope [class*="border-[#E5E5E5]"], .kv-scope [class*="border-[#E5E5E5]"],
+.kv-scope [class*="border-neutral-"], .kv-scope [class*="border-neutral-"], .kv-scope .border { border-color:#33363D !important; }
+.kv-scope [class*="text-[#111111]"], .kv-scope [class*="text-neutral-9"], .kv-scope [class*="text-black"] { color:#fff !important; }
+.kv-scope [class*="text-[#6D6D6D]"], .kv-scope [class*="text-[#555555]"], .kv-scope [class*="text-[#696969]"],
+.kv-scope [class*="text-neutral-4"], .kv-scope [class*="text-neutral-5"], .kv-scope [class*="text-neutral-6"] { color:#C6C9CF !important; }
+.kv-scope [class*="text-[#8B8B8B]"] { color:#E53935 !important; }
+.kv-scope button[class*="bg-[#111111]"], .kv-scope button[class*="bg-[#1A1A1A]"], .kv-scope a[class*="bg-[#111111]"] {
+  background: linear-gradient(180deg,#fff,#E5E5E5) !important; color:#0A0A0A !important; }
+.kv-scope input, .kv-scope textarea, .kv-scope select { background:#121316 !important; color:#fff !important; border-color:#42454C !important; }
+.kv-scope input::placeholder, .kv-scope textarea::placeholder { color:#9296A0 !important; }

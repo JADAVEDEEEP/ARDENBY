@@ -1,125 +1,128 @@
 /* =========================================================
-   KOVENIK checkout — mirrors the Cart page tokens exactly:
-   page #0A0A0A · card #111111 · borders #2A2A2A / #3A3A3A · text #C0C0C0 / white
-   · square corners · white solid CTA. Scoped under .ck / .ck-scope.
+   KOVENIK checkout. Flat and light: white page, #F5F5F5 panels,
+   #E5E5E5 borders, #111 actions, 2-4px corners. Red (#EF3535) is only
+   used for the active-step ring; small red text uses #C8211F.
+   Scoped under .ck / .ck-scope.
    ========================================================= */
 .ck,
 .ck-scope {
   --ck-bg: #ffffff;
-  --ck-card: #f4f0e8;
-  --ck-line: #e2e0db;
-  --ck-line-strong: #cfc9bb;
-  --ck-silver: #4a4a4a;
-  --ck-ink: #171717;
+  --ck-card: #F5F5F5;
+  --ck-line: #E5E5E5;
+  --ck-line-strong: #BDBDBD;
+  --ck-muted: #666666;
+  --ck-ink: #111111;
+  color-scheme: light;
 }
 .ck {
   position: relative;
   isolation: isolate;
   overflow-x: clip;
   background: var(--ck-bg);
-  color: var(--ck-silver);
+  color: var(--ck-ink);
 }
 .ck *:focus-visible,
 .ck-scope *:focus-visible {
-  outline: none;
-  box-shadow: 0 0 0 2px var(--ck-bg), 0 0 0 4px #222222;
+  outline: 2px solid var(--ck-ink);
+  outline-offset: 2px;
 }
 
-/* ---------- panels & tiles (cart "CARD" + summary border) ---------- */
+/* ---------- panels & tiles ---------- */
 .ck-panel {
   position: relative;
-  background: var(--ck-card);
-  border: 1px solid var(--ck-line-strong);
+  background: var(--ck-bg);
+  border: 1px solid var(--ck-line);
+  border-radius: 4px;
 }
-.ck-tile {
+.ck-panel-grey {
   position: relative;
   background: var(--ck-card);
   border: 1px solid var(--ck-line);
-  transition: border-color 0.2s, background 0.2s;
+  border-radius: 4px;
+}
+.ck-tile {
+  position: relative;
+  background: var(--ck-bg);
+  border: 1px solid var(--ck-line);
+  border-radius: 4px;
+  transition: border-color 0.2s;
 }
 .ck-tile:hover { border-color: var(--ck-line-strong); }
-.ck-tile[data-on='true'] { border-color: #222222; }
-.ck-tile[data-disabled='true'] { opacity: 0.5; cursor: not-allowed; }
+.ck-tile[data-on='true'] { border: 2px solid var(--ck-ink); }
+.ck-tile[data-disabled='true'] { background: var(--ck-card); color: var(--ck-muted); cursor: not-allowed; }
+.ck-tile[data-disabled='true'] * { cursor: not-allowed; }
 
 /* ---------- type ---------- */
-.ck-heading {
-  font-weight: 300;
-  line-height: 1.15;
+.ck-display {
+  font-family: var(--font-oswald), Impact, sans-serif;
+  font-weight: 700;
+  text-transform: uppercase;
+  line-height: 1.05;
   color: var(--ck-ink);
 }
-.ck-chrome-text { color: var(--ck-ink); }
-.ck-chrome-link { color: inherit; }
-.ck-chip-chrome {
-  background: transparent;
-  border: 1px solid var(--ck-line-strong);
-  color: var(--ck-ink);
+.ck-chip {
+  display: inline-flex; align-items: center; gap: 6px; flex-shrink: 0;
+  min-height: 36px; padding: 0 12px;
+  border: 1px solid var(--ck-line); border-radius: 2px; background: #ffffff;
+  font-size: 15px; font-weight: 600; color: var(--ck-ink);
 }
 
-/* thin outline icon holder (cart's round outlined icon) */
-.ck-ico {
-  background: transparent;
-  border: 1px solid var(--ck-line-strong);
-  color: var(--ck-silver);
-}
-.ck-radio-dot { background: var(--ck-silver); }
-
-/* ---------- progress (cart's flat silver bar) ---------- */
-.ck-track { position: relative; height: 4px; background: var(--ck-line); overflow: hidden; }
+/* ---------- progress bar (mobile) ---------- */
+.ck-track { position: relative; height: 4px; background: var(--ck-line); overflow: hidden; border-radius: 2px; }
 .ck-fill {
   position: absolute; inset: 0 auto 0 0;
-  background: var(--ck-silver);
+  background: var(--ck-ink);
   transition: width 0.5s ease-out;
 }
-.ck-node-active { box-shadow: none; }
 
-/* ---------- Place Order = cart's "CHECKOUT NOW" ---------- */
+/* ---------- primary + secondary actions (16px, 52px tall) ---------- */
 .ck-cta {
-  display: flex; width: 100%; min-height: 52px;
-  align-items: center; justify-content: center; gap: 8px;
-  background: #222222;
+  display: flex; width: 100%; min-height: 56px;
+  align-items: center; justify-content: center; gap: 10px;
+  background: #111111;
   color: #ffffff;
   border: 0;
+  border-radius: 2px;
   padding: 0 20px;
-  font-size: 13px; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase;
+  font-size: 16px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase;
   transition: background 0.2s, transform 0.1s;
 }
 .ck-cta:hover:not(:disabled) { background: #000000; }
 .ck-cta:active:not(:disabled) { transform: scale(0.99); }
 .ck-cta:disabled { cursor: not-allowed; opacity: 0.6; }
 
-/* secondary = cart's outlined button */
 .ck-ghost {
   display: inline-flex; align-items: center; justify-content: center; gap: 8px;
-  min-height: 40px;
-  border: 1px solid #222222;
-  background: transparent;
-  padding: 0 16px;
-  font-size: 12px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase;
+  min-height: 48px;
+  border: 1px solid #111111;
+  border-radius: 2px;
+  background: #ffffff;
+  padding: 0 18px;
+  font-size: 16px; font-weight: 600;
   color: var(--ck-ink);
   transition: background 0.2s, color 0.2s;
 }
-.ck-ghost:hover:not(:disabled) { background: #222222; color: #ffffff; }
+.ck-ghost:hover:not(:disabled) { background: #111111; color: #ffffff; }
 .ck-ghost:disabled { opacity: 0.5; cursor: not-allowed; }
 
 .ck-input {
   width: 100%;
-  min-height: 44px;
+  min-height: 52px;
   border: 1px solid var(--ck-line-strong);
-  background: var(--ck-bg);
-  padding: 10px 12px;
+  border-radius: 2px;
+  background: #ffffff;
+  padding: 10px 14px;
   font-size: 16px; color: var(--ck-ink);
   outline: none;
-  color-scheme: light;
 }
-.ck-input::placeholder { color: #5c5c5c; }
-.ck-input:focus { border-color: #222222; box-shadow: 0 0 0 1px #222222; }
-.ck-input[aria-invalid='true'] { border-color: #b3261e; }
+.ck-input::placeholder { color: #767676; }
+.ck-input:focus { border-color: #111111; box-shadow: 0 0 0 1px #111111; }
+.ck-input[aria-invalid='true'] { border-color: #C8211F; box-shadow: 0 0 0 1px #C8211F; }
 select.ck-input { appearance: auto; }
-select.ck-input option { background: #ffffff; color: #171717; }
 
 .ck-scroll::-webkit-scrollbar { width: 6px; }
 .ck-scroll::-webkit-scrollbar-thumb { background: var(--ck-line-strong); }
-.ck, .ck-scope { accent-color: var(--ck-silver); }
+.ck, .ck-scope { accent-color: #111111; }
 
 /* Collapsible grid-rows trick */
 .ck-collapse { display: grid; grid-template-rows: 0fr; transition: grid-template-rows 0.3s ease; }
@@ -127,7 +130,15 @@ select.ck-input option { background: #ffffff; color: #171717; }
 .ck-collapse > div { overflow: hidden; }
 .ck-collapse:not([data-open='true']) > div { visibility: hidden; }
 
-@media (max-width: 640px) { .ck-input { font-size: 16px; } }
 @media (prefers-reduced-motion: reduce) {
-  .ck-fill, .ck-collapse { transition: none; }
+  .ck-fill, .ck-collapse, .ck-cta { transition: none; }
+}
+
+.ck-ico { border: 1px solid var(--ck-line); background: #ffffff; color: var(--ck-ink); }
+.ck-heading {
+  font-family: var(--font-oswald), Impact, sans-serif;
+  font-weight: 700;
+  text-transform: uppercase;
+  line-height: 1.05;
+  color: var(--ck-ink);
 }

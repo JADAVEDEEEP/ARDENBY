@@ -73,16 +73,16 @@ export function CustomerAuthGate({
   return (
     <main className="kv-page flex min-h-[60vh] items-center justify-center px-4 py-16">
       {state === 'out' && (
-        <div className="w-full max-w-md rounded-2xl border border-[#B08D57]/25 bg-[#F4F0E8] p-8 text-center text-[#171717]">
-          <Lock className="mx-auto h-8 w-8 text-[#8C6D3A]" strokeWidth={1.4} />
+        <div className="w-full max-w-md rounded-2xl border border-[#E53935]/25 bg-[#F7F7F7] p-8 text-center text-[#111111]">
+          <Lock className="mx-auto h-8 w-8 text-[#E53935]" strokeWidth={1.4} />
           <h1 className="mt-4 font-serif text-2xl">{title}</h1>
-          <p className="mt-3 text-sm leading-6 text-[#171717]/70">
+          <p className="mt-3 text-sm leading-6 text-[#111111]/70">
             Please sign in to your account to view this page. You will come straight back here.
           </p>
           <button
             type="button"
             onClick={() => window.dispatchEvent(new Event('ardenby-open-auth'))}
-            className="mt-6 rounded-xl bg-[#B08D57] px-6 py-3 text-xs font-semibold uppercase tracking-[0.22em] text-[#FFFFFF] transition hover:brightness-110"
+            className="mt-6 rounded-xl bg-[#E53935] px-6 py-3 text-xs font-semibold uppercase tracking-[0.22em] text-[#FFFFFF] transition hover:brightness-110"
           >
             Sign in
           </button>

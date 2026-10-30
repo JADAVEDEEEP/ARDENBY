@@ -36,7 +36,7 @@ export function MobileShopBar({ variant = 'dark' }: { variant?: 'dark' | 'silver
 
   const badge = (count: number) =>
     mounted && count > 0 ? (
-      <span className="absolute right-2 top-1 flex h-4 min-w-[16px] items-center justify-center rounded-full bg-[#B89548] px-1 text-[12px] font-bold leading-none text-white">
+      <span className="absolute right-2 top-1 flex h-4 min-w-[16px] items-center justify-center rounded-full bg-[#E53935] px-1 text-[12px] font-bold leading-none text-white">
         {count}
       </span>
     ) : null;

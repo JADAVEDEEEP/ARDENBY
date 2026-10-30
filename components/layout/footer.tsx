@@ -9,7 +9,7 @@ import { ChevronDown } from "lucide-react";
 import { useNewsletterSubscribe } from "@/hooks/use-newsletter-subscribe";
 import { cn } from "@/lib/utils";
 
-import { KovenikLogo } from "./kovenik-logo";
+import { KovenikBrand } from "./kovenik-brand";
 import { SocialLinks } from "./social-links";
 
 /* ================================================================
@@ -76,7 +76,7 @@ function FooterColumn({
           onClick={() => setOpen((v) => !v)}
           aria-expanded={open}
           aria-controls={panelId}
-          className="flex min-h-[48px] w-full items-center justify-between font-oswald text-[18px] font-semibold uppercase tracking-[0.1em] text-[#7A5E30] md:text-[22px] md:pointer-events-none md:min-h-0 md:cursor-default"
+          className="flex min-h-[48px] w-full items-center justify-between font-oswald text-[18px] font-semibold uppercase tracking-[0.1em] text-[#111111] md:text-[22px] md:pointer-events-none md:min-h-0 md:cursor-default"
         >
           {title}
           <ChevronDown
@@ -222,7 +222,7 @@ export function Footer() {
                 <button
                   type="submit"
                   disabled={subscribed}
-                  className="inline-flex h-12 shrink-0 items-center justify-center bg-kv-gold px-8 text-[15px] font-bold uppercase tracking-[0.1em] text-kv-ink hover:bg-kv-gold-dark disabled:opacity-80"
+                  className="inline-flex h-12 shrink-0 items-center justify-center bg-kv-gold px-8 text-[15px] font-bold uppercase tracking-[0.1em] text-white hover:bg-kv-gold-dark disabled:opacity-80"
                 >
                   {subscribed ? "Joined" : "Join"}
                 </button>
@@ -242,7 +242,7 @@ export function Footer() {
         <div className="mt-6 flex flex-col gap-5 border-t border-kv-line pt-6 md:mt-10 md:flex-row md:items-center md:justify-between">
           <div className="flex items-center gap-4">
             <Link href="/" aria-label="Kovenik home" className="inline-block">
-              <KovenikLogo layout="horizontal" className="h-[36px] w-[144px]" />
+              <KovenikBrand className="h-[48px] w-[136px] md:h-[64px] md:w-[182px]" bearClassName="h-[84px] md:h-[130px]" />
             </Link>
             <span className="text-[14px] font-semibold uppercase tracking-[0.12em] text-kv-sub">Est. 2026 · India</span>
           </div>
@@ -277,8 +277,8 @@ export function Footer() {
               y="150"
               textLength="1000"
               lengthAdjust="spacingAndGlyphs"
-              fill="#C9B48A"
-              fillOpacity="0.55"
+              fill="#111111"
+              fillOpacity="0.12"
               style={{
                 fontFamily: "var(--font-inter), Inter, Arial, system-ui, sans-serif",
                 fontWeight: 900,

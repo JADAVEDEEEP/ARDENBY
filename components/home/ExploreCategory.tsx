@@ -55,7 +55,7 @@ export function ExploreCategory({ products, loading, error, onRetry }: ExploreCa
 
   return (
     <section aria-labelledby="home-explore" className="w-full bg-kv-bg py-10 md:py-14">
-      <div className="kv-gutter w-full">
+      <div className="kv-gutter mx-auto w-full max-w-[1600px]">
         <SectionHeader id="home-explore" title="Explore our category" href="/shop" />
         <FilterChips options={CHIPS} active={active} onChange={setActive} label="Filter products" />
 
@@ -72,7 +72,7 @@ export function ExploreCategory({ products, loading, error, onRetry }: ExploreCa
           </div>
         ) : loading ? (
           <div className="grid grid-cols-2 gap-x-3 gap-y-8 md:grid-cols-4 md:gap-x-6 min-[1600px]:grid-cols-5">
-            {Array.from({ length: 4 }).map((_, i) => (
+            {Array.from({ length: GRID_LIMIT }).map((_, i) => (
               <ProductSkeletonCard key={i} />
             ))}
           </div>

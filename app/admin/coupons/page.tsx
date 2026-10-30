@@ -1,7 +1,33 @@
 'use client';
 
 import { FormEvent, useCallback, useEffect, useMemo, useState } from 'react';
+import { BadgePercent, Pencil, Trash2 } from 'lucide-react';
+
 import { adminApiRequest } from '@/components/admin/admin-auth';
+import {
+  Card,
+  EmptyState,
+  Notice,
+  PageHeader,
+  Spinner,
+  StatusPill,
+  btnDanger,
+  btnOutline,
+  btnPrimary,
+  fieldClass,
+  labelClass,
+} from '@/components/admin/ui';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog';
+import { cn } from '@/lib/utils';
 
 type Coupon = {
   id: string;
@@ -38,13 +64,12 @@ const emptyForm: CouponForm = {
   active: true,
 };
 
-// Same pattern as the Categories admin page: adminApiRequest handles the
-// base URL and the admin JWT token, so no token code is needed here.
+// adminApiRequest handles the base URL and the admin token.
 const COUPONS_PATH = '/api/coupons';
+const CODE_PATTERN = /^[A-Z0-9][A-Z0-9_-]{2,29}$/;
 
-function isActive(coupon: Coupon): boolean {
-  return Boolean(Number(coupon.active));
-}
+const isActive = (coupon: Coupon) => Boolean(Number(coupon.active));
+const isExpired = (coupon: Coupon) => new Date(coupon.expiry).getTime() < Date.now();
 
 function formatDate(value?: string) {
   if (!value) return '—';
@@ -54,10 +79,8 @@ function formatDate(value?: string) {
     : date.toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' });
 }
 
-function money(value: number | string | null | undefined) {
-  const amount = Number(value || 0);
-  return `₹${amount.toLocaleString('en-IN')}`;
-}
+const money = (value: number | string | null | undefined) =>
+  `₹${Number(value || 0).toLocaleString('en-IN')}`;
 
 export default function CouponManagementPage() {
   const [coupons, setCoupons] = useState<Coupon[]>([]);
@@ -68,23 +91,20 @@ export default function CouponManagementPage() {
   const [notice, setNotice] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
   const [search, setSearch] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
+  const [toDelete, setToDelete] = useState<Coupon | null>(null);
 
-  const request = useCallback(async (path: string, init: RequestInit = {}) => {
-    return adminApiRequest(`${COUPONS_PATH}${path}`, init);
-  }, []);
+  const request = useCallback(
+    (path: string, init?: RequestInit) => adminApiRequest<any>(`${COUPONS_PATH}${path}`, init),
+    []
+  );
 
   const loadCoupons = useCallback(async () => {
     setLoading(true);
     try {
-      const payload = await request('');
-      setCoupons(
-        Array.isArray(payload) ? payload : Array.isArray(payload?.coupons) ? payload.coupons : []
-      );
+      const data = await request('');
+      setCoupons(Array.isArray(data?.coupons) ? data.coupons : []);
     } catch (error) {
-      setNotice({
-        type: 'error',
-        text: error instanceof Error ? error.message : 'Coupons load nahi hue.',
-      });
+      setNotice({ type: 'error', text: error instanceof Error ? error.message : 'Could not load coupons.' });
     } finally {
       setLoading(false);
     }
@@ -95,33 +115,19 @@ export default function CouponManagementPage() {
   }, [loadCoupons]);
 
   const stats = useMemo(() => {
-    const active = coupons.filter(isActive);
-    const expired = coupons.filter((coupon) => new Date(coupon.expiry).getTime() < Date.now());
-    return {
-      total: coupons.length,
-      active: active.length,
-      inactive: coupons.length - active.length,
-      expired: expired.length,
-    };
+    const expired = coupons.filter(isExpired).length;
+    const active = coupons.filter((c) => isActive(c) && !isExpired(c)).length;
+    return { total: coupons.length, active, inactive: coupons.length - active - expired, expired };
   }, [coupons]);
 
   const filteredCoupons = useMemo(() => {
-    const query = search.trim().toLowerCase();
+    const q = search.trim().toLowerCase();
     return coupons.filter((coupon) => {
+      const state = isExpired(coupon) ? 'expired' : isActive(coupon) ? 'active' : 'inactive';
+      const matchesStatus = statusFilter === 'all' || state === statusFilter;
       const matchesSearch =
-        !query ||
-        coupon.code.toLowerCase().includes(query) ||
-        (coupon.description || '').toLowerCase().includes(query);
-
-      const expired = new Date(coupon.expiry).getTime() < Date.now();
-
-      const matchesStatus =
-        statusFilter === 'all' ||
-        (statusFilter === 'active' && isActive(coupon) && !expired) ||
-        (statusFilter === 'inactive' && !isActive(coupon)) ||
-        (statusFilter === 'expired' && expired);
-
-      return matchesSearch && matchesStatus;
+        !q || coupon.code.toLowerCase().includes(q) || (coupon.description || '').toLowerCase().includes(q);
+      return matchesStatus && matchesSearch;
     });
   }, [coupons, search, statusFilter]);
 
@@ -132,30 +138,38 @@ export default function CouponManagementPage() {
   function resetForm() {
     setForm(emptyForm);
     setEditingId(null);
+    setNotice(null);
   }
 
   async function submitCoupon(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setNotice(null);
 
+    const code = form.code.trim().toUpperCase();
     const value = Number(form.discount_value);
-    const minimum = Number(form.min_order || 0);
+    const minimum = form.min_order.trim() === '' ? 0 : Number(form.min_order);
     const maximum = form.max_discount.trim() === '' ? null : Number(form.max_discount);
+    const fail = (text: string) => setNotice({ type: 'error', text });
 
-    if (!form.code.trim()) return setNotice({ type: 'error', text: 'Coupon code required hai.' });
-    if (!Number.isFinite(value) || value <= 0)
-      return setNotice({ type: 'error', text: 'Discount value valid honi chahiye.' });
-    if (!form.expiry) return setNotice({ type: 'error', text: 'Expiry date required hai.' });
+    if (!CODE_PATTERN.test(code))
+      return fail('Coupon code must be 3–30 characters: letters, numbers, hyphen or underscore.');
+    if (!Number.isFinite(value) || value <= 0) return fail('Discount value must be greater than 0.');
     if (form.discount_type === 'percentage' && value > 100)
-      return setNotice({ type: 'error', text: 'Percentage discount 100 se zyada nahi ho sakta.' });
+      return fail('A percentage discount cannot be more than 100.');
+    if (!Number.isFinite(minimum) || minimum < 0) return fail('Minimum order must be 0 or more.');
+    if (maximum !== null && (!Number.isFinite(maximum) || maximum <= 0))
+      return fail('Maximum discount must be greater than 0, or left empty.');
+    if (!form.expiry || Number.isNaN(new Date(form.expiry).getTime())) return fail('Choose a valid expiry date.');
+    if (!editingId && new Date(form.expiry).getTime() <= Date.now())
+      return fail('Expiry must be in the future for a new coupon.');
 
     const body = {
-      code: form.code.trim().toUpperCase(),
+      code,
       description: form.description.trim() || null,
       discount_type: form.discount_type,
       discount_value: value,
       min_order: minimum,
-      max_discount: maximum,
+      max_discount: form.discount_type === 'percentage' ? maximum : null,
       expiry: form.expiry,
       active: form.active,
     };
@@ -163,22 +177,17 @@ export default function CouponManagementPage() {
     setSaving(true);
     try {
       if (editingId) {
-        await request(`/${encodeURIComponent(editingId)}`, {
-          method: 'PUT',
-          body: JSON.stringify(body),
-        });
-        setNotice({ type: 'success', text: 'Coupon successfully update ho gaya.' });
+        await request(`/${encodeURIComponent(editingId)}`, { method: 'PUT', body: JSON.stringify(body) });
       } else {
         await request('', { method: 'POST', body: JSON.stringify(body) });
-        setNotice({ type: 'success', text: 'Naya coupon successfully create ho gaya.' });
       }
-      resetForm();
+      const text = editingId ? `Coupon ${code} updated.` : `Coupon ${code} created.`;
+      setForm(emptyForm);
+      setEditingId(null);
       await loadCoupons();
+      setNotice({ type: 'success', text });
     } catch (error) {
-      setNotice({
-        type: 'error',
-        text: error instanceof Error ? error.message : 'Coupon save nahi hua.',
-      });
+      fail(error instanceof Error ? error.message : 'The coupon could not be saved.');
     } finally {
       setSaving(false);
     }
@@ -190,6 +199,7 @@ export default function CouponManagementPage() {
       ? ''
       : new Date(date.getTime() - date.getTimezoneOffset() * 60000).toISOString().slice(0, 16);
 
+    setNotice(null);
     setEditingId(coupon.id);
     setForm({
       code: coupon.code,
@@ -204,128 +214,107 @@ export default function CouponManagementPage() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
-  async function deleteCoupon(coupon: Coupon) {
-    if (!window.confirm(`Delete coupon ${coupon.code}? This cannot be undone.`)) return;
+  async function confirmDelete() {
+    const coupon = toDelete;
+    if (!coupon) return;
+    setToDelete(null);
     setNotice(null);
     try {
       await request(`/${encodeURIComponent(coupon.id)}`, { method: 'DELETE' });
       setCoupons((previous) => previous.filter((item) => item.id !== coupon.id));
-      setNotice({ type: 'success', text: `${coupon.code} delete ho gaya.` });
+      setNotice({ type: 'success', text: `Coupon ${coupon.code} deleted.` });
       if (editingId === coupon.id) resetForm();
     } catch (error) {
-      setNotice({
-        type: 'error',
-        text: error instanceof Error ? error.message : 'Coupon delete nahi hua.',
-      });
+      setNotice({ type: 'error', text: error instanceof Error ? error.message : 'The coupon could not be deleted.' });
     }
   }
 
-  const inputClass =
-    'mt-2 w-full rounded-lg border border-neutral-900 bg-[#12110F] px-4 py-3 text-sm outline-none placeholder:text-stone-100/30 focus:border-emerald-400';
-
   return (
-    <main className="min-h-screen bg-[#090908] text-[#FDF3DB]">
-      <div className="mx-auto max-w-[1600px] space-y-6 p-4 md:p-8">
-        {/* Header + stats */}
-        <div className="flex flex-col gap-5 xl:flex-row xl:items-center xl:justify-between">
-          <div>
-            <div className="mb-2 inline-flex h-12 w-12 items-center justify-center rounded-xl border border-emerald-400/70 bg-emerald-500/10 text-3xl text-emerald-300 shadow-[0_0_25px_rgba(16,185,129,.15)]">
-              ％
-            </div>
-            <h1 className="text-3xl font-bold tracking-tight">Coupons</h1>
-            <p className="mt-1 text-sm text-stone-100/60">
-              Create and manage discount coupons for your store.
-            </p>
-          </div>
+    <div>
+      <PageHeader title="Coupons" subtitle="Create and manage discount coupons for your store." />
 
-          <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
-            {[
-              ['Total Coupons', stats.total, 'border-neutral-800', 'text-emerald-300'],
-              ['Active', stats.active, 'border-stone-600/70', 'text-emerald-300'],
-              ['Inactive', stats.inactive, 'border-yellow-800/70', 'text-yellow-300'],
-              ['Expired', stats.expired, 'border-red-900/80', 'text-red-300'],
-            ].map(([label, value, border, color]) => (
-              <div
-                key={String(label)}
-                className={`min-w-[125px] rounded-xl border ${border} bg-[#11100E] p-4`}
-              >
-                <div className="text-xs text-stone-50/60">{label}</div>
-                <div className={`mt-1 text-2xl font-bold ${color}`}>{value}</div>
-              </div>
-            ))}
+      <div className="mb-6 grid grid-cols-2 gap-4 lg:grid-cols-4">
+        {[
+          ['Total coupons', stats.total, 'text-[#111111]'],
+          ['Active', stats.active, 'text-[#16845B]'],
+          ['Inactive', stats.inactive, 'text-[#C47A16]'],
+          ['Expired', stats.expired, 'text-[#D92D20]'],
+        ].map(([label, value, color]) => (
+          <div key={String(label)} className="rounded-xl border border-[#E4E7EC] bg-white p-5">
+            <p className="text-[14px] font-semibold text-[#626875]">{label}</p>
+            <p className={cn('mt-1.5 text-[34px] font-bold leading-none', String(color))}>{value}</p>
           </div>
-        </div>
+        ))}
+      </div>
 
-        {/* Notice */}
-        {notice && (
-          <div
-            role="status"
-            className={`flex items-start justify-between gap-4 rounded-lg border px-4 py-3 text-sm ${
-              notice.type === 'success'
-                ? 'border-emerald-500/50 bg-neutral-900/30 text-emerald-200'
-                : 'border-red-500/50 bg-red-950/40 text-red-200'
-            }`}
-          >
+      {notice && (
+        <Notice tone={notice.type} className="mb-6">
+          <div className="flex items-start justify-between gap-4">
             <span>{notice.text}</span>
-            <button onClick={() => setNotice(null)} aria-label="Dismiss message">
+            <button type="button" onClick={() => setNotice(null)} aria-label="Dismiss message" className="font-bold">
               ×
             </button>
           </div>
-        )}
+        </Notice>
+      )}
 
-        {/* Form */}
-        <form
-          onSubmit={submitCoupon}
-          className="overflow-hidden rounded-2xl border border-stone-600/70 bg-gradient-to-br from-[#1F1E1B] via-[#11100E] to-[#0E0D0C] shadow-[0_0_40px_rgba(16,185,129,.08)]"
+      <form onSubmit={submitCoupon} noValidate className="mb-6">
+        <Card
+          title={editingId ? 'Edit coupon' : 'Create new coupon'}
+          description={editingId ? 'The coupon code cannot be changed.' : 'Add a discount coupon to your store.'}
         >
-          <div className="border-b border-neutral-800/60 bg-gradient-to-r from-emerald-500/10 to-transparent px-5 py-5 md:px-7">
-            <h2 className="text-xl font-bold">{editingId ? 'Edit Coupon' : 'Create New Coupon'}</h2>
-            <p className="mt-1 text-sm text-stone-100/60">Add a discount coupon to your store</p>
-          </div>
-
-          <div className="grid gap-5 p-5 md:grid-cols-2 xl:grid-cols-3 md:p-7">
-            <label className="block text-sm font-medium">
-              Coupon Code <span className="text-red-400">*</span>
+          <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
+            <div>
+              <label htmlFor="c-code" className={labelClass}>
+                Coupon code <span className="text-[#E53935]">*</span>
+              </label>
               <input
-                required
+                id="c-code"
                 value={form.code}
+                disabled={!!editingId}
                 onChange={(e) => updateForm('code', e.target.value.toUpperCase())}
                 placeholder="e.g. DIWALI20"
-                className={inputClass}
+                maxLength={30}
+                className={cn(fieldClass, 'font-mono uppercase')}
               />
-              <span className="mt-1 block text-xs text-stone-100/45">
-                Will be converted to uppercase
-              </span>
-            </label>
+              <p className="mt-1.5 text-[12px] text-[#626875]">Letters, numbers, - and _ only.</p>
+            </div>
 
-            <label className="block text-sm font-medium">
-              Description
+            <div className="xl:col-span-2">
+              <label htmlFor="c-desc" className={labelClass}>
+                Description
+              </label>
               <input
+                id="c-desc"
                 value={form.description}
+                maxLength={255}
                 onChange={(e) => updateForm('description', e.target.value)}
                 placeholder="e.g. 20% off on all products"
-                className={inputClass}
+                className={fieldClass}
               />
-            </label>
+            </div>
 
-            <label className="block text-sm font-medium">
-              Discount Type <span className="text-red-400">*</span>
+            <div>
+              <label htmlFor="c-type" className={labelClass}>
+                Discount type <span className="text-[#E53935]">*</span>
+              </label>
               <select
+                id="c-type"
                 value={form.discount_type}
-                onChange={(e) =>
-                  updateForm('discount_type', e.target.value as CouponForm['discount_type'])
-                }
-                className={inputClass}
+                onChange={(e) => updateForm('discount_type', e.target.value as CouponForm['discount_type'])}
+                className={fieldClass}
               >
                 <option value="percentage">Percentage (%)</option>
                 <option value="flat">Flat (₹)</option>
               </select>
-            </label>
+            </div>
 
-            <label className="block text-sm font-medium">
-              Discount Value <span className="text-red-400">*</span>
+            <div>
+              <label htmlFor="c-value" className={labelClass}>
+                Discount value <span className="text-[#E53935]">*</span>
+              </label>
               <input
-                required
+                id="c-value"
                 type="number"
                 min="0.01"
                 max={form.discount_type === 'percentage' ? 100 : undefined}
@@ -333,233 +322,218 @@ export default function CouponManagementPage() {
                 value={form.discount_value}
                 onChange={(e) => updateForm('discount_value', e.target.value)}
                 placeholder={form.discount_type === 'percentage' ? 'e.g. 20' : 'e.g. 100'}
-                className={inputClass}
+                className={fieldClass}
               />
-            </label>
+            </div>
 
-            <label className="block text-sm font-medium">
-              Minimum Order Value (₹)
+            <div>
+              <label htmlFor="c-min" className={labelClass}>
+                Minimum order value (₹)
+              </label>
               <input
+                id="c-min"
                 type="number"
                 min="0"
                 step="0.01"
                 value={form.min_order}
                 onChange={(e) => updateForm('min_order', e.target.value)}
-                placeholder="0"
-                className={inputClass}
+                className={fieldClass}
               />
-              <span className="mt-1 block text-xs text-stone-100/45">
-                0 for no minimum order
-              </span>
-            </label>
+              <p className="mt-1.5 text-[12px] text-[#626875]">0 for no minimum.</p>
+            </div>
 
-            <label className="block text-sm font-medium">
-              Maximum Discount (₹)
+            <div>
+              <label htmlFor="c-max" className={labelClass}>
+                Maximum discount (₹)
+              </label>
               <input
+                id="c-max"
                 type="number"
                 min="0"
                 step="0.01"
                 value={form.max_discount}
+                disabled={form.discount_type === 'flat'}
                 onChange={(e) => updateForm('max_discount', e.target.value)}
-                placeholder="Leave empty for no limit"
-                className={inputClass}
+                placeholder={form.discount_type === 'flat' ? 'Not used for flat coupons' : 'Empty = no limit'}
+                className={fieldClass}
               />
-              <span className="mt-1 block text-xs text-stone-100/45">
-                Primarily for percentage coupons
-              </span>
-            </label>
+            </div>
 
-            <label className="block text-sm font-medium">
-              Expiry Date <span className="text-red-400">*</span>
+            <div>
+              <label htmlFor="c-expiry" className={labelClass}>
+                Expiry date &amp; time <span className="text-[#E53935]">*</span>
+              </label>
               <input
-                required
+                id="c-expiry"
                 type="datetime-local"
                 value={form.expiry}
                 onChange={(e) => updateForm('expiry', e.target.value)}
-                className={inputClass}
+                className={fieldClass}
               />
-            </label>
+            </div>
 
-            <div className="flex items-center gap-3 self-center">
+            <div className="flex items-center gap-3 self-end pb-1.5">
               <button
                 type="button"
                 role="switch"
                 aria-checked={form.active}
+                aria-label="Coupon active"
                 onClick={() => updateForm('active', !form.active)}
-                className={`relative h-7 w-12 rounded-full transition ${
-                  form.active ? 'bg-emerald-500' : 'bg-slate-600'
-                }`}
+                className={cn(
+                  'relative h-7 w-12 shrink-0 rounded-full outline-none transition focus-visible:ring-2 focus-visible:ring-[#E53935]/50 focus-visible:ring-offset-2',
+                  form.active ? 'bg-[#E53935]' : 'bg-[#D0D5DD]'
+                )}
               >
                 <span
-                  className={`absolute top-1 h-5 w-5 rounded-full bg-white transition-all ${
-                    form.active ? 'left-6' : 'left-1'
-                  }`}
+                  className={cn(
+                    'absolute top-0.5 h-6 w-6 rounded-full bg-white shadow transition-all',
+                    form.active ? 'left-[22px]' : 'left-0.5'
+                  )}
                 />
               </button>
               <div>
-                <div className="text-sm font-semibold">{form.active ? 'Active' : 'Inactive'}</div>
-                <div className="text-xs text-stone-100/50">Inactive coupons cannot be used</div>
+                <p className="text-[14px] font-semibold text-[#111111]">{form.active ? 'Active' : 'Inactive'}</p>
+                <p className="text-[12px] text-[#626875]">Inactive coupons cannot be used.</p>
               </div>
             </div>
-
-            <div className="flex flex-wrap items-center justify-start gap-3 md:col-span-2 xl:col-span-1 xl:justify-end">
-              <button
-                type="button"
-                onClick={resetForm}
-                className="rounded-lg border border-stone-700 px-5 py-3 text-sm font-semibold text-stone-100 hover:bg-neutral-900/50"
-              >
-                ↻ Reset
-              </button>
-              <button
-                disabled={saving}
-                type="submit"
-                className="rounded-lg bg-gradient-to-r from-[#f0c85e] to-[#ffe9a1] px-6 py-3 text-sm font-bold text-[#1C1B18] shadow-[0_0_20px_rgba(240,200,94,.14)] hover:brightness-105 disabled:cursor-not-allowed disabled:opacity-60"
-              >
-                {saving ? 'Saving…' : editingId ? '✓ Update Coupon' : '+ Create Coupon'}
-              </button>
-            </div>
-          </div>
-        </form>
-
-        {/* Coupons list */}
-        <section className="overflow-hidden rounded-2xl border border-neutral-800/80 bg-[#0F0E0D]">
-          <div className="flex flex-col gap-4 border-b border-neutral-900/70 p-5 md:flex-row md:items-center md:justify-between">
-            <div>
-              <h2 className="text-xl font-bold text-[#f5d77b]">Coupons List</h2>
-              <p className="mt-1 text-sm text-stone-100/55">View, edit and manage all coupons</p>
-            </div>
-
-            <div className="flex flex-col gap-2 sm:flex-row">
-              <input
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-                placeholder="Search code or description…"
-                className="min-w-0 rounded-lg border border-neutral-900 bg-[#12110F] px-4 py-2.5 text-sm outline-none placeholder:text-stone-100/35 focus:border-emerald-400 sm:w-64"
-              />
-              <select
-                value={statusFilter}
-                onChange={(e) => setStatusFilter(e.target.value)}
-                className="rounded-lg border border-neutral-900 bg-[#12110F] px-3 py-2.5 text-sm outline-none focus:border-emerald-400"
-              >
-                <option value="all">All Status</option>
-                <option value="active">Active</option>
-                <option value="inactive">Inactive</option>
-                <option value="expired">Expired</option>
-              </select>
-            </div>
           </div>
 
+          <div className="mt-6 flex flex-wrap items-center gap-3 border-t border-[#E4E7EC] pt-5">
+            <button disabled={saving} type="submit" className={btnPrimary}>
+              {saving ? 'Saving…' : editingId ? 'Update coupon' : 'Create coupon'}
+            </button>
+            <button type="button" onClick={resetForm} className={btnOutline}>
+              {editingId ? 'Cancel edit' : 'Reset'}
+            </button>
+          </div>
+        </Card>
+      </form>
+
+      <Card
+        title="All coupons"
+        description="View, edit and manage every coupon."
+        bodyClassName="p-0 md:p-0"
+        action={
+          <div className="flex w-full flex-col gap-2 sm:w-auto sm:flex-row">
+            <input
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              placeholder="Search code or description…"
+              aria-label="Search coupons"
+              className={cn(fieldClass, 'sm:w-64')}
+            />
+            <select
+              value={statusFilter}
+              onChange={(e) => setStatusFilter(e.target.value)}
+              aria-label="Filter by status"
+              className={cn(fieldClass, 'sm:w-40')}
+            >
+              <option value="all">All status</option>
+              <option value="active">Active</option>
+              <option value="inactive">Inactive</option>
+              <option value="expired">Expired</option>
+            </select>
+          </div>
+        }
+      >
+        {loading ? (
+          <Spinner label="Loading coupons" />
+        ) : filteredCoupons.length === 0 ? (
+          <EmptyState icon={BadgePercent} title="No coupons found">
+            {coupons.length === 0 ? 'Create your first coupon above.' : 'Try a different search or filter.'}
+          </EmptyState>
+        ) : (
           <div className="overflow-x-auto">
-            <table className="w-full min-w-[1050px] border-collapse text-left text-sm">
-              <thead className="bg-neutral-950/80 text-[11px] uppercase tracking-wider text-stone-100/65">
+            <table className="w-full min-w-[960px] border-collapse text-left text-[14px]">
+              <thead className="bg-[#F5F6F8] text-[12px] uppercase tracking-wider text-[#626875]">
                 <tr>
-                  {[
-                    '#',
-                    'Code',
-                    'Description',
-                    'Type',
-                    'Value',
-                    'Min Order',
-                    'Max Discount',
-                    'Expiry',
-                    'Status',
-                    'Created At',
-                    'Actions',
-                  ].map((heading) => (
-                    <th key={heading} className="px-4 py-3 font-semibold">
-                      {heading}
-                    </th>
-                  ))}
+                  {['Code', 'Description', 'Type', 'Value', 'Min order', 'Max discount', 'Expiry', 'Status', 'Actions'].map(
+                    (heading) => (
+                      <th key={heading} className="px-4 py-3 font-semibold">
+                        {heading}
+                      </th>
+                    )
+                  )}
                 </tr>
               </thead>
-
-              <tbody className="divide-y divide-emerald-950">
-                {loading ? (
-                  <tr>
-                    <td colSpan={11} className="px-4 py-12 text-center text-stone-100/50">
-                      Loading coupons…
-                    </td>
-                  </tr>
-                ) : filteredCoupons.length === 0 ? (
-                  <tr>
-                    <td colSpan={11} className="px-4 py-12 text-center text-stone-100/50">
-                      No coupons found. Create your first coupon above.
-                    </td>
-                  </tr>
-                ) : (
-                  filteredCoupons.map((coupon, index) => {
-                    const expired = new Date(coupon.expiry).getTime() < Date.now();
-                    return (
-                      <tr key={coupon.id} className="transition hover:bg-neutral-900/20">
-                        <td className="px-4 py-3 text-stone-100/55">{index + 1}</td>
-                        <td className="px-4 py-3 font-bold tracking-wide">{coupon.code}</td>
-                        <td className="max-w-56 truncate px-4 py-3 text-stone-100/65">
-                          {coupon.description || '—'}
-                        </td>
-                        <td className="px-4 py-3">
-                          <span
-                            className={`rounded-md border px-2 py-1 text-xs ${
-                              coupon.discount_type === 'percentage'
-                                ? 'border-stone-600 bg-neutral-900/50 text-emerald-200'
-                                : 'border-yellow-700 bg-yellow-900/30 text-yellow-200'
-                            }`}
+              <tbody className="divide-y divide-[#E4E7EC]">
+                {filteredCoupons.map((coupon) => {
+                  const expired = isExpired(coupon);
+                  return (
+                    <tr key={coupon.id} className="transition hover:bg-[#F9FAFB]">
+                      <td className="px-4 py-3.5 font-mono font-bold tracking-wide text-[#111111]">{coupon.code}</td>
+                      <td className="max-w-56 truncate px-4 py-3.5 text-[#626875]">{coupon.description || '—'}</td>
+                      <td className="px-4 py-3.5">
+                        <StatusPill tone="neutral">
+                          {coupon.discount_type === 'percentage' ? 'Percentage' : 'Flat'}
+                        </StatusPill>
+                      </td>
+                      <td className="px-4 py-3.5 font-semibold text-[#111111]">
+                        {coupon.discount_type === 'percentage'
+                          ? `${Number(coupon.discount_value)}%`
+                          : money(coupon.discount_value)}
+                      </td>
+                      <td className="px-4 py-3.5">{money(coupon.min_order)}</td>
+                      <td className="px-4 py-3.5">
+                        {coupon.max_discount == null || Number(coupon.max_discount) === 0
+                          ? '—'
+                          : money(coupon.max_discount)}
+                      </td>
+                      <td className="px-4 py-3.5">{formatDate(coupon.expiry)}</td>
+                      <td className="px-4 py-3.5">
+                        {expired ? (
+                          <StatusPill tone="error">Expired</StatusPill>
+                        ) : isActive(coupon) ? (
+                          <StatusPill tone="success">Active</StatusPill>
+                        ) : (
+                          <StatusPill tone="warning">Inactive</StatusPill>
+                        )}
+                      </td>
+                      <td className="px-4 py-3.5">
+                        <div className="flex gap-2">
+                          <button
+                            type="button"
+                            onClick={() => editCoupon(coupon)}
+                            aria-label={`Edit ${coupon.code}`}
+                            className="flex h-10 w-10 items-center justify-center rounded-lg border border-[#D0D5DD] text-[#111111] transition hover:border-[#111111]"
                           >
-                            {coupon.discount_type === 'percentage' ? 'Percentage' : 'Flat'}
-                          </span>
-                        </td>
-                        <td className="px-4 py-3">
-                          {coupon.discount_type === 'percentage'
-                            ? `${coupon.discount_value}%`
-                            : money(coupon.discount_value)}
-                        </td>
-                        <td className="px-4 py-3">{money(coupon.min_order)}</td>
-                        <td className="px-4 py-3">
-                          {coupon.max_discount == null ? '—' : money(coupon.max_discount)}
-                        </td>
-                        <td className="px-4 py-3">{formatDate(coupon.expiry)}</td>
-                        <td className="px-4 py-3">
-                          <span
-                            className={`rounded-md border px-2 py-1 text-xs ${
-                              expired
-                                ? 'border-slate-600 bg-slate-800 text-slate-200'
-                                : isActive(coupon)
-                                  ? 'border-stone-600 bg-neutral-900/50 text-emerald-200'
-                                  : 'border-red-700 bg-red-950/50 text-red-200'
-                            }`}
+                            <Pencil className="h-4 w-4" />
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => setToDelete(coupon)}
+                            aria-label={`Delete ${coupon.code}`}
+                            className={cn(btnDanger, '!min-h-10 !w-10 !px-0')}
                           >
-                            {expired ? 'Expired' : isActive(coupon) ? 'Active' : 'Inactive'}
-                          </span>
-                        </td>
-                        <td className="px-4 py-3 text-stone-100/55">
-                          {formatDate(coupon.created_at)}
-                        </td>
-                        <td className="px-4 py-3">
-                          <div className="flex gap-2">
-                            <button
-                              onClick={() => editCoupon(coupon)}
-                              title="Edit coupon"
-                              className="rounded-md border border-yellow-600 px-2.5 py-1.5 text-yellow-200 hover:bg-yellow-900/30"
-                            >
-                              ✎
-                            </button>
-                            <button
-                              onClick={() => void deleteCoupon(coupon)}
-                              title="Delete coupon"
-                              className="rounded-md border border-red-800 px-2.5 py-1.5 text-red-300 hover:bg-red-950/60"
-                            >
-                              ⌫
-                            </button>
-                          </div>
-                        </td>
-                      </tr>
-                    );
-                  })
-                )}
+                            <Trash2 className="h-4 w-4" />
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  );
+                })}
               </tbody>
             </table>
           </div>
-        </section>
-      </div>
-    </main>
+        )}
+      </Card>
+
+      <AlertDialog open={!!toDelete} onOpenChange={(open) => !open && setToDelete(null)}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Delete coupon {toDelete?.code}?</AlertDialogTitle>
+            <AlertDialogDescription>
+              This permanently removes the coupon. It can no longer be applied at checkout. This cannot be undone.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction onClick={() => void confirmDelete()} className="bg-[#D92D20] text-white hover:bg-[#B42318]">
+              Delete coupon
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+    </div>
   );
 }

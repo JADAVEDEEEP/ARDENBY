@@ -51,7 +51,7 @@ export function ProfileNavigation({
               onClick={() => onSectionChange(item.id)}
               className={`whitespace-nowrap border-b-2 px-3 pb-3 text-[9px] uppercase tracking-[0.14em] ${
                 activeSection === item.id
-                  ? 'border-[#E2E0DB] text-[#FFFFFF]'
+                  ? 'border-[#E5E5E5] text-[#FFFFFF]'
                   : 'border-transparent text-[#5C5C5C]'
               }`}
             >
@@ -67,7 +67,7 @@ export function ProfileNavigation({
     <aside className="lg:sticky lg:top-24 lg:self-start">
       <div className="border-y border-[#222222] py-4">
         <div className="mb-4 flex items-center gap-3 px-1">
-          <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[#F4F0E8] font-serif text-base text-[#171717]">
+          <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[#F7F7F7] font-serif text-base text-[#111111]">
             {initial}
           </div>
           <div className="min-w-0">
@@ -91,11 +91,11 @@ export function ProfileNavigation({
                 }`}
               >
                 <span className={`absolute left-0 h-4 w-px transition ${
-                  active ? 'bg-[#B08D57]' : 'bg-transparent group-hover:bg-[#B08D57]'
+                  active ? 'bg-[#E53935]' : 'bg-transparent group-hover:bg-[#E53935]'
                 }`} />
-                <Icon className={`ml-2 h-[15px] w-[15px] ${active ? 'text-[#8C6D3A]' : ''}`} strokeWidth={1.5} />
+                <Icon className={`ml-2 h-[15px] w-[15px] ${active ? 'text-[#E53935]' : ''}`} strokeWidth={1.5} />
                 <span className="text-[11px] uppercase tracking-[0.13em]">{item.label}</span>
-                {active && <ChevronRight className="ml-auto h-3.5 w-3.5 text-[#8C6D3A]" />}
+                {active && <ChevronRight className="ml-auto h-3.5 w-3.5 text-[#E53935]" />}
               </button>
             );
           })}

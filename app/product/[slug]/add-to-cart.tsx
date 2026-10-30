@@ -187,7 +187,7 @@ export function AddToCart({ product }: { product: Product }) {
           focus-visible:ring-offset-2
         "
       >
-        <span className="absolute inset-0 -translate-x-full bg-[#171717]/10 transition-transform duration-500 group-hover:translate-x-0" />
+        <span className="absolute inset-0 -translate-x-full bg-[#111111]/10 transition-transform duration-500 group-hover:translate-x-0" />
 
         <ShoppingBag
           className="relative h-[17px] w-[17px] transition-transform duration-300 group-hover:-translate-y-0.5"

@@ -23,14 +23,20 @@ export function ProductSkeletonCard() {
   return (
     <div aria-hidden="true" className="animate-pulse">
       <div className="aspect-[3/4] bg-kv-img" />
-      <div className="mt-3 h-4 w-3/4 bg-kv-img" />
-      <div className="mt-2 h-3.5 w-1/2 bg-kv-img" />
+      {/* Mirrors the card's text block (brand, name, category, price) so loading doesn't shift the page. */}
+      <div className="pt-3.5">
+        <div className="mb-1 h-3 w-1/4 bg-kv-img" />
+        <div className="h-[22px] w-3/4 bg-kv-img" />
+        <div className="mt-1 h-5 w-1/2 bg-kv-img" />
+        <div className="mt-2 h-6 w-2/5 bg-kv-img" />
+      </div>
     </div>
   );
 }
 
-/* 8px gaps. Mobile: 160px cards. Tablet: 3 across. Desktop (1024px+): 4 across. */
-const ITEM = 'w-[160px] shrink-0 md:w-[calc((100%-16px)/3)] lg:w-[calc((100%-24px)/4)]';
+/* Same gaps as the grids below (12px mobile, 24px md+). Mobile: 160px cards. Tablet: 3 across. 1024px+: 4. 1600px+: 5. */
+const ITEM =
+  'w-[160px] shrink-0 md:w-[calc((100%-48px)/3)] lg:w-[calc((100%-72px)/4)] min-[1600px]:w-[calc((100%-96px)/5)]';
 
 const ARROW =
   'absolute top-[calc(50%-48px)] z-20 hidden h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full border border-kv-line bg-kv-bg text-kv-ink transition-colors hover:border-kv-ink focus-visible:outline focus-visible:outline-2 focus-visible:outline-kv-ink disabled:pointer-events-none disabled:opacity-0 md:flex';
@@ -66,7 +72,7 @@ export function ProductRail({ id, title, products, loading, error, onRetry, href
   if (!loading && !error && products.length === 0) return null;
 
   return (
-    <section aria-labelledby={id} className="kv-gutter w-full bg-kv-bg py-10 md:py-14">
+    <section aria-labelledby={id} className="kv-gutter mx-auto w-full max-w-[1600px] bg-kv-bg py-10 md:py-14">
       <SectionHeader id={id} title={title} href={href} />
 
       {error && !loading ? (
@@ -106,7 +112,7 @@ export function ProductRail({ id, title, products, loading, error, onRetry, href
           <ul
             ref={track}
             onScroll={update}
-            className="kv-rail -mx-[clamp(16px,3vw,48px)] flex gap-2 overflow-x-auto px-[clamp(16px,3vw,48px)] md:mx-0 md:px-0"
+            className="kv-rail -mx-[clamp(16px,3vw,48px)] flex gap-3 overflow-x-auto md:gap-6 px-[clamp(16px,3vw,48px)] md:mx-0 md:px-0"
           >
             {loading
               ? Array.from({ length: 4 }).map((_, i) => (
@@ -114,9 +120,9 @@ export function ProductRail({ id, title, products, loading, error, onRetry, href
                     <ProductSkeletonCard />
                   </li>
                 ))
-              : products.map((product, i) => (
+              : products.map((product) => (
                   <li key={product.id} className={ITEM}>
-                    <ProductCard product={product} variant="arrival" priority={i < 4} />
+                    <ProductCard product={product} variant="arrival" />
                   </li>
                 ))}
           </ul>
