@@ -35,12 +35,12 @@ export function KovenikLogo({ className, bunny = true }: KovenikLogoProps) {
       {bunny && (
         <g stroke={BLACK} strokeWidth="2.2" strokeLinejoin="round">
           <g transform="rotate(-10 143 18)">
-            <rect x="139" y="-3" width="8" height="22" rx="4" fill={WHITE} />
-            <rect x="141.2" y="0" width="3.6" height="14" rx="1.8" fill={RED} stroke="none" />
+            <rect x="139" y="0" width="8" height="19" rx="4" fill={WHITE} />
+            <rect x="141.2" y="3" width="3.6" height="11.5" rx="1.8" fill={RED} stroke="none" />
           </g>
           <g transform="rotate(12 159 18)">
-            <rect x="155" y="-3" width="8" height="22" rx="4" fill={WHITE} />
-            <rect x="157.2" y="0" width="3.6" height="14" rx="1.8" fill={RED} stroke="none" />
+            <rect x="155" y="0" width="8" height="19" rx="4" fill={WHITE} />
+            <rect x="157.2" y="3" width="3.6" height="11.5" rx="1.8" fill={RED} stroke="none" />
           </g>
           <ellipse cx="151" cy="26" rx="14" ry="10" fill={WHITE} />
           {/* Eyes, with a slanted brow for the rebel attitude. */}
@@ -51,7 +51,7 @@ export function KovenikLogo({ className, bunny = true }: KovenikLogoProps) {
       )}
       <text
         x="0"
-        y="56"
+        y="53"
         textLength="182"
         lengthAdjust="spacingAndGlyphs"
         fill={BLACK}
@@ -61,7 +61,7 @@ export function KovenikLogo({ className, bunny = true }: KovenikLogoProps) {
       >
         KOVENIK
       </text>
-      <rect x="0" y="60" width="44" height="3" rx="1.5" fill={RED} />
+      <rect x="0" y="57" width="44" height="3" rx="1.5" fill={RED} />
       {/* Paws gripping the top edge of the letters. */}
       {bunny && (
         <g fill={WHITE} stroke={BLACK} strokeWidth="2">

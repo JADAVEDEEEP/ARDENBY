@@ -9,6 +9,8 @@ import { Heart, Menu, Search, ShoppingCart, User } from 'lucide-react';
 
 import { cn } from '@/lib/utils';
 
+import { HeaderMember } from '@/components/membership/header-member';
+
 import { KovenikBrand } from './kovenik-brand';
 import type { UserProfile } from './navbar';
 
@@ -142,10 +144,13 @@ export function NavbarHeader({
     </button>
   );
 
-  const logo = (cls: string, bearCls: string) => (
-    <Link href="/" aria-label="Kovenik home" className="shrink-0">
-      <KovenikBrand variant="bust" className={cls} bearClassName={bearCls} />
-    </Link>
+  const logo = (cls: string, bearCls: string, badgeCls: string) => (
+    <div className="relative shrink-0">
+      <Link href="/" aria-label="Kovenik home" className="block">
+        <KovenikBrand variant="bust" className={cls} bearClassName={bearCls} />
+      </Link>
+      <HeaderMember className={badgeCls} />
+    </div>
   );
 
   return (
@@ -183,7 +188,9 @@ export function NavbarHeader({
               </nav>
             </div>
 
-            <div className="justify-self-center">{logo('h-[46px] w-[131px]', '-my-1 h-[80px] translate-y-[2px]')}</div>
+            <div className="justify-self-center">
+              {logo('h-[46px] w-[131px]', '-my-1 h-[80px] translate-y-[2px]', '')}
+            </div>
 
             <div className="flex items-center gap-1 justify-self-end">
               <div className="mr-2 w-[170px] xl:mr-3 xl:w-[300px]">{searchForm('d')}</div>
@@ -219,9 +226,11 @@ export function NavbarHeader({
           <div className="flex h-14 items-center justify-between pl-1 pr-2">
             <div className="flex min-w-0 items-center">
               {hamburger}
-              {logo('h-[32px] w-[91px]', '-my-1 h-[55px] translate-y-[2px]')}
+              {logo('h-[32px] w-[91px]', '-my-1 h-[55px] translate-y-[2px]', '')}
             </div>
-            <div className="flex items-center">{iconButtons(false)}</div>
+            <div className="flex items-center">
+              {iconButtons(false)}
+            </div>
           </div>
 
           <div className="px-4 pb-2">{searchForm('m')}</div>

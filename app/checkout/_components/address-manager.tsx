@@ -13,6 +13,7 @@ import {
   type AddressErrors,
   type AddressForm,
 } from './shared';
+import { CurrentLocationButton, type PickedAddress } from '../../../components/profile/CurrentLocationButton';
 
 const EMPTY_FORM: AddressForm = {
   name: '',
@@ -92,6 +93,18 @@ function AddressModal({
     });
   };
 
+  // The checkout form keeps one free-text address line, so compose it from the picked parts.
+  // Fields Google could not identify are left as the customer typed them.
+  const applyPicked = (p: PickedAddress) => {
+    const line = [p.flat, p.building, p.area, p.landmark].filter(Boolean).join(', ');
+    const patch: Partial<AddressForm> = {};
+    if (line) patch.address = line;
+    if (p.city) patch.city = p.city;
+    if (p.state) patch.state = p.state;
+    if (p.pincode) patch.pincode = p.pincode;
+    set(patch);
+  };
+
   const input = (name: keyof AddressForm, placeholder: string, type = 'text', mode?: 'numeric' | 'tel') => (
     <input
       type={type}
@@ -114,12 +127,12 @@ function AddressModal({
         role="dialog"
         aria-modal="true"
         aria-labelledby="address-modal-title"
-        className="flex w-full max-w-xl flex-col overflow-hidden rounded-[4px] border border-[#E5E5E5] bg-white"
+        className="flex w-full max-w-xl flex-col overflow-hidden rounded-[16px] border border-[#E5E5E5] bg-white"
         style={{ maxHeight: 'calc(100dvh - 1.5rem)' }}
       >
         <div className="flex shrink-0 items-center justify-between border-b border-[#E5E5E5] px-5 py-4 sm:px-6">
           <div>
-            <h3 id="address-modal-title" className="ck-display text-[26px]">
+            <h3 id="address-modal-title" className="ck-h">
               {editingId ? 'Edit address' : 'Add new address'}
             </h3>
           </div>
@@ -149,6 +162,9 @@ function AddressModal({
           className="flex min-h-0 flex-1 flex-col"
         >
          <div className="ck-scroll min-h-0 flex-1 space-y-4 overflow-y-auto overscroll-contain p-5 sm:p-6">
+          <div className="grid">
+            <CurrentLocationButton onPick={applyPicked} inputClassName="ck-input" />
+          </div>
           <div className="grid gap-4 sm:grid-cols-2">
             <Field label="Full name" error={errors.name}>
               {input('name', 'e.g. Aarav Mehta')}
@@ -431,7 +447,7 @@ export function AddressManager({
 
         {loading ? (
           <div
-            className="flex min-h-[140px] items-center justify-center rounded-[4px] border border-[#E5E5E5] bg-[#F5F5F5]"
+            className="flex min-h-[140px] items-center justify-center rounded-[12px] border border-[#E5E5E5] bg-[#F5F5F5]"
             aria-busy="true"
             aria-label="Loading addresses"
           >
@@ -443,13 +459,13 @@ export function AddressManager({
               const on = selectedAddressId === a.id;
 
               return (
-                <div key={a.id} className="ck-tile flex flex-col" data-on={on}>
+                <div key={a.id} className="ck-tile flex min-w-0 flex-col" data-on={on}>
                   <button
                     type="button"
                     onClick={() => onSelect(a)}
                     role="radio"
                     aria-checked={on}
-                    className="flex-1 p-4 text-left"
+                    className="flex-1 rounded-t-[12px] p-4 text-left sm:p-5"
                   >
                     <div className="flex items-start gap-3">
                       <span
@@ -463,36 +479,38 @@ export function AddressManager({
 
                       <div className="min-w-0 flex-1">
                         <div className="flex flex-wrap items-center gap-2">
-                          <p className="text-[18px] font-bold text-[#111111]">{a.name}</p>
-                          <span className="rounded-[2px] border border-[#E5E5E5] bg-[#F5F5F5] px-2 py-0.5 text-[14px] font-semibold text-[#111111]">
+                          <p className="break-words text-[16px] font-bold leading-6 text-[#111111]">{a.name}</p>
+                          <span className="rounded-full border border-[#E5E5E5] bg-[#F5F5F5] px-2.5 py-0.5 text-[12px] font-semibold text-[#111111]">
                             {a.address_type || 'Address'}
                           </span>
-                          {a.is_default && <span className="text-[14px] font-bold text-[#C8211F]">Default</span>}
+                          {Boolean(a.is_default) && (
+                            <span className="rounded-full bg-[#111111] px-2.5 py-0.5 text-[12px] font-semibold text-white">Default</span>
+                          )}
                         </div>
-                        <p className="mt-2 text-[16px] leading-6 text-[#444444]">
+                        <p className="mt-2 break-words text-[15px] leading-6 text-[#555555]">
                           {a.address}
                           <br />
                           {a.city}, {a.state} {a.pincode}
                         </p>
-                        <p className="mt-1.5 text-[16px] text-[#444444]">{maskPhone(a.phone)}</p>
+                        <p className="mt-1.5 text-[15px] text-[#555555]">{maskPhone(a.phone)}</p>
                       </div>
                     </div>
                   </button>
 
-                  <div className="flex flex-wrap items-center gap-x-5 border-t border-[#E5E5E5] px-4 pl-[52px]">
+                  <div className="flex flex-wrap items-center gap-x-4 border-t border-[#EDEDED] px-4 pl-[52px] sm:pl-[56px] sm:pr-5">
                     <button
                       type="button"
                       onClick={() => openEdit(a)}
-                      className="min-h-[44px] text-[16px] font-semibold text-[#111111] underline underline-offset-4"
+                      className="min-h-[44px] text-[15px] font-semibold text-[#111111] underline underline-offset-4"
                     >
-                      Edit address
+                      Edit
                     </button>
                     {!a.is_default && (
                       <button
                         type="button"
                         onClick={() => void makeDefault(a.id)}
                         disabled={saving}
-                        className="min-h-[44px] text-[16px] font-medium text-[#444444] underline underline-offset-4 disabled:opacity-40"
+                        className="min-h-[44px] text-[15px] font-medium text-[#444444] underline underline-offset-4 disabled:opacity-40"
                       >
                         Set as default
                       </button>
@@ -501,7 +519,7 @@ export function AddressManager({
                       type="button"
                       onClick={() => void removeAddress(a.id)}
                       disabled={saving}
-                      className="min-h-[44px] text-[16px] font-semibold text-[#C8211F] underline underline-offset-4 disabled:opacity-40"
+                      className="ml-auto min-h-[44px] text-[15px] font-semibold text-[#C8211F] underline underline-offset-4 disabled:opacity-40"
                     >
                       Delete
                     </button>
@@ -513,7 +531,7 @@ export function AddressManager({
             <button
               type="button"
               onClick={openAdd}
-              className="group flex min-h-[120px] flex-col items-center justify-center gap-2 rounded-[4px] border-2 border-dashed border-[#BDBDBD] bg-white text-[17px] font-bold text-[#111111] transition hover:border-[#111111]"
+              className="group flex min-h-[132px] flex-col items-center justify-center gap-2.5 rounded-[12px] border border-dashed border-[#BDBDBD] bg-[#FAFAFA] text-[15px] font-semibold text-[#111111] transition hover:border-[#111111]"
             >
               <span className="flex h-11 w-11 items-center justify-center rounded-full bg-[#111111] text-white">
                 <Plus className="h-5 w-5" />

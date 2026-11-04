@@ -13,11 +13,13 @@ import {
   ShoppingBag,
   Truck,
   Zap,
+  CreditCard,
 } from 'lucide-react';
 import { toast } from 'sonner';
 import { useCartStore, waitForPendingCartUpdates } from '@/store/cart-store';
 import { startRazorpayPayment } from '@/lib/razorpay-checkout';
 import { calculateCartPricing } from '@/lib/pricing';
+import { useMemberCartItems } from '@/hooks/use-member-pricing';
 import { formatINR } from '@/lib/format';
 import { useCartCoupon } from '@/features/cart/use-cart-coupon';
 
@@ -48,6 +50,7 @@ function Shell({ children }: { children: React.ReactNode }) {
 
 function SectionCard({
   index,
+  icon,
   title,
   sub,
   badge,
@@ -55,6 +58,7 @@ function SectionCard({
   id,
 }: {
   index: string;
+  icon: React.ReactNode;
   title: string;
   sub: string;
   badge?: React.ReactNode;
@@ -63,22 +67,19 @@ function SectionCard({
 }) {
   return (
     <section className="ck-panel p-4 sm:p-6" aria-labelledby={id}>
-      <header className="mb-5 flex flex-wrap items-start justify-between gap-3">
-        <div className="flex items-center gap-3.5">
-          <span
-            aria-hidden
-            className="flex h-12 w-12 shrink-0 items-center justify-center rounded-[2px] bg-[#111111] text-[22px] font-bold text-white"
-          >
-            {index}
+      <header className="mb-5 flex items-center justify-between gap-3">
+        <div className="flex min-w-0 items-center gap-3">
+          <span aria-hidden className="ck-icon-sq">
+            {icon}
           </span>
-          <div>
-            <h2 id={id} className="ck-display text-[24px] sm:text-[30px]">
-              {title}
+          <div className="min-w-0">
+            <h2 id={id} className="ck-h">
+              {index}. {title}
             </h2>
-            <p className="mt-0.5 hidden text-[16px] text-[#666666] sm:block">{sub}</p>
+            <p className="mt-0.5 text-[14px] leading-5 text-[#666666]">{sub}</p>
           </div>
         </div>
-        {badge}
+        <span className="hidden sm:block">{badge}</span>
       </header>
       {children}
     </section>
@@ -99,7 +100,10 @@ const BUSY_LABEL: Partial<Record<Phase, string>> = {
 };
 
 function CheckoutPageView() {
-  const items = useCartStore((state) => state.items);
+  const storeItems = useCartStore((state) => state.items);
+  // Member prices for display; the server recomputes the payable amount when the order is placed.
+  const memberCart = useMemberCartItems(storeItems);
+  const items = memberCart.items;
   const clearCart = useCartStore((state) => state.clearCart);
 
   // Hydration fix: the persisted cart only exists on the client, so the server
@@ -292,9 +296,19 @@ function CheckoutPageView() {
   };
 
   // Shared with the cart and the order API (lib/pricing.ts).
-  const { subtotal, discount, shipping, gst, total, totalSavings } = calculateCartPricing(items, coupon.pricingCoupon);
+  const { subtotal, discount, shipping, gst, total, totalSavings } = calculateCartPricing(items, coupon.pricingCoupon, { freeShipping: memberCart.freeShipping });
   const itemCount = items.reduce((acc, item) => acc + item.quantity, 0);
-  const pricing = { subtotal, discount, shipping, gst, total, itemCount, totalSavings };
+  const pricing = {
+    subtotal,
+    discount,
+    shipping,
+    gst,
+    total,
+    itemCount,
+    totalSavings,
+    memberSavings: memberCart.memberSavings,
+    memberTier: memberCart.member?.planName ?? null,
+  };
 
   const step: 1 | 2 | 3 = placed ? 3 : selectedAddress ? 2 : 1;
   const isOnline = selectedPayment === 'online';
@@ -398,9 +412,9 @@ function CheckoutPageView() {
         {/* desktop / tablet-landscape header */}
         <header className="mb-8 mt-2 hidden items-end justify-between gap-8 lg:flex">
           <div>
-            <h1 className="ck-display text-[44px]">Checkout</h1>
-            <p className="mt-3 flex items-center gap-2 text-[17px] text-[#444444]">
-              <Lock className="h-4 w-4 shrink-0" aria-hidden /> Secure checkout. Complete your order and wear beyond ordinary.
+            <h1 className="ck-display text-[40px]">Checkout</h1>
+            <p className="mt-2.5 flex items-center gap-2 text-[16px] text-[#555555]">
+              <Lock className="h-4 w-4 shrink-0" aria-hidden /> Complete your order in a few simple steps.
             </p>
           </div>
           <StepProgress step={step} />
@@ -408,7 +422,7 @@ function CheckoutPageView() {
 
         {/* mobile / tablet header */}
         <header className="mb-5 mt-1 lg:hidden">
-          <h1 className="ck-display text-[34px]">Checkout</h1>
+          <h1 className="ck-display text-[30px]">Checkout</h1>
           <div className="mt-4">
             <SegmentedProgress step={step} />
           </div>
@@ -433,6 +447,7 @@ function CheckoutPageView() {
             <SectionCard
               id="delivery-heading"
               index="1"
+              icon={<MapPin className="h-5 w-5" />}
               title="Delivery address"
               sub="Where should we send your KOVENIK drop?"
               badge={
@@ -443,35 +458,37 @@ function CheckoutPageView() {
             >
               <AddressManager selectedAddressId={selectedAddress?.id || null} onSelect={setSelectedAddress} />
 
-              <div className="mt-6">
-                <h3 className="mb-3 text-[20px] font-bold text-[#111111]">Delivery speed</h3>
+              <div className="mt-6 border-t border-[#EDEDED] pt-6">
+                <h3 className="mb-3 flex items-center gap-2 text-[16px] font-bold leading-6 text-[#111111]">
+                  <Truck className="h-5 w-5" aria-hidden /> Delivery options
+                </h3>
                 <div className="grid gap-3 sm:grid-cols-2">
-                  <div className="ck-tile flex items-center gap-3 p-4" data-on="true">
+                  <div className="ck-tile flex min-h-[72px] items-center gap-3.5 p-4" data-on="true">
                     <span aria-hidden className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full border-2 border-[#111111]">
                       <span className="h-3 w-3 rounded-full bg-[#111111]" />
                     </span>
                     <span className="min-w-0 flex-1">
-                      <span className="block text-[18px] font-bold text-[#111111]">Standard delivery</span>
-                      <span className="block text-[15px] text-[#666666]">Free on orders above ₹999</span>
+                      <span className="block text-[16px] font-bold leading-6 text-[#111111]">Standard delivery</span>
+                      <span className="block text-[14px] leading-5 text-[#666666]">Free on orders above ₹999</span>
                     </span>
-                    <span className="text-[16px] font-bold text-[#111111]">
+                    <span className="shrink-0 rounded-full bg-[#111111] px-2.5 py-1 text-[12px] font-bold tracking-[0.06em] text-white">
                       {shipping === 0 ? 'FREE' : formatINR(shipping)}
                     </span>
                   </div>
 
-                  <div className="ck-tile flex items-center gap-3 p-4" data-disabled="true" aria-disabled="true">
+                  <div className="ck-tile flex min-h-[72px] items-center gap-3.5 p-4" data-disabled="true" aria-disabled="true">
                     <span aria-hidden className="flex h-6 w-6 shrink-0 rounded-full border-2 border-[#BDBDBD]" />
                     <span className="min-w-0 flex-1">
-                      <span className="block text-[18px] font-bold">Express delivery</span>
-                      <span className="block text-[15px]">Coming soon</span>
+                      <span className="block text-[16px] font-bold leading-6">Express delivery</span>
+                      <span className="block text-[14px] leading-5 sm:text-[15px]">Coming soon</span>
                     </span>
                     <Zap className="h-5 w-5 shrink-0 text-[#666666]" aria-hidden />
                   </div>
                 </div>
 
                 {selectedAddress && (
-                  <p className="mt-3 flex items-center gap-2 text-[15px] text-[#444444]">
-                    <MapPin className="h-4 w-4 shrink-0" aria-hidden />
+                  <p className="mt-4 flex items-start gap-2 text-[14px] leading-5 text-[#444444] sm:text-[15px]">
+                    <MapPin className="mt-0.5 h-4 w-4 shrink-0" aria-hidden />
                     Delivering to pincode <strong className="font-semibold text-[#111111]">{selectedAddress.pincode}</strong> ·{' '}
                     {selectedAddress.city}, {selectedAddress.state}
                   </p>
@@ -482,6 +499,7 @@ function CheckoutPageView() {
             <SectionCard
               id="payment-heading"
               index="2"
+              icon={<CreditCard className="h-5 w-5" />}
               title="Payment"
               sub="Choose how you’d like to pay"
               badge={
@@ -509,7 +527,7 @@ function CheckoutPageView() {
 
             <div className="space-y-4 lg:hidden">
               <MobilePriceDetails pricing={pricing} couponCode={coupon.couponCode} />
-              <div className="rounded-[4px] border border-[#E5E5E5] bg-white p-4">
+              <div className="ck-panel p-4">
                 <p className="text-center text-[15px] text-[#666666]">{paymentNote}</p>
                 <AcceptedRow />
               </div>
@@ -517,7 +535,7 @@ function CheckoutPageView() {
           </div>
 
           {/* desktop summary */}
-          <aside className="hidden min-w-0 lg:sticky lg:top-6 lg:block">
+          <aside className="hidden min-w-0 lg:sticky lg:top-[148px] lg:block">
             <DesktopSummary
               items={items}
               pricing={pricing}
@@ -531,11 +549,14 @@ function CheckoutPageView() {
       </div>
 
       {/* mobile dock */}
-      <div className="fixed inset-x-0 bottom-0 z-40 border-t border-[#E5E5E5] bg-white lg:hidden">
+      <div className="fixed inset-x-0 bottom-0 z-40 rounded-t-2xl border-t border-[#E5E5E5] bg-white shadow-[0_-10px_30px_-12px_rgba(17,17,17,.18)] lg:hidden">
         <div className="mx-auto flex max-w-[640px] items-center gap-4 px-4 pb-[calc(0.75rem+env(safe-area-inset-bottom))] pt-3">
           <div className="shrink-0">
-            <p className="text-[14px] text-[#666666]">Total payable</p>
+            <p className="text-[13px] text-[#666666]">Total payable</p>
             <strong className="text-[24px] font-bold leading-none tabular-nums text-[#111111]">{formatINR(total)}</strong>
+            {totalSavings > 0 && (
+              <p className="mt-1 text-[12px] font-semibold text-[#111111]">You save {formatINR(totalSavings)}</p>
+            )}
           </div>
           <PlaceOrderButton label={ctaLabel} busy={busy} total={total} className="!min-h-[52px] min-w-0 flex-1 !px-3" />
         </div>

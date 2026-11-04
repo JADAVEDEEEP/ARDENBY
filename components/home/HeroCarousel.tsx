@@ -1,24 +1,12 @@
 'use client';
 
-import { useEffect, useState } from 'react';
-
-import Image from 'next/image';
 import Link from 'next/link';
 
 import { cn } from '@/lib/utils';
 import type { Product } from '@/types';
 
+import { BannerSlider } from './BannerSlider';
 import { SafeImage } from './ui/SafeImage';
-
-const SLIDE_MS = 6000;
-
-/* Existing KOVENIK campaign photography. */
-const SLIDES = [
-  { image: '/images/hero-black-tee.jpg', alt: 'Model wearing a KOVENIK black oversized graphic tee' },
-  { image: '/images/hero-olive-graphic.jpg', alt: 'Model wearing an olive KOVENIK oversized tee' },
-  { image: '/images/hero-dtf-back-print.jpg', alt: 'Model wearing a white KOVENIK tee with a crane back print' },
-  { image: '/images/hero-linen.jpg', alt: 'Model wearing a KOVENIK linen tee' },
-] as const;
 
 const BTN =
   'inline-flex min-h-[48px] flex-1 items-center justify-center whitespace-nowrap px-3 text-[14px] font-bold uppercase tracking-[0.08em] transition-colors sm:flex-none sm:min-h-[52px] sm:px-6 sm:text-[15px] lg:px-8';
@@ -29,16 +17,6 @@ interface HeroCarouselProps {
 }
 
 export function HeroCarousel({ products }: HeroCarouselProps) {
-  const [index, setIndex] = useState(0);
-  const [paused, setPaused] = useState(false);
-
-  useEffect(() => {
-    if (paused) return;
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-    const timer = window.setInterval(() => setIndex((i) => (i + 1) % SLIDES.length), SLIDE_MS);
-    return () => window.clearInterval(timer);
-  }, [paused]);
-
   const thumbs = products.filter((p) => p.images?.[0]).slice(0, 3);
 
   const buttons = (
@@ -60,31 +38,19 @@ export function HeroCarousel({ products }: HeroCarouselProps) {
 
   return (
     <section
-      aria-roledescription="carousel"
       aria-label="Featured collection"
       className="w-full bg-kv-bg"
-      onMouseEnter={() => setPaused(true)}
-      onMouseLeave={() => setPaused(false)}
-      onFocus={() => setPaused(true)}
-      onBlur={() => setPaused(false)}
     >
       {/* Edge to edge: image flush left, content fills the rest */}
       <div className="grid w-full md:grid-cols-2">
-        <div className="relative aspect-[4/5] w-full overflow-hidden bg-kv-ink md:aspect-auto md:min-h-[560px]">
-          {SLIDES.map((slide, i) => (
-            <Image
-              key={slide.image}
-              src={slide.image}
-              alt={slide.alt}
-              fill
-              priority={i === 0}
-              sizes="(min-width: 768px) 50vw, 100vw"
-              aria-hidden={i !== index}
-              className={cn('object-cover object-[50%_25%] transition-opacity duration-500', i === index ? 'opacity-100' : 'opacity-0')}
-            />
-          ))}
+        <div className="w-full md:contents">
+          {/* Banner slider: live banners from the admin panel */}
+          <div className="relative aspect-[4/5] w-full overflow-hidden bg-kv-ink md:aspect-auto md:min-h-[560px]">
+            <BannerSlider />
+          </div>
 
-          <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black via-black/85 to-transparent px-4 pb-5 pt-16 text-white md:hidden">
+          {/* Phone: the heading and buttons sit under the banner so they never cover its artwork */}
+          <div className="bg-kv-ink px-4 pb-6 pt-5 text-white md:hidden">
             <h1 className="font-oswald text-[40px] font-bold uppercase leading-none tracking-[0.04em]">Art you can wear</h1>
             <p className="mt-2 text-[15px] leading-[1.6] text-kv-mist">
               Heavyweight fabrics, relaxed cuts and a calm, considered finish.
@@ -125,20 +91,6 @@ export function HeroCarousel({ products }: HeroCarouselProps) {
         </div>
       </div>
 
-      <div className="flex items-center justify-center py-1" role="group" aria-label="Choose slide">
-        {SLIDES.map((slide, i) => (
-          <button
-            key={slide.image}
-            type="button"
-            onClick={() => setIndex(i)}
-            aria-label={`Show slide ${i + 1} of ${SLIDES.length}`}
-            aria-current={i === index}
-            className="flex h-11 w-8 items-center justify-center"
-          >
-            <span className={cn('block h-2 rounded-full transition-all duration-300', i === index ? 'w-6 bg-kv-gold' : 'w-2 bg-kv-line')} />
-          </button>
-        ))}
-      </div>
     </section>
   );
 }

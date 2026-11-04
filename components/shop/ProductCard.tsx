@@ -8,6 +8,7 @@ import { Heart, Plus } from 'lucide-react';
 
 import { cn } from '@/lib/utils';
 import { formatINR } from '@/lib/format';
+import { MemberPriceTag } from '@/components/membership/member-price-tag';
 import { useWishlistStore } from '@/store/wishlist-store';
 import { useCartStore } from '@/store/cart-store';
 import { WishlistLoginModal } from '@/components/product/product-card';
@@ -229,7 +230,7 @@ export function ProductCard({
   const hasSecond = images.length > 1;
 
   return (
-    <article className="group relative min-w-0">
+    <article className="group relative flex h-full min-w-0 flex-col">
       <div className="relative aspect-[4/5] overflow-hidden bg-[var(--ivory-2)]">
         <Link href={href} aria-label={product.name} className="absolute inset-0 block">
           {images[0] && (
@@ -367,7 +368,7 @@ export function ProductCard({
         </div>
       </div>
 
-      <div className="flex min-w-0 flex-col gap-1.5 pt-3.5">
+      <div className="flex min-w-0 flex-1 flex-col gap-1.5 pt-3.5">
         <ColourDots colors={colors} status={colorStatus} onRetry={() => onRetryColors(product)} />
         <p className="text-[11px] font-medium uppercase tracking-[0.16em] text-[var(--soft)] lg:text-[12px]">Kovenik</p>
         <Link
@@ -378,11 +379,15 @@ export function ProductCard({
           {product.name}
         </Link>
         <RatingLink slug={product.slug} rating={product.rating} reviewCount={product.reviewCount} />
-        <p className="flex flex-wrap items-baseline gap-x-2 text-[15px] lg:text-[17px]">
-          <span className={cn('font-semibold', unavailable ? 'text-[var(--muted)]' : 'text-[var(--ink)]')}>{formatINR(price)}</span>
-          {mrp && <span className="text-[12px] text-[var(--soft)] line-through lg:text-[14px]">{formatINR(mrp)}</span>}
-          {pct > 0 && <span className="text-[12px] font-semibold text-[var(--gold)] lg:text-[14px]">{pct}% OFF</span>}
-        </p>
+        {/* Pricing is pinned to the bottom so rows line up whatever the title length. */}
+        <div className="mt-auto">
+          <p className="flex flex-wrap items-baseline gap-x-2 gap-y-0.5 text-[15px] lg:text-[17px]">
+            <span className={cn('whitespace-nowrap font-semibold', unavailable ? 'text-[var(--muted)]' : 'text-[var(--ink)]')}>{formatINR(price)}</span>
+            {mrp && <span className="whitespace-nowrap text-[12px] text-[var(--soft)] line-through lg:text-[14px]">{formatINR(mrp)}</span>}
+            {pct > 0 && <span className="whitespace-nowrap text-[12px] font-semibold text-[var(--gold)] lg:text-[14px]">{pct}% OFF</span>}
+          </p>
+          <MemberPriceTag productId={product.id} price={price} />
+        </div>
       </div>
       <WishlistLoginModal open={loginOpen} onClose={() => setLoginOpen(false)} />
     </article>

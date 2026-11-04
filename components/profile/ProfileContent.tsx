@@ -9,6 +9,7 @@ import { AddressesSection } from './AddressesSection';
 import { CouponsSection } from './CouponsSection';
 import { AccountSection } from './AccountSection';
 import { SecuritySection } from './SecuritySection';
+import { MembershipSection } from './MembershipSection';
 
 type ProfileState = ReturnType<typeof useProfile>;
 
@@ -27,6 +28,7 @@ export function ProfileContent({ profile }: { profile: ProfileState }) {
       {profile.activeSection === 'wishlist' && <WishlistSection profile={profile} />}
       {profile.activeSection === 'addresses' && <AddressesSection profile={profile} />}
       {profile.activeSection === 'coupons' && <CouponsSection profile={profile} />}
+      {profile.activeSection === 'membership' && <MembershipSection />}
       {profile.activeSection === 'account' && <AccountSection profile={profile} />}
       {profile.activeSection === 'security' && <SecuritySection profile={profile} />}
     </section>

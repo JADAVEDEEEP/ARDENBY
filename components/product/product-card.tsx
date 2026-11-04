@@ -25,6 +25,7 @@ import { useWishlistStore } from '@/store/wishlist-store';
 import { useCartStore } from '@/store/cart-store';
 
 import { formatINR, discountPercent } from '@/lib/format';
+import { MemberPriceTag } from '@/components/membership/member-price-tag';
 
 import { cn } from '@/lib/utils';
 
@@ -617,6 +618,7 @@ export function ProductCard({
             </div>
 
           </div>
+          <MemberPriceTag productId={product.id} price={price} />
 
           {showBestPrice && (
             <p className="text-[12px] font-medium text-[#E53935]">

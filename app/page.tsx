@@ -6,6 +6,7 @@ import { CollectionGrid } from '@/components/home/CollectionGrid';
 import { ExploreCategory } from '@/components/home/ExploreCategory';
 import { HeroCarousel } from '@/components/home/HeroCarousel';
 import { MobileCategoryIcons } from '@/components/home/MobileCategoryIcons';
+import { MembershipStrip } from '@/components/home/MembershipStrip';
 import { MobileShopBar } from '@/components/home/MobileShopBar';
 import { Newsletter } from '@/components/home/Newsletter';
 import { ProcessSection } from '@/components/home/ProcessSection';
@@ -43,6 +44,7 @@ export default function HomePage() {
         />
         <CollectionGrid products={products} />
         <ExploreCategory products={products} loading={loading} error={error} onRetry={retry} />
+        <MembershipStrip />
         <ProcessSection />
         <Newsletter />
       </div>

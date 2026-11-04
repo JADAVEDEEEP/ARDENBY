@@ -23,6 +23,9 @@ import {
 import { toast } from 'sonner';
 
 import { useCartStore } from '@/store/cart-store';
+import { useMemberCartItems } from '@/hooks/use-member-pricing';
+import { MemberBadge } from '@/components/membership/member-badge';
+import { MemberLineSaving } from '@/components/membership/member-price-tag';
 import { useCartCoupon } from '@/features/cart/use-cart-coupon';
 import { useHomeProducts } from '@/hooks/use-home-products';
 import {
@@ -100,6 +103,47 @@ function ShippingProgress({ subtotal }: { subtotal: number }) {
   );
 }
 
+/** Members: what the membership saves on this bag. Everyone else: what joining would save. */
+function MemberSavingsBanner({
+  tier,
+  memberSavings,
+  joinSavings,
+}: {
+  tier: string | null;
+  memberSavings: number;
+  joinSavings: number;
+}) {
+  const shell = 'flex items-center gap-3 bg-gradient-to-r from-[#EADCF5] via-[#D9ECFA] to-[#F6E1EE] px-4 py-3 sm:px-5';
+
+  if (tier) {
+    if (memberSavings <= 0) return null;
+    return (
+      <div className={shell}>
+        <MemberBadge size={26} />
+        <p className="text-sm text-[#111111]">
+          <span className="font-bold text-[#C8211F]">Member Savings</span> on this order are{' '}
+          <strong className="tabular-nums">{formatINR(memberSavings)}</strong>
+          <span className="text-[#5C5C5C]"> · {tier}</span>
+        </p>
+      </div>
+    );
+  }
+
+  if (joinSavings <= 0) return null;
+  return (
+    <div className={shell}>
+      <MemberBadge size={26} />
+      <p className="min-w-0 text-sm text-[#111111]">
+        Join KOVENIK Membership and save{' '}
+        <strong className="tabular-nums text-[#C8211F]">{formatINR(joinSavings)}</strong> on this order.{' '}
+        <Link href="/membership" className="font-semibold underline underline-offset-2">
+          View plans
+        </Link>
+      </p>
+    </div>
+  );
+}
+
 type LineProps = {
   item: CartItem;
   busy: boolean;
@@ -113,6 +157,7 @@ function CartLine({ item, busy, stockLimit, onQuantity, onRemove }: LineProps) {
   const off =
     item.mrp > item.price ? Math.round((1 - item.price / item.mrp) * 100) : 0;
   const href = item.slug ? `/product/${item.slug}` : undefined;
+  const regularPrice = (item as CartItem & { regularPrice?: number }).regularPrice;
 
   const imageBox = (
     <div className="aspect-[4/5] w-[88px] overflow-hidden bg-[#F4F4F4] sm:w-[112px] lg:w-[128px]">
@@ -194,6 +239,15 @@ function CartLine({ item, busy, stockLimit, onQuantity, onRemove }: LineProps) {
               </>
             )}
           </p>
+          {regularPrice !== undefined && regularPrice > item.price && (
+            <div className="mt-1.5 space-y-1">
+              <p className="text-xs tabular-nums text-[#5C5C5C]">
+                Regular price {formatINR(regularPrice)} · Member price{' '}
+                <span className="font-semibold text-[#111111]">{formatINR(item.price)}</span>
+              </p>
+              <MemberLineSaving saving={(regularPrice - item.price) * item.quantity} />
+            </div>
+          )}
 
           <p className="mt-1.5 text-xs text-[#5C5C5C]">In stock · Ready to ship · Ship only</p>
 
@@ -519,14 +573,20 @@ export default function CartPage() {
     };
   }, []);
 
-  const safeItems = useMemo(() => (mounted ? items : []), [mounted, items]);
+  const baseItems = useMemo(() => (mounted ? items : []), [mounted, items]);
+  // Member prices (display; the server recomputes them at checkout).
+  const memberCart = useMemberCartItems(baseItems);
+  const safeItems = memberCart.items;
   const itemCount = safeItems.reduce((n, i) => n + i.quantity, 0);
   const rawSubtotal = calculateCartPricing(safeItems).subtotal;
 
   const coupon = useCartCoupon(rawSubtotal);
-  const pricing = calculateCartPricing(safeItems, coupon.pricingCoupon);
+  const pricing = calculateCartPricing(safeItems, coupon.pricingCoupon, { freeShipping: memberCart.freeShipping });
   const { subtotal, productSavings, discount, shipping, gst, total, totalSavings } = pricing;
   const bagTotalMrp = subtotal + productSavings;
+  // productSavings (MRP - payable) already contains the member saving; show them separately.
+  const memberSavings = Math.min(Math.round(memberCart.memberSavings * 100) / 100, productSavings);
+  const saleSavings = Math.round((productSavings - memberSavings) * 100) / 100;
   const itemsLabel = itemCount === 1 ? 'item' : 'items';
 
   const minOrderShortfall =
@@ -644,8 +704,13 @@ export default function CartPage() {
                 </Link>
               </div>
 
-              <div className="mb-6">
+              <div className="mb-6 space-y-3">
                 <ShippingProgress subtotal={rawSubtotal} />
+                <MemberSavingsBanner
+                  tier={memberCart.member?.planName ?? null}
+                  memberSavings={memberCart.memberSavings}
+                  joinSavings={memberCart.joinSavings}
+                />
               </div>
 
               <div
@@ -746,9 +811,14 @@ export default function CartPage() {
 
                 <dl className="space-y-3 text-sm">
                   <SummaryRow label="Bag total (MRP)">{formatINR(bagTotalMrp)}</SummaryRow>
-                  {productSavings > 0 && (
+                  {saleSavings > 0 && (
                     <SummaryRow label="Discount on MRP" red>
-                      −{formatINR(productSavings)}
+                      −{formatINR(saleSavings)}
+                    </SummaryRow>
+                  )}
+                  {memberSavings > 0 && (
+                    <SummaryRow label="Member Savings" red>
+                      −{formatINR(memberSavings)}
                     </SummaryRow>
                   )}
                   {discount > 0 && (

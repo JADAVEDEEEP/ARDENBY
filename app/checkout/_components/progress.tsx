@@ -23,9 +23,9 @@ export function StepProgress({ step }: { step: 1 | 2 | 3 }) {
             )}
             <span className="flex items-center gap-2.5">
               <span
-                className={`flex h-10 w-10 items-center justify-center rounded-full text-[16px] font-bold ${
+                className={`flex h-9 w-9 items-center justify-center rounded-full text-[15px] font-bold ${
                   active
-                    ? 'bg-[#111111] text-white ring-[3px] ring-[#EF3535]/60 ring-offset-2'
+                    ? 'bg-[#111111] text-white ring-[3px] ring-[#EF3535]/40 ring-offset-2'
                     : done
                       ? 'bg-[#111111] text-white'
                       : 'border-2 border-[#BDBDBD] bg-white text-[#666666]'

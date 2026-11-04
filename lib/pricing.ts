@@ -64,7 +64,10 @@ export function roundMoney(value: number): number {
 
 export function calculateCartPricing(
   items: PricedItem[],
-  coupon: CouponRule | number | null = null
+  coupon: CouponRule | number | null = null,
+  // Member benefit (e.g. Gold) that waives the shipping fee. Display only: the
+  // server applies the real rule when the order is created.
+  options: { freeShipping?: boolean } = {}
 ) {
   const subtotal = roundMoney(
     items.reduce((sum, item) => sum + item.price * item.quantity, 0)
@@ -86,7 +89,9 @@ export function calculateCartPricing(
   const discount = roundMoney(Math.max(0, Math.min(rawDiscount, subtotal)));
   const taxableAmount = roundMoney(subtotal - discount);
   const shipping =
-    subtotal === 0 || subtotal >= FREE_SHIPPING_THRESHOLD ? 0 : SHIPPING_FEE;
+    subtotal === 0 || subtotal >= FREE_SHIPPING_THRESHOLD || options.freeShipping
+      ? 0
+      : SHIPPING_FEE;
   const gst = Math.round(taxableAmount * GST_RATE);
   const total = roundMoney(taxableAmount + shipping + gst);
 

@@ -14,7 +14,6 @@ type ProductStageProps = {
 
 const ZOOM_SCALE = 1.9;
 const OVERLAY = 'bg-white/[0.92] text-[#111111]';
-const SECONDARY_LABELS = ['On model', 'Print detail'];
 
 /**
  * Product gallery. The real product photography is never replaced or
@@ -65,6 +64,13 @@ export function ProductStage({ images, name, onOpenFullscreen }: ProductStagePro
     setActive((current) => (current === index ? current : index));
   };
 
+  const scrollToSlide = (index: number) => {
+    const el = swiperRef.current;
+    if (!el || count === 0) return;
+    const target = ((index % count) + count) % count;
+    el.scrollTo({ left: target * el.clientWidth, behavior: 'smooth' });
+  };
+
   if (count === 0) {
     return (
       <div className="flex aspect-[4/5] items-center justify-center bg-white text-[14px] text-[var(--muted)]">
@@ -72,8 +78,6 @@ export function ProductStage({ images, name, onOpenFullscreen }: ProductStagePro
       </div>
     );
   }
-
-  const secondary = count >= 3 ? [1, 2] : [];
 
   return (
     <div className="min-w-0">
@@ -142,6 +146,15 @@ export function ProductStage({ images, name, onOpenFullscreen }: ProductStagePro
               </>
             )}
 
+            <button
+              type="button"
+              aria-label="Open product image fullscreen"
+              onClick={() => onOpenFullscreen(active)}
+              className={`absolute right-4 top-4 z-20 flex h-10 w-10 items-center justify-center rounded-full ${OVERLAY}`}
+            >
+              <Maximize2 className="h-[18px] w-[18px]" />
+            </button>
+
             {count > 1 && (
               <span
                 className={`pointer-events-none absolute bottom-4 left-4 z-20 rounded-full px-4 py-2 text-[12px] font-semibold tabular-nums tracking-[0.1em] ${OVERLAY}`}
@@ -159,26 +172,6 @@ export function ProductStage({ images, name, onOpenFullscreen }: ProductStagePro
           </div>
         </div>
 
-        {secondary.length > 0 && (
-          <div className="mt-4 grid grid-cols-2 gap-4 pl-[92px]">
-            {secondary.map((index, position) => (
-              <button
-                key={`${images[index]}-${index}`}
-                type="button"
-                aria-label={`Open image ${index + 1} fullscreen`}
-                onClick={() => onOpenFullscreen(index)}
-                className="relative aspect-[4/5] overflow-hidden bg-white"
-              >
-                <img src={images[index]} alt={`${name} ${index + 1}`} className="h-full w-full object-cover" loading="lazy" />
-                <span
-                  className={`absolute bottom-3 left-3 px-3 py-1.5 text-[12px] font-semibold uppercase tracking-[0.14em] ${OVERLAY}`}
-                >
-                  {SECONDARY_LABELS[position]}
-                </span>
-              </button>
-            ))}
-          </div>
-        )}
       </div>
 
       {/* ------------------------------- MOBILE ------------------------------ */}
@@ -210,38 +203,49 @@ export function ProductStage({ images, name, onOpenFullscreen }: ProductStagePro
           </div>
 
           {count > 1 && (
-            <span
-              className={`pointer-events-none absolute right-3 top-3 rounded-full px-3 py-1.5 text-[12px] font-semibold tabular-nums ${OVERLAY}`}
-            >
-              {active + 1} / {count}
-            </span>
+            <>
+              <button
+                type="button"
+                aria-label="Previous image"
+                onClick={() => scrollToSlide(active - 1)}
+                className={`absolute left-3 top-1/2 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full ${OVERLAY}`}
+              >
+                <ChevronLeft className="h-5 w-5" />
+              </button>
+              <button
+                type="button"
+                aria-label="Next image"
+                onClick={() => scrollToSlide(active + 1)}
+                className={`absolute right-3 top-1/2 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full ${OVERLAY}`}
+              >
+                <ChevronRight className="h-5 w-5" />
+              </button>
+            </>
           )}
 
           <button
             type="button"
             aria-label="Open product image fullscreen"
             onClick={() => onOpenFullscreen(active)}
-            className={`absolute bottom-3 right-3 flex h-9 w-9 items-center justify-center rounded-full ${OVERLAY}`}
+            className={`absolute right-3 top-3 flex h-9 w-9 items-center justify-center rounded-full ${OVERLAY}`}
           >
             <Maximize2 className="h-4 w-4" />
           </button>
 
-          {count > 1 && (
-            <div
-              className="pointer-events-none absolute inset-x-0 bottom-4 flex items-center justify-center gap-1.5"
-              aria-hidden="true"
-            >
-              {images.map((_, index) => (
-                <span
-                  key={index}
-                  className={`h-1.5 rounded-full transition-all duration-300 ${
-                    active === index ? 'w-5 bg-[#111111]' : 'w-1.5 bg-[#111111]/35'
-                  }`}
-                />
-              ))}
-            </div>
-          )}
         </div>
+
+        {count > 1 && (
+          <div className="flex items-center justify-center gap-1.5 py-3" aria-hidden="true">
+            {images.map((_, index) => (
+              <span
+                key={index}
+                className={`h-1.5 rounded-full transition-all duration-300 ${
+                  active === index ? 'w-5 bg-[#111111]' : 'w-1.5 bg-[#111111]/35'
+                }`}
+              />
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );

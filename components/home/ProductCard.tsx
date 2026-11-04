@@ -8,6 +8,7 @@ import { WishlistLoginModal } from '@/components/product/product-card';
 import { RatingLink } from '@/components/product/rating-link';
 import { useWishlistToggle } from '@/hooks/use-wishlist-toggle';
 import { discountPercent, formatINR } from '@/lib/format';
+import { MemberPriceTag } from '@/components/membership/member-price-tag';
 import { cn } from '@/lib/utils';
 import type { Product } from '@/types';
 
@@ -123,19 +124,28 @@ export function ProductCard({ product, variant = 'arrival', priority = false, cl
 
           <RatingLink slug={product.slug} rating={product.rating} reviewCount={product.reviewCount} className="mt-1" />
 
-          <div className="mt-auto flex flex-wrap items-baseline gap-x-1.5 gap-y-0.5 pt-2 md:gap-x-2.5">
-            <span className="text-[16px] font-bold leading-6 text-kv-ink md:text-[18px]">{formatINR(price)}</span>
-            {onSale && (
-              <>
-                <span className="text-[12px] leading-6 text-kv-sub line-through md:text-[14px]">{formatINR(mrp)}</span>
-                {!grid && <span className="text-[12px] font-bold uppercase leading-6 text-kv-gold-text md:text-[14px]">{discount}% off</span>}
-              </>
+          {/* Pricing is pinned to the bottom so rows line up whatever the title length. */}
+          <div className="mt-auto pt-2">
+            <div className="flex flex-wrap items-baseline gap-x-2 gap-y-0.5">
+              <span className="whitespace-nowrap text-[16px] font-bold leading-6 text-kv-ink md:text-[18px]">{formatINR(price)}</span>
+              {onSale && (
+                <>
+                  <span className="whitespace-nowrap text-[12px] leading-6 text-kv-sub line-through md:text-[14px]">{formatINR(mrp)}</span>
+                  {!grid && (
+                    <span className="whitespace-nowrap text-[12px] font-bold uppercase leading-6 text-kv-gold-text md:text-[14px]">
+                      {discount}% off
+                    </span>
+                  )}
+                </>
+              )}
+            </div>
+            {grid && bestPrice > 0 && bestPrice < price && (
+              <p className="mt-0.5 whitespace-nowrap text-[12px] leading-5 text-kv-sub md:text-[13px]">
+                Best price <strong className="font-bold tabular-nums text-kv-ink">{formatINR(bestPrice)}</strong>
+              </p>
             )}
+            <MemberPriceTag productId={product.id} price={price} />
           </div>
-
-          {grid && bestPrice > 0 && bestPrice < price && (
-            <p className="mt-1 text-[14px] font-bold text-kv-gold-text">Best price {formatINR(bestPrice)}</p>
-          )}
         </div>
       </article>
 

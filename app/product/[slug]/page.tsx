@@ -9,8 +9,12 @@ import {
   ChevronLeft,
   ChevronRight,
   Copy,
+  Gem,
   Heart,
+  Layers,
+  Leaf,
   Minus,
+  Shirt,
   Plus,
   RotateCcw,
   Ruler,
@@ -21,12 +25,14 @@ import {
 } from 'lucide-react';
 import { apiUrl } from '@/lib/api-url';
 import { formatINR, discountPercent } from '@/lib/format';
+import { MemberPriceNote } from '@/components/membership/member-price-tag';
 import { useWishlistStore } from '@/store/wishlist-store';
 import { useCartStore } from '@/store/cart-store';
 import { MobileShopBar } from '@/components/home/MobileShopBar';
 import { useHeaderHeight } from '@/components/shop/use-header-height';
 import { ProductStage } from './product-stage';
 import { ProductReviews } from '@/components/product/product-reviews';
+import { SizeGuideModal } from '@/components/product/size-guide-modal';
 
 /* -------------------------------------------------------------------------- */
 /* Types                                                                      */
@@ -260,6 +266,7 @@ export default function ProductPage() {
   const addCartItem = useCartStore((state) => state.addItem);
   const router = useRouter();
   const [needSelection, setNeedSelection] = useState(false);
+  const [sizeGuideOpen, setSizeGuideOpen] = useState(false);
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const [lightboxImage, setLightboxImage] = useState(0);
   const [activeTab, setActiveTab] = useState<TabKey>('description');
@@ -267,7 +274,6 @@ export default function ProductPage() {
   const [isWishlisted, setIsWishlisted] = useState(false);
   const [cartBusy, setCartBusy] = useState(false);
   const [skuCopied, setSkuCopied] = useState(false);
-  const [addInView, setAddInView] = useState(true);
   const [notice, setNotice] = useState<Notice | null>(null);
 
   const wishlistToggle = useWishlistStore((state) => state.toggle);
@@ -279,7 +285,6 @@ export default function ProductPage() {
 
   const lightboxTouchStartX = useRef<number | null>(null);
   const selectorsRef = useRef<HTMLDivElement | null>(null);
-  const addButtonRef = useRef<HTMLButtonElement | null>(null);
   const noticeTimer = useRef<number | null>(null);
 
   const isRelatedWishlisted = (productId: string) =>
@@ -467,20 +472,6 @@ export default function ProductPage() {
       cancelled = true;
     };
   }, [product?.id, wishlistSync, wishlistHas]);
-
-  // Show the mobile sticky bar only once the in-flow Add to Cart button has
-  // scrolled out of view, so there is never a redundant second button on screen.
-  useEffect(() => {
-    const element = addButtonRef.current;
-    if (!element || typeof IntersectionObserver === 'undefined') return;
-
-    const observer = new IntersectionObserver(([entry]) => {
-      setAddInView(entry.isIntersecting);
-    });
-    observer.observe(element);
-
-    return () => observer.disconnect();
-  }, [loading, product?.id]);
 
   // Hide the mobile sticky bar once the site footer is on screen.
   useEffect(() => {
@@ -734,16 +725,7 @@ export default function ProductPage() {
     }
   };
 
-  const openSizeGuide = () => {
-    setActiveTab('size');
-    setOpenAccordion('size');
-    const desktop = window.matchMedia('(min-width: 1024px)').matches;
-    window.requestAnimationFrame(() =>
-      document
-        .getElementById(desktop ? 'kovenik-details' : 'kovenik-details-m')
-        ?.scrollIntoView({ behavior: 'smooth', block: 'start' })
-    );
-  };
+  const openSizeGuide = () => setSizeGuideOpen(true);
 
   /* ------------------------------------------------------------------------ */
   /* Add to Cart                                                              */
@@ -929,13 +911,13 @@ export default function ProductPage() {
     .filter((label): label is string => Boolean(label))
     .slice(0, 2);
 
-  const shortDescription = (() => {
-    const text = product.description ?? '';
-    if (text.length <= 170) return text;
-    const cut = text.slice(0, 170);
-    const stop = Math.max(cut.lastIndexOf('. '), cut.lastIndexOf(' '));
-    return `${cut.slice(0, stop > 80 ? stop : 170).replace(/[.,;:\s]+$/, '')}…`;
-  })();
+  const reviewCountNum = Number(product.review_count) || 0;
+  const goToReviews = () => {
+    document.getElementById('reviews')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    window.history.replaceState(null, '', '#reviews');
+  };
+  const featureIcons = [Leaf, Layers, Shirt, Gem];
+  const fabricImage = images[2];
 
   const specTable =
     specRows.length > 0 ? (
@@ -953,14 +935,38 @@ export default function ProductPage() {
     switch (key) {
       case 'description':
         return (
-          <>
-            <p>{product.description || 'No specific description provided for this style.'}</p>
-            {product.fabricDetails && (
-              <p className="mt-3">
-                <strong className="font-semibold text-[var(--ink)]">Fabric details:</strong> {product.fabricDetails}
-              </p>
+          <div className={fabricImage ? 'lg:grid lg:grid-cols-[minmax(0,1fr)_220px] lg:gap-10' : ''}>
+            <div>
+              <h3 className="mb-2 text-[18px] font-bold text-[var(--ink)]">Product Description</h3>
+              <p>{product.description || 'No specific description provided for this style.'}</p>
+              {product.fabricDetails && (
+                <p className="mt-3">
+                  <strong className="font-semibold text-[var(--ink)]">Fabric details:</strong> {product.fabricDetails}
+                </p>
+              )}
+              {stripCols.length > 0 && (
+                <ul className="mt-6 grid grid-cols-2 gap-4 sm:grid-cols-3">
+                  {stripCols.map(([label, value], index) => {
+                    const Icon = featureIcons[index % featureIcons.length];
+                    return (
+                      <li key={label} className="flex flex-col items-center gap-2 text-center">
+                        <Icon className="h-7 w-7 text-[var(--ink)]" strokeWidth={1.3} />
+                        <span className="text-[12.5px] font-medium text-[var(--ink)]">{value}</span>
+                      </li>
+                    );
+                  })}
+                </ul>
+              )}
+            </div>
+            {fabricImage && (
+              <img
+                src={fabricImage}
+                alt={`${product.name} detail`}
+                loading="lazy"
+                className="mt-6 aspect-[4/3] w-full object-cover lg:mt-0"
+              />
             )}
-          </>
+          </div>
         );
       case 'wash':
         return <p>{product.washCare || 'Wash care details are not available for this product.'}</p>;
@@ -979,6 +985,13 @@ export default function ProductPage() {
                 <strong className="font-semibold text-[var(--ink)]">Fit:</strong> {product.fit}
               </p>
             )}
+            <button
+              type="button"
+              onClick={openSizeGuide}
+              className="mt-4 inline-flex items-center gap-1.5 text-[14px] text-[var(--ink)] underline underline-offset-4"
+            >
+              <Ruler className="h-4 w-4" /> Open size guide
+            </button>
           </>
         );
       default:
@@ -995,7 +1008,6 @@ export default function ProductPage() {
   };
 
   const categoryHref = `/shop?category=${encodeURIComponent(product.category_slug ?? product.category ?? '')}`;
-  const stickyVariantLabel = [selectedColor, selectedSize ? `Size ${selectedSize}` : null].filter(Boolean).join(' · ');
 
   /* ------------------------------------------------------------------------ */
   /* Render                                                                   */
@@ -1094,15 +1106,12 @@ export default function ProductPage() {
                     <span className="text-[14px] text-[var(--soft)] line-through lg:text-[16px]">{formatINR(mrp)}</span>
                   )}
                   {discount > 0 && (
-                    <span className="text-[14px] font-semibold text-[var(--gold)] lg:text-[16px]">{discount}% OFF</span>
+                    <span className="rounded-sm bg-[#EDEDED] px-2.5 py-1 text-[13px] font-semibold leading-none text-[var(--ink)] lg:text-[14px]">{discount}% OFF</span>
                   )}
                 </div>
+                <MemberPriceNote productId={product.id} price={price} className="mt-3" />
                 <p className="mt-2 text-[12px] text-[var(--soft)] lg:text-[13px]">+ 5% GST at checkout</p>
               </div>
-
-              {shortDescription && (
-                <p className="text-[14.5px] leading-[1.6] text-[var(--charcoal)] lg:text-[15px]">{shortDescription}</p>
-              )}
 
               {/* Specs strip */}
               {stripCols.length > 0 && (
@@ -1255,7 +1264,7 @@ export default function ProductPage() {
               <div className="flex flex-wrap gap-3 lg:flex-nowrap">
                 {variants.length > 0 && (
                   <div
-                    className="order-1 inline-flex h-[50px] flex-1 items-center justify-between border border-[#C3C3C3] bg-white lg:h-[54px] lg:flex-none"
+                    className="order-1 inline-flex h-[50px] w-[150px] flex-none items-center justify-between border border-[#C3C3C3] bg-white lg:h-[54px]"
                     role="group"
                     aria-label="Quantity"
                   >
@@ -1281,13 +1290,13 @@ export default function ProductPage() {
                   </div>
                 )}
 
+                {/* Mobile uses the always-visible sticky bar below; this row keeps quantity only. */}
                 <button
-                  ref={addButtonRef}
                   type="button"
                   onClick={handleAddToCart}
                   disabled={stockBlocked || cartBusy}
                   aria-busy={cartBusy}
-                  className="order-3 flex h-[52px] w-full items-center justify-center gap-3 bg-[var(--ink)] text-[14px] font-semibold uppercase tracking-[0.16em] text-[var(--ivory)] transition-colors hover:bg-[var(--charcoal)] disabled:cursor-not-allowed disabled:opacity-45 lg:order-2 lg:h-[54px] lg:min-w-0 lg:flex-1 lg:w-auto"
+                  className="order-2 hidden h-[54px] min-w-0 flex-1 items-center justify-center gap-3 bg-[var(--ink)] text-[14px] font-semibold uppercase tracking-[0.16em] text-[var(--ivory)] transition-colors hover:bg-[var(--charcoal)] disabled:cursor-not-allowed disabled:opacity-45 lg:flex"
                 >
                   <ShoppingBag className="h-[18px] w-[18px]" />
                   {cartBusy ? 'Adding…' : 'Add to Cart'}
@@ -1299,7 +1308,7 @@ export default function ProductPage() {
                   aria-pressed={isWishlisted}
                   onClick={handleWishlistToggle}
                   disabled={wishlistBusy}
-                  className={`order-2 flex h-[50px] w-[50px] shrink-0 items-center justify-center border border-[#C3C3C3] bg-white text-[var(--ink)] transition hover:border-[var(--ink)] lg:order-3 lg:h-[54px] lg:w-[54px] ${wishlistBusy ? 'opacity-60' : ''}`}
+                  className={`order-3 hidden h-[54px] w-[54px] shrink-0 items-center justify-center border border-[#C3C3C3] bg-white text-[var(--ink)] transition hover:border-[var(--ink)] lg:flex ${wishlistBusy ? 'opacity-60' : ''}`}
                 >
                   <Heart className={`h-5 w-5 ${isWishlisted ? 'fill-current' : ''}`} />
                 </button>
@@ -1382,6 +1391,16 @@ export default function ProductPage() {
               </div>
             );
           })}
+          <div className="border-b border-[var(--line)]">
+            <button
+              type="button"
+              onClick={goToReviews}
+              className="flex min-h-[56px] w-full items-center justify-between gap-4 text-left text-[13px] font-semibold uppercase tracking-[0.14em] text-[var(--ink)]"
+            >
+              Reviews ({reviewCountNum})
+              <ChevronRight className="h-[18px] w-[18px] shrink-0" />
+            </button>
+          </div>
         </div>
 
         {/* Desktop: tabs */}
@@ -1421,6 +1440,13 @@ export default function ProductPage() {
                 </button>
               );
             })}
+            <button
+              type="button"
+              onClick={goToReviews}
+              className="-mb-px whitespace-nowrap border-b-2 border-transparent pb-4 text-[13px] font-semibold uppercase tracking-[0.14em] text-[var(--soft)] transition-colors hover:text-[var(--ink)]"
+            >
+              Reviews ({reviewCountNum})
+            </button>
           </div>
 
           <div className={`mt-10 grid gap-20 ${specTable ? 'grid-cols-[1.2fr_1fr]' : ''}`}>
@@ -1529,27 +1555,28 @@ export default function ProductPage() {
 
       <MobileShopBar />
 
-      {/* MOBILE STICKY BAR: appears only after the in-flow Add to Cart scrolls away; hides at the footer */}
-      {!addInView && !footerInView && (
+      {/* MOBILE STICKY BAR: always visible on mobile/tablet (wishlist + Add to Cart); hides at the footer */}
+      {!footerInView && (
         <div className="fixed inset-x-0 bottom-[calc(5.25rem+env(safe-area-inset-bottom))] z-40 border-t border-[var(--line)] bg-white px-4 py-3 md:bottom-0 md:pb-[calc(0.75rem+env(safe-area-inset-bottom))] lg:hidden">
           <div className="mx-auto flex max-w-xl items-center gap-3">
-            <div className="min-w-0 flex-1">
-              <div className="flex flex-wrap items-baseline gap-x-2">
-                <span className="text-[17px] font-semibold leading-6 text-[var(--ink)]">{formatINR(price)}</span>
-                {mrp !== undefined && mrp > price && (
-                  <span className="text-[12px] text-[var(--soft)] line-through">{formatINR(mrp)}</span>
-                )}
-              </div>
-              {stickyVariantLabel && (
-                <p className="truncate text-[12px] leading-4 text-[var(--muted)]">{stickyVariantLabel}</p>
-              )}
-            </div>
+            <button
+              type="button"
+              aria-label={isWishlisted ? 'Remove from wishlist' : 'Add to wishlist'}
+              aria-pressed={isWishlisted}
+              onClick={handleWishlistToggle}
+              disabled={wishlistBusy}
+              className={`flex h-[52px] w-[52px] shrink-0 items-center justify-center border border-[#C3C3C3] bg-white text-[var(--ink)] transition hover:border-[var(--ink)] ${wishlistBusy ? 'opacity-60' : ''}`}
+            >
+              <Heart className={`h-5 w-5 ${isWishlisted ? 'fill-current' : ''}`} />
+            </button>
             <button
               type="button"
               onClick={handleAddToCart}
               disabled={stockBlocked || cartBusy}
-              className="h-12 shrink-0 bg-[var(--ink)] px-6 text-[13px] font-semibold uppercase tracking-[0.16em] text-[var(--ivory)] transition-colors disabled:cursor-not-allowed disabled:opacity-45"
+              aria-busy={cartBusy}
+              className="flex h-[52px] min-w-0 flex-1 items-center justify-center gap-3 bg-[var(--ink)] text-[14px] font-semibold uppercase tracking-[0.16em] text-[var(--ivory)] transition-colors disabled:cursor-not-allowed disabled:opacity-45"
             >
+              <ShoppingBag className="h-[18px] w-[18px]" />
               {cartBusy ? 'Adding…' : 'Add to Cart'}
             </button>
           </div>
@@ -1586,6 +1613,8 @@ export default function ProductPage() {
           </div>
         </div>
       )}
+
+      <SizeGuideModal open={sizeGuideOpen} onClose={() => setSizeGuideOpen(false)} />
 
       {/* FULL SCREEN IMAGE VIEWER */}
       {lightboxOpen && images.length > 0 && (

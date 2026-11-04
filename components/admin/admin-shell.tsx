@@ -5,6 +5,7 @@ import { usePathname } from 'next/navigation';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import type { ComponentType, ReactNode } from 'react';
 import {
+  BadgeCheck,
   BadgePercent,
   Bell,
   BarChart3,
@@ -14,6 +15,7 @@ import {
   Download,
   FolderTree,
   History,
+  ImageIcon,
   LayoutDashboard,
   LogOut,
   Menu,
@@ -51,6 +53,8 @@ const adminLinks: NavItem[] = [
   { href: '/admin/orders', label: 'Orders', icon: PackageCheck },
   { href: '/admin/products', label: 'Products', icon: Boxes },
   { href: '/admin/categories', label: 'Categories', icon: FolderTree },
+  { href: '/admin/banners', label: 'Banners', icon: ImageIcon },
+  { href: '/admin/membership', label: 'Membership', icon: BadgeCheck },
   { href: '/admin/inventory', label: 'Inventory', icon: Warehouse },
   { href: '/admin/inventory/history', label: 'Stock history', icon: History },
   { href: '/admin/coupons', label: 'Coupons', icon: BadgePercent },

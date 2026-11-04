@@ -104,36 +104,36 @@ export function PaymentSection({
         >
           <Radio on={online} />
           <span className="min-w-0 flex-1">
-            <span className="block text-[20px] font-bold text-[#111111]">Pay online</span>
-            <span className="block text-[15px] text-[#666666] sm:text-[16px]">
+            <span className="block text-[16px] font-bold leading-6 text-[#111111] sm:text-[17px]">Pay online</span>
+            <span className="mt-0.5 block text-[14px] leading-5 text-[#666666]">
               Instant confirmation in Razorpay&apos;s secure window
             </span>
           </span>
-          <span className="hidden shrink-0 items-center rounded-[4px] border border-[#E5E5E5] bg-white px-3 py-2 text-[14px] font-semibold text-[#111111] sm:inline-flex">
+          <span className="hidden shrink-0 items-center rounded-full border border-[#E5E5E5] bg-white px-3 py-1.5 text-[13px] font-semibold text-[#111111] sm:inline-flex">
             Razorpay Secured
           </span>
         </button>
 
         {online && (
           <div className="px-4 pb-4 sm:px-5 sm:pb-5">
-            <ul className="grid grid-cols-2 gap-3 xl:grid-cols-4">
+            <ul className="grid grid-cols-1 gap-3 min-[480px]:grid-cols-2 xl:grid-cols-4">
               {ONLINE_TILES.map(({ label, logos, badge, note }) => (
-                <li key={label} className="rounded-[4px] bg-[#F5F5F5] p-3.5">
+                <li key={label} className="flex min-w-0 flex-col rounded-[10px] bg-[#F5F5F5] p-3.5">
                   <div className="flex items-center justify-between gap-2">
-                    <p className="text-[17px] font-bold text-[#111111]">{label}</p>
+                    <p className="text-[15px] font-bold leading-6 text-[#111111]">{label}</p>
                     {badge && (
-                      <span className="rounded-[2px] bg-[#111111] px-2 py-0.5 text-[13px] font-semibold text-white">
+                      <span className="rounded-full bg-[#111111] px-2 py-0.5 text-[12px] font-semibold text-white">
                         {badge}
                       </span>
                     )}
                   </div>
                   <div className="mt-3 flex flex-wrap gap-1.5">{logos}</div>
-                  {note && <p className="mt-2 text-[14px] text-[#666666]">{note}</p>}
+                  {note && <p className="mt-auto pt-2 text-[13px] text-[#666666]">{note}</p>}
                 </li>
               ))}
             </ul>
 
-            <p className="mt-3 text-[15px] leading-6 text-[#666666]">
+            <p className="mt-3 text-[14px] leading-5 text-[#666666]">
               Only methods enabled on our Razorpay account appear in the payment window.
             </p>
           </div>
@@ -152,16 +152,16 @@ export function PaymentSection({
         >
           <Radio on={cod} />
           <span className="min-w-0 flex-1">
-            <span className="block text-[20px] font-bold text-[#111111]">Cash on Delivery</span>
-            <span className="block text-[15px] text-[#666666] sm:text-[16px]">
+            <span className="block text-[16px] font-bold leading-6 text-[#111111] sm:text-[17px]">Cash on Delivery</span>
+            <span className="mt-0.5 block text-[14px] leading-5 text-[#666666]">
               Pay in cash or UPI to the courier when your order arrives
             </span>
           </span>
-          <span className="hidden shrink-0 rounded-full bg-[#F5F5F5] px-3 py-1.5 text-[14px] font-semibold text-[#111111] sm:inline">
+          <span className="hidden shrink-0 rounded-full border border-[#E5E5E5] bg-white px-3 py-1.5 text-[13px] font-semibold text-[#111111] sm:inline-flex">
             No extra fee
           </span>
         </button>
-        <p className="px-4 pb-4 pl-[52px] text-[14px] font-semibold text-[#111111] sm:hidden">No extra fee</p>
+        <p className="px-4 pb-4 pl-[52px] text-[13px] font-semibold text-[#111111] sm:hidden">No extra fee</p>
       </div>
     </div>
   );

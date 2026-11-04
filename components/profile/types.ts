@@ -4,6 +4,7 @@ export type Section =
   | 'wishlist'
   | 'addresses'
   | 'coupons'
+  | 'membership'
   | 'account'
   | 'security';
 

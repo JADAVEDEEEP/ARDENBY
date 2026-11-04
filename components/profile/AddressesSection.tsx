@@ -1,9 +1,10 @@
 'use client';
 
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { AlertCircle, Check, ChevronDown, MapPin, Plus, X } from 'lucide-react';
 import type { useProfile } from '../../hooks/use-profile';
 import { EmptyPanel, SectionTitle } from './metal';
+import { CurrentLocationButton, type PickedAddress } from './CurrentLocationButton';
 
 type ProfileState = ReturnType<typeof useProfile>;
 
@@ -17,6 +18,24 @@ const STATES = [
 ];
 
 const TYPES = ['Home', 'Work', 'Other'] as const;
+
+// Google returns names like "National Capital Territory of Delhi"; map them onto the select's options.
+const STATE_ALIASES: Record<string, string> = {
+  'national capital territory of delhi': 'Delhi',
+  'nct of delhi': 'Delhi',
+  orissa: 'Odisha',
+  uttaranchal: 'Uttarakhand',
+  pondicherry: 'Puducherry',
+  'jammu & kashmir': 'Jammu and Kashmir',
+  'dadra and nagar haveli': 'Dadra and Nagar Haveli and Daman and Diu',
+  'daman and diu': 'Dadra and Nagar Haveli and Daman and Diu',
+  'andaman & nicobar islands': 'Andaman and Nicobar Islands',
+};
+
+const matchState = (raw: string) => {
+  const key = raw.trim().toLowerCase();
+  return STATES.find((s) => s.toLowerCase() === key) ?? STATE_ALIASES[key] ?? '';
+};
 
 const tenDigits = (value: string) => value.replace(/\D/g, '').slice(-10);
 
@@ -38,6 +57,7 @@ function FieldError({ id, message }: { id: string; message?: string }) {
 
 export function AddressesSection({ profile }: { profile: ProfileState }) {
   const [flat, setFlat] = useState('');
+  const [building, setBuilding] = useState('');
   const [area, setArea] = useState('');
   const [landmark, setLandmark] = useState('');
   const [errors, setErrors] = useState<Errors>({});
@@ -48,36 +68,62 @@ export function AddressesSection({ profile }: { profile: ProfileState }) {
 
   const setField = (patch: Partial<typeof form>) => profile.setAddressForm((prev) => ({ ...prev, ...patch }));
 
-  // The API stores one address line, so compose it from the three address inputs.
-  const compose = (f: string, a: string, l: string) =>
-    [f, a, l].map((part) => part.trim()).filter(Boolean).join(', ');
+  // The API stores one address line, so compose it from the address inputs.
+  const compose = (f: string, b: string, a: string, l: string) =>
+    [f, b, a, l].map((part) => part.trim()).filter(Boolean).join(', ');
 
-  const updateLines = (next: { flat?: string; area?: string; landmark?: string }) => {
+  const updateLines = (next: { flat?: string; building?: string; area?: string; landmark?: string }) => {
     const f = next.flat ?? flat;
+    const b = next.building ?? building;
     const a = next.area ?? area;
     const l = next.landmark ?? landmark;
     if (next.flat !== undefined) setFlat(next.flat);
+    if (next.building !== undefined) setBuilding(next.building);
     if (next.area !== undefined) setArea(next.area);
     if (next.landmark !== undefined) setLandmark(next.landmark);
-    setField({ address: compose(f, a, l) });
+    setField({ address: compose(f, b, a, l) });
     setErrors((e) => ({ ...e, flat: undefined, area: undefined }));
+  };
+
+  // Values we last filled from the map, so a later pick only replaces what the user has not typed over.
+  const autoFilled = useRef({ flat: '', building: '', landmark: '' });
+
+  const applyPicked = (picked: PickedAddress) => {
+    const nextFlat = !flat.trim() || flat === autoFilled.current.flat ? picked.flat : flat;
+    const nextLandmark = !landmark.trim() || landmark === autoFilled.current.landmark ? picked.landmark : landmark;
+    const pickedBuilding = picked.building ?? '';
+    const nextBuilding = !building.trim() || building === autoFilled.current.building ? pickedBuilding || building : building;
+    autoFilled.current = { flat: picked.flat, building: pickedBuilding, landmark: picked.landmark };
+    // Only overwrite what Google identified; keep anything the customer already typed otherwise.
+    const matchedState = matchState(picked.state);
+    updateLines({ flat: nextFlat, building: nextBuilding, area: picked.area || area, landmark: nextLandmark });
+    setField({
+      city: picked.city || form.city,
+      pincode: picked.pincode || form.pincode,
+      state: matchedState || form.state,
+    });
+    setErrors((e) => ({ ...e, pincode: undefined, city: undefined, state: undefined }));
   };
 
   const closeForm = () => {
     profile.setShowAddressForm(false);
     profile.resetAddressForm();
     setFlat('');
+    setBuilding('');
     setArea('');
     setLandmark('');
     setErrors({});
+    autoFilled.current = { flat: '', building: '', landmark: '' };
   };
 
   const openAdd = () => {
     profile.resetAddressForm();
     setFlat('');
+    setBuilding('');
     setArea('');
     setLandmark('');
     setErrors({});
+    autoFilled.current = { flat: '', building: '', landmark: '' };
     profile.setShowAddressForm(true);
   };
 
@@ -86,6 +132,7 @@ export function AddressesSection({ profile }: { profile: ProfileState }) {
     // A saved address is one string: first part is the building, the rest is the area.
     const [first, ...rest] = String(address.address).split(',').map((p) => p.trim());
     setFlat(first || '');
+    setBuilding('');
     setArea(rest.join(', '));
     setLandmark('');
     setErrors({});
@@ -230,6 +277,8 @@ export function AddressesSection({ profile }: { profile: ProfileState }) {
           </div>
 
           <div className="mt-6 grid gap-x-6 gap-y-5 sm:grid-cols-2">
+            <CurrentLocationButton onPick={applyPicked} />
+
             <div>
               <label htmlFor="addr-name" className="kv-field-label">Full name</label>
               <input
@@ -301,6 +350,20 @@ export function AddressesSection({ profile }: { profile: ProfileState }) {
                 className="kv-input"
               />
               <FieldError id="err-flat" message={errors.flat} />
+            </div>
+
+            <div className="sm:col-span-2">
+              <label htmlFor="addr-building" className="kv-field-label">
+                Building, apartment, society <span className="font-normal text-[#666666]">(optional)</span>
+              </label>
+              <input
+                id="addr-building"
+                value={building}
+                onChange={(e) => updateLines({ building: e.target.value })}
+                placeholder="e.g. Safal Parivesh"
+                autoComplete="off"
+                className="kv-input"
+              />
             </div>
 
             <div className="sm:col-span-2">

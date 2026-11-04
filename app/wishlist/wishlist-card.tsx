@@ -10,6 +10,7 @@ import type { WishlistItem } from '@/store/wishlist-store';
 import { RatingLink } from '@/components/product/rating-link';
 import { useCartStore } from '@/store/cart-store';
 import { formatINR } from '@/lib/format';
+import { MemberPriceTag } from '@/components/membership/member-price-tag';
 
 export const DISPLAY = { fontFamily: 'var(--font-oswald), Impact, sans-serif' } as const;
 
@@ -201,6 +202,7 @@ export function WishlistCard({
             </span>
           )}
         </p>
+        <MemberPriceTag productId={item.productId} price={item.price} />
 
         {product !== undefined && (
           <p className={`flex items-center gap-1.5 text-[15px] ${soldOut ? 'font-semibold text-[#C8211F]' : 'text-[#666666]'}`}>

@@ -172,3 +172,80 @@ export async function syncOrderPayment(orderId: string): Promise<boolean> {
   const data = await paymentRequest('/api/payments/razorpay/sync', { orderId });
   return Boolean(data.paid);
 }
+
+export type MembershipPaymentResult =
+  | { status: 'paid' }
+  | { status: 'dismissed' }
+  | { status: 'failed'; message: string };
+
+// Membership purchase through the SAME Razorpay account, checkout script and
+// signature verification as shop orders. The amount comes from the server's plan
+// price; activation only happens after the server verifies the signature.
+export async function startMembershipPayment(
+  planId: string,
+  prefill?: { name?: string; contact?: string; email?: string },
+  onPhase?: (phase: 'opened' | 'verifying') => void
+): Promise<MembershipPaymentResult> {
+  await loadCheckoutScript();
+
+  const { payment } = await paymentRequest('/api/membership/purchase', { planId });
+
+  const Razorpay = window.Razorpay;
+  if (!Razorpay) throw new Error('Payment window is unavailable.');
+
+  return new Promise<MembershipPaymentResult>((resolve) => {
+    let settled = false;
+    const settle = (result: MembershipPaymentResult) => {
+      if (settled) return;
+      settled = true;
+      resolve(result);
+    };
+
+    const reportFailure = () =>
+      paymentRequest('/api/membership/failed', {
+        razorpay_order_id: payment.razorpayOrderId,
+      }).catch(() => undefined);
+
+    const instance = new Razorpay({
+      key: payment.keyId,
+      amount: payment.amount,
+      currency: payment.currency,
+      order_id: payment.razorpayOrderId,
+      name: 'KÖVENIK',
+      description: `${payment.plan?.name ?? ''} membership`.trim(),
+      prefill,
+      theme: { color: '#4d7cff' },
+      handler: (response) => {
+        onPhase?.('verifying');
+        paymentRequest('/api/membership/verify', {
+          razorpay_order_id: response.razorpay_order_id,
+          razorpay_payment_id: response.razorpay_payment_id,
+          razorpay_signature: response.razorpay_signature,
+        })
+          .then(() => settle({ status: 'paid' }))
+          .catch((error: Error) =>
+            settle({ status: 'failed', message: error.message || 'Payment could not be verified.' })
+          );
+      },
+      modal: {
+        ondismiss: () => {
+          void reportFailure();
+          settle({ status: 'dismissed' });
+        },
+      },
+    });
+
+    instance.on('payment.failed', () => {
+      void reportFailure();
+    });
+
+    instance.open();
+    onPhase?.('opened');
+  });
+}
+
+// The customer may have paid and closed the tab before verification finished.
+export async function syncMembershipPayment(razorpayOrderId: string): Promise<boolean> {
+  const data = await paymentRequest('/api/membership/sync', { razorpay_order_id: razorpayOrderId });
+  return Boolean(data.activated);
+}

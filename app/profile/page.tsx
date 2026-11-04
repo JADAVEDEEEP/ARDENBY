@@ -30,6 +30,7 @@ const NAV_ITEMS = [
   { id: 'wishlist', label: 'Wishlist', icon: Heart, count: 'wishlist' },
   { id: 'addresses', label: 'Addresses', icon: MapPin, count: 'addresses' },
   { id: 'coupons', label: 'Coupons & Offers', icon: Ticket, count: 'coupons' },
+  { id: 'membership', label: 'My Membership', icon: BadgeCheck, count: null },
   { id: 'account', label: 'Account Details', icon: User, count: null },
   { id: 'security', label: 'Security', icon: ShieldCheck, count: null },
 ] as const;
