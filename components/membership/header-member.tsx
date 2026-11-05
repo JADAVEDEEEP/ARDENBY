@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { Crown, Tag, Truck, X, Zap } from 'lucide-react';
+import { Crown, Tag, Truck, X } from 'lucide-react';
 
 import { MEMBER_RED } from '@/components/membership/member-badge';
 import { useMemberPricing, useMemberCartItems } from '@/hooks/use-member-pricing';
@@ -58,7 +58,6 @@ export function HeaderMember({ className }: { className?: string }) {
   if (!mounted || !member) return null;
 
   const current = mine?.current ?? null;
-  const early = current?.benefits.find((b) => b.active && b.type.toUpperCase() === 'EARLY_ACCESS') ?? null;
 
   const perks = [
     {
@@ -67,7 +66,6 @@ export function HeaderMember({ className }: { className?: string }) {
       bottom: 'Member Price',
     },
     { Icon: Truck, top: member.freeDelivery ? 'Free' : 'Standard', bottom: 'Delivery' },
-    ...(early ? [{ Icon: Zap, top: 'Early', bottom: 'Access' }] : []),
   ];
 
   return (

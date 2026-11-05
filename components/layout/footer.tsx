@@ -22,8 +22,8 @@ const footerColumns = [
     links: [
       { label: "Contact Us", href: "/contact" },
       { label: "Track Order", href: "/orders" },
-      { label: "Returns & Exchanges", href: "/returns" },
-      { label: "Shipping Policy", href: "/shipping" },
+      { label: "Returns & Refunds", href: "/returns" },
+      { label: "Shipping & Delivery", href: "/shipping" },
       { label: "FAQs", href: "/faqs" },
     ],
   },
@@ -50,7 +50,7 @@ const footerColumns = [
     title: "More Info",
     links: [
       { label: "Privacy Policy", href: "/privacy" },
-      { label: "Terms of Service", href: "/terms" },
+      { label: "Terms & Conditions", href: "/terms" },
     ],
   },
 ];
@@ -110,7 +110,7 @@ export function Footer() {
   const isHome = pathname === "/";
 
   // Same submit + toast logic as the homepage Newsletter section.
-  const { email, setEmail, subscribed, handleSubscribe } = useNewsletterSubscribe();
+  const { email, setEmail, available, handleSubscribe } = useNewsletterSubscribe();
 
   return (
     <footer className="kv-flat relative w-full overflow-x-hidden bg-kv-footer text-kv-ink">
@@ -215,18 +215,20 @@ export function Footer() {
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
+                  disabled={!available}
                   placeholder="Enter your email address"
                   autoComplete="email"
                   className="h-12 min-w-0 flex-none border border-white/40 sm:flex-1 bg-transparent px-4 text-[16px] text-white outline-none placeholder:text-kv-mist focus:border-kv-gold-dark"
                 />
                 <button
                   type="submit"
-                  disabled={subscribed}
-                  className="inline-flex h-12 shrink-0 items-center justify-center bg-kv-gold px-8 text-[15px] font-bold uppercase tracking-[0.1em] text-white hover:bg-kv-gold-dark disabled:opacity-80"
+                  disabled={!available}
+                  className="inline-flex h-12 shrink-0 items-center justify-center bg-kv-gold px-8 text-[15px] font-bold uppercase tracking-[0.1em] text-white hover:bg-kv-gold-dark disabled:cursor-not-allowed disabled:opacity-50"
                 >
-                  {subscribed ? "Joined" : "Join"}
+                  Join
                 </button>
               </div>
+              <p className="mt-3 text-[13px] leading-5 text-kv-mist">Newsletter sign-up is not available yet. Please check back soon.</p>
             </form>
           </div>
         </section>

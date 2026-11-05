@@ -2,16 +2,9 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 
 const content: Record<string, { title: string; text: string }> = {
-  about: { title: 'About KOVENIK', text: 'KOVENIK  creates premium everyday clothing for people who choose their own direction.' },
   careers: { title: 'Careers', text: 'We are building a thoughtful fashion label. New opportunities will be posted here.' },
-  press: { title: 'Press', text: 'For press enquiries, reach out to hello@ardenby.com.' },
+  press: { title: 'Press', text: 'For press enquiries, reach out to our support team.' },
   sustainability: { title: 'Sustainability', text: 'We focus on durable fabrics, considered production, and pieces designed to be worn often.' },
-  contact: { title: 'Contact us', text: 'Need help with an order or product? Email hello@ardenby.com and our team will get back to you.' },
-  shipping: { title: 'Shipping policy', text: 'Orders are packed with care and typically delivered within 3 to 7 business days across India.' },
-  returns: { title: 'Returns & exchange', text: 'Unused items can be returned within 7 days of delivery. Contact support to begin a return.' },
-  faqs: { title: 'Frequently asked questions', text: 'Find answers about sizing, delivery, care, payments, and returns by contacting our support team.' },
-  privacy: { title: 'Privacy policy', text: 'We use your information only to process orders, provide support, and improve your KOVENIK experience.' },
-  terms: { title: 'Terms & conditions', text: 'By using KOVENIK, you agree to shop responsibly and provide accurate delivery information.' },
   admin: { title: 'Admin', text: 'The admin dashboard is available to authorized store staff.' },
 };
 

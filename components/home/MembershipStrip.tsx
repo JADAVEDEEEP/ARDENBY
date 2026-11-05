@@ -35,7 +35,7 @@ export function MembershipStrip() {
           <h2 className="mt-1 text-[22px] font-bold leading-tight md:text-[28px]">
             {bestDiscount > 0 ? `Save up to ${bestDiscount}% every day.` : 'Join the club.'} Plans from {formatINR(cheapest)} a year.
           </h2>
-          <p className="mt-1 text-[14px] text-white/70">Member prices, early access to new drops and priority support.</p>
+          <p className="mt-1 text-[14px] text-white/70">Member prices on eligible products.</p>
         </div>
         <Link
           href="/membership"

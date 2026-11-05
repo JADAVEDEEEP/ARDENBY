@@ -998,7 +998,7 @@ export default function ProductPage() {
         return (
           <>
             <p>
-              Hassle-free 7-day returns and exchanges from the date of delivery. Items must be
+              Easy 7-day returns from the date of delivery. Items must be
               unused, unwashed, and with all original tags intact.
             </p>
             <p className="mt-3">Cash on delivery is available. Shipping is free on orders above ₹999.</p>

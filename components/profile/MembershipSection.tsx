@@ -15,6 +15,7 @@ import {
   formatDate,
   saveBirthday,
   type MyMembership,
+  isBenefitLive,
 } from '@/lib/membership-api';
 import { EmptyPanel, SectionTitle } from './metal';
 
@@ -78,7 +79,7 @@ export function MembershipSection() {
         <EmptyPanel
           icon={BadgeCheck}
           title="You are not a member yet"
-          text="Join Bronze, Silver or Gold for member pricing, early access and more."
+          text="Join Bronze, Silver or Gold for member pricing and more."
           action={
             <Link
               href="/membership"
@@ -117,7 +118,7 @@ export function MembershipSection() {
           </dl>
 
           <ul className="mt-5 grid gap-2 text-[14.5px] sm:grid-cols-2">
-            {current.benefits.map((b) => (
+            {current.benefits.filter(isBenefitLive).map((b) => (
               <li key={b.id} className="flex gap-2.5">
                 <Check className="mt-1 h-4 w-4 shrink-0 text-[#1B7A43]" strokeWidth={2.4} aria-hidden />
                 <span>{b.description}</span>
@@ -153,7 +154,7 @@ export function MembershipSection() {
 
       <div className="mt-6 rounded border border-[#E5E5E5] bg-white p-5 md:p-6">
         <h3 className="text-[16px] font-bold">Birthday</h3>
-        <p className="mt-1 text-[14px] text-[#666666]">Add your birth date so members can receive their birthday benefit.</p>
+        <p className="mt-1 text-[14px] text-[#666666]">Save your birth date to your membership profile.</p>
         <div className="mt-3 flex flex-wrap items-center gap-3">
           <input
             type="date"

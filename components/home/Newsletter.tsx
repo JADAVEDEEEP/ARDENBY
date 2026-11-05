@@ -3,7 +3,7 @@
 import { useNewsletterSubscribe } from '@/hooks/use-newsletter-subscribe';
 
 export function Newsletter() {
-  const { email, setEmail, subscribed, handleSubscribe } = useNewsletterSubscribe();
+  const { email, setEmail, available, handleSubscribe } = useNewsletterSubscribe();
 
   return (
     <section aria-labelledby="home-newsletter" className="on-dark bg-kv-ink py-12 md:py-16">
@@ -17,7 +17,7 @@ export function Newsletter() {
             Stay in the inner circle.
           </h2>
           <p className="mt-4 max-w-[540px] text-[15px] leading-[1.6] text-kv-mist md:text-[17px]">
-            Get first access to new drops, exclusive collections, private releases and 10% off your first order.
+            Updates on new drops and releases from KOVENIK.
           </p>
         </div>
 
@@ -31,20 +31,21 @@ export function Newsletter() {
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
+              disabled={!available}
               placeholder="Enter your email address"
               autoComplete="email"
               className="h-12 min-w-0 flex-none border border-white/40 sm:flex-1 bg-transparent px-4 text-[16px] text-white outline-none placeholder:text-kv-mist focus:border-kv-gold-dark md:h-[52px]"
             />
             <button
               type="submit"
-              disabled={subscribed}
-              className="inline-flex h-12 shrink-0 items-center justify-center bg-kv-gold px-8 text-[14px] font-bold uppercase tracking-[0.1em] text-white transition-colors hover:bg-kv-gold-dark disabled:opacity-80 md:h-[52px] md:text-[15px]"
+              disabled={!available}
+              className="inline-flex h-12 shrink-0 items-center justify-center bg-kv-gold px-8 text-[14px] font-bold uppercase tracking-[0.1em] text-white transition-colors hover:bg-kv-gold-dark disabled:cursor-not-allowed disabled:opacity-50 md:h-[52px] md:text-[15px]"
             >
-              {subscribed ? 'Joined' : 'Join'}
+              Join
             </button>
           </div>
           <p className="mt-3 text-[13px] leading-5 text-kv-mist md:text-[14px]">
-            By subscribing, you agree to receive KOVENIK updates, product launches and offers.
+            Newsletter sign-up is not available yet. Please check back soon.
           </p>
         </form>
       </div>

@@ -116,3 +116,13 @@ export const formatDate = (value: string | null | undefined) =>
   value
     ? new Date(value).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })
     : '—';
+
+/** Benefit types that exist in plan data but are not built yet. Hidden from customer-facing
+ *  lists so nothing is promised that does not work. Remove a type here once it is implemented. */
+const UNBUILT_BENEFIT_TYPES = new Set(['EARLY_ACCESS', 'BIRTHDAY_COUPON', 'BIRTHDAY_REWARD']);
+export const isBenefitLive = (b: { type: string }) => !UNBUILT_BENEFIT_TYPES.has(b.type.toUpperCase());
+
+/** Plan taglines come from the plan table and may still mention unbuilt perks (e.g. "early access").
+ *  Hide such a line instead of promising it; update the plan text in the database/admin later. */
+export const liveText = (text: string | null | undefined) =>
+  text && !/early access|birthday/i.test(text) ? text : '';

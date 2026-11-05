@@ -13,6 +13,8 @@ import {
   formatDate,
   type MembershipPlan,
   type MyMembership,
+  isBenefitLive,
+  liveText,
 } from '@/lib/membership-api';
 import { startMembershipPayment, syncMembershipPayment } from '@/lib/razorpay-checkout';
 import { cn } from '@/lib/utils';
@@ -130,7 +132,7 @@ export function MembershipClient() {
           <p className="text-[12px] font-semibold uppercase tracking-[0.2em] text-[#E53935]">KÖVENIK Membership</p>
           <h1 className="mt-3 text-[32px] font-bold leading-tight tracking-tight md:text-[44px]">Pay once. Save all year.</h1>
           <p className="mt-3 text-[16px] leading-7 text-[#555555]">
-            Member prices on eligible products, early access to new drops and more. Choose the plan that fits you.
+            Member prices on eligible products and more. Choose the plan that fits you.
           </p>
         </header>
 
@@ -196,7 +198,7 @@ export function MembershipClient() {
                     </span>
                   )}
                   <h2 className="text-[22px] font-bold">{plan.name}</h2>
-                  {plan.description && <p className="mt-1 text-[14px] leading-6 text-[#666666]">{plan.description}</p>}
+                  {liveText(plan.description) && <p className="mt-1 text-[14px] leading-6 text-[#666666]">{liveText(plan.description)}</p>}
 
                   <p className="mt-5 flex items-baseline gap-2">
                     <span className="text-[38px] font-bold leading-none tabular-nums">{formatINR(plan.price)}</span>
@@ -209,7 +211,7 @@ export function MembershipClient() {
                   )}
 
                   <ul className="mt-5 space-y-2.5 text-[14.5px] leading-6">
-                    {plan.benefits.map((b) => (
+                    {plan.benefits.filter(isBenefitLive).map((b) => (
                       <li key={b.id} className="flex gap-2.5">
                         <Check className="mt-1 h-4 w-4 shrink-0 text-[#1B7A43]" strokeWidth={2.4} aria-hidden />
                         <span>{b.description}</span>

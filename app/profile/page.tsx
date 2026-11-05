@@ -278,7 +278,7 @@ function ProfilePageView() {
               <div className="rounded-[4px] border border-[#E5E5E5] bg-[#F5F5F5] p-5">
                 <p className="kv-display text-[22px]">Need a hand?</p>
                 <p className="mt-2 text-[15px] leading-6 text-[#666666]">
-                  Sizing, exchanges or delivery — reach our team any time.
+                  Sizing, returns or delivery — reach our team any time.
                 </p>
                 <button type="button" onClick={goContact} className="kv-btn-ghost mt-4 w-full">
                   <LifeBuoy className="h-4 w-4" /> Contact support

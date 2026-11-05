@@ -3,28 +3,18 @@
 import { useState } from 'react';
 import type { FormEvent } from 'react';
 
-import { toast } from 'sonner';
+/** Newsletter sign-up is NOT built yet: there is no endpoint and nothing is stored. Until it is,
+ *  the forms are disabled and say so honestly. When a real endpoint exists, set NEWSLETTER_AVAILABLE
+ *  to true and implement the submit below. Never show a "subscribed" message without a stored result. */
+export const NEWSLETTER_AVAILABLE = false;
+export const NEWSLETTER_UNAVAILABLE_TEXT = 'Newsletter sign-up is not available yet. Please check back soon.';
 
-/** Newsletter submit + sonner toasts. Shared by the homepage Newsletter section
- *  and the footer form (same logic as the original footer handler). */
 export function useNewsletterSubscribe() {
   const [email, setEmail] = useState('');
-  const [subscribed, setSubscribed] = useState(false);
 
   const handleSubscribe = (e: FormEvent) => {
-    e.preventDefault();
-
-    if (!email.trim()) {
-      toast.error('Please enter your email address.');
-      return;
-    }
-
-    setSubscribed(true);
-
-    toast.success('Welcome to the Kovenik Fam! Check your inbox for 10% off.');
-
-    setEmail('');
+    e.preventDefault(); // nothing is submitted or stored
   };
 
-  return { email, setEmail, subscribed, handleSubscribe };
+  return { email, setEmail, subscribed: false, available: NEWSLETTER_AVAILABLE, handleSubscribe };
 }

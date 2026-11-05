@@ -80,7 +80,7 @@ const QUICK_LINKS = [
   { label: 'Wishlist', href: '/wishlist', badge: true },
   { label: 'Contact Us', href: '/contact' },
   { label: 'FAQs', href: '/faqs' },
-  { label: 'Returns & Exchanges', href: '/returns' },
+  { label: 'Returns & Refunds', href: '/returns' },
 ] as const;
 
 const FOCUSABLE = 'a[href], button:not([disabled]), input:not([disabled]), [tabindex]:not([tabindex="-1"])';
