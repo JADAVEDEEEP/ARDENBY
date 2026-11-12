@@ -5,12 +5,15 @@ import { CheckCircle2, Clock3, Loader2, PackageX, RotateCcw, Truck, XCircle } fr
 
 import { CustomerApiError, customerRequest, errorText } from '@/lib/customer-api';
 import { formatINR } from '@/lib/format';
+import { ReturnTimeline, type Tracking } from '@/components/orders/return-timeline';
 import { ItemPicker, RefundBreakdown, type Breakdown, type PickableItem } from '@/components/orders/item-picker';
 import {
   REASON_MAX,
   buildReturnPayload,
   chosenItems,
   initialSelection,
+  isValidUpi,
+  UPI_HELP,
   validateReturn,
   type Selection,
 } from '@/lib/return-request';
@@ -26,7 +29,19 @@ type ReturnRow = {
   decisionReason: string | null;
   requestedAt: string | null;
   trackingReference: string | null;
-  refund: { state: 'refunded' | 'in_progress' | 'none'; amount: number } | null;
+  refund: {
+    state: 'refunded' | 'in_progress' | 'none';
+    amount: number;
+    /** COD (UPI payout) refunds only: the four plain states. */
+    status?: 'pending' | 'processing' | 'refunded' | 'failed';
+    note?: string;
+    method?: string;
+    destination?: string;
+    reference?: string | null;
+  } | null;
+  refundTo?: { method: string; destination: string } | null;
+  /** Stage-by-stage tracking built by the server from stored events only. */
+  tracking?: Tracking;
   canMarkShipped: boolean;
   items: { orderItemId: string; name: string; size: string; color: string; quantity: number; outcome: string | null }[];
   timeline: { status: string; label: string; at: string }[];
@@ -60,11 +75,28 @@ const STATUS_STYLE: Record<string, { icon: typeof Clock3; tone: string }> = {
   Rejected: { icon: XCircle, tone: 'border-[#D92D20]/40 bg-[#D92D20]/10 text-[#B42318]' },
 };
 
+const REFUND_LABEL = { pending: 'Pending', processing: 'Processing', refunded: 'Refunded', failed: 'Failed' } as const;
+const REFUND_TONE = {
+  pending: 'border-[#C47A16]/40 bg-[#C47A16]/10 text-[#8A540C]',
+  processing: 'border-[#2563EB]/40 bg-[#2563EB]/10 text-[#1D4ED8]',
+  refunded: 'border-[#16845B]/40 bg-[#16845B]/10 text-[#0F6446]',
+  failed: 'border-[#D92D20]/40 bg-[#D92D20]/10 text-[#B42318]',
+} as const;
+
 const when = (iso: string | null) =>
   iso ? new Date(iso).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' }) : '';
 
 /** Return requests of one order: the status of each, and the form for a new one. */
-export function ReturnSection({ orderId, onChanged }: { orderId: string; onChanged?: () => void | Promise<void> }) {
+export function ReturnSection({
+  orderId,
+  isCod = false,
+  onChanged,
+}: {
+  orderId: string;
+  /** Cash-on-delivery orders are refunded to a UPI ID, which the form must collect. */
+  isCod?: boolean;
+  onChanged?: () => void | Promise<void>;
+}) {
   const [state, setState] = useState<ReturnState | null>(null);
   const [loading, setLoading] = useState(true);
   const [loadError, setLoadError] = useState('');
@@ -85,6 +117,26 @@ export function ReturnSection({ orderId, onChanged }: { orderId: string; onChang
   useEffect(() => {
     void load();
   }, [load]);
+
+  // Keep the tracking in step with admin actions and payment webhooks: refresh while a return
+  // is still moving, and again whenever the customer comes back to the tab.
+  const moving = Boolean(
+    state?.requests.some(
+      (r) => !['Completed', 'Rejected'].includes(r.status) || ['pending', 'processing'].includes(String(r.refund?.status || '')) || r.tracking?.outcome === 'in_progress'
+    )
+  );
+  useEffect(() => {
+    if (!moving) return;
+    const timer = setInterval(() => void load(), 45000);
+    const onVisible = () => {
+      if (document.visibilityState === 'visible') void load();
+    };
+    document.addEventListener('visibilitychange', onVisible);
+    return () => {
+      clearInterval(timer);
+      document.removeEventListener('visibilitychange', onVisible);
+    };
+  }, [moving, load]);
 
   if (loading && !state) {
     return (
@@ -165,6 +217,7 @@ export function ReturnSection({ orderId, onChanged }: { orderId: string; onChang
       {open && showCallout && (
         <ReturnDialog
           orderId={orderId}
+          isCod={isCod}
           items={state.items}
           reasons={state.reasons}
           onClose={() => setOpen(false)}
@@ -254,13 +307,34 @@ function RequestCard({
         </p>
       )}
 
-      {request.refund && request.refund.state !== 'none' && request.refund.amount > 0 && (
+      {request.tracking ? (
+        <ReturnTimeline tracking={request.tracking} />
+      ) : request.refund?.status && request.refund.amount > 0 ? (
+        <div className="mt-3 rounded-xl border border-[#111111]/10 bg-white p-4 text-sm" aria-label="Refund">
+          <div className="flex flex-wrap items-center justify-between gap-2">
+            <span className="font-semibold">Refund {formatINR(request.refund.amount)}</span>
+            <span className={`rounded-full border px-2.5 py-0.5 text-xs font-semibold ${REFUND_TONE[request.refund.status]}`}>
+              {REFUND_LABEL[request.refund.status]}
+            </span>
+          </div>
+          <p className="mt-1.5 text-[#111111]/70">{request.refund.note}</p>
+          <p className="mt-1 text-xs text-[#111111]/55">
+            Refund method: {request.refund.method || 'UPI'}
+            {request.refund.destination ? ` · ${request.refund.destination}` : ''}
+            {request.refund.reference ? ` · Reference ${request.refund.reference}` : ''}
+          </p>
+        </div>
+      ) : request.refund && request.refund.state !== 'none' && request.refund.amount > 0 ? (
         <p className="mt-3 text-sm font-medium text-[#111111]">
           {request.refund.state === 'refunded'
             ? `Your refund of ${formatINR(request.refund.amount)} has been issued.`
             : `Your refund of ${formatINR(request.refund.amount)} is being processed. It can take a few days to reach you.`}
         </p>
-      )}
+      ) : request.refundTo ? (
+        <p className="mt-3 text-xs text-[#111111]/60">
+          Refund method: {request.refundTo.method} · {request.refundTo.destination}
+        </p>
+      ) : null}
 
       {request.canMarkShipped && (
         <div className="mt-4 rounded-xl border border-[#111111]/10 bg-white p-4">
@@ -288,7 +362,7 @@ function RequestCard({
         </div>
       )}
 
-      {request.timeline.length > 0 && (
+      {!request.tracking && request.timeline.length > 0 && (
         <ol className="mt-5 space-y-2 border-l-2 border-[#E53935]/25 pl-4" aria-label="Return progress">
           {request.timeline.map((step, index) => (
             <li key={`${step.status}-${index}`} className="text-xs text-[#111111]/70">
@@ -303,12 +377,14 @@ function RequestCard({
 
 function ReturnDialog({
   orderId,
+  isCod,
   items,
   reasons,
   onClose,
   onSubmitted,
 }: {
   orderId: string;
+  isCod: boolean;
   items: ReturnItem[];
   reasons: { code: string; label: string }[];
   onClose: () => void;
@@ -317,6 +393,7 @@ function ReturnDialog({
   const [selection, setSelection] = useState<Selection>(() => initialSelection(items));
   const [reasonCode, setReasonCode] = useState('');
   const [description, setDescription] = useState('');
+  const [upiId, setUpiId] = useState('');
   const [step, setStep] = useState<'form' | 'review'>('form');
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState('');
@@ -339,7 +416,10 @@ function ReturnDialog({
     };
   }, [onClose, submitting]);
 
-  const problem = useMemo(() => validateReturn(items, selection, reasonCode, description), [items, selection, reasonCode, description]);
+  const problem = useMemo(
+    () => validateReturn(items, selection, reasonCode, description, { required: isCod, value: upiId }),
+    [items, selection, reasonCode, description, isCod, upiId]
+  );
   const picked = useMemo(() => chosenItems(items, selection), [items, selection]);
 
   // The server works out the refund estimate; the screen only shows it.
@@ -354,7 +434,7 @@ function ReturnDialog({
       try {
         const result = await customerRequest<{ estimate: number; breakdown: Breakdown | null }>('/api/returns/preview', {
           method: 'POST',
-          body: JSON.stringify({ orderId, items: picked }),
+          body: JSON.stringify({ orderId, items: picked, reasonCode: reasonCode || undefined }),
         });
         if (!cancelled) setEstimate(result);
       } catch {
@@ -367,7 +447,7 @@ function ReturnDialog({
       cancelled = true;
       clearTimeout(timer);
     };
-  }, [orderId, picked]);
+  }, [orderId, picked, reasonCode]);
 
   const submit = async () => {
     setSubmitting(true);
@@ -375,7 +455,7 @@ function ReturnDialog({
     try {
       await customerRequest('/api/returns', {
         method: 'POST',
-        body: JSON.stringify(buildReturnPayload(orderId, items, selection, reasonCode, description)),
+        body: JSON.stringify(buildReturnPayload(orderId, items, selection, reasonCode, description, isCod ? upiId : undefined)),
       });
       await onSubmitted();
     } catch (err) {
@@ -457,6 +537,32 @@ function ReturnDialog({
                 </p>
               </div>
 
+              {isCod && (
+                <div>
+                  <label htmlFor="return-upi" className="mb-2 block text-sm font-semibold">
+                    Your UPI ID for the refund
+                  </label>
+                  <input
+                    id="return-upi"
+                    value={upiId}
+                    onChange={(e) => setUpiId(e.target.value)}
+                    disabled={submitting}
+                    inputMode="email"
+                    autoComplete="off"
+                    autoCapitalize="none"
+                    spellCheck={false}
+                    maxLength={100}
+                    placeholder="name@bank"
+                    aria-invalid={touched && !isValidUpi(upiId)}
+                    aria-describedby="return-upi-help"
+                    className="min-h-[48px] w-full rounded-xl border border-[#111111]/20 bg-white px-3.5 text-sm outline-none transition focus:border-[#E53935] focus:ring-2 focus:ring-[#E53935]/20"
+                  />
+                  <p id="return-upi-help" className="mt-1 text-xs text-[#111111]/60">
+                    You paid cash on delivery, so we send your refund to this UPI ID. {touched && !isValidUpi(upiId) ? UPI_HELP : ''}
+                  </p>
+                </div>
+              )}
+
               {estimating && !estimate ? (
                 <p className="flex items-center gap-2 text-sm text-[#111111]/60">
                   <Loader2 className="h-4 w-4 animate-spin" aria-hidden /> Working out your refund…
@@ -465,7 +571,11 @@ function ReturnDialog({
                 <RefundBreakdown
                   breakdown={estimate.breakdown}
                   title="Estimated refund"
-                  note="This is an estimate. We confirm the final amount after we check the items. Shipping charges are not refunded on a return."
+                  note={
+                    estimate.breakdown.sellerFault
+                      ? 'This is an estimate. Because this is our mistake, your refund includes shipping and any COD handling fee. We confirm the final amount after we check the items.'
+                      : 'This is an estimate. We confirm the final amount after we check the items. Shipping charges are not refunded on a return.'
+                  }
                 />
               ) : null}
 
@@ -493,6 +603,12 @@ function ReturnDialog({
                 {reasonLabel}
                 {description.trim() ? ` — ${description.trim()}` : ''}
               </p>
+              {isCod && (
+                <p>
+                  <span className="font-semibold">Refund to UPI: </span>
+                  {upiId.trim().toLowerCase()}
+                </p>
+              )}
               {estimate?.breakdown && (
                 <p>
                   <span className="font-semibold">Estimated refund: </span>

@@ -4,10 +4,6 @@ import Link from 'next/link';
 import type { Product } from '@/types';
 
 import { SafeImage } from './ui/SafeImage';
-import { SectionHeader } from './ui/SectionHeader';
-
-const MARQUEE_TEXT = 'THE PRINT CLUB ✦ LIMITED EDITION DROP ✦ ZERO RESTOCKS ✦ 240 GSM ✦';
-const MARQUEE_REPEAT = 6;
 
 /** Up to three real products for "In this drop": The Print Club first, then
  *  limited-edition and new pieces to fill the row. */
@@ -30,14 +26,10 @@ export function PromoBanner({ products }: { products: Product[] }) {
   const drop = pickDrop(products);
 
   return (
-    <section aria-labelledby="home-new-in" className="w-full bg-kv-bg">
-      <div className="kv-gutter pb-6 pt-10 md:pb-8 md:pt-14">
-        <SectionHeader id="home-new-in" title="New in" className="mb-0 md:mb-0" />
-      </div>
-
+    <section aria-labelledby="home-featured" className="w-full bg-kv-bg">
       {/* Full-bleed banner: 100% of the viewport, no container, no radius */}
-      <div className="on-dark grid w-full bg-kv-ink md:min-h-[580px] md:grid-cols-2">
-        <div className="relative order-1 h-[320px] w-full md:order-2 md:h-auto">
+      <div className="on-dark grid w-full bg-kv-ink md:min-h-[460px] md:grid-cols-2">
+        <div className="relative order-1 h-[280px] w-full md:order-2 md:h-auto">
           <Image
             src="/images/print-club-campaign.png"
             alt="Model in an oversized cream KOVENIK tee with the chest badge, from The Print Club drop"
@@ -48,15 +40,15 @@ export function PromoBanner({ products }: { products: Product[] }) {
           />
         </div>
 
-        <div className="order-2 flex flex-col justify-center px-4 py-10 md:order-1 md:px-16 md:py-[72px]">
+        <div className="order-2 flex flex-col justify-center px-4 py-8 md:order-1 md:px-16 md:py-12">
           <p className="text-[12px] font-bold uppercase tracking-[0.28em] text-kv-gold-dark md:text-[13px]">
             Limited edition drop · 01
           </p>
-          <h3 className="mt-4 font-oswald text-[48px] font-bold uppercase leading-[0.95] text-white md:text-[84px]">
+          <h2 id="home-featured" className="mt-4 font-oswald text-[48px] font-bold uppercase leading-[0.95] text-white md:text-[84px]">
             The Print
             <br />
             Club
-          </h3>
+          </h2>
           <p className="mt-5 max-w-[460px] text-[15px] leading-[1.6] text-kv-mist md:text-[17px]">
             Original high-density DTF and puff graphic designs. Exclusive runs with zero restocks.
           </p>
@@ -101,24 +93,6 @@ export function PromoBanner({ products }: { products: Product[] }) {
               </ul>
             </div>
           )}
-        </div>
-      </div>
-
-      {/* Gold marquee strip: scrolls left forever; static for reduced motion */}
-      <div className="w-full overflow-hidden bg-kv-ink" role="marquee" aria-label={MARQUEE_TEXT}>
-        <div className="kv-marquee flex w-max" aria-hidden="true">
-          {[0, 1].map((group) => (
-            <div key={group} className="flex shrink-0">
-              {Array.from({ length: MARQUEE_REPEAT }).map((_, i) => (
-                <span
-                  key={i}
-                  className="whitespace-nowrap px-3 py-3 font-oswald text-[16px] font-semibold uppercase tracking-[0.14em] text-white md:text-[18px]"
-                >
-                  {MARQUEE_TEXT}
-                </span>
-              ))}
-            </div>
-          ))}
         </div>
       </div>
     </section>

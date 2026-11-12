@@ -51,7 +51,7 @@ type Notifications = {
 type Config = {
   currency: string;
   timezone: string;
-  shipping: { freeShippingThreshold: number; shippingFee: number; gstRate: number };
+  shipping: { shippingFee: number; freeForMembers?: boolean; gstRate: number };
   orderStatuses: string[];
 };
 type SettingsData = {
@@ -326,8 +326,8 @@ function FulfilmentTab({ config }: { config: Config }) {
       description="These rules are enforced by the order system in code, so they are shown read-only. Changing them safely requires a code change."
     >
       <div className="grid gap-4 sm:grid-cols-3">
-        <ReadOnly label="Free shipping from" value={`₹${config.shipping.freeShippingThreshold}`} note="Order subtotal at or above this ships free" />
-        <ReadOnly label="Shipping fee" value={`₹${config.shipping.shippingFee}`} note="Charged below the threshold" />
+        <ReadOnly label="Shipping fee" value={`₹${config.shipping.shippingFee}`} note="Flat per order, any order value (temporary, until Shiprocket)" />
+        <ReadOnly label="Free shipping" value={config.shipping.freeForMembers === false ? 'None' : 'Active members'} note="Decided by the server from the customer's active membership" />
         <ReadOnly label="GST" value={`${Math.round(config.shipping.gstRate * 100)}%`} note="Applied after any coupon" />
       </div>
       <h3 className="mb-3 mt-8 text-[16px] font-bold text-[#111111]">Order statuses</h3>

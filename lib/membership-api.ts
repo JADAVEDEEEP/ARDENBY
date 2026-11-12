@@ -21,6 +21,8 @@ export interface MembershipPlan {
   freeDelivery: boolean;
   discountPercent: number;
   active: boolean;
+  /** Admin API only: an old Bronze/Silver/Gold row kept for existing members. */
+  retired?: boolean;
   benefits: MembershipBenefit[];
 }
 
@@ -39,6 +41,8 @@ export interface MembershipHistoryRow {
   id: string;
   planName: string;
   planSlug: string;
+  /** Set when the purchase was made on a plan that has since been retired (e.g. "Gold"). */
+  previousPlan?: string | null;
   status: string;
   paymentStatus: string;
   amount: number | null;
@@ -62,7 +66,7 @@ export interface MemberPricing {
   member: { planName: string; planSlug: string; tierRank: number; discountPercent: number; freeDelivery: boolean } | null;
   /** Active member's price per product (only products the plan actually reduces). */
   prices: Record<string, number>;
-  /** Entry-tier price for everyone who is not an active member ("Join and save"). */
+  /** KOVENIK MEMBER price for everyone who is not an active member ("Join and save"). */
   preview: { planName: string; prices: Record<string, number> } | null;
 }
 
@@ -90,9 +94,6 @@ export async function fetchPreviewPricing(): Promise<MemberPreviewPricing> {
   const data = (await response.json()) as Partial<MemberPreviewPricing>;
   return { plan: data.plan ?? null, prices: data.prices ?? {} };
 }
-
-export const saveBirthday = (birthday: string) =>
-  customerRequest('/api/membership/birthday', { method: 'PUT', body: JSON.stringify({ birthday }) });
 
 export const PURCHASE_STATUS: Record<string, string> = {
   active: 'Active',

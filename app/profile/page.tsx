@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
   ChevronDown,
   User,
@@ -23,6 +23,7 @@ import { DeleteAccountModal } from '../../components/profile/DeleteAccountModal'
 import { MembershipCard, SERIF_STYLE, memberCode } from '../../components/profile/metal';
 import { useProfile } from '../../hooks/use-profile';
 import { CustomerAuthGate } from '@/components/auth/customer-auth-gate';
+import { fetchMyMembership } from '@/lib/membership-api';
 
 const NAV_ITEMS = [
   { id: 'overview', label: 'Overview', icon: LayoutDashboard, count: null },
@@ -40,6 +41,22 @@ type NavId = (typeof NAV_ITEMS)[number]['id'];
 function ProfilePageView() {
   const profile = useProfile();
   const [menuOpen, setMenuOpen] = useState(false);
+  // "Inner Circle" branding is only for customers with an ACTIVE membership right now.
+  const [isMember, setIsMember] = useState(false);
+
+  useEffect(() => {
+    let alive = true;
+    const load = () =>
+      fetchMyMembership()
+        .then((data) => alive && setIsMember(Boolean(data.current)))
+        .catch(() => alive && setIsMember(false));
+    void load();
+    window.addEventListener('ardenby-membership-changed', load);
+    return () => {
+      alive = false;
+      window.removeEventListener('ardenby-membership-changed', load);
+    };
+  }, []);
 
   /* ---------------- LOADING ---------------- */
 
@@ -85,9 +102,11 @@ function ProfilePageView() {
 
   const tags = (
     <div className="flex flex-wrap gap-2">
-      <span className="kv-pill">
-        <Star className="h-4 w-4 fill-[#EF3535] text-[#EF3535]" strokeWidth={1.7} /> Inner Circle Member
-      </span>
+      {isMember && (
+        <span className="kv-pill">
+          <Star className="h-4 w-4 fill-[#EF3535] text-[#EF3535]" strokeWidth={1.7} /> Inner Circle Member
+        </span>
+      )}
       {verified && (
         <span className="kv-pill">
           <BadgeCheck className="h-4 w-4" strokeWidth={1.7} /> Email verified
@@ -155,11 +174,11 @@ function ProfilePageView() {
                     <p className="text-[16px] font-bold text-[#C8211F]">My Account</p>
                     <h1 className="kv-display mt-2 text-[44px] xl:text-[52px]">Welcome back, {profile.displayName}</h1>
                     <p className="mt-3 max-w-xl text-[17px] leading-7 text-[#666666]">
-                      Your orders, saved pieces and Inner Circle privileges — all in one place.
+                      {isMember ? 'Your orders, saved pieces and Inner Circle privileges — all in one place.' : 'Your orders, saved pieces and account — all in one place.'}
                     </p>
                     <div className="mt-6">{tags}</div>
                   </div>
-                  <MembershipCard name={profile.displayName} userId={profile.user.id} createdAt={profile.user.created_at} />
+                  <MembershipCard name={profile.displayName} userId={profile.user.id} createdAt={profile.user.created_at} isMember={isMember} />
                 </div>
               </div>
 
@@ -167,13 +186,13 @@ function ProfilePageView() {
               <div className="rounded bg-[#111111] p-5 text-white lg:hidden">
                 <div className="flex items-start justify-between gap-3">
                   <p className="text-[15px] text-[#D1D1D1]">Welcome back</p>
-                  <span className="text-[13px] font-bold tracking-[0.08em] text-[#EF3535]">INNER CIRCLE</span>
+                  {isMember && <span className="text-[13px] font-bold tracking-[0.08em] text-[#EF3535]">INNER CIRCLE</span>}
                 </div>
                 <h1 className="mt-1 text-[32px] font-bold uppercase leading-[1.1]" style={SERIF_STYLE}>
                   {profile.displayName}
                 </h1>
                 <p className="mt-2 text-[15px] text-[#D1D1D1]">
-                  {[memberSinceText && `Member since ${memberSinceText}`, memberCode(profile.user.id, profile.user.created_at)]
+                  {[memberSinceText && `${isMember ? 'Member' : 'Customer'} since ${memberSinceText}`, memberCode(profile.user.id, profile.user.created_at)]
                     .filter(Boolean)
                     .join(' · ')}
                 </p>
@@ -204,9 +223,11 @@ function ProfilePageView() {
               </nav>
               <div className="mt-1 flex items-center justify-between gap-4">
                 <h1 className="kv-display text-[40px]">My Account</h1>
-                <span className="kv-pill !bg-[#111111] !text-white">
-                  <Star className="h-4 w-4 fill-[#EF3535] text-[#EF3535]" strokeWidth={1.7} /> Inner Circle Member
-                </span>
+                {isMember && (
+                  <span className="kv-pill !bg-[#111111] !text-white">
+                    <Star className="h-4 w-4 fill-[#EF3535] text-[#EF3535]" strokeWidth={1.7} /> Inner Circle Member
+                  </span>
+                )}
               </div>
             </div>
           )}

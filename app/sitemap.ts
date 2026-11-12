@@ -10,12 +10,10 @@ const INFO_PAGES = [
   'contact',
   'shipping',
   'returns',
+  'size-guide',
   'faqs',
   'privacy',
   'terms',
-  'sustainability',
-  'careers',
-  'press',
 ];
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {

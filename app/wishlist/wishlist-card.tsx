@@ -8,9 +8,9 @@ import { toast } from 'sonner';
 import type { CartItem, Product } from '@/types';
 import type { WishlistItem } from '@/store/wishlist-store';
 import { RatingLink } from '@/components/product/rating-link';
+import { MemberPriceTag } from '@/components/membership/member-price-tag';
 import { useCartStore } from '@/store/cart-store';
 import { formatINR } from '@/lib/format';
-import { MemberPriceTag } from '@/components/membership/member-price-tag';
 
 export const DISPLAY = { fontFamily: 'var(--font-oswald), Impact, sans-serif' } as const;
 
@@ -22,7 +22,7 @@ export const BTN_TEXT = 'text-[16px] font-bold uppercase tracking-[0.04em]';
 /** undefined = still loading, null = could not be loaded. */
 export type ProductDetail = Product | null | undefined;
 
-const SIZE_ORDER = ['XS', 'S', 'M', 'L', 'XL', 'XXL', '3XL'];
+const SIZE_ORDER = ['XS', 'S', 'M', 'L', 'XL', 'XXL', '3XL', '4XL', '5XL'];
 
 /* ------------------------------ variant helpers ------------------------------ */
 

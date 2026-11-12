@@ -3,14 +3,22 @@
 //
 //   subtotal        = sum(price * qty)
 //   taxableAmount   = subtotal - couponDiscount
-//   shipping        = free when subtotal >= FREE_SHIPPING_THRESHOLD, else SHIPPING_FEE
+//   shipping        = SHIPPING_FEE flat per order; free for an active KOVENIK member
+//                     (TEMPORARY until Shiprocket; no minimum order value / threshold)
 //   gst             = round(taxableAmount * GST_RATE)
 //   total           = taxableAmount + shipping + gst
 //   totalSavings    = productSavings (mrp - price) + couponDiscount
 
-export const FREE_SHIPPING_THRESHOLD = 999;
-export const SHIPPING_FEE = 79;
+export const SHIPPING_FEE = 49;
 export const GST_RATE = 0.05;
+
+// Cash on delivery (mirrors the backend): flat handling fee + GST on the fee, COD only
+// while the goods value (after any coupon, before GST / shipping / the fee) is within
+// the limit. The server enforces both; this is display and early feedback.
+export const COD_FEE = 29;
+export const COD_MAX_ORDER_VALUE = 3000;
+export const COD_LIMIT_MESSAGE =
+  'COD is available only for orders up to ₹3,000. Please choose online payment.';
 
 type PricedItem = { price: number; mrp?: number; quantity: number };
 
@@ -65,9 +73,10 @@ export function roundMoney(value: number): number {
 export function calculateCartPricing(
   items: PricedItem[],
   coupon: CouponRule | number | null = null,
-  // Member benefit (e.g. Gold) that waives the shipping fee. Display only: the
-  // server applies the real rule when the order is created.
-  options: { freeShipping?: boolean } = {}
+  // Active-member benefit that waives the shipping fee. The flag comes from the BACKEND
+  // (/api/membership/my-pricing); this is display only, the server applies the real rule
+  // when the order is created.
+  options: { freeShipping?: boolean; cod?: boolean } = {}
 ) {
   const subtotal = roundMoney(
     items.reduce((sum, item) => sum + item.price * item.quantity, 0)
@@ -88,12 +97,12 @@ export function calculateCartPricing(
       : Number(coupon) || 0;
   const discount = roundMoney(Math.max(0, Math.min(rawDiscount, subtotal)));
   const taxableAmount = roundMoney(subtotal - discount);
-  const shipping =
-    subtotal === 0 || subtotal >= FREE_SHIPPING_THRESHOLD || options.freeShipping
-      ? 0
-      : SHIPPING_FEE;
+  const shipping = subtotal === 0 || options.freeShipping ? 0 : SHIPPING_FEE;
   const gst = Math.round(taxableAmount * GST_RATE);
-  const total = roundMoney(taxableAmount + shipping + gst);
+  const codAvailable = taxableAmount <= COD_MAX_ORDER_VALUE;
+  const codFee = options.cod && subtotal > 0 ? COD_FEE : 0;
+  const codFeeTax = roundMoney(codFee * GST_RATE);
+  const total = roundMoney(taxableAmount + shipping + gst + codFee + codFeeTax);
 
   return {
     subtotal,
@@ -102,6 +111,9 @@ export function calculateCartPricing(
     taxableAmount,
     shipping,
     gst,
+    codAvailable,
+    codFee,
+    codFeeTax,
     total,
     totalSavings: roundMoney(productSavings + discount),
   };

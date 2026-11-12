@@ -814,15 +814,15 @@
    ========================================================= */
 :root {
   --c-white: #FFFFFF;
-  --c-band: #F7F7F7;
-  --c-footer: #F7F7F7;
-  --c-img: #F7F7F7;
-  --c-line: #E5E5E5;
-  --c-ink: #111111;
-  --c-sub: #666666;
-  --c-gold: #E53935;
-  --c-gold-text: #E53935;
-  --c-gold-on-dark: #E53935;
+  --c-band: #F7F5F2;
+  --c-footer: #F7F5F2;
+  --c-img: #F7F5F2;
+  --c-line: #E7E4DF;
+  --c-ink: #0A0A0A;
+  --c-sub: #5F5F5F;
+  --c-gold: #D7261E;
+  --c-gold-text: #D7261E;
+  --c-gold-on-dark: #F2483F;
   --c-mist: #D1D1D1;
 }
 

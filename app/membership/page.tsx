@@ -5,7 +5,7 @@ import { MembershipClient } from './membership-client';
 
 export const metadata: Metadata = {
   title: 'Membership | KÖVENIK',
-  description: 'Join KÖVENIK Bronze, Silver or Gold for member pricing and more.',
+  description: 'Join KÖVENIK MEMBER: one membership, a flat 15% off eligible products all year.',
   alternates: { canonical: '/membership' },
 };
 

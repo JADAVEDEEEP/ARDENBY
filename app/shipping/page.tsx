@@ -3,7 +3,7 @@ import Link from 'next/link';
 
 import { Callout, Container, CtaLink, Eyebrow, PageTitle, PROSE } from '@/components/info/info-ui';
 import { SupportContact } from '@/components/info/support-contact';
-import { FREE_SHIPPING_THRESHOLD, GST_PERCENT, SHIPPING_FEE, inr } from '@/lib/policy-facts';
+import { GST_PERCENT, SHIPPING_FEE, inr } from '@/lib/policy-facts';
 
 export const metadata: Metadata = {
   title: 'Shipping & Delivery Policy | KOVENIK',
@@ -87,23 +87,16 @@ export default function ShippingPage() {
             What delivery costs, when it is free, and how your order travels from our hands to yours.
           </p>
 
-          <dl className="mt-12 grid gap-4 md:grid-cols-3">
+          <dl className="mt-12 grid gap-4 md:grid-cols-2">
             <div className="bg-white p-7 md:p-8">
-              <dt className="text-[13px] font-bold uppercase tracking-[0.2em] text-[#555555]">Orders under {inr(FREE_SHIPPING_THRESHOLD)}</dt>
+              <dt className="text-[13px] font-bold uppercase tracking-[0.2em] text-[#555555]">Every order</dt>
               <dd className="mt-3 font-oswald text-[clamp(48px,8vw,72px)] font-bold leading-none text-[#111111]">{inr(SHIPPING_FEE)}</dd>
-              <dd className="mt-3 text-[16px] leading-[1.6] text-[#555555]">Flat shipping fee, added at checkout.</dd>
+              <dd className="mt-3 text-[16px] leading-[1.6] text-[#555555]">Flat shipping fee per order, added at checkout. There is no minimum order value.</dd>
             </div>
             <div className="bg-[#C62828] p-7 text-white md:p-8">
-              <dt className="text-[13px] font-bold uppercase tracking-[0.2em] text-white/85">{inr(FREE_SHIPPING_THRESHOLD)} and above</dt>
+              <dt className="text-[13px] font-bold uppercase tracking-[0.2em] text-white/85">KOVENIK MEMBERS</dt>
               <dd className="mt-3 font-oswald text-[clamp(48px,8vw,72px)] font-bold uppercase leading-none">Free</dd>
-              <dd className="mt-3 text-[16px] leading-[1.6] text-white/90">Shipping is free on the order subtotal at or above this amount.</dd>
-            </div>
-            <div className="bg-[#111111] p-7 text-white md:p-8">
-              <dt className="text-[13px] font-bold uppercase tracking-[0.2em] text-[#FF8A80]">Gold members</dt>
-              <dd className="mt-3 font-oswald text-[clamp(48px,8vw,72px)] font-bold uppercase leading-none">Free</dd>
-              <dd className="mt-3 text-[16px] leading-[1.6] text-[#D6D6D6]">
-                Free shipping on eligible orders, whatever the order value.
-              </dd>
+              <dd className="mt-3 text-[16px] leading-[1.6] text-white/90">Free shipping on every order while your membership is active.</dd>
             </div>
           </dl>
         </Container>
@@ -171,18 +164,16 @@ export default function ShippingPage() {
             <div className={PROSE}>
               <ul>
                 <li>
-                  <strong>Order subtotal below {inr(FREE_SHIPPING_THRESHOLD)}:</strong> a flat {inr(SHIPPING_FEE)}.
+                  <strong>Every order:</strong> a flat {inr(SHIPPING_FEE)}, whatever the order value. This is a temporary
+                  flat rate.
                 </li>
                 <li>
-                  <strong>Order subtotal of {inr(FREE_SHIPPING_THRESHOLD)} or more:</strong> free.
+                  <strong>KOVENIK MEMBERS:</strong> free shipping on every order while the membership is active (this
+                  includes memberships bought on our earlier Gold plan, until they expire). See the{' '}
+                  <Link href="/membership">membership page</Link>.
                 </li>
                 <li>
-                  <strong>Gold membership:</strong> free shipping on eligible orders. See the{' '}
-                  <Link href="/membership">membership page</Link> for plans.
-                </li>
-                <li>
-                  <strong>Coupons:</strong> the free-shipping threshold is measured on your subtotal <em>before</em> a
-                  coupon is applied, so a coupon never turns a free-shipping order into a paid one.
+                  <strong>Coupons:</strong> a coupon does not change the shipping fee.
                 </li>
                 <li>
                   <strong>GST:</strong> {GST_PERCENT}% GST is calculated on the amount after any coupon and is shown

@@ -1,9 +1,9 @@
 'use client';
 
-import { useSearchParams } from 'next/navigation';
 import { useCallback, useEffect, useState } from 'react';
-import { Check, Loader2 } from 'lucide-react';
+import { BellRing, Check, Loader2, Percent, Sparkles, Truck } from 'lucide-react';
 
+import { MemberBadge } from '@/components/membership/member-badge';
 import { clearReturnTo, rememberReturnTo } from '@/lib/auth-redirect';
 import { errorText } from '@/lib/customer-api';
 import { formatINR } from '@/lib/format';
@@ -11,10 +11,9 @@ import {
   fetchMembershipPlans,
   fetchMyMembership,
   formatDate,
+  isBenefitLive,
   type MembershipPlan,
   type MyMembership,
-  isBenefitLive,
-  liveText,
 } from '@/lib/membership-api';
 import { startMembershipPayment, syncMembershipPayment } from '@/lib/razorpay-checkout';
 import { cn } from '@/lib/utils';
@@ -27,24 +26,27 @@ const signedIn = () => {
   }
 };
 
-/** What the button does for this plan. The server applies the same rule when it matters. */
-function actionFor(plan: MembershipPlan, mine: MyMembership | null) {
-  const current = mine?.current;
-  if (!current) return { label: `Join ${plan.name}`, disabled: false };
-  if (plan.tierRank < current.tierRank) return { label: 'Included in your plan', disabled: true };
-  if (plan.tierRank > current.tierRank) return { label: `Upgrade to ${plan.name}`, disabled: false };
-  if (mine?.queued) return { label: 'Already renewed', disabled: true };
-  return { label: `Renew ${plan.name}`, disabled: false };
+const BENEFIT_ICON: Record<string, typeof Percent> = {
+  DISCOUNT: Percent,
+  EXCLUSIVE_OFFERS: Sparkles,
+  NEW_LAUNCH_NOTIFICATIONS: BellRing,
+  FREE_DELIVERY: Truck,
+};
+
+const termLabel = (days: number) => (days === 365 ? 'year' : `${days} days`);
+
+/** What the button does. The server applies the same rule when it matters. */
+function actionFor(mine: MyMembership | null) {
+  if (!mine?.current) return { label: 'Join KOVENIK MEMBER', disabled: false };
+  if (mine.queued) return { label: 'Already renewed', disabled: true };
+  return { label: 'Renew membership', disabled: false };
 }
 
 export function MembershipClient() {
-  const params = useSearchParams();
-  const wantedSlug = params.get('plan');
-
   const [plans, setPlans] = useState<MembershipPlan[] | null>(null);
   const [loadError, setLoadError] = useState('');
   const [mine, setMine] = useState<MyMembership | null>(null);
-  const [busySlug, setBusySlug] = useState<string | null>(null);
+  const [busy, setBusy] = useState(false);
   const [phase, setPhase] = useState<'idle' | 'opened' | 'verifying'>('idle');
   const [message, setMessage] = useState<{ tone: 'ok' | 'error'; text: string } | null>(null);
 
@@ -54,8 +56,7 @@ export function MembershipClient() {
       return;
     }
     try {
-      const data = await fetchMyMembership();
-      setMine(data);
+      setMine(await fetchMyMembership());
     } catch {
       setMine(null);
     }
@@ -77,23 +78,27 @@ export function MembershipClient() {
     };
   }, [loadMine]);
 
-  const join = async (plan: MembershipPlan) => {
+  // The one membership plan. Everything shown comes from it, so admin edits show up here.
+  const plan = plans && plans.length > 0 ? plans[0] : null;
+
+  const join = async () => {
+    if (!plan) return;
     setMessage(null);
 
     if (!signedIn()) {
-      // Remember the chosen plan; after sign-in the navbar brings the customer back here.
-      rememberReturnTo(`/membership?plan=${encodeURIComponent(plan.slug)}`);
+      // After sign-in the navbar brings the customer back here.
+      rememberReturnTo('/membership');
       window.dispatchEvent(new Event('ardenby-open-auth'));
       return;
     }
     clearReturnTo();
 
-    setBusySlug(plan.slug);
+    setBusy(true);
     setPhase('idle');
     try {
       const result = await startMembershipPayment(plan.id, undefined, setPhase);
       if (result.status === 'paid') {
-        setMessage({ tone: 'ok', text: `Welcome to ${plan.name}! Your membership is now active.` });
+        setMessage({ tone: 'ok', text: 'Welcome to KOVENIK MEMBER! Your membership is now active.' });
         await loadMine();
         window.dispatchEvent(new Event('ardenby-membership-changed'));
       } else if (result.status === 'failed') {
@@ -102,7 +107,7 @@ export function MembershipClient() {
     } catch (error) {
       setMessage({ tone: 'error', text: errorText(error) });
     } finally {
-      setBusySlug(null);
+      setBusy(false);
       setPhase('idle');
     }
   };
@@ -123,31 +128,64 @@ export function MembershipClient() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [mine?.history.length]);
 
-  const topRank = plans?.reduce((max, p) => Math.max(max, p.tierRank), 0) ?? 0;
+  const action = actionFor(mine);
+  const benefits = plan ? plan.benefits.filter(isBenefitLive) : [];
+  // Purchases at which the discount repays the fee, from the live plan values.
+  const breakEven = plan && plan.discountPercent > 0 ? Math.ceil(plan.price / (plan.discountPercent / 100)) : null;
 
   return (
     <main className="kv-page min-h-screen bg-white text-[#111111]">
-      <div className="mx-auto max-w-[1180px] px-4 py-10 md:px-8 md:py-16">
-        <header className="mx-auto max-w-2xl text-center">
-          <p className="text-[12px] font-semibold uppercase tracking-[0.2em] text-[#E53935]">KÖVENIK Membership</p>
-          <h1 className="mt-3 text-[32px] font-bold leading-tight tracking-tight md:text-[44px]">Pay once. Save all year.</h1>
-          <p className="mt-3 text-[16px] leading-7 text-[#555555]">
-            Member prices on eligible products and more. Choose the plan that fits you.
+      {/* Hero */}
+      <section className="bg-[#111111] text-white">
+        <div className="mx-auto max-w-[1100px] px-4 py-14 text-center md:px-8 md:py-24">
+          <p className="inline-flex items-center gap-2 text-[12px] font-semibold uppercase tracking-[0.28em] text-[#FF8A87]">
+            <MemberBadge size={20} label={false} /> KOVENIK MEMBER
           </p>
-        </header>
-
-        {mine?.current && (
-          <p className="mx-auto mt-8 max-w-xl rounded border border-[#111111]/15 bg-[#F7F7F7] px-4 py-3 text-center text-[14px]">
-            You are a <strong>{mine.current.planName}</strong> member until{' '}
-            <strong>{formatDate(mine.current.endDate)}</strong>.
+          <h1 className="font-oswald mx-auto mt-5 max-w-[14ch] text-[clamp(40px,8vw,84px)] font-bold uppercase leading-[0.98] tracking-tight">
+            {plan ? `Flat ${plan.discountPercent}% off.` : 'Members save more.'}
+            <br />
+            All year.
+          </h1>
+          <p className="mx-auto mt-6 max-w-xl text-[16px] leading-7 text-white/70 md:text-[18px]">
+            One membership. One simple saving on every eligible product, every time you shop.
           </p>
-        )}
 
+          {plan && (
+            <div className="mx-auto mt-10 flex max-w-sm flex-col items-center gap-4">
+              <p className="flex items-baseline gap-2">
+                <span className="text-[48px] font-bold leading-none tabular-nums">{formatINR(plan.price)}</span>
+                <span className="text-[15px] text-white/60">/ {termLabel(plan.durationDays)}</span>
+              </p>
+              <button
+                type="button"
+                disabled={action.disabled || busy}
+                onClick={join}
+                className="flex min-h-[52px] w-full items-center justify-center gap-2 rounded-[3px] bg-[#E53935] px-6 text-[13px] font-bold uppercase tracking-[0.16em] text-white transition hover:bg-[#C62E2B] disabled:cursor-not-allowed disabled:opacity-50"
+              >
+                {busy && <Loader2 className="h-4 w-4 animate-spin" aria-hidden />}
+                {busy ? (phase === 'verifying' ? 'Confirming payment…' : 'Opening payment…') : action.label}
+              </button>
+              {mine?.current && (
+                <p className="text-[13px] text-white/70">
+                  You are a member until <strong className="text-white">{formatDate(mine.current.endDate)}</strong>.
+                </p>
+              )}
+              {mine?.queued && (
+                <p className="text-[13px] text-white/70">
+                  Renewal paid: your next year starts on <strong className="text-white">{formatDate(mine.queued.startDate)}</strong>.
+                </p>
+              )}
+            </div>
+          )}
+        </div>
+      </section>
+
+      <div className="mx-auto max-w-[1100px] px-4 py-12 md:px-8 md:py-16">
         {message && (
           <p
             role="status"
             className={cn(
-              'mx-auto mt-6 max-w-xl rounded border px-4 py-3 text-center text-[14px]',
+              'mx-auto mb-10 max-w-xl rounded border px-4 py-3 text-center text-[14px]',
               message.tone === 'ok'
                 ? 'border-[#1B7A43]/40 bg-[#1B7A43]/10 text-[#14602F]'
                 : 'border-[#D92D20]/40 bg-[#D92D20]/10 text-[#B42318]'
@@ -158,92 +196,71 @@ export function MembershipClient() {
         )}
 
         {plans === null && !loadError && (
-          <div className="mt-12 grid gap-5 md:grid-cols-3" aria-busy="true">
+          <div className="grid gap-5 md:grid-cols-3" aria-busy="true">
             {[0, 1, 2].map((i) => (
-              <div key={i} className="h-[420px] animate-pulse rounded bg-[#F5F5F5]" />
+              <div key={i} className="h-40 animate-pulse rounded bg-[#F5F5F5]" />
             ))}
           </div>
         )}
 
         {loadError && (
-          <p className="mt-12 text-center text-[15px] text-[#B42318]">
-            We could not load the membership plans right now. Please try again in a moment.
+          <p className="text-center text-[15px] text-[#B42318]">
+            We could not load the membership right now. Please try again in a moment.
           </p>
         )}
 
-        {plans && plans.length === 0 && !loadError && (
-          <p className="mt-12 text-center text-[15px] text-[#555555]">Membership plans are not available at the moment.</p>
+        {plans && !plan && !loadError && (
+          <p className="text-center text-[15px] text-[#555555]">Membership is not available at the moment.</p>
         )}
 
-        {plans && plans.length > 0 && (
-          <ul className="mt-10 grid gap-5 md:mt-14 md:grid-cols-3">
-            {plans.map((plan) => {
-              const action = actionFor(plan, mine);
-              const featured = plan.tierRank === topRank && plans.length > 1;
-              const chosen = wantedSlug === plan.slug;
-              const busy = busySlug === plan.slug;
-              const isCurrent = mine?.current?.planId === plan.id;
-              return (
-                <li
-                  key={plan.id}
-                  className={cn(
-                    'relative flex flex-col rounded border bg-white p-6 md:p-7',
-                    featured ? 'border-[#111111] shadow-[0_8px_30px_rgba(0,0,0,0.08)]' : 'border-[#E5E5E5]',
-                    chosen && 'ring-2 ring-[#E53935]'
-                  )}
-                >
-                  {featured && (
-                    <span className="absolute -top-3 left-6 rounded-[3px] bg-[#111111] px-2.5 py-1 text-[11px] font-bold uppercase tracking-wide text-white">
-                      Best value
-                    </span>
-                  )}
-                  <h2 className="text-[22px] font-bold">{plan.name}</h2>
-                  {liveText(plan.description) && <p className="mt-1 text-[14px] leading-6 text-[#666666]">{liveText(plan.description)}</p>}
+        {plan && (
+          <>
+            {/* What you get */}
+            <h2 className="text-center text-[12px] font-semibold uppercase tracking-[0.24em] text-[#666666]">What you get</h2>
+            <ul className="mx-auto mt-8 flex max-w-[1100px] flex-wrap justify-center gap-4">
+              {benefits.map((b) => {
+                const Icon = BENEFIT_ICON[b.type.toUpperCase()] ?? Check;
+                return (
+                  <li key={b.id} className="flex w-full flex-col items-start gap-4 rounded border border-[#E5E5E5] bg-white p-6 md:w-[calc(33.333%-0.75rem)] md:min-w-[280px] md:p-8">
+                    <Icon className="h-6 w-6 text-[#E53935]" strokeWidth={1.8} aria-hidden />
+                    <p className="text-[16px] font-semibold leading-snug">{b.description}</p>
+                  </li>
+                );
+              })}
+            </ul>
 
-                  <p className="mt-5 flex items-baseline gap-2">
-                    <span className="text-[38px] font-bold leading-none tabular-nums">{formatINR(plan.price)}</span>
-                    <span className="text-[14px] text-[#666666]">
-                      / {plan.durationDays === 365 ? 'year' : `${plan.durationDays} days`}
-                    </span>
-                  </p>
-                  {plan.discountPercent > 0 && (
-                    <p className="mt-2 text-[14px] font-semibold text-[#1B7A43]">{plan.discountPercent}% off eligible products</p>
-                  )}
+            {breakEven && (
+              <p className="mx-auto mt-8 max-w-xl text-center text-[15px] leading-7 text-[#444444]">
+                It pays for itself once you have shopped about <strong>{formatINR(breakEven)}</strong> at selling prices (less if you count the shipping you save), and
+                everything after that is savings.
+              </p>
+            )}
 
-                  <ul className="mt-5 space-y-2.5 text-[14.5px] leading-6">
-                    {plan.benefits.filter(isBenefitLive).map((b) => (
-                      <li key={b.id} className="flex gap-2.5">
-                        <Check className="mt-1 h-4 w-4 shrink-0 text-[#1B7A43]" strokeWidth={2.4} aria-hidden />
-                        <span>{b.description}</span>
-                      </li>
-                    ))}
-                  </ul>
-
-                  <div className="mt-auto pt-7">
-                    <button
-                      type="button"
-                      disabled={action.disabled || busySlug !== null}
-                      onClick={() => join(plan)}
-                      className={cn(
-                        'flex min-h-[48px] w-full items-center justify-center gap-2 rounded-[3px] px-5 text-[13px] font-bold uppercase tracking-[0.14em] transition disabled:cursor-not-allowed disabled:opacity-50',
-                        featured ? 'bg-[#E53935] text-white hover:bg-[#C62E2B]' : 'bg-[#111111] text-white hover:bg-[#2A2A2A]'
-                      )}
-                    >
-                      {busy && <Loader2 className="h-4 w-4 animate-spin" aria-hidden />}
-                      {busy ? (phase === 'verifying' ? 'Confirming payment…' : 'Opening payment…') : action.label}
-                    </button>
-                    {isCurrent && <p className="mt-2 text-center text-[12.5px] text-[#666666]">This is your current plan.</p>}
-                  </div>
+            {/* How it works */}
+            <h2 className="mt-16 text-center text-[12px] font-semibold uppercase tracking-[0.24em] text-[#666666]">How it works</h2>
+            <ol className="mt-8 grid gap-8 md:grid-cols-3">
+              {[
+                ['Join', `Pay ${formatINR(plan.price)} once. Your membership is active straight away.`],
+                ['Shop', `Member prices show on eligible products. ${plan.discountPercent}% comes off the selling price automatically, sale items included, and shipping is free.`],
+                ['Save', 'Your savings are shown in the cart and at checkout before you pay.'],
+              ].map(([title, text], i) => (
+                <li key={title} className="text-center">
+                  <span className="font-oswald mx-auto flex h-11 w-11 items-center justify-center rounded-full border border-[#111111] text-[18px] font-bold">
+                    {i + 1}
+                  </span>
+                  <h3 className="mt-4 text-[18px] font-bold">{title}</h3>
+                  <p className="mx-auto mt-1 max-w-[30ch] text-[14.5px] leading-6 text-[#555555]">{text}</p>
                 </li>
-              );
-            })}
-          </ul>
+              ))}
+            </ol>
+          </>
         )}
 
-        <p className="mx-auto mt-10 max-w-2xl text-center text-[13px] leading-6 text-[#666666]">
-          Member prices apply to eligible products and are confirmed at checkout. Discounts from sale prices, member prices and
-          coupons are limited so they never exceed our maximum combined discount. Renewing extends your plan from its end date;
-          upgrading starts the higher plan today. Payments are processed securely by Razorpay.
+        <p className="mx-auto mt-14 max-w-2xl text-center text-[13px] leading-6 text-[#666666]">
+          The member discount is taken off the current selling price of eligible products, sale items included, and is
+          confirmed at checkout. Sale price, member discount and coupons together are limited so the total never exceeds
+          our maximum combined discount off the list price (MRP). Renewing extends your membership from its end date.
+          Payments are processed securely by Razorpay.
         </p>
       </div>
     </main>

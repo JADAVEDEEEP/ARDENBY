@@ -60,28 +60,12 @@ const BENEFIT_TYPES = [
   'BIRTHDAY_REWARD',
 ];
 
-const emptyPlan = (): PlanForm => ({
-  id: null,
-  name: '',
-  slug: '',
-  description: '',
-  price: '',
-  durationDays: '365',
-  tierRank: '',
-  discountPercent: '0',
-  freeDelivery: false,
-  active: true,
-  benefits: [],
-});
-
 type PlanForm = {
-  id: string | null;
+  id: string;
   name: string;
-  slug: string;
   description: string;
   price: string;
   durationDays: string;
-  tierRank: string;
   discountPercent: string;
   freeDelivery: boolean;
   active: boolean;
@@ -91,11 +75,9 @@ type PlanForm = {
 const toForm = (p: MembershipPlan): PlanForm => ({
   id: p.id,
   name: p.name,
-  slug: p.slug,
   description: p.description || '',
   price: String(p.price),
   durationDays: String(p.durationDays),
-  tierRank: String(p.tierRank),
   discountPercent: String(p.discountPercent),
   freeDelivery: p.freeDelivery,
   active: p.active,
@@ -174,11 +156,9 @@ function PlansTab({ onNotice, onError }: TabProps) {
     try {
       const body = {
         name: form.name,
-        slug: form.slug,
         description: form.description,
         price: Number(form.price),
         durationDays: Number(form.durationDays),
-        tierRank: Number(form.tierRank),
         discountPercent: Number(form.discountPercent),
         freeDelivery: form.freeDelivery,
         active: form.active,
@@ -189,11 +169,11 @@ function PlansTab({ onNotice, onError }: TabProps) {
           active: b.active,
         })),
       };
-      await opsRequest(form.id ? `/api/admin/membership/plans/${form.id}` : '/api/admin/membership/plans', {
-        method: form.id ? 'PUT' : 'POST',
+      await opsRequest(`/api/admin/membership/plans/${form.id}`, {
+        method: 'PUT',
         body: JSON.stringify(body),
       });
-      onNotice(form.id ? 'Plan updated.' : 'Plan created.');
+      onNotice('Membership plan updated.');
       setForm(null);
       await load();
     } catch (e) {
@@ -216,32 +196,31 @@ function PlansTab({ onNotice, onError }: TabProps) {
   };
 
   if (!plans) return <Spinner />;
+  const activePlans = plans.filter((p) => !p.retired);
+  const retiredPlans = plans.filter((p) => p.retired);
 
   const set = <K extends keyof PlanForm>(key: K, value: PlanForm[K]) => setForm((f) => (f ? { ...f, [key]: value } : f));
 
   return (
     <div className="space-y-5">
       <Card
-        title="Plans"
-        description="Prices, validity and benefits shown on the website come from here. Changes apply to new purchases."
-        action={
-          <button className={btnPrimary} onClick={() => setForm(emptyPlan())}>
-            <Plus className="h-4 w-4" /> New plan
-          </button>
-        }
+        title="KOVENIK MEMBER"
+        description="The single membership plan. Price, validity, discount and benefits shown on the website come from here. Price and validity changes apply to new purchases only."
       >
-        {plans.length === 0 ? (
-          <EmptyState title="No membership plans yet">Run the seed script or create a plan.</EmptyState>
+        {activePlans.length === 0 ? (
+          <EmptyState title="The membership plan is not set up yet">
+            Run <code>node scripts/seed-membership-plans.js --apply</code> on the server to create KOVENIK MEMBER.
+          </EmptyState>
         ) : (
           <ul className="divide-y divide-[#E4E7EC]">
-            {plans.map((p) => (
+            {activePlans.map((p) => (
               <li key={p.id} className="flex flex-wrap items-center justify-between gap-3 py-3">
                 <div>
                   <p className="font-semibold">
                     {p.name} <span className="font-normal text-[#626875]">· {formatINR(p.price)} · {p.durationDays} days · {p.discountPercent}% off</span>
                   </p>
                   <p className="text-[13px] text-[#626875]">
-                    Tier {p.tierRank}
+                    Flat {p.discountPercent}% off eligible products
                     {p.freeDelivery ? ' · free shipping' : ''}
                   </p>
                 </div>
@@ -258,9 +237,30 @@ function PlansTab({ onNotice, onError }: TabProps) {
 
       {rulesFor && <ProductRules plan={rulesFor} onNotice={onNotice} onError={onError} />}
 
+      {retiredPlans.length > 0 && (
+        <Card
+          title="Retired plans"
+          description="The old Bronze, Silver and Gold plans are no longer sold. They are kept so existing members and purchase history stay intact; a term already paid for runs until its end date and is treated as KOVENIK MEMBER (never worse than what was bought)."
+        >
+          <ul className="divide-y divide-[#E4E7EC]">
+            {retiredPlans.map((p) => (
+              <li key={p.id} className="flex flex-wrap items-center justify-between gap-3 py-3">
+                <p className="font-semibold">
+                  {p.name}{' '}
+                  <span className="font-normal text-[#626875]">
+                    · {formatINR(p.price)} · {p.durationDays} days · {p.discountPercent}% off{p.freeDelivery ? ' · free shipping' : ''}
+                  </span>
+                </p>
+                <StatusPill tone="neutral">Retired</StatusPill>
+              </li>
+            ))}
+          </ul>
+        </Card>
+      )}
+
       <Card
         title="Discount safety cap"
-        description="Sale price + member price + coupon together may never take more than this percentage off a product's list price (MRP)."
+        description="Sale price + member discount + coupon together may never take more than this percentage off a product's list price (MRP)."
       >
         <div className="flex flex-wrap items-end gap-3">
           <div>
@@ -272,11 +272,11 @@ function PlansTab({ onNotice, onError }: TabProps) {
       </Card>
 
       {form && (
-        <Card title={form.id ? `Edit ${form.name}` : 'New plan'}>
+        <Card title={`Edit ${form.name}`}>
           <div className="grid gap-4 md:grid-cols-3">
             {([
-              ['Name', 'name'], ['Slug (web address key)', 'slug'], ['Price (₹)', 'price'],
-              ['Validity (days)', 'durationDays'], ['Tier order (higher = better)', 'tierRank'], ['Discount (%)', 'discountPercent'],
+              ['Name', 'name'], ['Price (₹)', 'price'],
+              ['Validity (days)', 'durationDays'], ['Member discount (% off selling price)', 'discountPercent'],
             ] as [string, keyof PlanForm][]).map(([label, key]) => (
               <div key={key}>
                 <label className={labelClass}>{label}</label>
@@ -288,7 +288,7 @@ function PlansTab({ onNotice, onError }: TabProps) {
               <input className={fieldClass} value={form.description} onChange={(e) => set('description', e.target.value)} />
             </div>
             <label className="flex items-center gap-2 text-[14px]">
-              <input type="checkbox" checked={form.freeDelivery} onChange={(e) => set('freeDelivery', e.target.checked)} /> Free shipping on every order
+              <input type="checkbox" checked={form.freeDelivery} onChange={(e) => set('freeDelivery', e.target.checked)} /> Free shipping on every order (not part of the standard plan)
             </label>
             <label className="flex items-center gap-2 text-[14px]">
               <input type="checkbox" checked={form.active} onChange={(e) => set('active', e.target.checked)} /> Enabled (shown and purchasable)
@@ -297,7 +297,7 @@ function PlansTab({ onNotice, onError }: TabProps) {
 
           <h3 className="mb-2 mt-6 text-[15px] font-bold">Benefits shown to customers</h3>
           <p className="mb-3 text-[13px] text-[#626875]">
-            Early access: put the hours in Value. Removing a row hides it; nothing is deleted.
+            Removing a row hides it; nothing is deleted. Only list benefits that are actually delivered.
           </p>
           <div className="space-y-2">
             {form.benefits.map((b, i) => (
@@ -374,7 +374,7 @@ function ProductRules({ plan, onNotice, onError }: { plan: MembershipPlan } & Ta
   return (
     <Card
       title={`${plan.name}: product pricing`}
-      description={`Default: every product gets ${plan.discountPercent}% off its selling price. Exclude a product, or set a fixed member price.`}
+      description={`Default: every product gets ${plan.discountPercent}% off its current selling price (sale items included), within the discount cap. Exclude a product, or set a fixed member price that replaces the percentage.`}
     >
       {!rows ? (
         <Spinner />

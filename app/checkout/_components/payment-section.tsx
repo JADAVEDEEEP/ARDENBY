@@ -3,6 +3,7 @@
 import { Landmark } from 'lucide-react';
 import type { PaymentId } from './shared';
 import { LogoChip, TextChip } from './payment-logos';
+import { COD_FEE, COD_LIMIT_MESSAGE } from '@/lib/pricing';
 
 // These tiles describe what Razorpay's secure window can offer. The window
 // itself only lists the methods enabled on the merchant account.
@@ -82,10 +83,13 @@ export function PaymentSection({
   value,
   onChange,
   disabled,
+  codAvailable = true,
 }: {
   value: PaymentId;
   onChange: (v: PaymentId) => void;
   disabled?: boolean;
+  /** False when the goods value is over the COD limit. */
+  codAvailable?: boolean;
 }) {
   const online = value === 'online';
   const cod = value === 'cod';
@@ -141,12 +145,13 @@ export function PaymentSection({
       </div>
 
       {/* Cash on delivery */}
-      <div className="ck-tile" data-on={cod} data-disabled={disabled || undefined}>
+      <div className="ck-tile" data-on={cod} data-disabled={disabled || !codAvailable || undefined}>
         <button
           type="button"
           role="radio"
           aria-checked={cod}
-          disabled={disabled}
+          aria-disabled={!codAvailable}
+          disabled={disabled || !codAvailable}
           onClick={() => onChange('cod')}
           className="flex w-full items-start gap-3 p-4 text-left sm:items-center sm:p-5"
         >
@@ -158,10 +163,16 @@ export function PaymentSection({
             </span>
           </span>
           <span className="hidden shrink-0 rounded-full border border-[#E5E5E5] bg-white px-3 py-1.5 text-[13px] font-semibold text-[#111111] sm:inline-flex">
-            No extra fee
+            {codAvailable ? `+ ₹${COD_FEE} handling fee` : 'Unavailable'}
           </span>
         </button>
-        <p className="px-4 pb-4 pl-[52px] text-[13px] font-semibold text-[#111111] sm:hidden">No extra fee</p>
+        {codAvailable ? (
+          <p className="px-4 pb-4 pl-[52px] text-[13px] font-semibold text-[#111111] sm:hidden">+ ₹{COD_FEE} handling fee (plus GST)</p>
+        ) : (
+          <p role="status" className="px-4 pb-4 pl-[52px] text-[14px] font-semibold leading-5 text-[#C8211F]">
+            {COD_LIMIT_MESSAGE}
+          </p>
+        )}
       </div>
     </div>
   );

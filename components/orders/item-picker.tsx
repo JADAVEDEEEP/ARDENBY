@@ -151,8 +151,11 @@ export function ItemPicker({
 export type Breakdown = {
   lines: { orderItemId: string; name: string; quantity: number; goods: number; discount: number; tax: number; refund: number }[];
   shipping: number;
+  /** COD handling fee (with GST) refunded on a seller-fault return. */
+  codFee?: number;
   final: number;
   includesShipping?: boolean;
+  sellerFault?: boolean;
 };
 
 /** "What you get back", worked out by the server. Shown before anything is sent. */
@@ -183,6 +186,12 @@ export function RefundBreakdown({ breakdown, title, note }: { breakdown: Breakdo
           <p className={row}>
             <span className="text-[#111111]/70">Shipping</span>
             <span>{formatINR(breakdown.shipping)}</span>
+          </p>
+        )}
+        {(breakdown.codFee ?? 0) > 0 && (
+          <p className={row}>
+            <span className="text-[#111111]/70">COD handling fee</span>
+            <span>{formatINR(breakdown.codFee ?? 0)}</span>
           </p>
         )}
         <p className={`${row} border-t border-[#111111]/15 pt-2 text-base font-bold`}>

@@ -6,25 +6,24 @@ import { CollectionGrid } from '@/components/home/CollectionGrid';
 import { ExploreCategory } from '@/components/home/ExploreCategory';
 import { HeroCarousel } from '@/components/home/HeroCarousel';
 import { MobileCategoryIcons } from '@/components/home/MobileCategoryIcons';
-import { MembershipStrip } from '@/components/home/MembershipStrip';
+import { MembershipBanner } from '@/components/home/MembershipBanner';
 import { MobileShopBar } from '@/components/home/MobileShopBar';
 import { Newsletter } from '@/components/home/Newsletter';
-import { ProcessSection } from '@/components/home/ProcessSection';
 import { ProductRail } from '@/components/home/ProductRail';
 import { PromoBanner } from '@/components/home/PromoBanner';
 import { USPStrip } from '@/components/home/USPStrip';
 import { useHomeProducts } from '@/hooks/use-home-products';
 
 const RAIL_LIMIT = 8;
+const EXPLORE_LIMIT = 8;
 
 export default function HomePage() {
   const { products, loading, error, retry } = useHomeProducts();
 
-  // Products flagged as new; if nothing is flagged yet, the latest products.
-  const newArrivals = useMemo(() => {
-    const flagged = products.filter((p) => p.newArrival);
-    return (flagged.length > 0 ? flagged : products).slice(0, RAIL_LIMIT);
-  }, [products]);
+  // The API returns products newest first, so New Arrivals is simply the newest 8.
+  const newArrivals = useMemo(() => products.slice(0, RAIL_LIMIT), [products]);
+  // Shop by category never repeats a product already shown in New Arrivals.
+  const shownIds = useMemo(() => new Set(newArrivals.map((p) => p.id)), [newArrivals]);
 
   return (
     <>
@@ -43,9 +42,8 @@ export default function HomePage() {
           onRetry={retry}
         />
         <CollectionGrid products={products} />
-        <ExploreCategory products={products} loading={loading} error={error} onRetry={retry} />
-        <MembershipStrip />
-        <ProcessSection />
+        <ExploreCategory products={products} excludeIds={shownIds} loading={loading} error={error} onRetry={retry} />
+        <MembershipBanner />
         <Newsletter />
       </div>
 

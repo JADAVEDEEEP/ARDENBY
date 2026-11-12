@@ -8,11 +8,11 @@ import { Heart, Plus } from 'lucide-react';
 
 import { cn } from '@/lib/utils';
 import { formatINR } from '@/lib/format';
-import { MemberPriceTag } from '@/components/membership/member-price-tag';
 import { useWishlistStore } from '@/store/wishlist-store';
 import { useCartStore } from '@/store/cart-store';
 import { WishlistLoginModal } from '@/components/product/product-card';
 import { RatingLink } from '@/components/product/rating-link';
+import { MemberPriceTag } from '@/components/membership/member-price-tag';
 import type { ToastPush } from '@/app/shop/shop-ui';
 import {
   focusQty,
@@ -28,7 +28,7 @@ import { discountPct } from './shop-filters';
 
 export type ColorStatus = 'ok' | 'loading' | 'error';
 
-const ALL_SIZES = ['XS', 'S', 'M', 'L', 'XL', 'XXL', '3XL'];
+const ALL_SIZES = ['XS', 'S', 'M', 'L', 'XL', 'XXL', '3XL', '4XL', '5XL'];
 
 function ColourDots({
   colors,
@@ -126,7 +126,7 @@ export function ProductCard({
   }, [focusKey]);
 
   const colors = normalizeProductColors(product);
-  const tag = product.bestSeller ? 'BESTSELLER' : product.newArrival ? 'NEW' : null;
+  const tag = product.limitedEdition ? 'LIMITED DROP' : product.bestSeller ? 'BESTSELLER' : product.newArrival ? 'NEW' : null;
 
   const notify = (forSize?: string) => {
     saveNotify(product.id, forSize);
@@ -266,7 +266,7 @@ export function ProductCard({
           <span
             className={cn(
               'pointer-events-none absolute left-0 top-3.5 px-2.5 py-[5px] text-[10px] font-semibold uppercase leading-none tracking-[0.14em] text-white lg:text-[11px]',
-              tag === 'NEW' ? 'bg-[var(--gold)]' : 'bg-[var(--ink)]'
+              tag === 'NEW' || tag === 'LIMITED DROP' ? 'bg-[var(--gold)]' : 'bg-[var(--ink)]'
             )}
           >
             {tag}
@@ -378,6 +378,12 @@ export function ProductCard({
         >
           {product.name}
         </Link>
+        {product.categoryLabel && (
+          <p className="line-clamp-1 text-[12px] text-[var(--soft)] lg:text-[13px]">
+            {product.categoryLabel}
+            {product.fit ? ` · ${product.fit}` : ''}
+          </p>
+        )}
         <RatingLink slug={product.slug} rating={product.rating} reviewCount={product.reviewCount} />
         {/* Pricing is pinned to the bottom so rows line up whatever the title length. */}
         <div className="mt-auto">

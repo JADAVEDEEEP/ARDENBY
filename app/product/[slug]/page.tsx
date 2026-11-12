@@ -25,13 +25,14 @@ import {
 } from 'lucide-react';
 import { apiUrl } from '@/lib/api-url';
 import { formatINR, discountPercent } from '@/lib/format';
-import { MemberPriceNote } from '@/components/membership/member-price-tag';
+import { CouponOfferLine, MemberPriceNote } from '@/components/membership/member-price-tag';
 import { useWishlistStore } from '@/store/wishlist-store';
 import { useCartStore } from '@/store/cart-store';
 import { MobileShopBar } from '@/components/home/MobileShopBar';
 import { useHeaderHeight } from '@/components/shop/use-header-height';
 import { ProductStage } from './product-stage';
 import { ProductReviews } from '@/components/product/product-reviews';
+import { DeliveryAndTrust } from '@/components/product/delivery-check';
 import { SizeGuideModal } from '@/components/product/size-guide-modal';
 
 /* -------------------------------------------------------------------------- */
@@ -103,7 +104,7 @@ type Notice = {
 
 type TabKey = 'description' | 'wash' | 'size' | 'returns';
 
-const SIZE_ORDER = ['XS', 'S', 'M', 'L', 'XL', 'XXL', '3XL', '4XL'];
+const SIZE_ORDER = ['XS', 'S', 'M', 'L', 'XL', 'XXL', '3XL', '4XL', '5XL'];
 const sizeRank = (size: string) => {
   const index = SIZE_ORDER.indexOf(size.trim().toUpperCase());
   return index === -1 ? SIZE_ORDER.length : index;
@@ -1001,7 +1002,7 @@ export default function ProductPage() {
               Easy 7-day returns from the date of delivery. Items must be
               unused, unwashed, and with all original tags intact.
             </p>
-            <p className="mt-3">Cash on delivery is available. Shipping is free on orders above ₹999.</p>
+            <p className="mt-3">Cash on delivery is available. Shipping is a flat ₹49 per order, and free for KOVENIK members.</p>
           </>
         );
     }
@@ -1100,6 +1101,7 @@ export default function ProductPage() {
 
               {/* Price */}
               <div>
+                <p className="mb-1.5 text-[11px] uppercase tracking-[0.14em] text-[var(--soft)]">Selling price</p>
                 <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
                   <span className="text-[26px] font-semibold leading-none tracking-tight text-[var(--ink)] lg:text-[30px]">{formatINR(price)}</span>
                   {mrp !== undefined && mrp > price && (
@@ -1132,17 +1134,7 @@ export default function ProductPage() {
               )}
 
               {/* Offer line */}
-              {hasBestOffer && (
-                <div className="flex flex-wrap items-center gap-x-3 gap-y-1.5 border-y border-dashed border-[var(--line)] py-3.5 text-[14px] text-[var(--charcoal)]">
-                  <span className="border border-[var(--gold)] px-2 py-1 text-[11px] font-semibold uppercase leading-none tracking-[0.14em] text-[var(--gold)]">
-                    Best offer
-                  </span>
-                  <span>
-                    Get it at <span className="font-semibold text-[var(--ink)]">{formatINR(bestPrice)}</span>
-                  </span>
-                  <span className="text-[13px] text-[var(--muted)] sm:ml-auto">Apply at checkout</span>
-                </div>
-              )}
+              {hasBestOffer && <CouponOfferLine couponPrice={bestPrice} />}
 
               {/* COLOUR + SIZE */}
               <div ref={selectorsRef} className="scroll-mt-[calc(var(--header-h,96px)+16px)] space-y-[22px]">
@@ -1318,7 +1310,7 @@ export default function ProductPage() {
               <div className="grid grid-cols-3 border-y border-[var(--line)]">
                 {[
                   { Icon: Banknote, label: 'COD available', sub: 'Pay on delivery' },
-                  { Icon: Truck, label: 'Free shipping', sub: 'Above ₹999' },
+                  { Icon: Truck, label: 'Flat ₹49 shipping', sub: 'Free for members' },
                   { Icon: RotateCcw, label: 'Easy returns', sub: '7-day returns' },
                 ].map(({ Icon, label, sub }, index) => (
                   <div
@@ -1333,6 +1325,8 @@ export default function ProductPage() {
                   </div>
                 ))}
               </div>
+
+              <DeliveryAndTrust fit={product.fit} productName={product.name} />
 
               {displaySku && (
                 <div className="inline-flex max-w-full items-center gap-2 text-[12px] text-[var(--soft)]">

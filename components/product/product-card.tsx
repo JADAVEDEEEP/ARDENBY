@@ -25,13 +25,13 @@ import { useWishlistStore } from '@/store/wishlist-store';
 import { useCartStore } from '@/store/cart-store';
 
 import { formatINR, discountPercent } from '@/lib/format';
-import { MemberPriceTag } from '@/components/membership/member-price-tag';
 
 import { cn } from '@/lib/utils';
 
 import { toast } from 'sonner';
 
 import { RatingLink } from '@/components/product/rating-link';
+import { MemberPriceTag } from '@/components/membership/member-price-tag';
 
 /* ------------------------------------------------------------------
    CONFIG
@@ -43,7 +43,7 @@ const LOGIN_ROUTE = '/login';
 const REGISTER_ROUTE = '/register';
 const LOW_STOCK_THRESHOLD = 10;
 
-const SIZE_ORDER = ['XS', 'S', 'M', 'L', 'XL', 'XXL', '3XL'];
+const SIZE_ORDER = ['XS', 'S', 'M', 'L', 'XL', 'XXL', '3XL', '4XL', '5XL'];
 
 /* Swatch colours for display only. Unknown colours fall back to a neutral
    swatch (the colour name is still shown via title / aria-label). */
@@ -198,57 +198,42 @@ export function WishlistLoginModal({
         aria-modal="true"
         aria-labelledby={titleId}
         aria-describedby={descId}
-        className="relative max-h-[calc(100dvh-2rem)] w-full max-w-[420px] overflow-hidden rounded-2xl border border-[#E53935]/30 bg-[#F7F7F7] px-6 pb-8 pt-10 text-center  sm:px-8"
+        className="relative max-h-[calc(100dvh-2rem)] w-full max-w-[420px] overflow-y-auto border-t-4 border-[#E53935] bg-white px-6 pb-7 pt-9 text-center shadow-2xl sm:px-8"
       >
-        {/* animated cosmos: stars, planet, orbital rings (decorative only) */}
-        <div aria-hidden="true" className="pointer-events-none absolute inset-0 overflow-hidden rounded-2xl">
-          <div
-            className="kv-twinkle absolute inset-0 opacity-80"
-            style={{
-              backgroundImage:
-                'radial-gradient(1px 1px at 12% 18%,#fff 50%,transparent 51%),radial-gradient(1.5px 1.5px at 30% 70%,#fff 50%,transparent 51%),radial-gradient(1px 1px at 58% 14%,rgba(255,255,255,.8) 50%,transparent 51%),radial-gradient(1px 1px at 78% 62%,#fff 50%,transparent 51%),radial-gradient(1.5px 1.5px at 90% 28%,rgba(255,255,255,.8) 50%,transparent 51%),radial-gradient(1px 1px at 20% 92%,rgba(255,255,255,.7) 50%,transparent 51%)',
+        <span className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-[#E53935]/10">
+          <Heart className="h-7 w-7 fill-[#E53935] text-[#E53935]" aria-hidden="true" />
+        </span>
+
+        <h2
+          id={titleId}
+          className="font-oswald text-[26px] font-bold uppercase leading-tight tracking-[0.04em] text-[#111111] sm:text-[30px]"
+        >
+          Sign in to save your favourites
+        </h2>
+
+        <p id={descId} className="mx-auto mt-3 max-w-[320px] text-[15px] leading-relaxed text-[#444444]">
+          Keep the pieces you love in one place, come back to them on any device, and never lose track of a drop you
+          want.
+        </p>
+
+        <div className="mt-6 flex flex-col gap-3">
+          <button
+            type="button"
+            onClick={() => {
+              onClose();
+              window.dispatchEvent(new Event('ardenby-open-auth'));
             }}
-          />
-          <div className="absolute -right-16 -top-16 h-44 w-44">
-            <div className="absolute inset-[22%] rounded-full bg-[#222222] " />
-            <div className="absolute inset-0 rotate-[-18deg]">
-              <div
-                className="kv-orbit h-full w-full rounded-full border border-[#E53935]/45"
-                style={{ ['--kv-d' as string]: '28s', transform: 'scaleY(0.38)' }}
-              />
-            </div>
-            <div className="absolute inset-[-12%] rotate-[14deg]">
-              <div
-                className="kv-orbit h-full w-full rounded-[50%] border border-[#111111]/20"
-                style={{ ['--kv-d' as string]: '44s' }}
-              >
-                <span className="absolute left-1/2 top-0 h-1.5 w-1.5 -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#E53935] " />
-              </div>
-            </div>
-          </div>
-          <div className="kv-float absolute -bottom-8 -left-8 h-24 w-24 rounded-full bg-[#E5E5E5] opacity-80" />
-          <div className="absolute inset-x-8 top-0 h-px bg-gradient-to-r from-transparent via-[#E53935] to-transparent" />
-        </div>
-
-        <div className="relative">
-          <span className="mx-auto mb-5 flex h-14 w-14 items-center justify-center rounded-full border border-[#E53935]/60 bg-[#FFFFFF] ">
-            <Heart className="h-6 w-6 text-[#E53935]" />
-          </span>
-
-          <h2
-            id={titleId}
-            className="font-serif text-[24px] font-bold leading-tight text-[#111111] sm:text-[26px]"
+            className="inline-flex min-h-[48px] w-full items-center justify-center bg-[#111111] px-6 text-[14px] font-bold uppercase tracking-[0.1em] text-white transition-colors hover:bg-[#E53935] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#E53935]"
           >
-            Sign in to save your favourites
-          </h2>
-
-          <p
-            id={descId}
-            className="mx-auto mt-3 max-w-[320px] text-[15px] leading-relaxed text-[#111111]/80"
+            Sign in or create account
+          </button>
+          <button
+            type="button"
+            onClick={onClose}
+            className="inline-flex min-h-[44px] w-full items-center justify-center text-[14px] font-semibold text-[#111111]/70 transition-colors hover:text-[#111111] focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#E53935]"
           >
-            Keep the pieces you love in one place, come back to them on any
-            device, and never lose track of a drop you want.
-          </p>
+            Maybe later
+          </button>
         </div>
 
         <button
@@ -390,8 +375,6 @@ export function ProductCard({
   const price = getVariantPrice(selectedVariant, product.price);
   const discountPct = discountPercent(product.mrp, price);
   const hasDiscount = discountPct > 0;
-  const bestPrice = Number(product.bestPrice || 0);
-  const showBestPrice = bestPrice > 0 && bestPrice < price;
 
   /* ---------- images ---------- */
   const images: string[] = Array.isArray(product.images)
@@ -619,13 +602,6 @@ export function ProductCard({
 
           </div>
           <MemberPriceTag productId={product.id} price={price} />
-
-          {showBestPrice && (
-            <p className="text-[12px] font-medium text-[#E53935]">
-              Best Price:{' '}
-              <span className="font-semibold">{formatINR(bestPrice)}</span>
-            </p>
-          )}
 
           {/* Rating (live review data only) */}
           {!compact && (

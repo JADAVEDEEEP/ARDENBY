@@ -54,6 +54,7 @@ const adminLinks: NavItem[] = [
   { href: '/admin/products', label: 'Products', icon: Boxes },
   { href: '/admin/categories', label: 'Categories', icon: FolderTree },
   { href: '/admin/banners', label: 'Banners', icon: ImageIcon },
+  { href: '/admin/images', label: 'Product images', icon: ImageIcon },
   { href: '/admin/membership', label: 'Membership', icon: BadgeCheck },
   { href: '/admin/inventory', label: 'Inventory', icon: Warehouse },
   { href: '/admin/inventory/history', label: 'Stock history', icon: History },

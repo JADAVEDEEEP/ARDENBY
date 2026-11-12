@@ -34,6 +34,8 @@ type OrderDetail = {
   shipping_amount: number | string;
   discount_amount: number | string;
   tax_amount: number | string;
+  cod_fee?: number | string;
+  cod_fee_tax?: number | string;
   total_amount: number | string;
   coupon_code?: string | null;
   shipping_name: string;
@@ -174,7 +176,7 @@ function OrderDetailPageView() {
 
             {/* Return request: the button, the form and the return status all live here. */}
             <CancelSection orderId={order.id} onChanged={() => load()} />
-            <ReturnSection orderId={order.id} onChanged={() => load()} />
+            <ReturnSection orderId={order.id} isCod={String(order.payment_method).toLowerCase() === 'cod'} onChanged={() => load()} />
 
             <section className={PANEL}>
               <p className={LABEL}>Items</p>
@@ -239,6 +241,12 @@ function OrderDetailPageView() {
                   <dt>GST</dt>
                   <dd>{formatINR(Number(order.tax_amount))}</dd>
                 </div>
+                {Number(order.cod_fee) > 0 && (
+                  <div className="flex justify-between text-[#111111]/75">
+                    <dt>COD handling fee (incl. GST)</dt>
+                    <dd>{formatINR(Number(order.cod_fee) + Number(order.cod_fee_tax || 0))}</dd>
+                  </div>
+                )}
                 <div className="flex justify-between border-t border-[#E53935]/20 pt-3 font-serif text-lg">
                   <dt>Total</dt>
                   <dd className="text-[#E53935]">{formatINR(Number(order.total_amount))}</dd>

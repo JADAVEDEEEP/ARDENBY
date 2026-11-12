@@ -12,6 +12,8 @@ import { SectionHeader } from './ui/SectionHeader';
 
 interface ExploreCategoryProps {
   products: Product[];
+  /** Product ids already shown in New Arrivals: kept out of this grid so no row repeats. */
+  excludeIds?: ReadonlySet<string>;
   loading: boolean;
   error: string;
   onRetry: () => void;
@@ -21,42 +23,45 @@ const GRID_LIMIT = 8;
 
 const CHIPS: readonly ChipOption[] = [
   { id: 'all', label: 'All' },
-  { id: 'new-in', label: 'New In' },
+  { id: 'top-wear', label: 'Top Wear' },
+  { id: 'bottom-wear', label: 'Bottom Wear' },
+  { id: 'plus-size', label: 'Plus Size' },
   { id: 'best-seller', label: 'Best Seller' },
   { id: 'ardenby-premium', label: 'Kovenik Premium' },
-  { id: 'bottom-wear', label: 'Bottom Wear' },
   { id: 'epic-thread', label: 'Epic Thread' },
-  { id: 'plus-size', label: 'Plus Size' },
-  { id: 'supreme-edition', label: 'Supreme Edition' },
+  { id: 'the-print-club', label: 'The Print Club' },
 ];
 
 function matches(product: Product, filter: string): boolean {
   switch (filter) {
     case 'all':
       return true;
-    case 'new-in':
-      return product.newArrival;
     case 'best-seller':
       return product.bestSeller;
+    case 'top-wear':
+    case 'bottom-wear':
     case 'plus-size':
-      return product.sizes.includes('XXL');
+      // Categories live as slug tokens in the product's tags (a product has one collection).
+      return product.category === filter || product.tags.some((t) => t.toLowerCase() === filter);
     default:
       return product.category === filter;
   }
 }
 
-export function ExploreCategory({ products, loading, error, onRetry }: ExploreCategoryProps) {
+export function ExploreCategory({ products, excludeIds, loading, error, onRetry }: ExploreCategoryProps) {
   const [active, setActive] = useState('all');
 
-  const visible = useMemo(
-    () => products.filter((p) => matches(p, active)).slice(0, GRID_LIMIT),
-    [products, active]
-  );
+  const visible = useMemo(() => {
+    const matching = products.filter((p) => matches(p, active));
+    const fresh = excludeIds ? matching.filter((p) => !excludeIds.has(p.id)) : matching;
+    // Prefer products not already shown above; only fall back to repeats if a category would be near-empty.
+    return (fresh.length >= 4 || !excludeIds ? fresh : matching).slice(0, GRID_LIMIT);
+  }, [products, active, excludeIds]);
 
   return (
     <section aria-labelledby="home-explore" className="w-full bg-kv-bg py-10 md:py-14">
       <div className="kv-gutter mx-auto w-full max-w-[1600px]">
-        <SectionHeader id="home-explore" title="Explore our category" href="/shop" />
+        <SectionHeader id="home-explore" title="Shop by category" href="/shop" />
         <FilterChips options={CHIPS} active={active} onChange={setActive} label="Filter products" />
 
         {error && !loading ? (

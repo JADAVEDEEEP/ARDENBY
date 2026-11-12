@@ -31,6 +31,8 @@ export interface Order {
   shipping_amount: number;
   discount_amount: number;
   tax_amount: number;
+  cod_fee?: number;
+  cod_fee_tax?: number;
   total_amount: number;
   coupon_code?: string | null;
   created_at: string;

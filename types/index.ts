@@ -1,4 +1,4 @@
-export type ProductSize = 'S' | 'M' | 'L' | 'XL' | 'XXL';
+export type ProductSize = 'S' | 'M' | 'L' | 'XL' | 'XXL' | '3XL' | '4XL' | '5XL';
 
 export type ProductColor =
   | 'Black'

@@ -58,11 +58,14 @@ export function MembershipCard({
   userId,
   createdAt,
   compact = false,
+  isMember = true,
 }: {
   name: string;
   userId?: string;
   createdAt?: string | null;
   compact?: boolean;
+  /** Inner Circle branding shows only for an active membership. */
+  isMember?: boolean;
 }) {
   const since = memberSince(createdAt);
   const sinceText = since
@@ -71,13 +74,13 @@ export function MembershipCard({
   const size = compact ? 'w-full max-w-[320px] p-4' : 'w-[360px] p-6';
 
   return (
-    <div className="relative" aria-label="KOVENIK Inner Circle membership card">
+    <div className="relative" aria-label={isMember ? 'KOVENIK Inner Circle membership card' : 'KOVENIK account card'}>
       <div className={`kv-card-face ${size} flex min-h-[170px] flex-col justify-between gap-5`}>
         <div className="flex items-start justify-between">
           <span className="text-[20px] font-bold tracking-[0.04em] text-white" style={SERIF_STYLE}>
             KOVENIK
           </span>
-          <span className="text-[13px] font-bold tracking-[0.1em] text-[#EF3535]">INNER CIRCLE</span>
+          {isMember && <span className="text-[13px] font-bold tracking-[0.1em] text-[#EF3535]">INNER CIRCLE</span>}
         </div>
         <div className="kv-chip h-8 w-11" />
         <div className="flex items-end justify-between gap-3">
@@ -89,7 +92,7 @@ export function MembershipCard({
           </div>
           {sinceText && (
             <div className="shrink-0 text-right">
-              <p className="text-[12px] tracking-[0.08em] text-[#D1D1D1]">MEMBER SINCE</p>
+              <p className="text-[12px] tracking-[0.08em] text-[#D1D1D1]">{isMember ? 'MEMBER SINCE' : 'CUSTOMER SINCE'}</p>
               <p className="text-[16px] font-semibold text-white">{sinceText}</p>
             </div>
           )}

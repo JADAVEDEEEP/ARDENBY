@@ -31,6 +31,7 @@ import {
   ArrowLeft,
   ArrowRight,
   UploadCloud,
+  Lock,
 } from "lucide-react";
 
 type Variant = {
@@ -99,7 +100,6 @@ const emptyForm = {
   fabric_details: "",
   wash_care: "",
   tags: "",
-  inventory: "0",
   best_seller: false,
   new_arrival: false,
   trending: false,
@@ -109,15 +109,15 @@ const emptyForm = {
 
 /* shared UI tokens (presentation only) — KOVENIK black / white / red */
 const inputCls =
-  "w-full min-h-11 rounded-xl border border-[#E4E7EC] bg-[#F5F6F8] px-3.5 py-2.5 text-sm text-[#111111] outline-none transition duration-200  placeholder:text-[#626875] hover:border-[#E53935]/50 focus:border-[#E53935] focus:ring-4 focus:ring-[#E53935]/15";
+  "w-full min-h-11 rounded-xl border border-[#2E2E2E] bg-[#1A1A1A] px-3.5 py-2.5 text-sm text-white outline-none transition duration-200  placeholder:text-[#A0A0A0] hover:border-[#EF3838]/50 focus:border-[#EF3838] focus:ring-4 focus:ring-[#EF3838]/15";
 const labelCls =
-  "mb-1.5 block text-[12px] font-medium tracking-[0.08em] text-[#4A5160]";
+  "mb-1.5 block text-[12px] font-medium tracking-[0.08em] text-[#BDBDBD]";
 const primaryBtn =
-  "bg-[#E53935] text-white shadow-sm hover:bg-[#C62E2B]";
+  "bg-[#EF3838] text-white shadow-sm hover:bg-[#D62E2E]";
 const panelCls =
-  "rounded-xl border border-[#E4E7EC] bg-white shadow-[0_1px_2px_rgba(16,24,40,0.05)]";
+  "rounded-xl border border-[#2E2E2E] bg-[#111111] shadow-[0_8px_24px_rgba(0,0,0,0.25)]";
 const selectCls =
-  "h-11 w-full cursor-pointer appearance-none rounded-lg border border-[#E4E7EC] bg-white pl-3.5 pr-9 text-[14px] text-[#111111] outline-none transition duration-200  hover:border-[#E53935]/55 focus:border-[#E53935] focus:ring-4 focus:ring-[#E53935]/15";
+  "h-11 w-full cursor-pointer appearance-none rounded-lg border border-[#2E2E2E] bg-[#1A1A1A] pl-3.5 pr-9 text-[14px] text-white outline-none transition duration-200  hover:border-[#EF3838]/55 focus:border-[#EF3838] focus:ring-4 focus:ring-[#EF3838]/15";
 
 const tableGrid =
   "grid-cols-[40px_minmax(240px,2.3fr)_minmax(90px,.9fr)_minmax(100px,.9fr)_minmax(64px,.6fr)_minmax(90px,.9fr)_minmax(110px,1fr)_92px]";
@@ -250,7 +250,6 @@ export default function AdminProductsPage() {
       fabric_details: product.fabric_details || "",
       wash_care: product.wash_care || "",
       tags: product.tags || "",
-      inventory: String(product.inventory ?? 0),
       best_seller: !!product.best_seller,
       new_arrival: !!product.new_arrival,
       trending: !!product.trending,
@@ -291,6 +290,16 @@ export default function AdminProductsPage() {
         return;
       }
 
+      if (form.variants.some((v) => !v.size.trim() || !v.color.trim())) {
+        pushToast("error", "Every variant needs a size and a colour");
+        return;
+      }
+
+      if (duplicateVariantRows.size > 0) {
+        pushToast("error", "Two variants share the same size and colour");
+        return;
+      }
+
       setSaving(true);
 
       const payload = new FormData();
@@ -322,8 +331,6 @@ export default function AdminProductsPage() {
       payload.append("fabric_details", form.fabric_details);
       payload.append("wash_care", form.wash_care);
       payload.append("tags", form.tags);
-
-      payload.append("inventory", form.inventory || "0");
 
       payload.append("best_seller", String(form.best_seller));
       payload.append("new_arrival", String(form.new_arrival));
@@ -429,6 +436,22 @@ export default function AdminProductsPage() {
     }));
   };
 
+  // Quick-add: new row with the given size, reusing the last colour used.
+  const addVariantSize = (size: string) => {
+    setForm((prev) => ({
+      ...prev,
+      variants: [
+        ...prev.variants,
+        {
+          size,
+          color: prev.variants[prev.variants.length - 1]?.color || "",
+          inventory: 0,
+          sku: "",
+        },
+      ],
+    }));
+  };
+
   const removeVariant = (index: number) => {
     setForm((prev) => ({
       ...prev,
@@ -495,7 +518,11 @@ export default function AdminProductsPage() {
     return () => window.removeEventListener("keydown", onKey);
   }, []);
 
-  const stockOf = (p: Product) => Number(p.inventory || 0);
+  // Total stock = sum of variant stock (the API sends the same figure).
+  const stockOf = (p: Product) =>
+    p.variants && p.variants.length > 0
+      ? p.variants.reduce((n, v) => n + Math.max(0, Number(v.inventory) || 0), 0)
+      : Number(p.inventory || 0);
   const priceOf = (p: Product) => Number(p.best_price || p.price || 0);
   const inr = (n: number) => n.toLocaleString("en-IN");
   const isActive = (p: Product) =>
@@ -617,13 +644,13 @@ export default function AdminProductsPage() {
     return (
       <div>
         <div className="flex flex-wrap items-baseline gap-x-2">
-          <span className="text-[15px] font-semibold tabular-nums text-[#111111]">₹{inr(priceOf(p))}</span>
+          <span className="text-[15px] font-semibold tabular-nums text-white">₹{inr(priceOf(p))}</span>
           {p.mrp && p.mrp > priceOf(p) ? (
-            <span className="text-[12px] text-[#626875] line-through tabular-nums">₹{inr(p.mrp)}</span>
+            <span className="text-[12px] text-[#BDBDBD] line-through tabular-nums">₹{inr(p.mrp)}</span>
           ) : null}
         </div>
         {off > 0 && (
-          <span className="mt-0.5 inline-block text-[12px] font-medium text-[#E53935]">
+          <span className="mt-0.5 inline-block text-[12px] font-medium text-[#EF3838]">
             {off}% off
           </span>
         )}
@@ -632,10 +659,10 @@ export default function AdminProductsPage() {
   };
 
   const stockClr = (stock: number) =>
-    stock === 0 ? "text-[#B42318]" : stock <= 5 ? "text-[#E53935]" : "text-[#0F6446]";
+    stock === 0 ? "text-[#EF3838]" : stock <= 5 ? "text-[#EF3838]" : "text-[#3DDC84]";
 
   const thumb = (p: Product, cls: string) => (
-    <div className={`shrink-0 overflow-hidden rounded-lg border border-[#E4E7EC] bg-white ${cls}`}>
+    <div className={`shrink-0 overflow-hidden rounded-lg border border-[#2E2E2E] bg-[#1A1A1A] ${cls}`}>
       {p.images?.[0]?.image_url ? (
         <img
           src={p.images[0].image_url}
@@ -643,7 +670,7 @@ export default function AdminProductsPage() {
           className="h-full w-full object-cover"
         />
       ) : (
-        <div className="flex h-full items-center justify-center text-[#626875]">
+        <div className="flex h-full items-center justify-center text-[#BDBDBD]">
           <ImageOff className="h-5 w-5" />
         </div>
       )}
@@ -669,14 +696,55 @@ export default function AdminProductsPage() {
 
   /* ---- presentation-only helpers ---- */
   const formSections = [
-    { id: "kv-basic", label: "Basic Info", hint: "Name, category, description" },
-    { id: "kv-images", label: "Images", hint: "Upload product images" },
-    { id: "kv-pricing", label: "Pricing", hint: "Price, MRP and best price" },
-    { id: "kv-inventory", label: "Inventory", hint: "Stock and variants" },
-    { id: "kv-details", label: "Details & Tags", hint: "Fabric, care and flags" },
+    { id: "kv-basic", label: "Basic Info", hint: "Name, category, description", icon: Package },
+    { id: "kv-images", label: "Images", hint: "Upload product images", icon: UploadCloud },
+    { id: "kv-pricing", label: "Pricing", hint: "Price, MRP and best price", icon: Tag },
+    { id: "kv-inventory", label: "Inventory", hint: "Stock and variants", icon: Layers3 },
+    { id: "kv-details", label: "Details & Tags", hint: "Fabric, care and flags", icon: LayoutGrid },
   ];
-  const jumpTo = (id: string) =>
+
+  // Product stock is never typed in: it is the sum of the variant stocks
+  // (the server recalculates it on every save; this is the live preview).
+  const formTotalStock = form.variants.reduce(
+    (sum, v) => sum + Math.max(0, Math.floor(Number(v.inventory) || 0)),
+    0
+  );
+  const stockTone = (n: number) => (n <= 0 ? "out" : n <= 5 ? "low" : "ok");
+
+  const duplicateVariantRows = (() => {
+    const seen = new Set<string>();
+    const dup = new Set<number>();
+    form.variants.forEach((v, i) => {
+      const size = v.size.trim().toLowerCase();
+      const color = v.color.trim().toLowerCase();
+      if (!size || !color) return;
+      const key = `${size}|${color}`;
+      if (seen.has(key)) dup.add(i);
+      else seen.add(key);
+    });
+    return dup;
+  })();
+
+  const [activeSection, setActiveSection] = useState("kv-basic");
+  const modalBodyRef = useRef<HTMLDivElement>(null);
+  const onModalScroll = () => {
+    const body = modalBodyRef.current;
+    if (!body) return;
+    const top = body.getBoundingClientRect().top + 40;
+    let current = formSections[0].id;
+    for (const sec of formSections) {
+      const el = document.getElementById(sec.id);
+      if (el && el.getBoundingClientRect().top <= top) current = sec.id;
+    }
+    if (body.scrollTop + body.clientHeight >= body.scrollHeight - 4) {
+      current = formSections[formSections.length - 1].id;
+    }
+    setActiveSection(current);
+  };
+  const jumpTo = (id: string) => {
+    setActiveSection(id);
     document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" });
+  };
 
   const statusBadge = (p: Product, small = false) => {
     const active = isActive(p);
@@ -686,8 +754,8 @@ export default function AdminProductsPage() {
           small ? "px-2.5 py-1 text-[12px]" : "px-3 py-1 text-[12px]"
         } ${
           active
-            ? "border-[#D0D5DD] bg-[#E4E7EC]/70 text-[#4A5160]"
-            : "border-[#D92D20]/30 bg-[#D92D20]/10 text-[#B42318]"
+            ? "border-[#3DDC84]/40 bg-[#3DDC84]/10 text-[#3DDC84]"
+            : "border-[#D92D20]/30 bg-[#D92D20]/10 text-[#EF3838]"
         }`}
       >
         <span className={`h-1.5 w-1.5 rounded-full ${active ? "bg-[#7BD18F]" : "bg-[#E58C7B]"}`} />
@@ -705,7 +773,7 @@ export default function AdminProductsPage() {
           e.stopPropagation();
           setMenuId(menuId === p.id ? null : p.id);
         }}
-        className="flex h-10 w-9 items-center justify-center rounded-lg border border-[#E4E7EC] bg-white text-[#4A5160] outline-none transition hover:border-[#D0D5DD] hover:text-[#111111] focus-visible:ring-2 focus-visible:ring-[#E53935]"
+        className="flex h-10 w-9 items-center justify-center rounded-lg border border-[#2E2E2E] bg-[#1A1A1A] text-[#BDBDBD] outline-none transition hover:border-[#3A3A3A] hover:text-white focus-visible:ring-2 focus-visible:ring-[#EF3838]"
       >
         <MoreVertical className="h-4 w-4" />
       </button>
@@ -719,7 +787,7 @@ export default function AdminProductsPage() {
             className="fixed inset-0 z-30 cursor-default"
           />
           <div
-            className={`absolute right-0 z-40 w-44 overflow-hidden rounded-lg border border-[#E53935]/35 bg-white py-1 shadow-[0_8px_24px_rgba(16,24,40,0.12)] ${
+            className={`absolute right-0 z-40 w-44 overflow-hidden rounded-lg border border-[#EF3838]/35 bg-[#1A1A1A] py-1 shadow-[0_8px_24px_rgba(16,24,40,0.12)] ${
               up ? "bottom-full mb-1.5" : "top-full mt-1.5"
             }`}
           >
@@ -729,9 +797,9 @@ export default function AdminProductsPage() {
                 setMenuId(null);
                 openPreview(p);
               }}
-              className="flex w-full items-center gap-2.5 px-3.5 py-2.5 text-left text-xs text-[#111111] transition hover:bg-[#E53935]/10"
+              className="flex w-full items-center gap-2.5 px-3.5 py-2.5 text-left text-xs text-white transition hover:bg-[#EF3838]/10"
             >
-              <Eye className="h-3.5 w-3.5 text-[#E53935]" />
+              <Eye className="h-3.5 w-3.5 text-[#EF3838]" />
               View details
             </button>
             <button
@@ -740,7 +808,7 @@ export default function AdminProductsPage() {
                 setMenuId(null);
                 deleteProduct(p.id);
               }}
-              className="flex w-full items-center gap-2.5 px-3.5 py-2.5 text-left text-xs text-[#B42318] transition hover:bg-[#D92D20]/8"
+              className="flex w-full items-center gap-2.5 px-3.5 py-2.5 text-left text-xs text-[#EF3838] transition hover:bg-[#D92D20]/8"
             >
               <Trash2 className="h-3.5 w-3.5" />
               Delete product
@@ -757,18 +825,150 @@ export default function AdminProductsPage() {
       onClick={() => openEdit(p)}
       aria-label={`Edit ${p.name}`}
       title="Edit"
-      className="flex h-10 w-10 items-center justify-center rounded-lg border border-[#E53935]/55 bg-transparent text-[#E53935] outline-none transition hover:bg-[#E53935] hover:text-white focus-visible:ring-2 focus-visible:ring-[#E53935]"
+      className="flex h-10 w-10 items-center justify-center rounded-lg border border-[#EF3838]/55 bg-transparent text-[#EF3838] outline-none transition hover:bg-[#EF3838] hover:text-white focus-visible:ring-2 focus-visible:ring-[#EF3838]"
     >
       <Pencil className="h-4 w-4" />
     </button>
   );
 
   return (
-    <div className="kv-scope mx-auto w-full max-w-7xl overflow-x-hidden pb-10 text-[#111111]">
+    <div className="kv-scope mx-auto w-full max-w-7xl overflow-x-hidden pb-10 text-white">
       <style>{`
         @keyframes kv-pop { from { opacity: 0; transform: translateY(14px) scale(.985); } to { opacity: 1; transform: none; } }
         .kv-pop { animation: kv-pop .35s cubic-bezier(.2,.7,.2,1) both; }
         @media (prefers-reduced-motion: reduce) { .kv-pop { animation: none; } }
+        /* ---------- Products page: readable dark surfaces ---------- */
+        .kv-scope input:not([type="checkbox"]):not([type="file"]), .kv-scope select, .kv-scope textarea { background: #111111 !important; color: #FFFFFF !important; border-color: #3A3A3A !important; }
+        .kv-scope select option { background: #1A1A1A; color: #FFFFFF; }
+        .kv-scope input::placeholder, .kv-scope textarea::placeholder { color: #A0A0A0 !important; opacity: 1; }
+        .kv-scope input[type="checkbox"] { accent-color: #EF3838; width: 18px; height: 18px; cursor: pointer; }
+        /* ---------- KOVENIK product modal ---------- */
+        .kvm-overlay { position: fixed; inset: 0; z-index: 80; display: flex; align-items: flex-end; justify-content: center; background: rgba(0,0,0,.78); backdrop-filter: blur(4px); }
+        .kvm-dialog { display: flex; flex-direction: column; width: 100%; height: 100dvh; overflow: hidden; background: #111111; border: 1px solid #2A2C32; color: #F5F5F5; box-shadow: 0 24px 64px rgba(0,0,0,.6); }
+        @media (min-width: 640px) { .kvm-overlay { align-items: center; padding: 24px; } .kvm-dialog { height: auto; max-height: 92vh; max-width: 1040px; border-radius: 18px; } }
+        .kvm-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; padding: 20px 24px 18px; border-bottom: 1px solid #23252A; background: linear-gradient(180deg,#1A1A1A,#111111); position: relative; }
+        .kvm-header::before { content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 3px; background: #EF3838; }
+        .kvm-header-text { min-width: 0; }
+        .kvm-eyebrow { display: block; font-size: 11px; font-weight: 700; letter-spacing: .22em; text-transform: uppercase; color: #EF3838; }
+        .kvm-title { margin: 4px 0 0; font-size: 22px; line-height: 1.2; font-weight: 700; color: #fff !important; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .kvm-sub { margin: 3px 0 0; font-size: 13px; color: #BDBDBD; }
+        .kvm-close { flex-shrink: 0; width: 38px; height: 38px; display: inline-flex; align-items: center; justify-content: center; border-radius: 999px; border: 1px solid #33363D; background: transparent; color: #F3F3F3; cursor: pointer; transition: .2s; }
+        .kvm-close:hover { border-color: #EF3838; color: #fff; background: rgba(229,57,53,.15); }
+        .kvm-layout { display: flex; flex-direction: column; flex: 1; min-height: 0; }
+        @media (min-width: 768px) { .kvm-layout { display: grid; grid-template-columns: 252px 1fr; } }
+        /* navigation */
+        .kvm-nav { display: flex; gap: 8px; overflow-x: auto; padding: 10px 16px; border-bottom: 1px solid #23252A; background: #111111; }
+        .kvm-step { flex-shrink: 0; display: flex; align-items: center; gap: 10px; padding: 8px 12px; border-radius: 12px; border: 1px solid transparent; background: transparent; color: #BDBDBD; text-align: left; cursor: pointer; transition: .2s; }
+        .kvm-step:hover { background: #17181C; border-color: #2A2C32; }
+        .kvm-step[data-active="true"] { background: #1A1213; border-color: rgba(229,57,53,.55); color: #fff; }
+        .kvm-step-num { width: 26px; height: 26px; flex-shrink: 0; display: inline-flex; align-items: center; justify-content: center; border-radius: 999px; border: 1px solid #3A3D45; font-size: 12px; font-weight: 700; color: #F3F3F3; transition: .2s; }
+        .kvm-step[data-active="true"] .kvm-step-num { background: #EF3838; border-color: #EF3838; color: #fff; }
+        .kvm-step-text { display: flex; flex-direction: column; min-width: 0; }
+        .kvm-step-label { font-size: 13px; font-weight: 600; color: inherit; white-space: nowrap; }
+        .kvm-step-hint, .kvm-step-icon { display: none; }
+        .kvm-nav-stock { display: none; }
+        @media (min-width: 768px) {
+          .kvm-nav { flex-direction: column; gap: 6px; overflow: auto; padding: 16px 14px; border-bottom: 0; border-right: 1px solid #23252A; }
+          .kvm-step { padding: 11px 12px; }
+          .kvm-step-text { flex: 1; }
+          .kvm-step-hint { display: block; font-size: 12px; color: #A0A0A0; margin-top: 1px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+          .kvm-step-icon { display: block; color: #5B5F69; }
+          .kvm-step[data-active="true"] .kvm-step-icon { color: #EF3838; }
+          .kvm-nav-stock { display: flex; flex-direction: column; gap: 2px; margin-top: auto; padding: 14px; border-radius: 14px; border: 1px solid #2A2C32; background: #1A1A1A; }
+          .kvm-nav-stock-label { font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: #A0A0A0; font-weight: 600; }
+          .kvm-nav-stock-value { font-size: 30px; font-weight: 800; line-height: 1.1; color: #fff; font-variant-numeric: tabular-nums; }
+          .kvm-nav-stock-note { font-size: 12px; color: #A0A0A0; }
+        }
+        [data-tone="low"] { color: #FF8A65; } [data-tone="out"] { color: #FF5A55; } [data-tone="ok"] { color: #fff; }
+        /* body + cards */
+        .kvm-body { flex: 1; min-height: 0; overflow-y: auto; padding: 16px; background: #111111; scroll-behavior: smooth; }
+        @media (min-width: 640px) { .kvm-body { padding: 24px; } }
+        .kvm-card { padding: 20px; border: 1px solid #23252A; border-radius: 16px; background: #1A1A1A; }
+        .kvm-card + .kvm-card { margin-top: 16px; }
+        .kvm-card-head { display: flex; align-items: flex-start; gap: 12px; margin-bottom: 18px; }
+        .kvm-card-num { width: 28px; height: 28px; flex-shrink: 0; display: inline-flex; align-items: center; justify-content: center; border-radius: 8px; background: rgba(229,57,53,.14); border: 1px solid rgba(229,57,53,.4); font-size: 13px; font-weight: 700; color: #EF3838; }
+        .kvm-card-title { margin: 0; font-size: 17px; font-weight: 700; color: #fff !important; }
+        .kvm-card-desc { margin: 2px 0 0; font-size: 13px; color: #BDBDBD; }
+        .kvm-grid { display: grid; gap: 16px; grid-template-columns: 1fr; }
+        @media (min-width: 640px) { .kvm-grid-2 { grid-template-columns: 1fr 1fr; } .kvm-grid-3 { grid-template-columns: repeat(3,1fr); } .kvm-span-2 { grid-column: span 2; } }
+        .kvm-mt { margin-top: 16px; }
+        .kvm-field { min-width: 0; }
+        .kvm-label { display: block; margin-bottom: 6px; font-size: 11px; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; color: #BDBDBD !important; }
+        .kv-scope .kvm-input { width: 100%; min-height: 44px; padding: 10px 14px; border-radius: 10px; border: 1px solid #2E3037 !important; background: #111111 !important; color: #fff !important; font-size: 14px; outline: none; transition: border-color .2s, box-shadow .2s; box-sizing: border-box; }
+        .kv-scope .kvm-input::placeholder { color: #5B5F69 !important; }
+        .kv-scope .kvm-input:hover { border-color: #4A4D56 !important; }
+        .kv-scope .kvm-input:focus { border-color: #EF3838 !important; box-shadow: 0 0 0 3px rgba(229,57,53,.18); }
+        .kvm-textarea { resize: vertical; min-height: 110px; line-height: 1.5; }
+        .kv-scope .kvm-select { appearance: none; padding-right: 38px; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%239A9EA8' stroke-width='3'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 14px center; cursor: pointer; }
+        .kvm-hint { margin: 0; font-size: 12.5px; color: #BDBDBD; }
+        .kvm-h4 { margin: 0; font-size: 15px; font-weight: 700; color: #fff !important; }
+        /* images */
+        .kvm-drop { display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 28px 16px; text-align: center; border: 1.5px dashed #3A3D45; border-radius: 14px; background: #111111; color: #EF3838; cursor: pointer; transition: .2s; }
+        .kvm-drop:hover { border-color: #EF3838; background: rgba(229,57,53,.05); }
+        .kvm-drop-title { font-size: 14px; font-weight: 600; color: #fff; }
+        .kvm-drop-note { font-size: 12.5px; color: #BDBDBD; }
+        .kvm-thumbs { display: grid; gap: 10px; grid-template-columns: repeat(3,1fr); margin-top: 10px; }
+        @media (min-width: 640px) { .kvm-thumbs { grid-template-columns: repeat(5,1fr); } }
+        .kvm-thumb { position: relative; overflow: hidden; border-radius: 10px; border: 1px solid #2A2C32; background: #111111; }
+        .kvm-thumb img { display: block; width: 100%; aspect-ratio: 1; object-fit: cover; }
+        .kvm-thumb-name { margin: 0; padding: 5px 8px; font-size: 11px; color: #BDBDBD; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .kvm-thumb-x { position: absolute; top: 6px; right: 6px; width: 24px; height: 24px; display: inline-flex; align-items: center; justify-content: center; border-radius: 999px; border: 1px solid rgba(255,255,255,.2); background: rgba(0,0,0,.75); color: #fff; cursor: pointer; }
+        .kvm-thumb-x:hover { background: #EF3838; }
+        .kvm-thumb-cover { position: absolute; top: 6px; left: 6px; padding: 2px 8px; border-radius: 999px; background: #EF3838; color: #fff; font-size: 10px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; }
+        /* stock summary + variants */
+        .kvm-total { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 14px 16px; border-radius: 12px; border: 1px solid #2A2C32; background: #111111; }
+        .kvm-total-label { display: block; font-size: 11px; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; color: #BDBDBD; }
+        .kvm-total-note { display: inline-flex; align-items: center; gap: 5px; margin-top: 3px; font-size: 12.5px; color: #A0A0A0; }
+        .kvm-total-value { font-size: 32px; font-weight: 800; line-height: 1; color: #fff; font-variant-numeric: tabular-nums; }
+        .kvm-total-value small { margin-left: 6px; font-size: 12px; font-weight: 600; color: #A0A0A0; }
+        .kvm-variants { margin-top: 16px; padding: 16px; border-radius: 14px; border: 1px solid #23252A; background: #111111; }
+        .kvm-variants-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 14px; }
+        .kvm-vcols { display: none; }
+        .kvm-vlist { display: flex; flex-direction: column; gap: 10px; }
+        .kvm-vrow { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; padding: 12px; border-radius: 12px; border: 1px solid #23252A; background: #1A1A1A; }
+        .kvm-vrow[data-dup="true"] { border-color: rgba(229,57,53,.6); }
+        .kvm-vcell { display: block; min-width: 0; }
+        .kvm-vlabel { display: block; margin-bottom: 4px; font-size: 10.5px; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; color: #A0A0A0; }
+        .kvm-vdel { grid-column: span 2; min-height: 40px; display: inline-flex; align-items: center; justify-content: center; border-radius: 10px; border: 1px solid #3A2022; background: transparent; color: #FF6B66; cursor: pointer; transition: .2s; }
+        .kvm-vdel:hover { background: rgba(229,57,53,.15); border-color: #EF3838; }
+        .kvm-vwarn { grid-column: 1 / -1; margin: 0; font-size: 12px; color: #FF6B66; }
+        .kv-scope .kvm-stock { font-weight: 700; font-variant-numeric: tabular-nums; }
+        .kv-scope .kvm-stock[data-tone="low"] { color: #FF8A65 !important; } .kv-scope .kvm-stock[data-tone="out"] { color: #FF5A55 !important; }
+        @media (min-width: 768px) {
+          .kvm-vcols, .kvm-vrow { grid-template-columns: 1fr 1fr 110px 1.1fr 44px; gap: 10px; }
+          .kvm-vcols { display: grid; padding: 0 12px 8px; font-size: 10.5px; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; color: #A0A0A0; }
+          .kvm-vrow { align-items: center; padding: 10px 12px; }
+          .kvm-vlabel { display: none; }
+          .kvm-vdel { grid-column: auto; width: 44px; min-height: 44px; }
+        }
+        .kvm-empty { display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 26px 16px; text-align: center; border: 1px dashed #33363D; border-radius: 12px; color: #A0A0A0; }
+        .kvm-empty p { margin: 4px 0 0; font-size: 14px; font-weight: 600; color: #fff; } .kvm-empty span { font-size: 12.5px; }
+        .kvm-quick { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-top: 14px; font-size: 12px; color: #A0A0A0; }
+        .kvm-chip { padding: 5px 12px; border-radius: 999px; border: 1px solid #33363D; background: transparent; color: #F3F3F3; font-size: 12px; font-weight: 600; cursor: pointer; transition: .2s; }
+        .kvm-chip:hover { border-color: #EF3838; color: #fff; background: rgba(229,57,53,.12); }
+        /* flags */
+        .kvm-flags { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        @media (min-width: 640px) { .kvm-flags { grid-template-columns: repeat(4,1fr); } }
+        .kvm-toggle { position: relative; display: flex; align-items: center; gap: 10px; min-height: 44px; padding: 0 14px; border-radius: 10px; border: 1px solid #2E3037; background: #111111; color: #F3F3F3; font-size: 13px; font-weight: 600; cursor: pointer; transition: .2s; }
+        .kvm-toggle input { position: absolute; opacity: 0; pointer-events: none; }
+        .kvm-toggle:hover { border-color: #4A4D56; }
+        .kvm-toggle-box { width: 18px; height: 18px; flex-shrink: 0; display: inline-flex; align-items: center; justify-content: center; border-radius: 5px; border: 1.5px solid #4A4D56; color: #fff; }
+        .kvm-toggle[data-on="true"] { border-color: #EF3838; background: rgba(229,57,53,.1); color: #fff; }
+        .kvm-toggle[data-on="true"] .kvm-toggle-box { background: #EF3838; border-color: #EF3838; }
+        .kvm-toggle input:focus-visible + .kvm-toggle-box { box-shadow: 0 0 0 3px rgba(229,57,53,.3); }
+        /* footer + buttons */
+        .kvm-footer { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 14px 16px calc(14px + env(safe-area-inset-bottom)); border-top: 1px solid #23252A; background: #111111; }
+        @media (min-width: 640px) { .kvm-footer { padding: 14px 24px; } }
+        .kvm-footer-stock { display: none; align-items: baseline; gap: 8px; font-size: 12px; letter-spacing: .1em; text-transform: uppercase; color: #A0A0A0; }
+        .kvm-footer-stock strong { font-size: 18px; letter-spacing: 0; color: #fff; font-variant-numeric: tabular-nums; }
+        @media (max-width: 767px) { .kvm-footer-stock { display: flex; } }
+        .kvm-footer-actions { display: flex; gap: 10px; margin-left: auto; }
+        .kvm-btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 44px; padding: 0 24px; border-radius: 10px; font-size: 14px; font-weight: 700; cursor: pointer; transition: .2s; border: 1px solid transparent; }
+        .kvm-btn:disabled { opacity: .55; cursor: not-allowed; }
+        .kv-scope .kvm-btn-red { background: #EF3838 !important; color: #fff !important; } .kv-scope .kvm-btn-red:hover:not(:disabled) { background: #D62E2E !important; }
+        .kv-scope .kvm-btn-ghost { background: transparent !important; border-color: #3A3D45; color: #E5E5E5 !important; } .kv-scope .kvm-btn-ghost:hover:not(:disabled) { border-color: #fff; }
+        .kvm-btn-sm { min-height: 36px; padding: 0 14px; font-size: 12.5px; }
+        .kvm-dialog button:focus-visible { outline: 2px solid #EF3838; outline-offset: 2px; }
         .kv-scope ::selection { background: rgba(229, 57, 53,.3); color: #fff; }
         .kv-scope * { scrollbar-width: thin; scrollbar-color: #4C4C4C transparent; }
         .kv-scope *::-webkit-scrollbar { width: 7px; height: 7px; }
@@ -783,10 +983,10 @@ export default function AdminProductsPage() {
       {/* PAGE HEADER */}
       <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
         <div>
-          <h2 className="text-3xl font-semibold leading-tight tracking-tight text-[#111111] sm:text-4xl">
+          <h2 style={{ color: "#111111" }} className="text-3xl font-bold leading-tight tracking-tight sm:text-4xl">
             Product Management
           </h2>
-          <p className="mt-1.5 text-sm text-[#4A5160]">
+          <p style={{ color: "#4D4D4D" }} className="mt-1.5 text-sm">
             Manage your products, variants, inventory and more.
           </p>
         </div>
@@ -794,7 +994,7 @@ export default function AdminProductsPage() {
         <button
           type="button"
           onClick={openAdd}
-          className={`flex h-11 w-full items-center justify-center gap-2 rounded-lg px-5 text-[14px] font-semibold outline-none transition active:scale-[.98] focus-visible:ring-2 focus-visible:ring-[#E53935] sm:w-auto ${primaryBtn}`}
+          className={`flex h-11 w-full items-center justify-center gap-2 rounded-lg px-5 text-[14px] font-semibold outline-none transition active:scale-[.98] focus-visible:ring-2 focus-visible:ring-[#EF3838] sm:w-auto ${primaryBtn}`}
         >
           <Plus className="h-4 w-4" />
           Add Product
@@ -808,17 +1008,17 @@ export default function AdminProductsPage() {
           return (
             <div
               key={s.label}
-              className={`${panelCls} flex items-center gap-3 p-3.5 transition-colors duration-300 hover:border-[#D0D5DD] sm:gap-4 sm:p-4`}
+              className={`${panelCls} flex items-center gap-3 p-3.5 transition-colors duration-300 hover:border-[#3A3A3A] sm:gap-4 sm:p-4`}
             >
-              <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg border border-[#D0D5DD] bg-[#F2F4F7] text-[#E53935] sm:h-12 sm:w-12">
+              <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg border border-[#3A3A3A] bg-[#1A1A1A] text-[#EF3838] sm:h-12 sm:w-12">
                 <Icon className="h-5 w-5" />
               </span>
               <div className="min-w-0">
-                <p className="truncate text-[12px] font-medium text-[#111111]">{s.label}</p>
-                <p className="mt-0.5 text-3xl font-semibold leading-none tabular-nums text-[#111111]">
+                <p className="truncate text-[12px] font-medium text-white">{s.label}</p>
+                <p className="mt-0.5 text-3xl font-semibold leading-none tabular-nums text-white">
                   {loading && products.length === 0 ? "—" : s.value}
                 </p>
-                <p className="mt-1 hidden truncate text-[12px] text-[#4A5160] sm:block">{s.sub}</p>
+                <p className="mt-1 hidden truncate text-[12px] text-[#BDBDBD] sm:block">{s.sub}</p>
               </div>
             </div>
           );
@@ -828,7 +1028,7 @@ export default function AdminProductsPage() {
       {/* TOOLBAR */}
       <div className="mt-5 flex gap-2 lg:hidden">
         <div className="relative min-w-0 flex-1">
-          <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[#E53935]" />
+          <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[#EF3838]" />
           <input
             value={search}
             onChange={(e) => setSearch(e.target.value)}
@@ -836,7 +1036,7 @@ export default function AdminProductsPage() {
               if (e.key === "Enter") loadProducts();
             }}
             placeholder="Search products..."
-            className="h-11 w-full rounded-lg border border-[#E4E7EC] bg-white pl-9 pr-3 text-[14px] text-[#111111] outline-none transition placeholder:text-[#626875] hover:border-[#E53935]/55 focus:border-[#E53935] focus:ring-4 focus:ring-[#E53935]/15"
+            className="h-11 w-full rounded-lg border border-[#2E2E2E] bg-[#1A1A1A] pl-9 pr-3 text-[14px] text-white outline-none transition placeholder:text-[#A0A0A0] hover:border-[#EF3838]/55 focus:border-[#EF3838] focus:ring-4 focus:ring-[#EF3838]/15"
           />
         </div>
         <button
@@ -851,7 +1051,7 @@ export default function AdminProductsPage() {
 
       <div className="mt-5 hidden items-center gap-3 lg:flex">
         <div className="relative min-w-0 flex-1">
-          <Search className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-[#E53935]" />
+          <Search className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-[#EF3838]" />
           <input
             ref={searchRef}
             value={search}
@@ -860,9 +1060,9 @@ export default function AdminProductsPage() {
               if (e.key === "Enter") loadProducts();
             }}
             placeholder="Search products by name, SKU..."
-            className="h-11 w-full rounded-lg border border-[#E4E7EC] bg-white pl-10 pr-10 text-[14px] text-[#111111] outline-none transition placeholder:text-[#626875] hover:border-[#E53935]/55 focus:border-[#E53935] focus:ring-4 focus:ring-[#E53935]/15"
+            className="h-11 w-full rounded-lg border border-[#2E2E2E] bg-[#1A1A1A] pl-10 pr-10 text-[14px] text-white outline-none transition placeholder:text-[#A0A0A0] hover:border-[#EF3838]/55 focus:border-[#EF3838] focus:ring-4 focus:ring-[#EF3838]/15"
           />
-          <kbd className="pointer-events-none absolute right-3 top-1/2 flex h-6 w-6 -translate-y-1/2 items-center justify-center rounded border border-[#E4E7EC] text-[12px] text-[#626875]">
+          <kbd className="pointer-events-none absolute right-3 top-1/2 flex h-6 w-6 -translate-y-1/2 items-center justify-center rounded border border-[#2E2E2E] text-[12px] text-[#BDBDBD]">
             /
           </kbd>
         </div>
@@ -885,7 +1085,7 @@ export default function AdminProductsPage() {
               </option>
             ))}
           </select>
-          <ChevronDown className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[#E53935]" />
+          <ChevronDown className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[#EF3838]" />
         </div>
 
         <div className="relative w-[150px] shrink-0">
@@ -905,7 +1105,7 @@ export default function AdminProductsPage() {
             <option value="low">Low Stock</option>
             <option value="out">Out of Stock</option>
           </select>
-          <ChevronDown className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[#E53935]" />
+          <ChevronDown className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[#EF3838]" />
         </div>
 
         <div className="relative w-[150px] shrink-0">
@@ -925,7 +1125,7 @@ export default function AdminProductsPage() {
             <option value="price_desc">Price: high to low</option>
             <option value="stock_asc">Stock: low to high</option>
           </select>
-          <ChevronDown className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[#E53935]" />
+          <ChevronDown className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[#EF3838]" />
         </div>
 
         <button
@@ -942,39 +1142,39 @@ export default function AdminProductsPage() {
       <div className={`${panelCls} mt-4 overflow-hidden`}>
         {/* active filter chips + selection */}
         {(chips.length > 0 || selected.length > 0) && (
-          <div className="flex flex-wrap items-center gap-2 border-b border-[#E4E7EC] px-3 py-2.5 sm:px-4">
+          <div className="flex flex-wrap items-center gap-2 border-b border-[#2E2E2E] px-3 py-2.5 sm:px-4">
             {chips.map((chip) => (
               <button
                 key={chip.label}
                 type="button"
                 onClick={chip.clear}
-                className="inline-flex items-center gap-1.5 rounded-full border border-[#D0D5DD] bg-[#E53935]/10 px-3 py-1 text-[12px] text-[#E53935] transition hover:bg-[#E53935]/20"
+                className="inline-flex items-center gap-1.5 rounded-full border border-[#3A3A3A] bg-[#EF3838]/10 px-3 py-1 text-[12px] text-[#EF3838] transition hover:bg-[#EF3838]/20"
               >
                 {chip.label}
                 <X className="h-3 w-3" />
               </button>
             ))}
             {selected.length > 0 && (
-              <span className="ml-auto text-[12px] text-[#4A5160]">{selected.length} selected</span>
+              <span className="ml-auto text-[12px] text-[#BDBDBD]">{selected.length} selected</span>
             )}
           </div>
         )}
 
         {/* loading / empty */}
         {loading && products.length === 0 && (
-          <div className="flex items-center justify-center gap-2 py-16 text-sm text-[#4A5160]">
-            <Loader2 className="h-4 w-4 animate-spin text-[#E53935]" />
+          <div className="flex items-center justify-center gap-2 py-16 text-sm text-[#BDBDBD]">
+            <Loader2 className="h-4 w-4 animate-spin text-[#EF3838]" />
             Loading products...
           </div>
         )}
 
         {!loading && filtered.length === 0 && (
           <div className="flex flex-col items-center justify-center gap-3 px-4 py-16 text-center">
-            <span className="flex h-14 w-14 items-center justify-center rounded-xl border border-[#D0D5DD] bg-[#F2F4F7] text-[#E53935]">
+            <span className="flex h-14 w-14 items-center justify-center rounded-xl border border-[#3A3A3A] bg-[#1A1A1A] text-[#EF3838]">
               <PackageOpen className="h-6 w-6" />
             </span>
-            <p className="text-sm font-medium text-[#111111]">No products found</p>
-            <p className="text-xs text-[#626875]">
+            <p className="text-sm font-medium text-white">No products found</p>
+            <p className="text-xs text-[#BDBDBD]">
               Try a different search or filter, or add a new product.
             </p>
           </div>
@@ -985,7 +1185,7 @@ export default function AdminProductsPage() {
           <div className="hidden overflow-x-auto md:block">
             <div className="min-w-[960px]">
               <div
-                className={`grid ${tableGrid} items-center border-b border-[#E4E7EC] bg-[#F5F6F8] px-4 py-3 text-[12px] font-semibold tracking-[0.12em] text-[#E53935] lg:px-5`}
+                className={`grid ${tableGrid} items-center border-b border-[#2E2E2E] bg-[#1A1A1A] px-4 py-3 text-[12px] font-semibold tracking-[0.12em] text-[#EF3838] lg:px-5`}
               >
                 <div>
                   <input
@@ -993,7 +1193,7 @@ export default function AdminProductsPage() {
                     checked={allSelected}
                     onChange={toggleAll}
                     aria-label="Select all products"
-                    className="h-4 w-4 accent-[#E53935]"
+                    className="h-4 w-4 accent-[#EF3838]"
                   />
                 </div>
                 <span>PRODUCT</span>
@@ -1005,7 +1205,7 @@ export default function AdminProductsPage() {
                 <span className="text-right">ACTIONS</span>
               </div>
 
-              <div className="divide-y divide-[#E4E7EC]">
+              <div className="divide-y divide-[#2E2E2E]">
                 {pageItems.map((product, i) => {
                   const stock = stockOf(product);
                   const isSel = selected.includes(product.id);
@@ -1013,8 +1213,8 @@ export default function AdminProductsPage() {
                   return (
                     <div
                       key={product.id}
-                      className={`grid min-h-[76px] ${tableGrid} items-center px-4 transition-colors hover:bg-[#E53935]/[0.05] lg:px-5 ${
-                        isSel ? "bg-[#E53935]/[0.08]" : "bg-transparent"
+                      className={`grid min-h-[76px] ${tableGrid} items-center px-4 transition-colors hover:bg-[#EF3838]/[0.05] lg:px-5 ${
+                        isSel ? "bg-[#EF3838]/[0.08]" : "bg-transparent"
                       }`}
                     >
                       <div>
@@ -1023,27 +1223,27 @@ export default function AdminProductsPage() {
                           checked={isSel}
                           onChange={() => toggleOne(product.id)}
                           aria-label={`Select ${product.name}`}
-                          className="h-4 w-4 accent-[#E53935]"
+                          className="h-4 w-4 accent-[#EF3838]"
                         />
                       </div>
 
                       <button
                         type="button"
                         onClick={() => openPreview(product)}
-                        className="flex min-w-0 items-center gap-3 py-2 pr-3 text-left outline-none focus-visible:ring-1 focus-visible:ring-[#E53935]"
+                        className="flex min-w-0 items-center gap-3 py-2 pr-3 text-left outline-none focus-visible:ring-1 focus-visible:ring-[#EF3838]"
                       >
                         {thumb(product, "h-[52px] w-[52px]")}
                         <span className="min-w-0">
-                          <span className="block truncate text-[14px] font-semibold text-[#111111]">
+                          <span className="block truncate text-[14px] font-semibold text-white">
                             {product.name}
                           </span>
-                          <span className="mt-1 block truncate text-[12px] text-[#626875]">
+                          <span className="mt-1 block truncate text-[12px] text-[#BDBDBD]">
                             SKU: {skuOf(product)}
                           </span>
                         </span>
                       </button>
 
-                      <span className="truncate pr-3 text-xs text-[#4A5160]">
+                      <span className="truncate pr-3 text-xs text-[#BDBDBD]">
                         {product.category_label || "Uncategorized"}
                       </span>
 
@@ -1054,16 +1254,16 @@ export default function AdminProductsPage() {
                           {stock}
                         </span>
                         {stock > 0 && stock <= 5 && (
-                          <span className="block text-[12px] text-[#E53935]">Low</span>
+                          <span className="block text-[12px] text-[#EF3838]">Low</span>
                         )}
                         {stock === 0 && (
-                          <span className="block text-[12px] text-[#B42318]">Out</span>
+                          <span className="block text-[12px] text-[#EF3838]">Out</span>
                         )}
                       </div>
 
                       <div>{statusBadge(product)}</div>
 
-                      <span className="text-xs tabular-nums text-[#4A5160]">{createdOf(product)}</span>
+                      <span className="text-xs tabular-nums text-[#BDBDBD]">{createdOf(product)}</span>
 
                       <div className="flex justify-end gap-1.5">
                         {editBtn(product)}
@@ -1089,8 +1289,8 @@ export default function AdminProductsPage() {
                   key={product.id}
                   className={`rounded-xl border p-3.5 transition ${
                     isSel
-                      ? "border-[#E53935]/60 bg-[#E53935]/[0.08]"
-                      : "border-[#E4E7EC] bg-gradient-to-br from-[#F2F4F7] to-white"
+                      ? "border-[#EF3838]/60 bg-[#EF3838]/[0.08]"
+                      : "border-[#2E2E2E] bg-gradient-to-br from-[#1A1A1A] to-[#111111]"
                   }`}
                 >
                   <div className="flex gap-3">
@@ -1098,7 +1298,7 @@ export default function AdminProductsPage() {
                       type="button"
                       onClick={() => openPreview(product)}
                       aria-label={`View ${product.name}`}
-                      className="h-[72px] w-[72px] shrink-0 overflow-hidden rounded-lg border border-[#E4E7EC] bg-white"
+                      className="h-[72px] w-[72px] shrink-0 overflow-hidden rounded-lg border border-[#2E2E2E] bg-[#1A1A1A]"
                     >
                       {product.images?.[0]?.image_url ? (
                         <img
@@ -1107,7 +1307,7 @@ export default function AdminProductsPage() {
                           className="h-full w-full object-cover"
                         />
                       ) : (
-                        <div className="flex h-full items-center justify-center text-[#626875]">
+                        <div className="flex h-full items-center justify-center text-[#BDBDBD]">
                           <ImageOff className="h-5 w-5" />
                         </div>
                       )}
@@ -1120,10 +1320,10 @@ export default function AdminProductsPage() {
                           onClick={() => openPreview(product)}
                           className="min-w-0 text-left"
                         >
-                          <p className="line-clamp-2 text-[14px] font-semibold leading-5 text-[#111111]">
+                          <p className="line-clamp-2 text-[14px] font-semibold leading-5 text-white">
                             {product.name}
                           </p>
-                          <p className="mt-0.5 truncate text-[12px] text-[#626875]">
+                          <p className="mt-0.5 truncate text-[12px] text-[#BDBDBD]">
                             SKU: {skuOf(product)}
                           </p>
                         </button>
@@ -1133,7 +1333,7 @@ export default function AdminProductsPage() {
                             checked={isSel}
                             onChange={() => toggleOne(product.id)}
                             aria-label={`Select ${product.name}`}
-                            className="h-4 w-4 accent-[#E53935]"
+                            className="h-4 w-4 accent-[#EF3838]"
                           />
                           {moreMenu(product)}
                         </div>
@@ -1141,13 +1341,13 @@ export default function AdminProductsPage() {
                     </div>
                   </div>
 
-                  <div className="mt-3 grid grid-cols-2 items-center gap-x-3 gap-y-2.5 border-t border-[#E4E7EC] pt-3">
+                  <div className="mt-3 grid grid-cols-2 items-center gap-x-3 gap-y-2.5 border-t border-[#2E2E2E] pt-3">
                     <div>{priceView(product)}</div>
-                    <p className="text-right text-xs text-[#4A5160]">
+                    <p className="text-right text-xs text-[#BDBDBD]">
                       Stock:{" "}
                       <span className={`font-semibold tabular-nums ${stockClr(stock)}`}>{stock}</span>
                     </p>
-                    <p className="min-w-0 truncate text-xs text-[#4A5160]">
+                    <p className="min-w-0 truncate text-xs text-[#BDBDBD]">
                       {product.category_label || "Uncategorized"}
                     </p>
                     <div className="flex justify-end">{statusBadge(product, true)}</div>
@@ -1156,7 +1356,7 @@ export default function AdminProductsPage() {
                   <button
                     type="button"
                     onClick={() => openEdit(product)}
-                    className="mt-3 flex h-11 w-full items-center justify-center gap-2 rounded-lg border border-[#E53935]/55 text-[14px] font-semibold text-[#E53935] transition active:scale-[.98] hover:bg-[#E53935]/10"
+                    className="mt-3 flex h-11 w-full items-center justify-center gap-2 rounded-lg border border-[#EF3838]/55 text-[14px] font-semibold text-[#EF3838] transition active:scale-[.98] hover:bg-[#EF3838]/10"
                   >
                     <Pencil className="h-3.5 w-3.5" />
                     Edit Product
@@ -1169,8 +1369,8 @@ export default function AdminProductsPage() {
 
         {/* PAGINATION */}
         {!loading && filtered.length > 0 && (
-          <div className="flex flex-col gap-3 border-t border-[#E4E7EC] px-4 py-3.5 sm:flex-row sm:items-center sm:justify-between">
-            <span className="text-center text-[12px] text-[#4A5160] sm:text-left">
+          <div className="flex flex-col gap-3 border-t border-[#2E2E2E] px-4 py-3.5 sm:flex-row sm:items-center sm:justify-between">
+            <span className="text-center text-[12px] text-[#BDBDBD] sm:text-left">
               Showing {start + 1} to {Math.min(start + perPage, filtered.length)} of{" "}
               {filtered.length} products
             </span>
@@ -1180,7 +1380,7 @@ export default function AdminProductsPage() {
                 type="button"
                 onClick={() => setPage(Math.max(1, safePage - 1))}
                 disabled={safePage === 1}
-                className="flex h-9 w-9 items-center justify-center rounded-md border border-[#E4E7EC] bg-[#F2F4F7] text-[#E53935] transition hover:border-[#E53935]/70 disabled:cursor-not-allowed disabled:opacity-35"
+                className="flex h-9 w-9 items-center justify-center rounded-md border border-[#2E2E2E] bg-[#1A1A1A] text-[#EF3838] transition hover:border-[#EF3838]/70 disabled:cursor-not-allowed disabled:opacity-35"
                 aria-label="Previous page"
               >
                 <ArrowLeft className="h-4 w-4" />
@@ -1194,7 +1394,7 @@ export default function AdminProductsPage() {
                   className={`h-9 min-w-9 rounded-md border px-2 text-xs font-semibold transition ${
                     n === safePage
                       ? `border-transparent ${primaryBtn}`
-                      : "border-[#E4E7EC] bg-[#F2F4F7] text-[#111111] hover:border-[#E53935]/60"
+                      : "border-[#2E2E2E] bg-[#1A1A1A] text-white hover:border-[#EF3838]/60"
                   }`}
                 >
                   {n}
@@ -1205,7 +1405,7 @@ export default function AdminProductsPage() {
                 type="button"
                 onClick={() => setPage(Math.min(pageCount, safePage + 1))}
                 disabled={safePage === pageCount}
-                className="flex h-9 w-9 items-center justify-center rounded-md border border-[#E4E7EC] bg-[#F2F4F7] text-[#E53935] transition hover:border-[#E53935]/70 disabled:cursor-not-allowed disabled:opacity-35"
+                className="flex h-9 w-9 items-center justify-center rounded-md border border-[#2E2E2E] bg-[#1A1A1A] text-[#EF3838] transition hover:border-[#EF3838]/70 disabled:cursor-not-allowed disabled:opacity-35"
                 aria-label="Next page"
               >
                 <ArrowRight className="h-4 w-4" />
@@ -1223,12 +1423,12 @@ export default function AdminProductsPage() {
             onClick={() => setFiltersOpen(false)}
             className="absolute inset-0 bg-black/80 backdrop-blur-sm"
           />
-          <div className="kv-pop absolute inset-x-0 bottom-0 max-h-[90dvh] overflow-y-auto rounded-t-2xl border border-b-0 border-[#D0D5DD] bg-gradient-to-b from-[#F2F4F7] to-white p-5 pb-6">
+          <div className="kv-pop absolute inset-x-0 bottom-0 max-h-[90dvh] overflow-y-auto rounded-t-2xl border border-b-0 border-[#3A3A3A] bg-gradient-to-b from-[#1A1A1A] to-[#111111] p-5 pb-6">
             <div className="mb-4 flex items-center justify-between">
-              <h3 className="text-xl font-semibold text-[#111111]">Filters</h3>
+              <h3 className="text-xl font-semibold text-white">Filters</h3>
               <button
                 onClick={() => setFiltersOpen(false)}
-                className="rounded-full border border-[#D0D5DD] p-2 text-[#E53935]"
+                className="rounded-full border border-[#3A3A3A] p-2 text-[#EF3838]"
                 aria-label="Close filters"
               >
                 <X className="h-4 w-4" />
@@ -1252,7 +1452,7 @@ export default function AdminProductsPage() {
                   </option>
                 ))}
               </select>
-              <ChevronDown className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[#E53935]" />
+              <ChevronDown className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[#EF3838]" />
             </div>
 
             <label className={`${labelCls} mt-4`}>Status</label>
@@ -1274,8 +1474,8 @@ export default function AdminProductsPage() {
                   }}
                   className={`h-11 rounded-lg border text-xs font-semibold transition ${
                     statusFilter === opt.v
-                      ? "border-[#E53935] bg-[#E53935]/20 text-[#111111]"
-                      : "border-[#E4E7EC] bg-white text-[#4A5160]"
+                      ? "border-[#EF3838] bg-[#EF3838]/20 text-white"
+                      : "border-[#2E2E2E] bg-[#1A1A1A] text-[#BDBDBD]"
                   }`}
                 >
                   {opt.l}
@@ -1300,7 +1500,7 @@ export default function AdminProductsPage() {
                 <option value="price_desc">Price: high to low</option>
                 <option value="stock_asc">Stock: low to high</option>
               </select>
-              <ChevronDown className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[#E53935]" />
+              <ChevronDown className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[#EF3838]" />
             </div>
 
             <div className="mt-6 grid grid-cols-2 gap-3">
@@ -1313,7 +1513,7 @@ export default function AdminProductsPage() {
                   setSortBy("default");
                   setPage(1);
                 }}
-                className="h-12 rounded-lg border border-[#E53935]/50 bg-white text-sm font-semibold text-[#E53935] transition hover:bg-[#E53935]/10"
+                className="h-12 rounded-lg border border-[#EF3838]/50 bg-[#1A1A1A] text-sm font-semibold text-[#EF3838] transition hover:bg-[#EF3838]/10"
               >
                 Reset
               </button>
@@ -1334,12 +1534,12 @@ export default function AdminProductsPage() {
 
       {/* FLOATING SELECTION BAR */}
       {selected.length > 0 && (
-        <div className="fixed inset-x-3 bottom-20 z-40 flex items-center justify-between gap-3 rounded-xl border border-[#E53935]/50 bg-white px-4 py-2.5 text-sm text-[#111111] shadow-[0_8px_24px_rgba(16,24,40,0.12)] sm:bottom-3 sm:left-1/2 sm:right-auto sm:inset-x-auto sm:-translate-x-1/2 sm:justify-center sm:rounded-full sm:pl-6 sm:pr-2.5">
+        <div className="fixed inset-x-3 bottom-20 z-40 flex items-center justify-between gap-3 rounded-xl border border-[#EF3838]/50 bg-[#1A1A1A] px-4 py-2.5 text-sm text-white shadow-[0_8px_24px_rgba(16,24,40,0.12)] sm:bottom-3 sm:left-1/2 sm:right-auto sm:inset-x-auto sm:-translate-x-1/2 sm:justify-center sm:rounded-full sm:pl-6 sm:pr-2.5">
           <span className="tabular-nums">{selected.length} selected</span>
           {selectedOne && (
             <button
               onClick={() => openEdit(selectedOne)}
-              className="rounded-full border border-[#E53935]/50 bg-[#E53935]/10 px-4 py-1.5 text-[#E53935] transition hover:bg-[#E53935]/25"
+              className="rounded-full border border-[#EF3838]/50 bg-[#EF3838]/10 px-4 py-1.5 text-[#EF3838] transition hover:bg-[#EF3838]/25"
             >
               Edit
             </button>
@@ -1363,13 +1563,13 @@ export default function AdminProductsPage() {
           />
 
           <aside
-            className="fixed inset-y-0 right-0 z-[60] flex w-full max-w-[430px] flex-col border-l border-[#D0D5DD] bg-gradient-to-b from-white to-white shadow-[0_8px_24px_rgba(16,24,40,0.12)]"
+            className="fixed inset-y-0 right-0 z-[60] flex w-full max-w-[430px] flex-col border-l border-[#3A3A3A] bg-[#111111] shadow-[0_8px_40px_rgba(0,0,0,0.5)]"
             aria-label="Product details"
           >
-            <div className="flex items-center justify-between border-b border-[#E4E7EC] px-5 py-4">
+            <div className="flex items-center justify-between border-b border-[#2E2E2E] px-5 py-4">
               <div>
-                <p className="text-lg font-semibold text-[#111111]">Product details</p>
-                <p className="mt-0.5 text-xs text-[#626875]">
+                <p className="text-lg font-semibold text-white">Product details</p>
+                <p className="mt-0.5 text-xs text-[#BDBDBD]">
                   Catalog / {previewProduct.category_label || "Uncategorized"}
                 </p>
               </div>
@@ -1377,7 +1577,7 @@ export default function AdminProductsPage() {
               <button
                 onClick={() => setPreviewProduct(null)}
                 aria-label="Close"
-                className="flex h-9 w-9 items-center justify-center rounded-full border border-[#D0D5DD] bg-[#F2F4F7] text-[#E53935] transition hover:bg-[#E53935] hover:text-white"
+                className="flex h-9 w-9 items-center justify-center rounded-full border border-[#3A3A3A] bg-[#1A1A1A] text-[#EF3838] transition hover:bg-[#EF3838] hover:text-white"
               >
                 <X className="h-4 w-4" />
               </button>
@@ -1385,7 +1585,7 @@ export default function AdminProductsPage() {
 
             <div className="min-h-0 flex-1 overflow-y-auto">
               <div className="p-5">
-                <div className="relative overflow-hidden rounded-xl border border-[#E4E7EC] bg-[#F5F6F8]">
+                <div className="relative overflow-hidden rounded-xl border border-[#2E2E2E] bg-[#1A1A1A]">
                   {previewImages.length ? (
                     <img
                       src={previewImages[previewImageIndex]?.image_url || previewImages[0].image_url}
@@ -1393,7 +1593,7 @@ export default function AdminProductsPage() {
                       className="aspect-[4/4.35] w-full object-cover"
                     />
                   ) : (
-                    <div className="flex aspect-[4/4.35] items-center justify-center text-[#626875]">
+                    <div className="flex aspect-[4/4.35] items-center justify-center text-[#BDBDBD]">
                       <ImageOff className="h-10 w-10" />
                     </div>
                   )}
@@ -1407,7 +1607,7 @@ export default function AdminProductsPage() {
                           )
                         }
                         aria-label="Previous image"
-                        className="absolute left-3 top-1/2 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full border border-[#E53935]/50 bg-black/70 text-[#E53935] backdrop-blur"
+                        className="absolute left-3 top-1/2 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full border border-[#EF3838]/50 bg-black/70 text-[#EF3838] backdrop-blur"
                       >
                         <ChevronLeft className="h-4 w-4" />
                       </button>
@@ -1418,7 +1618,7 @@ export default function AdminProductsPage() {
                           )
                         }
                         aria-label="Next image"
-                        className="absolute right-3 top-1/2 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full border border-[#E53935]/50 bg-black/70 text-[#E53935] backdrop-blur"
+                        className="absolute right-3 top-1/2 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full border border-[#EF3838]/50 bg-black/70 text-[#EF3838] backdrop-blur"
                       >
                         <ChevronRight className="h-4 w-4" />
                       </button>
@@ -1432,8 +1632,8 @@ export default function AdminProductsPage() {
                       <button
                         key={image.id || image.image_url}
                         onClick={() => setPreviewImageIndex(index)}
-                        className={`h-16 w-14 shrink-0 overflow-hidden rounded-lg border-2 bg-white ${
-                          index === previewImageIndex ? "border-[#E53935]" : "border-transparent"
+                        className={`h-16 w-14 shrink-0 overflow-hidden rounded-lg border-2 bg-[#1A1A1A] ${
+                          index === previewImageIndex ? "border-[#EF3838]" : "border-transparent"
                         }`}
                       >
                         <img
@@ -1449,14 +1649,14 @@ export default function AdminProductsPage() {
                 <div className="mt-5">
                   <div className="flex items-start justify-between gap-3">
                     <div className="min-w-0">
-                      <h2 className="text-2xl font-semibold tracking-tight text-[#111111]">
+                      <h2 className="text-2xl font-semibold tracking-tight text-white">
                         {previewProduct.name}
                       </h2>
-                      <div className="mt-1 flex items-center gap-2 text-xs text-[#626875]">
+                      <div className="mt-1 flex items-center gap-2 text-xs text-[#BDBDBD]">
                         <span className="truncate">SKU: {skuOf(previewProduct)}</span>
                         <button
                           onClick={() => navigator.clipboard?.writeText(skuOf(previewProduct))}
-                          className="rounded p-1 transition hover:bg-[#E53935]/15"
+                          className="rounded p-1 transition hover:bg-[#EF3838]/15"
                           title="Copy SKU"
                           aria-label="Copy SKU"
                         >
@@ -1468,10 +1668,10 @@ export default function AdminProductsPage() {
                     <span
                       className={`shrink-0 rounded-full border px-3 py-1.5 text-[12px] font-semibold ${
                         previewStatus === "Active"
-                          ? "border-[#D0D5DD] bg-[#E4E7EC]/70 text-[#4A5160]"
+                          ? "border-[#3A3A3A] bg-[#2E2E2E] text-[#BDBDBD]"
                           : previewStatus === "Low Stock"
-                            ? "border-[#D0D5DD] bg-[#E53935]/10 text-[#E53935]"
-                            : "border-[#D92D20]/30 bg-[#D92D20]/8 text-[#B42318]"
+                            ? "border-[#3A3A3A] bg-[#EF3838]/10 text-[#EF3838]"
+                            : "border-[#D92D20]/30 bg-[#D92D20]/8 text-[#EF3838]"
                       }`}
                     >
                       {previewStatus}
@@ -1479,48 +1679,48 @@ export default function AdminProductsPage() {
                   </div>
 
                   <div className="mt-3 flex items-end gap-2">
-                    <span className="text-[25px] font-semibold tabular-nums text-[#E53935]">₹{inr(previewPrice)}</span>
+                    <span className="text-[25px] font-semibold tabular-nums text-[#EF3838]">₹{inr(previewPrice)}</span>
                     {previewProduct.mrp && previewProduct.mrp > previewPrice && (
-                      <span className="pb-1 text-sm text-[#626875] line-through">
+                      <span className="pb-1 text-sm text-[#BDBDBD] line-through">
                         ₹{inr(previewProduct.mrp)}
                       </span>
                     )}
                   </div>
                 </div>
 
-                <div className="mt-6 divide-y divide-[#E4E7EC] rounded-xl border border-[#E4E7EC] bg-[#F2F4F7]">
+                <div className="mt-6 divide-y divide-[#2E2E2E] rounded-xl border border-[#2E2E2E] bg-[#1A1A1A]">
                   <div className="flex items-center justify-between gap-3 px-4 py-4">
                     <div className="flex items-center gap-3">
-                      <PackageCheck className="h-5 w-5 text-[#E53935]" />
+                      <PackageCheck className="h-5 w-5 text-[#EF3838]" />
                       <div>
-                        <p className="text-sm font-medium text-[#111111]">Inventory</p>
-                        <p className="text-xs text-[#626875]">
+                        <p className="text-sm font-medium text-white">Inventory</p>
+                        <p className="text-xs text-[#BDBDBD]">
                           {previewStock === 0 ? "No units available" : `${previewStock} units available`}
                         </p>
                       </div>
                     </div>
                     <button
                       onClick={() => openEdit(previewProduct)}
-                      className="rounded-lg border border-[#E53935]/50 px-3 py-2 text-xs font-medium text-[#E53935] transition hover:bg-[#E53935]/15"
+                      className="rounded-lg border border-[#EF3838]/50 px-3 py-2 text-xs font-medium text-[#EF3838] transition hover:bg-[#EF3838]/15"
                     >
                       Manage
                     </button>
                   </div>
 
                   <div className="flex items-start gap-3 px-4 py-4">
-                    <Tag className="mt-0.5 h-5 w-5 text-[#E53935]" />
+                    <Tag className="mt-0.5 h-5 w-5 text-[#EF3838]" />
                     <div>
-                      <p className="text-sm font-medium text-[#111111]">Category</p>
-                      <p className="mt-0.5 text-xs text-[#626875]">
+                      <p className="text-sm font-medium text-white">Category</p>
+                      <p className="mt-0.5 text-xs text-[#BDBDBD]">
                         {previewProduct.category_label || "Uncategorized"}
                       </p>
                     </div>
                   </div>
 
                   <div className="flex items-start gap-3 px-4 py-4">
-                    <Layers3 className="mt-0.5 h-5 w-5 text-[#E53935]" />
+                    <Layers3 className="mt-0.5 h-5 w-5 text-[#EF3838]" />
                     <div className="min-w-0">
-                      <p className="text-sm font-medium text-[#111111]">Collections & tags</p>
+                      <p className="text-sm font-medium text-white">Collections & tags</p>
                       <div className="mt-2 flex flex-wrap gap-1.5">
                         {previewProduct.best_seller && <Badge label="Best Seller" tone="amber" />}
                         {previewProduct.new_arrival && <Badge label="New" tone="blue" />}
@@ -1530,7 +1730,7 @@ export default function AdminProductsPage() {
                           !previewProduct.new_arrival &&
                           !previewProduct.trending &&
                           !previewProduct.limited_edition && (
-                            <span className="text-xs text-[#626875]">No tags assigned</span>
+                            <span className="text-xs text-[#BDBDBD]">No tags assigned</span>
                           )}
                       </div>
                     </div>
@@ -1538,8 +1738,8 @@ export default function AdminProductsPage() {
 
                   <div className="px-4 py-4">
                     <div className="flex items-center justify-between">
-                      <p className="text-sm font-medium text-[#111111]">Variants</p>
-                      <span className="text-xs text-[#626875]">
+                      <p className="text-sm font-medium text-white">Variants</p>
+                      <span className="text-xs text-[#BDBDBD]">
                         {previewProduct.variants?.length || 0} variants
                       </span>
                     </div>
@@ -1548,12 +1748,12 @@ export default function AdminProductsPage() {
                       {(previewProduct.variants || []).slice(0, 8).map((variant, index) => (
                         <div
                           key={variant.id || index}
-                          className="min-w-[76px] rounded-lg border border-[#E4E7EC] bg-[#F5F6F8] px-3 py-2"
+                          className="min-w-[76px] rounded-lg border border-[#2E2E2E] bg-[#1A1A1A] px-3 py-2"
                         >
-                          <p className="text-xs font-semibold text-[#111111]">
+                          <p className="text-xs font-semibold text-white">
                             {variant.size || "—"} · {variant.color || "—"}
                           </p>
-                          <p className="mt-0.5 text-[12px] text-[#626875]">
+                          <p className="mt-0.5 text-[12px] text-[#BDBDBD]">
                             {variant.inventory} stock
                           </p>
                         </div>
@@ -1564,8 +1764,8 @@ export default function AdminProductsPage() {
 
                 {previewProduct.description && (
                   <div className="mt-5">
-                    <p className="text-sm font-medium text-[#E53935]">Description</p>
-                    <p className="mt-2 text-sm leading-6 text-[#4A5160]">
+                    <p className="text-sm font-medium text-[#EF3838]">Description</p>
+                    <p className="mt-2 text-sm leading-6 text-[#BDBDBD]">
                       {previewProduct.description}
                     </p>
                   </div>
@@ -1573,7 +1773,7 @@ export default function AdminProductsPage() {
               </div>
             </div>
 
-            <div className="border-t border-[#E4E7EC] bg-[#F5F6F8] p-4">
+            <div className="border-t border-[#2E2E2E] bg-[#1A1A1A] p-4">
               <div className="grid grid-cols-2 gap-2.5">
                 <button
                   onClick={() => openEdit(previewProduct)}
@@ -1584,7 +1784,7 @@ export default function AdminProductsPage() {
                 </button>
                 <button
                   onClick={() => setPreviewProduct(null)}
-                  className="flex h-11 items-center justify-center gap-2 rounded-lg border border-[#E53935]/50 bg-transparent text-sm font-medium text-[#E53935] transition hover:bg-[#E53935]/10"
+                  className="flex h-11 items-center justify-center gap-2 rounded-lg border border-[#EF3838]/50 bg-transparent text-sm font-medium text-[#EF3838] transition hover:bg-[#EF3838]/10"
                 >
                   <ExternalLink className="h-4 w-4" />
                   View Store
@@ -1597,103 +1797,78 @@ export default function AdminProductsPage() {
 
       {/* ADD / EDIT MODAL */}
       {modal && (
-        <div className="fixed inset-0 z-[80] flex items-end justify-center bg-black/80 p-0 backdrop-blur-[3px] sm:items-center sm:p-4">
-          <div className="kv-pop flex h-[100dvh] w-full max-w-5xl flex-col overflow-hidden border border-[#D0D5DD] bg-gradient-to-br from-white via-white to-white shadow-[0_8px_24px_rgba(16,24,40,0.12)] sm:h-auto sm:max-h-[92vh] sm:rounded-2xl">
+        <div className="kvm-overlay" role="dialog" aria-modal="true" aria-label={editingId ? "Edit product" : "Add product"}>
+          <div className="kvm-dialog kv-pop">
             {/* header */}
-            <div className="flex items-center justify-between gap-3 border-b border-[#E4E7EC] px-4 py-4 sm:px-6">
-              <div className="min-w-0">
-                <h2 className="truncate text-2xl font-semibold text-[#111111]">
-                  {editingId ? "Edit Product" : "Add New Product"}
-                </h2>
-                <p className="truncate text-xs text-[#626875]">
-                  {editingId
-                    ? "Update this product in your store"
-                    : "Create a new product for your store"}
+            <header className="kvm-header">
+              <div className="kvm-header-text">
+                <span className="kvm-eyebrow">{editingId ? "Edit product" : "New product"}</span>
+                <h2 className="kvm-title">{form.name.trim() || (editingId ? "Untitled product" : "Add New Product")}</h2>
+                <p className="kvm-sub">
+                  {editingId ? "Update this product in your store" : "Create a new product for your store"}
                 </p>
               </div>
-
-              <button
-                onClick={() => setModal(false)}
-                aria-label="Close"
-                className="shrink-0 rounded-full border border-[#E4E7EC] p-2 text-[#E53935] transition hover:bg-[#E53935]/15 hover:text-[#111111]"
-              >
-                <X className="h-5 w-5" />
+              <button type="button" onClick={() => setModal(false)} aria-label="Close" className="kvm-close">
+                <X size={18} />
               </button>
-            </div>
+            </header>
 
-            {/* mobile section chips */}
-            <div className="flex gap-2 overflow-x-auto border-b border-[#E4E7EC] px-4 py-2.5 md:hidden">
-              {formSections.map((s) => (
-                <button
-                  key={s.id}
-                  type="button"
-                  onClick={() => jumpTo(s.id)}
-                  className="shrink-0 rounded-full border border-[#D0D5DD] bg-[#E53935]/[0.07] px-3.5 py-1.5 text-[12px] font-medium text-[#E53935] transition active:bg-[#E53935]/20"
-                >
-                  {s.label}
-                </button>
-              ))}
-            </div>
-
-            <div className="grid min-h-0 flex-1 md:grid-cols-[200px_1fr]">
-              {/* desktop section rail */}
-              <nav className="hidden border-r border-[#E4E7EC] bg-white/80 p-3 md:block">
-                <div className="space-y-1.5">
-                  {formSections.map((s, i) => (
+            <div className="kvm-layout">
+              {/* step navigation */}
+              <nav className="kvm-nav" aria-label="Product sections">
+                {formSections.map((s, i) => {
+                  const Icon = s.icon;
+                  const active = activeSection === s.id;
+                  return (
                     <button
                       key={s.id}
                       type="button"
                       onClick={() => jumpTo(s.id)}
-                      className="group flex w-full items-center gap-3 rounded-lg border border-transparent px-3 py-2.5 text-left transition hover:border-[#D0D5DD] hover:bg-[#E53935]/[0.07]"
+                      className="kvm-step"
+                      data-active={active}
+                      aria-current={active ? "step" : undefined}
                     >
-                      <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-md border border-[#D0D5DD] text-[12px] font-semibold text-[#E53935]">
-                        {i + 1}
+                      <span className="kvm-step-num">{i + 1}</span>
+                      <span className="kvm-step-text">
+                        <span className="kvm-step-label">{s.label}</span>
+                        <span className="kvm-step-hint">{s.hint}</span>
                       </span>
-                      <span className="min-w-0">
-                        <span className="block truncate text-xs font-medium text-[#111111]">
-                          {s.label}
-                        </span>
-                        <span className="block truncate text-[12px] text-[#626875]">
-                          {s.hint}
-                        </span>
-                      </span>
+                      <Icon size={15} className="kvm-step-icon" />
                     </button>
-                  ))}
+                  );
+                })}
+
+                <div className="kvm-nav-stock">
+                  <span className="kvm-nav-stock-label">Total stock</span>
+                  <span className="kvm-nav-stock-value" data-tone={stockTone(formTotalStock)}>
+                    {formTotalStock}
+                  </span>
+                  <span className="kvm-nav-stock-note">units across {form.variants.length} variant{form.variants.length === 1 ? "" : "s"}</span>
                 </div>
               </nav>
 
               {/* form body */}
-              <div className="min-h-0 overflow-y-auto p-4 sm:p-6">
+              <div className="kvm-body" ref={modalBodyRef} onScroll={onModalScroll}>
                 {/* 1. BASIC */}
-                <FormSection id="kv-basic" n={1} title="Basic Information">
-                  <div className="grid gap-3.5 sm:grid-cols-2 sm:gap-4">
-                    <Field
-                      label="Product Name"
-                      value={form.name}
-                      onChange={(v) => setForm({ ...form, name: v })}
-                    />
+                <FormSection id="kv-basic" n={1} title="Basic information" desc="Name, category and how the product is described.">
+                  <div className="kvm-grid kvm-grid-2">
+                    <Field label="Product name" value={form.name} onChange={(v) => setForm({ ...form, name: v })} />
 
-                    <div>
-                      <label className={labelCls}>Category</label>
-
+                    <div className="kvm-field">
+                      <label className="kvm-label">Category</label>
                       <select
                         value={form.category_slug}
                         onChange={(e) => {
-                          const selected = categories.find(
-                            (c) => c.slug === e.target.value
-                          );
-
+                          const selected = categories.find((c) => c.slug === e.target.value);
                           setForm({
                             ...form,
                             category_slug: e.target.value,
-                            category_label:
-                              selected?.name || selected?.label || "",
+                            category_label: selected?.name || selected?.label || "",
                           });
                         }}
-                        className={inputCls}
+                        className="kvm-input kvm-select"
                       >
-                        <option value="">Select Category</option>
-
+                        <option value="">Select category</option>
                         {categories.map((cat) => (
                           <option key={cat.slug || cat.id} value={cat.slug}>
                             {cat.name || cat.label}
@@ -1702,30 +1877,17 @@ export default function AdminProductsPage() {
                       </select>
                     </div>
 
-                    <Field
-                      label="Fit"
-                      value={form.fit}
-                      onChange={(v) => setForm({ ...form, fit: v })}
-                    />
+                    <Field label="Fit" value={form.fit} onChange={(v) => setForm({ ...form, fit: v })} />
+                    <Field label="Fabric" value={form.fabric} onChange={(v) => setForm({ ...form, fabric: v })} />
 
-                    <Field
-                      label="Fabric"
-                      value={form.fabric}
-                      onChange={(v) => setForm({ ...form, fabric: v })}
-                    />
-
-                    {/* COVERAGE */}
-                    <div>
-                      <label className={labelCls}>Coverage</label>
-
+                    <div className="kvm-field">
+                      <label className="kvm-label">Coverage</label>
                       <select
                         value={form.coverage}
-                        onChange={(e) =>
-                          setForm({ ...form, coverage: e.target.value })
-                        }
-                        className={inputCls}
+                        onChange={(e) => setForm({ ...form, coverage: e.target.value })}
+                        className="kvm-input kvm-select"
                       >
-                        <option value="">Select Coverage</option>
+                        <option value="">Select coverage</option>
                         <option value="All Over">All Over</option>
                         <option value="Front">Front</option>
                         <option value="Back">Back</option>
@@ -1733,32 +1895,24 @@ export default function AdminProductsPage() {
                     </div>
                   </div>
 
-                  {/* DESCRIPTION */}
-                  <div className="mt-4">
-                    <label className={labelCls}>Description</label>
-
+                  <div className="kvm-field kvm-mt">
+                    <label className="kvm-label">Description</label>
                     <textarea
                       value={form.description}
-                      onChange={(e) =>
-                        setForm({ ...form, description: e.target.value })
-                      }
+                      onChange={(e) => setForm({ ...form, description: e.target.value })}
                       rows={4}
-                      placeholder="Enter product description..."
-                      className={inputCls}
+                      placeholder="Describe the product, its feel and what makes it special…"
+                      className="kvm-input kvm-textarea"
                     />
                   </div>
                 </FormSection>
 
                 {/* 2. IMAGES */}
-                <FormSection id="kv-images" n={2} title="Product Images">
-                  <label className="group flex cursor-pointer flex-col items-center justify-center gap-2 rounded-xl border border-dashed border-[#D0D5DD] bg-[#F5F6F8] px-4 py-8 text-center transition hover:border-[#E53935] hover:bg-[#E53935]/[0.05]">
-                    <UploadCloud className="h-8 w-8 text-[#E53935] transition group-hover:scale-110" />
-                    <span className="text-sm font-medium text-[#111111]">
-                      Click to upload images
-                    </span>
-                    <span className="text-xs text-[#626875]">
-                      Select multiple images at once, or open the picker again to add more.
-                    </span>
+                <FormSection id="kv-images" n={2} title="Product images" desc={editingId ? "Uploading new images replaces the current set." : "The first image is used as the cover."}>
+                  <label className="kvm-drop">
+                    <UploadCloud size={26} />
+                    <span className="kvm-drop-title">Click to upload images</span>
+                    <span className="kvm-drop-note">Select several at once, or open the picker again to add more.</span>
                     <input
                       type="file"
                       name="images"
@@ -1770,232 +1924,197 @@ export default function AdminProductsPage() {
                   </label>
 
                   {files.length > 0 && (
-                    <div className="mt-4 space-y-3">
-                      <p className="text-xs font-medium text-[#4A5160]">
+                    <>
+                      <p className="kvm-hint kvm-mt">
                         {files.length} image{files.length > 1 ? "s" : ""} selected
                       </p>
-
-                      <div className="grid grid-cols-3 gap-2.5 sm:grid-cols-4">
+                      <div className="kvm-thumbs">
                         {files.map((file, index) => (
-                          <div
-                            key={`${file.name}-${file.size}-${file.lastModified}-${index}`}
-                            className="group relative overflow-hidden rounded-lg border border-[#E4E7EC] bg-white"
-                          >
-                            <img
-                              src={URL.createObjectURL(file)}
-                              alt={file.name}
-                              className="aspect-square w-full object-cover transition duration-300 group-hover:scale-105"
-                            />
+                          <div key={`${file.name}-${file.size}-${file.lastModified}-${index}`} className="kvm-thumb">
+                            <img src={URL.createObjectURL(file)} alt={file.name} />
+                            {index === 0 && <span className="kvm-thumb-cover">Cover</span>}
                             <button
                               type="button"
                               onClick={() => removeImage(index)}
-                              className="absolute right-1.5 top-1.5 flex h-6 w-6 items-center justify-center rounded-full border border-[#E53935]/60 bg-black/80 text-[#E53935] transition hover:bg-[#D92D20] hover:text-white"
+                              className="kvm-thumb-x"
                               aria-label={`Remove ${file.name}`}
                             >
-                              <X className="h-3.5 w-3.5" />
+                              <X size={13} />
                             </button>
-                            <p className="truncate bg-black/70 px-2 py-1 text-[12px] text-[#4A5160]">
-                              {file.name} · {(file.size / 1024 / 1024).toFixed(2)} MB
-                            </p>
+                            <p className="kvm-thumb-name">{file.name}</p>
                           </div>
                         ))}
                       </div>
-                    </div>
+                    </>
                   )}
                 </FormSection>
 
                 {/* 3. PRICING */}
-                <FormSection id="kv-pricing" n={3} title="Pricing">
-                  <div className="grid gap-3.5 sm:grid-cols-3 sm:gap-4">
-                    <Field
-                      label="Price"
-                      type="number"
-                      value={form.price}
-                      onChange={(v) => setForm({ ...form, price: v })}
-                    />
-
-                    <Field
-                      label="MRP"
-                      type="number"
-                      value={form.mrp}
-                      onChange={(v) => setForm({ ...form, mrp: v })}
-                    />
-
-                    <Field
-                      label="Best Price"
-                      type="number"
-                      value={form.best_price}
-                      onChange={(v) => setForm({ ...form, best_price: v })}
-                    />
+                <FormSection id="kv-pricing" n={3} title="Pricing" desc="All amounts in rupees.">
+                  <div className="kvm-grid kvm-grid-3">
+                    <Field label="Price (₹)" type="number" value={form.price} onChange={(v) => setForm({ ...form, price: v })} />
+                    <Field label="MRP (₹)" type="number" value={form.mrp} onChange={(v) => setForm({ ...form, mrp: v })} />
+                    <Field label="Best price (₹)" type="number" value={form.best_price} onChange={(v) => setForm({ ...form, best_price: v })} />
                   </div>
                 </FormSection>
 
                 {/* 4. INVENTORY + VARIANTS */}
-                <FormSection id="kv-inventory" n={4} title="Inventory">
-                  <div className="grid gap-3.5 sm:grid-cols-2 sm:gap-4">
-                    <Field
-                      label="Inventory"
-                      type="number"
-                      value={form.inventory}
-                      onChange={(v) => setForm({ ...form, inventory: v })}
-                    />
+                <FormSection id="kv-inventory" n={4} title="Inventory & variants" desc="Stock is managed per size and colour. The product total is calculated for you.">
+                  <div className="kvm-total">
+                    <div>
+                      <span className="kvm-total-label">Total stock</span>
+                      <span className="kvm-total-note">
+                        <Lock size={12} /> Calculated automatically from variant stock
+                      </span>
+                    </div>
+                    <span className="kvm-total-value" data-tone={stockTone(formTotalStock)}>
+                      {formTotalStock}
+                      <small>{formTotalStock === 1 ? "unit" : "units"}</small>
+                    </span>
                   </div>
 
-                  {/* VARIANTS */}
-                  <div className="mt-5 rounded-xl border border-[#E4E7EC] bg-[#F2F4F7] p-3.5 sm:p-4">
-                    <div className="mb-4 flex items-center justify-between gap-3">
+                  <div className="kvm-variants">
+                    <div className="kvm-variants-head">
                       <div>
-                        <h3 className="text-lg font-semibold text-[#111111]">Variants</h3>
-                        <p className="text-xs text-[#626875]">Size, color and stock</p>
+                        <h4 className="kvm-h4">Variants</h4>
+                        <p className="kvm-hint">Size, colour, stock and SKU</p>
                       </div>
-
-                      <button
-                        onClick={addVariant}
-                        type="button"
-                        className={`flex shrink-0 items-center gap-1.5 rounded-full px-4 py-2 text-xs font-bold transition active:scale-[0.97] ${primaryBtn}`}
-                      >
-                        <Plus className="h-3.5 w-3.5" />
-                        Variant
+                      <button type="button" onClick={addVariant} className="kvm-btn kvm-btn-red kvm-btn-sm">
+                        <Plus size={14} /> Add variant
                       </button>
                     </div>
 
-                    <div className="space-y-3">
-                      {form.variants.length === 0 && (
-                        <p className="rounded-lg border border-dashed border-[#E4E7EC] px-3 py-4 text-center text-xs text-[#626875]">
-                          No variants added yet.
-                        </p>
-                      )}
+                    {form.variants.length > 0 && (
+                      <div className="kvm-vcols" aria-hidden="true">
+                        <span>Size</span>
+                        <span>Colour</span>
+                        <span>Stock</span>
+                        <span>SKU</span>
+                        <span />
+                      </div>
+                    )}
 
+                    {form.variants.length === 0 && (
+                      <div className="kvm-empty">
+                        <Layers3 size={22} />
+                        <p>No variants yet</p>
+                        <span>Add at least one size and colour so customers can buy this product.</span>
+                      </div>
+                    )}
+
+                    <div className="kvm-vlist">
                       {form.variants.map((variant, index) => (
-                        <div
-                          key={variant.id || index}
-                          className="grid grid-cols-2 gap-2 rounded-lg border border-[#E4E7EC] p-2.5 md:grid-cols-[1fr_1fr_1fr_1fr_auto] md:border-0 md:p-0"
-                        >
-                          <input
-                            placeholder="Size"
-                            value={variant.size}
-                            onChange={(e) =>
-                              updateVariant(index, "size", e.target.value)
-                            }
-                            className={inputCls}
-                          />
-
-                          <input
-                            placeholder="Color"
-                            value={variant.color}
-                            onChange={(e) =>
-                              updateVariant(index, "color", e.target.value)
-                            }
-                            className={inputCls}
-                          />
-
-                          <input
-                            type="number"
-                            placeholder="Stock"
-                            value={variant.inventory}
-                            onChange={(e) =>
-                              updateVariant(index, "inventory", Number(e.target.value))
-                            }
-                            className={inputCls}
-                          />
-
-                          <input
-                            placeholder="SKU"
-                            value={variant.sku || ""}
-                            onChange={(e) =>
-                              updateVariant(index, "sku", e.target.value)
-                            }
-                            className={inputCls}
-                          />
-
+                        <div key={variant.id || index} className="kvm-vrow" data-dup={duplicateVariantRows.has(index)}>
+                          <label className="kvm-vcell">
+                            <span className="kvm-vlabel">Size</span>
+                            <input
+                              placeholder="e.g. M"
+                              value={variant.size}
+                              onChange={(e) => updateVariant(index, "size", e.target.value)}
+                              className="kvm-input"
+                            />
+                          </label>
+                          <label className="kvm-vcell">
+                            <span className="kvm-vlabel">Colour</span>
+                            <input
+                              placeholder="e.g. Black"
+                              value={variant.color}
+                              onChange={(e) => updateVariant(index, "color", e.target.value)}
+                              className="kvm-input"
+                            />
+                          </label>
+                          <label className="kvm-vcell">
+                            <span className="kvm-vlabel">Stock</span>
+                            <input
+                              type="number"
+                              inputMode="numeric"
+                              min={0}
+                              step={1}
+                              placeholder="0"
+                              value={variant.inventory}
+                              onFocus={(e) => e.target.select()}
+                              onChange={(e) =>
+                                updateVariant(index, "inventory", Math.max(0, Math.floor(Number(e.target.value) || 0)))
+                              }
+                              className="kvm-input kvm-stock"
+                              data-tone={stockTone(Number(variant.inventory) || 0)}
+                            />
+                          </label>
+                          <label className="kvm-vcell">
+                            <span className="kvm-vlabel">SKU</span>
+                            <input
+                              placeholder="Optional"
+                              value={variant.sku || ""}
+                              onChange={(e) => updateVariant(index, "sku", e.target.value)}
+                              className="kvm-input"
+                            />
+                          </label>
                           <button
                             type="button"
                             onClick={() => removeVariant(index)}
-                            aria-label="Remove variant"
-                            className="col-span-2 flex min-h-11 items-center justify-center rounded-xl border border-[#D92D20]/30 bg-[#D92D20]/8 px-3 py-2 text-[#B42318] transition hover:bg-[#D92D20]/8 md:col-span-1"
+                            aria-label={`Remove variant ${variant.size || index + 1}`}
+                            className="kvm-vdel"
                           >
-                            <Trash2 className="h-4 w-4" />
+                            <Trash2 size={16} />
                           </button>
+                          {duplicateVariantRows.has(index) && (
+                            <p className="kvm-vwarn">This size and colour already exists above.</p>
+                          )}
                         </div>
                       ))}
                     </div>
+
+                    {form.variants.length > 0 && (
+                      <div className="kvm-quick">
+                        <span>Quick add size</span>
+                        {["S", "M", "L", "XL", "XXL"].map((s) => (
+                          <button key={s} type="button" onClick={() => addVariantSize(s)} className="kvm-chip">
+                            + {s}
+                          </button>
+                        ))}
+                      </div>
+                    )}
                   </div>
                 </FormSection>
 
                 {/* 5. DETAILS, TAGS, FLAGS */}
-                <FormSection id="kv-details" n={5} title="Details & Tags">
-                  <div className="grid gap-3.5 sm:grid-cols-2 sm:gap-4">
-                    <Field
-                      label="Fabric Details"
-                      value={form.fabric_details}
-                      onChange={(v) => setForm({ ...form, fabric_details: v })}
-                    />
-
-                    <Field
-                      label="Wash Care"
-                      value={form.wash_care}
-                      onChange={(v) => setForm({ ...form, wash_care: v })}
-                    />
-
-                    <div className="sm:col-span-2">
-                      <Field
-                        label="Tags"
-                        value={form.tags}
-                        onChange={(v) => setForm({ ...form, tags: v })}
-                      />
+                <FormSection id="kv-details" n={5} title="Details & tags" desc="Care instructions, search tags and storefront badges.">
+                  <div className="kvm-grid kvm-grid-2">
+                    <Field label="Fabric details" value={form.fabric_details} onChange={(v) => setForm({ ...form, fabric_details: v })} />
+                    <Field label="Wash care" value={form.wash_care} onChange={(v) => setForm({ ...form, wash_care: v })} />
+                    <div className="kvm-span-2">
+                      <Field label="Tags" value={form.tags} onChange={(v) => setForm({ ...form, tags: v })} />
                     </div>
                   </div>
 
-                  {/* FLAGS */}
-                  <div className="mt-5 grid grid-cols-2 gap-2 sm:flex sm:flex-wrap">
-                    <Check
-                      label="Best Seller"
-                      checked={form.best_seller}
-                      onChange={(v) => setForm({ ...form, best_seller: v })}
-                    />
-
-                    <Check
-                      label="New Arrival"
-                      checked={form.new_arrival}
-                      onChange={(v) => setForm({ ...form, new_arrival: v })}
-                    />
-
-                    <Check
-                      label="Trending"
-                      checked={form.trending}
-                      onChange={(v) => setForm({ ...form, trending: v })}
-                    />
-
-                    <Check
-                      label="Limited Edition"
-                      checked={form.limited_edition}
-                      onChange={(v) => setForm({ ...form, limited_edition: v })}
-                    />
+                  <label className="kvm-label kvm-mt">Storefront flags</label>
+                  <div className="kvm-flags">
+                    <Toggle label="Best seller" checked={form.best_seller} onChange={(v) => setForm({ ...form, best_seller: v })} />
+                    <Toggle label="New arrival" checked={form.new_arrival} onChange={(v) => setForm({ ...form, new_arrival: v })} />
+                    <Toggle label="Trending" checked={form.trending} onChange={(v) => setForm({ ...form, trending: v })} />
+                    <Toggle label="Limited edition" checked={form.limited_edition} onChange={(v) => setForm({ ...form, limited_edition: v })} />
                   </div>
                 </FormSection>
               </div>
             </div>
 
-            {/* ACTIONS */}
-            <div className="flex justify-end gap-2.5 border-t border-[#E4E7EC] bg-[#F5F6F8] px-4 py-3.5 pb-[max(0.875rem,env(safe-area-inset-bottom))] sm:gap-3 sm:px-6">
-              <button
-                onClick={() => setModal(false)}
-                disabled={saving}
-                className="min-h-11 flex-1 rounded-lg border border-[#E53935]/50 bg-transparent px-5 py-2.5 text-sm font-semibold text-[#E53935] transition hover:bg-[#E53935]/10 disabled:opacity-50 sm:flex-none sm:px-8"
-              >
-                Cancel
-              </button>
-
-              <button
-                onClick={saveProduct}
-                disabled={saving}
-                className={`flex min-h-11 flex-1 items-center justify-center gap-2 rounded-lg px-5 py-2.5 text-sm font-bold transition active:scale-[0.98] disabled:opacity-60 sm:flex-none sm:px-8 ${primaryBtn}`}
-              >
-                {saving && <Loader2 className="h-4 w-4 animate-spin" />}
-                {editingId ? "Save Changes" : "Create Product"}
-                {!saving && <ArrowRight className="h-4 w-4" />}
-              </button>
-            </div>
+            {/* actions */}
+            <footer className="kvm-footer">
+              <div className="kvm-footer-stock">
+                <span>Total stock</span>
+                <strong data-tone={stockTone(formTotalStock)}>{formTotalStock}</strong>
+              </div>
+              <div className="kvm-footer-actions">
+                <button type="button" onClick={() => setModal(false)} disabled={saving} className="kvm-btn kvm-btn-ghost">
+                  Cancel
+                </button>
+                <button type="button" onClick={saveProduct} disabled={saving} className="kvm-btn kvm-btn-red">
+                  {saving && <Loader2 size={16} className="animate-spin" />}
+                  {editingId ? "Save changes" : "Create product"}
+                  {!saving && <ArrowRight size={16} />}
+                </button>
+              </div>
+            </footer>
           </div>
         </div>
       )}
@@ -2005,24 +2124,24 @@ export default function AdminProductsPage() {
         {toasts.map((toast) => (
           <div
             key={toast.id}
-            className={`pointer-events-auto flex w-full max-w-sm items-start gap-2.5 rounded-xl border bg-white p-3.5 shadow-[0_8px_24px_rgba(16,24,40,0.12)] transition ${
+            className={`pointer-events-auto flex w-full max-w-sm items-start gap-2.5 rounded-xl border bg-[#1A1A1A] p-3.5 shadow-[0_8px_24px_rgba(16,24,40,0.12)] transition ${
               toast.type === "success"
                 ? "border-[#16845B]/30"
                 : "border-[#D92D20]/30"
             }`}
           >
             {toast.type === "success" ? (
-              <CheckCircle2 className="mt-0.5 h-5 w-5 shrink-0 text-[#0F6446]" />
+              <CheckCircle2 className="mt-0.5 h-5 w-5 shrink-0 text-[#3DDC84]" />
             ) : (
-              <XCircle className="mt-0.5 h-5 w-5 shrink-0 text-[#B42318]" />
+              <XCircle className="mt-0.5 h-5 w-5 shrink-0 text-[#EF3838]" />
             )}
 
-            <p className="flex-1 text-sm text-[#111111]">{toast.message}</p>
+            <p className="flex-1 text-sm text-white">{toast.message}</p>
 
             <button
               onClick={() => dismissToast(toast.id)}
               aria-label="Dismiss"
-              className="text-[#626875] transition hover:text-[#111111]"
+              className="text-[#BDBDBD] transition hover:text-white"
             >
               <X className="h-4 w-4" />
             </button>
@@ -2041,23 +2160,23 @@ function FormSection({
   id,
   n,
   title,
+  desc,
   children,
 }: {
   id: string;
   n: number;
   title: string;
+  desc?: string;
   children: React.ReactNode;
 }) {
   return (
-    <section
-      id={id}
-      className="scroll-mt-2 border-b border-[#E4E7EC] pb-6 pt-1 first:pt-0 last:border-0 last:pb-2 [&:not(:first-child)]:mt-6"
-    >
-      <div className="mb-4 flex items-center gap-3">
-        <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-md border border-[#D0D5DD] bg-[#E53935]/10 text-[12px] font-semibold text-[#E53935]">
-          {n}
-        </span>
-        <h3 className="text-xl font-semibold text-[#111111]">{title}</h3>
+    <section id={id} className="kvm-card">
+      <div className="kvm-card-head">
+        <span className="kvm-card-num">{n}</span>
+        <div>
+          <h3 className="kvm-card-title">{title}</h3>
+          {desc && <p className="kvm-card-desc">{desc}</p>}
+        </div>
       </div>
       {children}
     </section>
@@ -2076,20 +2195,20 @@ function Field({
   type?: string;
 }) {
   return (
-    <div>
-      <label className={labelCls}>{label}</label>
-
+    <div className="kvm-field">
+      <label className="kvm-label">{label}</label>
       <input
         type={type}
         value={value}
         onChange={(e) => onChange(e.target.value)}
-        className={inputCls}
+        className="kvm-input"
+        {...(type === "number" ? { min: 0, inputMode: "decimal" as const } : {})}
       />
     </div>
   );
 }
 
-function Check({
+function Toggle({
   label,
   checked,
   onChange,
@@ -2099,19 +2218,9 @@ function Check({
   onChange: (value: boolean) => void;
 }) {
   return (
-    <label
-      className={`flex min-h-10 cursor-pointer items-center justify-center gap-2 rounded-full border px-4 py-2 text-xs font-semibold transition ${
-        checked
-          ? "border-[#E53935] bg-[#E53935]/20 text-[#111111]"
-          : "border-[#E4E7EC] bg-[#F5F6F8] text-[#4A5160] hover:border-[#E53935]/60 hover:text-[#E53935]"
-      }`}
-    >
-      <input
-        type="checkbox"
-        checked={checked}
-        onChange={(e) => onChange(e.target.checked)}
-        className="hidden"
-      />
+    <label className="kvm-toggle" data-on={checked}>
+      <input type="checkbox" checked={checked} onChange={(e) => onChange(e.target.checked)} />
+      <span className="kvm-toggle-box">{checked && <CheckCircle2 size={14} />}</span>
       {label}
     </label>
   );
@@ -2126,10 +2235,10 @@ function Badge({
 }) {
   // palette-safe tones: red, green, neutral
   const tones: Record<string, string> = {
-    amber: "border-[#D0D5DD] bg-[#E53935]/10 text-[#E53935]",
-    blue: "border-[#16845B]/30 bg-[#16845B]/10 text-[#0F6446]",
-    pink: "border-[#C98B7A]/40 bg-[#C98B7A]/10 text-[#B42318]",
-    violet: "border-[#B2B2B2]/30 bg-[#B2B2B2]/10 text-[#4A5160]",
+    amber: "border-[#3A3A3A] bg-[#EF3838]/10 text-[#EF3838]",
+    blue: "border-[#16845B]/30 bg-[#16845B]/10 text-[#3DDC84]",
+    pink: "border-[#C98B7A]/40 bg-[#C98B7A]/10 text-[#EF3838]",
+    violet: "border-[#B2B2B2]/30 bg-[#B2B2B2]/10 text-[#BDBDBD]",
   };
 
   return (

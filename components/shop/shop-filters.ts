@@ -61,7 +61,7 @@ export const COLLECTION_OPTIONS: { key: CollectionKey; label: string }[] = [
   { key: 'limitedEdition', label: 'Limited Edition' },
 ];
 
-const SIZE_ORDER = ['XS', 'S', 'M', 'L', 'XL', 'XXL', '3XL'];
+const SIZE_ORDER = ['XS', 'S', 'M', 'L', 'XL', 'XXL', '3XL', '4XL', '5XL'];
 const FALLBACK_SIZES = ['S', 'M', 'L', 'XL', 'XXL'];
 
 /** Case/space-insensitive key used in the URL and for matching ("Royal Blue" -> "royal-blue"). */
@@ -134,8 +134,16 @@ export function toggleIn<T>(arr: T[], v: T): T[] {
 
 export function inCategory(products: any[], category: string): any[] {
   if (!category || category === ALL_CATEGORY) return products;
-  if (category === 'plus-size') return products.filter((p) => p.sizes.includes('XXL'));
-  return products.filter((p) => p.category === category);
+  // tags arrive as an array (home feed) or a comma-separated string (shop API)
+  const tagList = (p: any): string[] =>
+    (Array.isArray(p.tags) ? p.tags : String(p.tags || '').split(',')).map((t: string) => String(t).trim().toLowerCase());
+  const tagged = (p: any) => tagList(p).includes(category);
+  // Plus Size = tagged plus-size or sold in 3XL and above (regular ranges also reach XXL, so XXL alone no longer means plus).
+  if (category === 'plus-size') {
+    return products.filter((p) => tagged(p) || (p.sizes || []).some((s: string) => ['3XL', '4XL', '5XL'].includes(String(s))));
+  }
+  // A product has one collection (its category slug); Top Wear / Bottom Wear live as tags.
+  return products.filter((p) => p.category === category || tagged(p));
 }
 
 export function applyFilters(products: any[], f: ShopFilters): any[] {

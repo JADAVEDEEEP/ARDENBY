@@ -13,11 +13,14 @@ import {
   PURCHASE_STATUS,
   fetchMyMembership,
   formatDate,
-  saveBirthday,
   type MyMembership,
   isBenefitLive,
 } from '@/lib/membership-api';
 import { EmptyPanel, SectionTitle } from './metal';
+
+/** Older purchases keep the name of the plan they were bought on, e.g. "KOVENIK MEMBER (was Gold)". */
+const planLabel = (h: { planName: string; previousPlan?: string | null }) =>
+  h.previousPlan ? `${h.planName} (${h.previousPlan})` : h.planName;
 
 const rowStatus = (status: string, endDate: string | null) =>
   status === 'active' && endDate && new Date(endDate).getTime() <= Date.now() ? 'expired' : status;
@@ -26,15 +29,10 @@ const rowStatus = (status: string, endDate: string | null) =>
 export function MembershipSection() {
   const [data, setData] = useState<MyMembership | null>(null);
   const [error, setError] = useState('');
-  const [birthday, setBirthday] = useState('');
-  const [savingBirthday, setSavingBirthday] = useState(false);
-  const [birthdayNote, setBirthdayNote] = useState('');
-
   const load = useCallback(async () => {
     try {
       const result = await fetchMyMembership();
       setData(result);
-      setBirthday(result.birthday ? String(result.birthday).slice(0, 10) : '');
       setError('');
     } catch (e) {
       setError(errorText(e));
@@ -58,19 +56,6 @@ export function MembershipSection() {
   const payments = history.filter((h) => h.paymentStatus !== 'none' || h.amount);
   const previous = history.filter((h) => h.id !== current?.id && h.status !== 'pending');
 
-  const onSaveBirthday = async () => {
-    setSavingBirthday(true);
-    setBirthdayNote('');
-    try {
-      await saveBirthday(birthday);
-      setBirthdayNote('Saved.');
-    } catch (e) {
-      setBirthdayNote(errorText(e));
-    } finally {
-      setSavingBirthday(false);
-    }
-  };
-
   return (
     <div>
       <SectionTitle title="My Membership" sub="Your plan, benefits and payments." />
@@ -79,13 +64,13 @@ export function MembershipSection() {
         <EmptyPanel
           icon={BadgeCheck}
           title="You are not a member yet"
-          text="Join Bronze, Silver or Gold for member pricing and more."
+          text="Join KOVENIK MEMBER for a flat 15% off eligible products."
           action={
             <Link
               href="/membership"
               className="inline-flex min-h-[44px] items-center rounded-[3px] bg-[#E53935] px-6 text-[13px] font-bold uppercase tracking-[0.14em] text-white hover:bg-[#C62E2B]"
             >
-              View plans
+              Join now
             </Link>
           }
         />
@@ -95,7 +80,7 @@ export function MembershipSection() {
             <div className="flex items-center gap-4">
               <MemberBadge size={44} />
               <div>
-                <p className="text-[12px] font-semibold uppercase tracking-[0.16em] text-[#666666]">Current plan</p>
+                <p className="text-[12px] font-semibold uppercase tracking-[0.16em] text-[#666666]">Current membership</p>
                 <h3 className="mt-1 text-[26px] font-bold leading-none">{current.planName}</h3>
               </div>
             </div>
@@ -136,45 +121,15 @@ export function MembershipSection() {
           <div className="mt-6 flex flex-wrap gap-3">
             {!queued && (
               <Link
-                href={`/membership?plan=${encodeURIComponent(current.planSlug)}`}
+                href="/membership"
                 className="inline-flex min-h-[44px] items-center rounded-[3px] bg-[#111111] px-6 text-[13px] font-bold uppercase tracking-[0.14em] text-white hover:bg-[#2A2A2A]"
               >
                 Renew
               </Link>
             )}
-            <Link
-              href="/membership"
-              className="inline-flex min-h-[44px] items-center rounded-[3px] border border-[#111111] px-6 text-[13px] font-bold uppercase tracking-[0.14em] hover:bg-[#111111] hover:text-white"
-            >
-              Compare plans
-            </Link>
           </div>
         </div>
       )}
-
-      <div className="mt-6 rounded border border-[#E5E5E5] bg-white p-5 md:p-6">
-        <h3 className="text-[16px] font-bold">Birthday</h3>
-        <p className="mt-1 text-[14px] text-[#666666]">Save your birth date to your membership profile.</p>
-        <div className="mt-3 flex flex-wrap items-center gap-3">
-          <input
-            type="date"
-            value={birthday}
-            max={new Date().toISOString().slice(0, 10)}
-            onChange={(e) => setBirthday(e.target.value)}
-            className="min-h-[44px] rounded-[3px] border border-[#CFCFCF] px-3 text-[15px]"
-            aria-label="Birth date"
-          />
-          <button
-            type="button"
-            disabled={!birthday || savingBirthday}
-            onClick={onSaveBirthday}
-            className="min-h-[44px] rounded-[3px] bg-[#111111] px-5 text-[13px] font-bold uppercase tracking-[0.14em] text-white disabled:opacity-50"
-          >
-            {savingBirthday ? 'Saving…' : 'Save'}
-          </button>
-          {birthdayNote && <span className="text-[14px] text-[#555555]">{birthdayNote}</span>}
-        </div>
-      </div>
 
       <HistoryTable
         title="Payment history"
@@ -183,7 +138,7 @@ export function MembershipSection() {
           key: h.id,
           cells: [
             formatDate(h.purchasedAt),
-            h.planName,
+            planLabel(h),
             h.amount == null ? '—' : formatINR(h.amount),
             PAYMENT_STATUS[h.paymentStatus] ?? h.paymentStatus,
             h.razorpayPaymentId || h.razorpayOrderId || '—',
@@ -199,7 +154,7 @@ export function MembershipSection() {
           const status = rowStatus(h.status, h.endDate);
           return {
             key: h.id,
-            cells: [h.planName, formatDate(h.startDate), formatDate(h.endDate), PURCHASE_STATUS[status] ?? status],
+            cells: [planLabel(h), formatDate(h.startDate), formatDate(h.endDate), PURCHASE_STATUS[status] ?? status],
           };
         })}
         headings={['Plan', 'Started', 'Ended', 'Status']}

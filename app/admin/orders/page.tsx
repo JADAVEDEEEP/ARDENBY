@@ -95,6 +95,8 @@ type Order = {
 
   total?: number;
   total_amount?: number;
+  cod_fee?: number | string;
+  cod_fee_tax?: number | string;
   totalAmount?: number;
 
   grand_total?: number;
@@ -2145,6 +2147,16 @@ export default function AdminOrdersPage() {
                       "—"
                     }
                   />
+
+                  {Number(selectedOrder.cod_fee) > 0 && (
+                    <InfoBox
+                      label="COD handling fee (incl. GST)"
+                      value={formatMoney(
+                        Number(selectedOrder.cod_fee) +
+                          Number(selectedOrder.cod_fee_tax || 0)
+                      )}
+                    />
+                  )}
 
                   <InfoBox
                     label="Items"

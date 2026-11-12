@@ -27,6 +27,8 @@ export type OrderDetail = {
   shipping_amount: number | string;
   discount_amount: number | string;
   tax_amount: number | string;
+  cod_fee?: number | string;
+  cod_fee_tax?: number | string;
   total_amount: number | string;
   coupon_code?: string | null;
   shipping_name?: string;

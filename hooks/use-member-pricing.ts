@@ -7,8 +7,8 @@ import { fetchMemberPricing, fetchPreviewPricing, type MemberPricing } from '@/l
 // One shared fetch for every price on the page (cards, product page, cart, checkout).
 // This is DISPLAY ONLY: the server recomputes the payable price at cart and checkout.
 //
-//   active member      -> member + prices (their own plan)
-//   everyone else      -> preview (entry tier) so we can say "Join and save Rs X"
+//   active member      -> member + prices (KOVENIK MEMBER)
+//   everyone else      -> preview (KOVENIK MEMBER price) so we can say "Join and save Rs X"
 //                         (guests, non-members, expired members; never applied to payable prices)
 const EMPTY: MemberPricing = { member: null, prices: {}, preview: null };
 const listeners = new Set<(value: MemberPricing) => void>();
@@ -110,7 +110,7 @@ export function useMemberCartItems<T extends { productId: string; price: number 
       freeShipping: pricing.member?.freeDelivery === true,
       // Savings already included in the prices above (active members only).
       memberSavings: items.reduce((sum, item, i) => sum + (item.price - priced[i].price) * qty(item), 0),
-      // What the entry tier would save a non-member on this bag (display only).
+      // What KOVENIK MEMBER would save a non-member on this bag (display only).
       joinSavings: pricing.member
         ? 0
         : items.reduce((sum, item) => {

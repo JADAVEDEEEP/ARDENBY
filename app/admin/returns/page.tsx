@@ -47,8 +47,10 @@ type Item = {
 type Breakdown = {
   lines: { orderItemId: string; name: string; quantity: number; goods: number; discount: number; tax: number; refund: number }[];
   shipping: number;
+  codFee?: number;
   calculated: number;
   final: number;
+  sellerFault?: boolean;
   error?: string;
 };
 
@@ -75,8 +77,23 @@ type ReturnRow = {
     deductionReason: string | null;
     amount: number | null;
     error: string | null;
+    /** Cash on delivery: where the customer asked to be paid (admins see it in full). */
+    upiId?: string | null;
+    sellerFault?: boolean | null;
+    shipping?: number | null;
+    codFee?: number | null;
+    payout?: {
+      id: string | null;
+      utr: string | null;
+      status: string | null;
+      failureReason: string | null;
+      attempts: number;
+    } | null;
   };
   refundPreview: Breakdown | null;
+  /** Both server-calculated, so the admin sees what 'seller's fault' changes before saving. */
+  refundPreviews?: { standard: Breakdown; sellerFault: Breakdown } | null;
+  sellerFaultDefault?: boolean;
   history: { from: string | null; to: string; note: string | null; actorRole: string | null; at: string }[];
 };
 
@@ -103,7 +120,7 @@ const STATUS_TONE: Record<string, 'warning' | 'accent' | 'error' | 'success' | '
 const REFUND_TEXT: Record<string, string> = {
   not_applicable: 'No refund due',
   pending: 'Refund waiting to be sent',
-  processing: 'Refund sent — waiting for Razorpay to confirm',
+  processing: 'Refund sent — waiting for the payment provider to confirm',
   completed: 'Refund completed',
   failed: 'Refund failed — retry it',
 };
@@ -194,13 +211,31 @@ export default function AdminReturnsPage() {
     setError('');
     setNotice('');
     try {
-      if (row.refund.status === 'processing') {
+      if (row.refund.method === 'razorpayx_upi' && row.refund.status === 'processing') {
+        // The payout already exists at RazorpayX: only read it back, never send another.
+        const checked = await opsRequest(`/api/admin/returns/${row.id}/payout-check`, { method: 'POST' });
+        setNotice(
+          checked.data?.status === 'completed'
+            ? 'RazorpayX confirmed the payout. The customer now sees Refunded.'
+            : checked.data?.status === 'failed'
+              ? 'RazorpayX reports the payout failed. You can retry it.'
+              : 'The payout is still processing at RazorpayX.'
+        );
+      } else if (row.refund.status === 'processing') {
         // Razorpay already holds this refund: only look it up (the server cannot create one from here).
         const checked = await opsRequest(`/api/admin/returns/${row.id}/refund-check`, { method: 'POST' });
         setNotice(checked.message || 'Refund checked.');
       } else {
         const data = await opsRequest(`/api/admin/returns/${row.id}/refund-retry`, { method: 'POST' });
-        setNotice(data.return?.refundStatus === 'completed' ? 'Refund confirmed by Razorpay.' : 'Refund checked. It is not confirmed by Razorpay yet.');
+        setNotice(
+          row.refund.method === 'razorpayx_upi'
+            ? data.return?.refundStatus === 'failed'
+              ? 'RazorpayX did not accept the payout. See the reason on the card.'
+              : 'Payout sent to RazorpayX. It shows Refunded only after RazorpayX confirms it.'
+            : data.return?.refundStatus === 'completed'
+              ? 'Refund confirmed by Razorpay.'
+              : 'Refund checked. It is not confirmed by Razorpay yet.'
+        );
       }
       await load();
     } catch (e) {
@@ -336,7 +371,11 @@ function ReturnCard({
 }) {
   const [showHistory, setShowHistory] = useState(false);
   const refundDue = r.status === 'Inspected' && r.refund.status == null;
-  const refundOpen = r.status === 'Inspected' && ['pending', 'processing', 'failed'].includes(r.refund.status || '') && r.refund.method === 'razorpay';
+  const isPayout = r.refund.method === 'razorpayx_upi';
+  const refundOpen =
+    r.status === 'Inspected' &&
+    ['pending', 'processing', 'failed'].includes(r.refund.status || '') &&
+    (r.refund.method === 'razorpay' || isPayout);
 
   return (
     <li className="space-y-3 px-5 py-4">
@@ -391,12 +430,22 @@ function ReturnCard({
         </p>
       )}
 
+      {!r.refund.status && r.refund.upiId && (
+        <p className="text-[13px] text-[#626875]">
+          Customer’s UPI ID for the refund: <strong className="text-[#111111]">{r.refund.upiId}</strong>
+        </p>
+      )}
+
       {r.refund.status && (
         <p className="text-[13px] text-[#626875]">
           {REFUND_TEXT[r.refund.status] || r.refund.status}
           {r.refund.amount != null && ` — ${inr(r.refund.amount)}`}
           {r.refund.calculated != null && r.refund.deduction ? ` (calculated ${inr(r.refund.calculated)}, deduction ${inr(r.refund.deduction)}${r.refund.deductionReason ? `: ${r.refund.deductionReason}` : ''})` : ''}
-          {r.refund.method && r.refund.method !== 'razorpay' ? ` · paid by ${r.refund.method.replace('_', ' ')}${r.refund.reference ? `, ref ${r.refund.reference}` : ''}` : ''}
+          {isPayout ? ` · UPI payout to ${r.refund.upiId || 'the customer'}` : ''}
+          {isPayout && r.refund.payout?.id ? ` · payout ${r.refund.payout.id}` : ''}
+          {isPayout && r.refund.payout?.utr ? ` · UTR ${r.refund.payout.utr}` : ''}
+          {isPayout && r.refund.payout?.status === 'reversed' ? ' · REVERSED by the bank — pay the customer manually' : ''}
+          {r.refund.method && r.refund.method !== 'razorpay' && !isPayout ? ` · paid by ${r.refund.method.replace('_', ' ')}${r.refund.reference ? `, ref ${r.refund.reference}` : ''}` : ''}
           {r.refund.error && r.refund.status === 'failed' ? ` · ${r.refund.error}` : ''}
         </p>
       )}
@@ -435,7 +484,11 @@ function ReturnCard({
         {refundOpen && (
           <button type="button" className={btnPrimary} onClick={onRetry} disabled={busy}>
             {busy && <Loader2 className="h-4 w-4 animate-spin" />}
-            {r.refund.status === 'failed' || r.refund.status === 'pending' ? 'Retry refund' : 'Check refund status'}
+            {r.refund.status === 'failed' || r.refund.status === 'pending'
+              ? isPayout
+                ? 'Retry payout via RazorpayX'
+                : 'Retry refund'
+              : 'Check refund status'}
           </button>
         )}
         <button type="button" className="text-[13px] font-semibold text-[#626875] underline" onClick={() => setShowHistory((v) => !v)}>
@@ -592,18 +645,41 @@ function RefundDialog({ row, onClose, onDone }: { row: ReturnRow; onClose: () =>
   const [deductionReason, setDeductionReason] = useState('');
   const [method, setMethod] = useState('upi');
   const [reference, setReference] = useState('');
-  const [preview, setPreview] = useState<Breakdown | null>(row.refundPreview);
+  const [previews, setPreviews] = useState(row.refundPreviews ?? null);
+  const [sellerFault, setSellerFault] = useState<boolean>(Boolean(row.sellerFaultDefault));
+  const [fallbackPreview, setFallbackPreview] = useState<Breakdown | null>(row.refundPreview);
+  const preview: Breakdown | null = previews ? (sellerFault ? previews.sellerFault : previews.standard) : fallbackPreview;
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState('');
+  // Automatic UPI payout through RazorpayX, when it is switched on and Payouts is activated.
+  const [payouts, setPayouts] = useState<{ active: boolean; reason: string | null } | null>(null);
+  const [manual, setManual] = useState(false);
 
   const cod = Boolean(row.order?.paidCod);
-  const amount = Number(deduction) > 0 ? Number(deduction) : 0;
+  const upiId = row.refund.upiId || null;
+  useEffect(() => {
+    if (!cod) return;
+    let live = true;
+    opsRequest('/api/admin/returns-options')
+      .then((d) => live && setPayouts({ active: Boolean(d.payouts?.active), reason: d.payouts?.reason || null }))
+      .catch(() => live && setPayouts({ active: false, reason: 'Could not check RazorpayX.' }));
+    return () => {
+      live = false;
+    };
+  }, [cod]);
+  const viaPayout = cod && Boolean(upiId) && Boolean(payouts?.active) && !manual;
+  // A seller-fault return cannot have a deduction (the server refuses it too).
+  const amount = !sellerFault && Number(deduction) > 0 ? Number(deduction) : 0;
 
   // Refresh the breakdown from the server (it is the only source of the amount).
   useEffect(() => {
     let live = true;
     opsRequest(`/api/admin/returns/${row.id}`)
-      .then((d) => live && d.return?.refundPreview && setPreview(d.return.refundPreview))
+      .then((d) => {
+        if (!live || !d.return) return;
+        if (d.return.refundPreviews) setPreviews(d.return.refundPreviews);
+        if (d.return.refundPreview) setFallbackPreview(d.return.refundPreview);
+      })
       .catch(() => {});
     return () => {
       live = false;
@@ -619,14 +695,21 @@ function RefundDialog({ row, onClose, onDone }: { row: ReturnRow; onClose: () =>
       const res = await opsRequest(`/api/admin/returns/${row.id}/refund`, {
         method: 'POST',
         body: JSON.stringify({
+          sellerFault,
           deduction: amount || undefined,
           deductionReason: amount ? deductionReason : undefined,
-          ...(cod ? { method, reference } : {}),
+          ...(viaPayout ? { method: 'razorpayx_upi' } : cod ? { method, reference } : {}),
         }),
       });
       const r = res.return;
       await onDone(
-        r.refundStatus === 'completed'
+        viaPayout
+          ? r.refundStatus === 'failed'
+            ? 'RazorpayX did not accept the payout. See the reason on the return, then retry or pay manually.'
+            : r.refundStatus === 'completed'
+              ? `Payout of ${inr(r.amount)} confirmed by RazorpayX.`
+              : `Payout of ${inr(r.amount)} sent to ${upiId} via RazorpayX. It shows Refunded only after RazorpayX confirms it.`
+          : r.refundStatus === 'completed'
           ? `Refund of ${inr(r.amount)} recorded. The return is complete.`
           : r.refundStatus === 'not_applicable'
             ? 'No refund was due. The return is complete.'
@@ -656,16 +739,47 @@ function RefundDialog({ row, onClose, onDone }: { row: ReturnRow; onClose: () =>
               </li>
             ))}
           </ul>
-          <p className="mt-1 text-[#626875]">Shipping is not refunded on a return.</p>
+          {sellerFault && (preview.shipping > 0 || (preview.codFee ?? 0) > 0) ? (
+            <p className="mt-1">
+              {preview.shipping > 0 && (
+                <>
+                  Original shipping (this return’s share): <strong>{inr(preview.shipping)}</strong>
+                  <br />
+                </>
+              )}
+              {(preview.codFee ?? 0) > 0 && (
+                <>
+                  COD handling fee with GST (this return’s share): <strong>{inr(preview.codFee ?? 0)}</strong>
+                </>
+              )}
+            </p>
+          ) : (
+            <p className="mt-1 text-[#626875]">
+              Shipping{row.order?.paidCod ? ' and the COD handling fee are' : ' is'} not refunded on a change-of-mind return.
+            </p>
+          )}
           <p className="mt-2 text-[15px] font-bold text-[#111111]">Calculated refund {inr(preview.calculated)}</p>
         </div>
+      )}
+
+      {previews && (
+        <label className="mt-4 flex items-start gap-2.5 rounded-lg border border-[#E4E7EC] bg-white p-3 text-[13px] text-[#344054]">
+          <input type="checkbox" className="mt-0.5" checked={sellerFault} onChange={(e) => setSellerFault(e.target.checked)} />
+          <span>
+            <strong className="text-[#111111]">Seller’s fault</strong> (wrong, damaged or defective product): also refund shipping
+            and the COD handling fee. No deduction is allowed.
+            <span className="mt-0.5 block text-[#626875]">
+              Customer’s reason: {row.reasonLabel || '—'}. {row.sellerFaultDefault ? 'Ticked because of that reason.' : 'Not ticked: this is a change-of-mind reason.'}
+            </span>
+          </span>
+        </label>
       )}
 
       <div className="mt-4">
         <label className={labelClass} htmlFor="deduction">
           Deduction (₹, optional) — for example a pickup fee
         </label>
-        <input id="deduction" className={`${fieldClass} w-40`} inputMode="decimal" value={deduction} onChange={(e) => setDeduction(e.target.value.replace(/[^0-9.]/g, '').slice(0, 10))} />
+        <input id="deduction" className={`${fieldClass} w-40`} inputMode="decimal" disabled={sellerFault} value={deduction} onChange={(e) => setDeduction(e.target.value.replace(/[^0-9.]/g, '').slice(0, 10))} />
         {amount > 0 && (
           <textarea
             className={`${fieldClass} mt-2 h-auto py-2.5`}
@@ -680,9 +794,32 @@ function RefundDialog({ row, onClose, onDone }: { row: ReturnRow; onClose: () =>
         {final != null && <p className="mt-2 text-[15px] font-bold text-[#111111]">Customer receives {inr(final)}</p>}
       </div>
 
-      {cod ? (
+      {viaPayout ? (
+        <div className="mt-4 space-y-1 rounded-lg border border-[#E4E7EC] p-3 text-[13px] text-[#344054]">
+          <p className="font-semibold text-[#111111]">Cash on delivery: UPI payout through RazorpayX</p>
+          <p>
+            Customer’s UPI ID: <strong className="text-[#111111]">{upiId}</strong>
+          </p>
+          <p className="text-[#626875]">
+            The amount above is sent once. The customer sees Refunded only after RazorpayX confirms the payout.
+          </p>
+          <button type="button" className="mt-1 text-[13px] font-semibold text-[#626875] underline" onClick={() => setManual(true)}>
+            Pay manually instead
+          </button>
+        </div>
+      ) : cod ? (
         <div className="mt-4 space-y-2 rounded-lg border border-[#E4E7EC] p-3">
           <p className="text-[13px] text-[#626875]">Cash on delivery: pay the customer back yourself, then record how.</p>
+          {upiId && (
+            <p className="text-[13px] text-[#344054]">
+              Customer’s UPI ID: <strong className="text-[#111111]">{upiId}</strong>
+            </p>
+          )}
+          {!manual && payouts && !payouts.active && (
+            <p className="text-[13px] text-[#8A540C]">
+              Automatic RazorpayX payout is not available{payouts.reason ? ` (${payouts.reason})` : ''}. Use the manual refund.
+            </p>
+          )}
           <label className={labelClass} htmlFor="method">
             Paid by
           </label>
@@ -713,7 +850,7 @@ function RefundDialog({ row, onClose, onDone }: { row: ReturnRow; onClose: () =>
         </button>
         <button type="button" className={btnPrimary} onClick={() => void submit()} disabled={busy || !preview || Boolean(preview.error)}>
           {busy && <Loader2 className="h-4 w-4 animate-spin" />}
-          {cod ? 'Record the refund' : 'Send refund'}
+          {viaPayout ? 'Process COD Refund via RazorpayX' : cod ? 'Record the refund' : 'Send refund'}
         </button>
       </div>
     </Overlay>

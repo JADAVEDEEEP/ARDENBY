@@ -30,8 +30,8 @@ import { useCartCoupon } from '@/features/cart/use-cart-coupon';
 import { useHomeProducts } from '@/hooks/use-home-products';
 import {
   calculateCartPricing,
-  FREE_SHIPPING_THRESHOLD,
   GST_RATE,
+  SHIPPING_FEE,
 } from '@/lib/pricing';
 import { formatINR } from '@/lib/format';
 import type { CartItem } from '@/types';
@@ -57,47 +57,29 @@ function Eyebrow({ children }: { children: React.ReactNode }) {
   );
 }
 
-function ShippingProgress({ subtotal }: { subtotal: number }) {
-  const remaining = Math.max(0, FREE_SHIPPING_THRESHOLD - subtotal);
-  const unlocked = remaining === 0;
-  const progress = Math.min(100, (subtotal / FREE_SHIPPING_THRESHOLD) * 100);
-
+/** Temporary shipping rule: flat fee for everyone, free for an active member (decided by the server). */
+function ShippingNote({ free }: { free: boolean }) {
   return (
     <div className={`px-4 py-4 sm:px-5 ${PANEL}`}>
       <div className="flex items-center gap-3">
         <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#111111] text-white">
-          {unlocked ? (
-            <Check className="h-4 w-4" strokeWidth={2.5} />
-          ) : (
-            <Truck className="h-4 w-4" strokeWidth={1.75} />
-          )}
+          {free ? <Check className="h-4 w-4" strokeWidth={2.5} /> : <Truck className="h-4 w-4" strokeWidth={1.75} />}
         </span>
         <p className="min-w-0 text-sm text-[#5C5C5C]">
-          {unlocked ? (
+          {free ? (
             <>
-              <span className="font-bold text-[#111111]">You&apos;ve unlocked FREE shipping.</span>{' '}
-              Your order ships on us.
+              <span className="font-bold text-[#111111]">Free shipping on this order.</span> KOVENIK MEMBER benefit.
             </>
           ) : (
             <>
-              Add <span className={`font-bold ${RED}`}>{formatINR(remaining)}</span> more for{' '}
-              <span className="font-bold text-[#111111]">FREE shipping</span>
+              <span className="font-bold text-[#111111]">Flat {formatINR(SHIPPING_FEE)} shipping</span> on this order.{' '}
+              <Link href="/membership" className="font-bold text-[#111111] underline underline-offset-2">
+                KOVENIK members ship free
+              </Link>
+              .
             </>
           )}
         </p>
-      </div>
-      <div
-        className="mt-3 h-[3px] overflow-hidden bg-[#DADADA]"
-        role="progressbar"
-        aria-label="Progress to free shipping"
-        aria-valuemin={0}
-        aria-valuemax={100}
-        aria-valuenow={Math.round(progress)}
-      >
-        <div
-          className="h-full bg-[#111111] transition-[width] duration-500 ease-out motion-reduce:transition-none"
-          style={{ width: `${progress}%` }}
-        />
       </div>
     </div>
   );
@@ -705,7 +687,7 @@ export default function CartPage() {
               </div>
 
               <div className="mb-6 space-y-3">
-                <ShippingProgress subtotal={rawSubtotal} />
+                <ShippingNote free={memberCart.freeShipping} />
                 <MemberSavingsBanner
                   tier={memberCart.member?.planName ?? null}
                   memberSavings={memberCart.memberSavings}
@@ -752,7 +734,7 @@ export default function CartPage() {
                   { Icon: ShieldCheck, label: 'Secure checkout' },
                   {
                     Icon: Truck,
-                    label: `Free shipping ${formatINR(FREE_SHIPPING_THRESHOLD)}+`,
+                    label: memberCart.freeShipping ? 'Free member shipping' : `Flat ${formatINR(SHIPPING_FEE)} shipping`,
                   },
                   { Icon: RotateCcw, label: '7-day returns' },
                 ].map(({ Icon, label }) => (

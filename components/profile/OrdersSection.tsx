@@ -533,6 +533,12 @@ export function OrdersSection({ profile }: { profile: ProfileState }) {
                                     <dt className="text-[#666666]">GST (5%)</dt>
                                     <dd className="tabular-nums">{profile.money(Number(detail.tax_amount))}</dd>
                                   </div>
+                                  {Number(detail.cod_fee) > 0 && (
+                                    <div className="flex justify-between gap-3">
+                                      <dt className="text-[#666666]">COD handling fee (incl. GST)</dt>
+                                      <dd className="tabular-nums">{profile.money(Number(detail.cod_fee) + Number(detail.cod_fee_tax || 0))}</dd>
+                                    </div>
+                                  )}
                                   <div className="flex justify-between gap-3 border-t border-[#E5E5E5] pt-2 text-[17px] font-bold">
                                     <dt>Total</dt>
                                     <dd className="tabular-nums">{profile.money(Number(detail.total_amount))}</dd>

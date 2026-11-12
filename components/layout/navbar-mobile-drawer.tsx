@@ -16,7 +16,7 @@ import type { Product } from '@/types';
 
 import { KovenikBrand } from './kovenik-brand';
 import type { UserProfile } from './navbar';
-import { SocialLinks } from './social-links';
+import { HAS_SOCIAL_LINKS, SocialLinks } from './social-links';
 
 type NavbarMobileDrawerProps = {
   mobileOpen: boolean;
@@ -450,10 +450,12 @@ export function NavbarMobileDrawer({
             </ul>
 
             {/* h) follow us */}
-            <div className="px-5 pb-8 pt-6">
-              <p className="mb-3 text-[16px] font-bold text-kv-ink">Follow Us</p>
-              <SocialLinks />
-            </div>
+            {HAS_SOCIAL_LINKS && (
+              <div className="px-5 pb-8 pt-6">
+                <p className="mb-3 text-[16px] font-bold text-kv-ink">Follow Us</p>
+                <SocialLinks />
+              </div>
+            )}
           </motion.div>
         </div>
       )}

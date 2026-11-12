@@ -18,7 +18,7 @@ import {
 import { toast } from 'sonner';
 import { useCartStore, waitForPendingCartUpdates } from '@/store/cart-store';
 import { startRazorpayPayment } from '@/lib/razorpay-checkout';
-import { calculateCartPricing } from '@/lib/pricing';
+import { calculateCartPricing, SHIPPING_FEE, COD_LIMIT_MESSAGE } from '@/lib/pricing';
 import { useMemberCartItems } from '@/hooks/use-member-pricing';
 import { formatINR } from '@/lib/format';
 import { useCartCoupon } from '@/features/cart/use-cart-coupon';
@@ -224,6 +224,13 @@ function CheckoutPageView() {
     if (lock.current || !selectedAddress) return;
     lock.current = true;
 
+    if (selectedPayment === 'cod' && !codAvailable) {
+      lock.current = false;
+      setSelectedPayment('online');
+      toast.error(COD_LIMIT_MESSAGE);
+      return;
+    }
+
     const isOnline = selectedPayment === 'online';
     const { id: addressId, name, phone, pincode, address, city, state } = selectedAddress;
 
@@ -296,13 +303,26 @@ function CheckoutPageView() {
   };
 
   // Shared with the cart and the order API (lib/pricing.ts).
-  const { subtotal, discount, shipping, gst, total, totalSavings } = calculateCartPricing(items, coupon.pricingCoupon, { freeShipping: memberCart.freeShipping });
+  const baseOptions = { freeShipping: memberCart.freeShipping };
+  const { codAvailable } = calculateCartPricing(items, coupon.pricingCoupon, baseOptions);
+  const codSelected = selectedPayment === 'cod' && codAvailable;
+  const { subtotal, discount, shipping, gst, codFee, codFeeTax, total, totalSavings } = calculateCartPricing(
+    items,
+    coupon.pricingCoupon,
+    { ...baseOptions, cod: codSelected }
+  );
+  // COD switches itself off when the goods value goes over the limit (and the server
+  // refuses it too); the customer is moved to online payment.
+  useEffect(() => {
+    if (!codAvailable && selectedPayment === 'cod') setSelectedPayment('online');
+  }, [codAvailable, selectedPayment]);
   const itemCount = items.reduce((acc, item) => acc + item.quantity, 0);
   const pricing = {
     subtotal,
     discount,
     shipping,
     gst,
+    codFee: codFee + codFeeTax,
     total,
     itemCount,
     totalSavings,
@@ -469,7 +489,7 @@ function CheckoutPageView() {
                     </span>
                     <span className="min-w-0 flex-1">
                       <span className="block text-[16px] font-bold leading-6 text-[#111111]">Standard delivery</span>
-                      <span className="block text-[14px] leading-5 text-[#666666]">Free on orders above ₹999</span>
+                      <span className="block text-[14px] leading-5 text-[#666666]">{memberCart.freeShipping ? 'Free for KOVENIK members' : `Flat ₹${SHIPPING_FEE} per order · free for members`}</span>
                     </span>
                     <span className="shrink-0 rounded-full bg-[#111111] px-2.5 py-1 text-[12px] font-bold tracking-[0.06em] text-white">
                       {shipping === 0 ? 'FREE' : formatINR(shipping)}
@@ -508,7 +528,7 @@ function CheckoutPageView() {
                 </Badge>
               }
             >
-              <PaymentSection value={selectedPayment} onChange={setSelectedPayment} disabled={busy} />
+              <PaymentSection value={selectedPayment} onChange={setSelectedPayment} disabled={busy} codAvailable={codAvailable} />
             </SectionCard>
 
             <div ref={statusRef} className="scroll-mt-28">

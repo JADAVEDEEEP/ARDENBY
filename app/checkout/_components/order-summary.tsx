@@ -12,6 +12,8 @@ export type SummaryPricing = {
   discount: number;
   shipping: number;
   gst: number;
+  /** COD handling fee including its GST; 0 for prepaid orders. */
+  codFee?: number;
   total: number;
   itemCount: number;
   totalSavings?: number;
@@ -138,6 +140,12 @@ export function PriceLines({ pricing, couponCode }: { pricing: SummaryPricing; c
         <dt>GST (5%)</dt>
         <dd className="font-medium tabular-nums text-[#111111]">{formatINR(gst)}</dd>
       </div>
+      {(pricing.codFee ?? 0) > 0 && (
+        <div className="flex justify-between gap-3 text-[#444444]">
+          <dt>COD handling fee (incl. GST)</dt>
+          <dd className="font-medium tabular-nums text-[#111111]">{formatINR(pricing.codFee ?? 0)}</dd>
+        </div>
+      )}
       {memberSavings > 0 && (
         <div className="flex items-center justify-between gap-3 rounded-[10px] bg-[#F5F5F5] px-3 py-2.5 font-semibold text-[#111111]">
           <dt className="flex min-w-0 items-center gap-2">
@@ -270,7 +278,7 @@ export function PlaceOrderButton({
 }
 
 const TRUST = [
-  { Icon: Truck, title: 'Free shipping ₹999+' },
+  { Icon: Truck, title: 'Flat ₹49 shipping' },
   { Icon: ShieldCheck, title: 'Secure payments' },
   { Icon: RotateCcw, title: '7-day easy returns' },
   { Icon: Headset, title: 'Customer support' },

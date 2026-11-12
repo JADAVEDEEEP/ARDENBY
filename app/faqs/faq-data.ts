@@ -1,7 +1,6 @@
 import {
-  FREE_SHIPPING_THRESHOLD,
   GST_PERCENT,
-  MEMBERSHIP_PLANS,
+  MEMBERSHIP_PLAN,
   RETURN_WINDOW_DAYS,
   SHIPPING_FEE,
   inr,
@@ -33,7 +32,7 @@ export interface FaqItem {
   link?: { href: string; label: string };
 }
 
-const planLine = MEMBERSHIP_PLANS.map((p) => `${p.name} (${inr(p.price)}, ${p.discount}% off eligible products${p.freeShipping ? ', free shipping' : ''})`).join('; ');
+const planLine = `${MEMBERSHIP_PLAN.name} (${inr(MEMBERSHIP_PLAN.price)} a year, an additional ${MEMBERSHIP_PLAN.discount}% off eligible products)`;
 
 export const FAQS: FaqItem[] = [
   // ---- Orders & Payments
@@ -95,14 +94,14 @@ export const FAQS: FaqItem[] = [
     id: 'shipping-cost',
     category: 'Shipping & Delivery',
     q: 'How much does shipping cost?',
-    a: `Orders with a subtotal below ${inr(FREE_SHIPPING_THRESHOLD)} have a flat ${inr(SHIPPING_FEE)} shipping fee. Orders of ${inr(FREE_SHIPPING_THRESHOLD)} or more ship free, and so do eligible orders from Gold members.`,
+    a: `Every order has a flat ${inr(SHIPPING_FEE)} shipping fee, whatever the order value. Active KOVENIK members ship free.`,
     link: { href: '/shipping', label: 'Shipping & Delivery Policy' },
   },
   {
     id: 'free-shipping-coupon',
     category: 'Shipping & Delivery',
-    q: 'Does a coupon affect free shipping?',
-    a: `No. The ${inr(FREE_SHIPPING_THRESHOLD)} free-shipping threshold is measured on your subtotal before a coupon is applied.`,
+    q: 'Does a coupon change the shipping fee?',
+    a: 'No. Coupons reduce the product total only; the shipping fee stays the same (flat, or free for active members).',
   },
   {
     id: 'delivery-time',
@@ -190,21 +189,21 @@ export const FAQS: FaqItem[] = [
   {
     id: 'membership-plans',
     category: 'Membership',
-    q: 'What membership plans are there?',
-    a: `KOVENIK offers ${planLine}. Each plan runs for one year. Full benefits are listed on the membership page.`,
-    link: { href: '/membership', label: 'See membership plans' },
+    q: 'What is KOVENIK MEMBER?',
+    a: `KOVENIK has one membership: ${planLine}. It runs for one year. The member discount comes off the current selling price, sale items included, and is applied once. Sale price, member discount and coupons together are capped at a maximum combined discount off the list price. Full benefits are on the membership page.`,
+    link: { href: '/membership', label: 'See membership' },
   },
   {
     id: 'membership-upgrade',
     category: 'Membership',
-    q: 'Can I renew or upgrade my membership?',
-    a: 'Buying the same plan again renews it from the day your current term ends. Moving to a higher plan starts it immediately and ends your lower plan; the unused part of the lower plan is not credited. A lower plan cannot be bought while a higher one is active.',
+    q: 'Can I renew my membership?',
+    a: 'Yes. Buying KOVENIK MEMBER again while you are a member renews it from the day your current term ends. If you joined on our earlier Bronze, Silver or Gold plan, that term continues until its end date and a renewal starts after it.',
   },
   {
     id: 'membership-shipping',
     category: 'Membership',
-    q: 'Which membership gives free shipping?',
-    a: 'Gold gives free shipping on eligible orders. Every order of ' + inr(FREE_SHIPPING_THRESHOLD) + ' or more ships free for everyone.',
+    q: 'Does membership include free shipping?',
+    a: 'Yes. Active KOVENIK members get free shipping on every order. Everyone else pays a flat ' + inr(SHIPPING_FEE) + ' per order. Members who bought our earlier Gold plan keep free shipping until that term ends.',
   },
 
   // ---- Account & Security

@@ -3,9 +3,12 @@ import { Star } from 'lucide-react';
 
 import { cn } from '@/lib/utils';
 
+/** Stars stay hidden until there are enough reviews to mean something. */
+export const MIN_REVIEWS_TO_SHOW = 3;
+
 /**
  * Average rating + review count from the live review data. Renders nothing
- * when the product has no reviews, so no rating is ever shown that is not real.
+ * until the product has at least 3 reviews, so no rating is ever shown that is not real.
  * Clicking it opens that product's review section.
  */
 export function RatingLink({
@@ -21,7 +24,7 @@ export function RatingLink({
 }) {
   const average = Number(rating);
   const count = Number(reviewCount);
-  if (!slug || !Number.isFinite(count) || count <= 0 || !Number.isFinite(average) || average <= 0) {
+  if (!slug || !Number.isFinite(count) || count < MIN_REVIEWS_TO_SHOW || !Number.isFinite(average) || average <= 0) {
     return null;
   }
 

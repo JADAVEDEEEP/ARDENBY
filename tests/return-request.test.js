@@ -15,7 +15,7 @@ const load = (file) => {
   return mod.exports;
 };
 
-const { initialSelection, validateReturn, buildReturnPayload, chosenItems, REASON_MAX } = load('return-request.ts');
+const { initialSelection, validateReturn, buildReturnPayload, chosenItems, isValidUpi, REASON_MAX } = load('return-request.ts');
 const cancel = load('cancel-reasons.ts');
 
 const items = [
@@ -87,7 +87,7 @@ test("the website's cancel reasons are exactly the server's (a drift would make 
 test('the order page includes the cancel and return sections and reloads after a change', () => {
   const page = fs.readFileSync(path.join(__dirname, '..', 'app', 'orders', '[id]', 'page.tsx'), 'utf8');
   assert.match(page, /<CancelSection orderId=\{order\.id\} onChanged=\{\(\) => load\(\)\} \/>/);
-  assert.match(page, /<ReturnSection orderId=\{order\.id\} onChanged=\{\(\) => load\(\)\} \/>/);
+  assert.match(page, /<ReturnSection orderId=\{order\.id\} isCod=\{[^}]*'cod'\} onChanged=\{\(\) => load\(\)\} \/>/);
 });
 
 test('admin orders no longer sends a bare "Cancelled" status: it opens the reason dialog', () => {
@@ -111,4 +111,22 @@ test("admin refund screens: history panel and the Razorpay status check are wire
   const returns = read("app/admin/returns/page.tsx");
   assert.match(returns, /refund-check/);
   assert.match(returns, /row\.refund\.status === 'processing'/, "a refund Razorpay already holds is only checked, never retried");
+});
+
+test('COD returns need a valid UPI id; prepaid returns do not ask for one', () => {
+  const picked = { a: { checked: true, quantity: 1 }, b: { checked: false, quantity: 1 } };
+  assert.equal(validateReturn(items, picked, 'size', '', { required: false, value: '' }), null);
+  assert.equal(validateReturn(items, picked, 'size', '', undefined), null);
+  assert.match(validateReturn(items, picked, 'size', '', { required: true, value: '' }), /UPI ID/);
+  assert.match(validateReturn(items, picked, 'size', '', { required: true, value: 'not-a-upi' }), /UPI ID/);
+  assert.equal(validateReturn(items, picked, 'size', '', { required: true, value: 'deep@okhdfcbank' }), null);
+  assert.ok(isValidUpi(' Deep.Jadav@YBL ') && !isValidUpi('a@b') && !isValidUpi('deep@ybl.com'));
+});
+
+test('the UPI id goes in the payload only when given, lower-cased, never with an amount', () => {
+  const picked = { a: { checked: true, quantity: 1 } };
+  const withUpi = buildReturnPayload('o1', items, picked, 'size', '', ' Deep@YBL ');
+  assert.equal(withUpi.upiId, 'deep@ybl');
+  assert.ok(!('amount' in withUpi) && !('refundAmount' in withUpi));
+  assert.ok(!('upiId' in buildReturnPayload('o1', items, picked, 'size', '')));
 });

@@ -3,14 +3,12 @@
 import { useState } from "react";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
 import { ChevronDown } from "lucide-react";
 
-import { useNewsletterSubscribe } from "@/hooks/use-newsletter-subscribe";
 import { cn } from "@/lib/utils";
 
 import { KovenikBrand } from "./kovenik-brand";
-import { SocialLinks } from "./social-links";
+import { HAS_SOCIAL_LINKS, SocialLinks } from "./social-links";
 
 /* ================================================================
     FOOTER CONTENT
@@ -25,15 +23,13 @@ const footerColumns = [
       { label: "Returns & Refunds", href: "/returns" },
       { label: "Shipping & Delivery", href: "/shipping" },
       { label: "FAQs", href: "/faqs" },
+      { label: "Size Guide", href: "/size-guide" },
     ],
   },
   {
     title: "Company",
     links: [
       { label: "About Us", href: "/about" },
-      { label: "Careers", href: "/careers" },
-      { label: "Press", href: "/press" },
-      { label: "Sustainability", href: "/sustainability" },
     ],
   },
   {
@@ -106,12 +102,6 @@ function FooterColumn({
 ================================================================ */
 
 export function Footer() {
-  const pathname = usePathname() ?? "";
-  const isHome = pathname === "/";
-
-  // Same submit + toast logic as the homepage Newsletter section.
-  const { email, setEmail, available, handleSubscribe } = useNewsletterSubscribe();
-
   return (
     <footer className="kv-flat relative w-full overflow-x-hidden bg-kv-footer text-kv-ink">
       <style jsx global>{`
@@ -175,7 +165,7 @@ export function Footer() {
         }
         @media (min-width: 1024px) {
           [data-sonner-toaster][data-y-position="top"] {
-            top: 132px !important;
+            top: 150px !important;
           }
         }
         /* Fallback if the wishlist toast comes from react-toastify. */
@@ -195,45 +185,6 @@ export function Footer() {
         }
       `}</style>
 
-      {/* Newsletter (hidden on "/", where the homepage has its own) */}
-      {!isHome && (
-        <section aria-label="Newsletter" className="on-dark bg-kv-ink">
-          <div className="mx-auto grid w-full max-w-[1280px] items-center gap-4 px-4 py-8 md:grid-cols-2 md:gap-12 md:px-6">
-            <div>
-              <p className="text-[13px] font-bold uppercase tracking-[0.2em] text-kv-gold-dark">Kovenik newsletter</p>
-              <h2 className="mt-2 font-oswald text-[26px] font-bold uppercase leading-none tracking-[0.04em] text-white md:text-[32px]">
-                Stay in the inner circle.
-              </h2>
-            </div>
-            <form onSubmit={handleSubscribe} className="w-full min-w-0">
-              <label htmlFor="footer-newsletter-email" className="sr-only">
-                Email address
-              </label>
-              <div className="flex w-full flex-col gap-2 sm:flex-row">
-                <input
-                  id="footer-newsletter-email"
-                  type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  disabled={!available}
-                  placeholder="Enter your email address"
-                  autoComplete="email"
-                  className="h-12 min-w-0 flex-none border border-white/40 sm:flex-1 bg-transparent px-4 text-[16px] text-white outline-none placeholder:text-kv-mist focus:border-kv-gold-dark"
-                />
-                <button
-                  type="submit"
-                  disabled={!available}
-                  className="inline-flex h-12 shrink-0 items-center justify-center bg-kv-gold px-8 text-[15px] font-bold uppercase tracking-[0.1em] text-white hover:bg-kv-gold-dark disabled:cursor-not-allowed disabled:opacity-50"
-                >
-                  Join
-                </button>
-              </div>
-              <p className="mt-3 text-[13px] leading-5 text-kv-mist">Newsletter sign-up is not available yet. Please check back soon.</p>
-            </form>
-          </div>
-        </section>
-      )}
-
       <div className="mx-auto w-full max-w-[1280px] px-4 py-8 md:px-6 md:py-12">
         <div className="grid grid-cols-1 md:grid-cols-4 md:gap-8">
           {footerColumns.map((col, i) => (
@@ -249,10 +200,12 @@ export function Footer() {
             <span className="text-[14px] font-semibold uppercase tracking-[0.12em] text-kv-sub">Est. 2026 · India</span>
           </div>
 
-          <div className="flex items-center gap-3">
-            <span className="text-[16px] font-bold text-kv-ink">Follow Us:</span>
-            <SocialLinks />
-          </div>
+          {HAS_SOCIAL_LINKS && (
+            <div className="flex items-center gap-3">
+              <span className="text-[16px] font-bold text-kv-ink">Follow Us:</span>
+              <SocialLinks />
+            </div>
+          )}
         </div>
 
         <details className="group mt-6 border border-kv-line bg-kv-bg">

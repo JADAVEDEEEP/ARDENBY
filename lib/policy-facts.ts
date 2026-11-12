@@ -12,9 +12,9 @@
 // NEEDS APPROVAL: items marked NEEDS APPROVAL are listed, with context, in
 // docs/POLICY_PAGES_BUSINESS_INPUT_REQUIRED.md.
 
-import { FREE_SHIPPING_THRESHOLD, GST_RATE, SHIPPING_FEE } from '@/lib/pricing';
+import { GST_RATE, SHIPPING_FEE } from '@/lib/pricing';
 
-export { FREE_SHIPPING_THRESHOLD, SHIPPING_FEE };
+export { SHIPPING_FEE };
 
 export const GST_PERCENT = Math.round(GST_RATE * 100);
 
@@ -45,9 +45,8 @@ export const BUSINESS = {
   grievanceOfficer: clean(process.env.NEXT_PUBLIC_GRIEVANCE_OFFICER),
 };
 
-/** Membership plans are read from the live plan table (verified 2026-11-04). */
-export const MEMBERSHIP_PLANS = [
-  { name: 'Bronze', price: 99, discount: 5, freeShipping: false },
-  { name: 'Silver', price: 199, discount: 8, freeShipping: false },
-  { name: 'Gold', price: 399, discount: 12, freeShipping: true },
-] as const;
+/** KOVENIK has one membership plan. These are the launch defaults seeded by
+ *  scripts/seed-membership-plans.js; the live price/discount are edited in the admin panel, so policy
+ *  copy that quotes them must be updated if the admin values change. */
+export const MEMBERSHIP_PLAN = { name: 'KOVENIK MEMBER', price: 199, discount: 15 } as const;
+export const MEMBER_DISCOUNT = MEMBERSHIP_PLAN.discount;

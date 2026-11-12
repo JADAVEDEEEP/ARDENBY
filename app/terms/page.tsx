@@ -6,8 +6,8 @@ import type { LegalSectionDef } from '@/components/info/info-ui';
 import { SupportContact } from '@/components/info/support-contact';
 import {
   BUSINESS,
-  FREE_SHIPPING_THRESHOLD,
   GST_PERCENT,
+  MEMBER_DISCOUNT,
   POLICY_UPDATED,
   SHIPPING_FEE,
   inr,
@@ -156,8 +156,8 @@ const sections: LegalSectionDef[] = [
     title: 'Shipping and delivery',
     content: (
       <p>
-        Orders under {inr(FREE_SHIPPING_THRESHOLD)} carry a {inr(SHIPPING_FEE)} shipping fee; orders of{' '}
-        {inr(FREE_SHIPPING_THRESHOLD)} or more ship free, as do orders by eligible members. Please make sure your
+        Every order carries a flat {inr(SHIPPING_FEE)} shipping fee, whatever its value; active KOVENIK members ship
+        free. Please make sure your
         delivery address and phone number are correct. Delivery is described in our{' '}
         <Link href="/shipping">Shipping &amp; Delivery Policy</Link>.
       </p>
@@ -169,13 +169,14 @@ const sections: LegalSectionDef[] = [
     content: (
       <>
         <p>
-          Membership plans, prices and benefits are shown on the <Link href="/membership">membership page</Link> and
-          apply for the plan’s stated duration.
+          KOVENIK MEMBER is our single membership plan. Its price and benefits are shown on the{' '}
+          <Link href="/membership">membership page</Link> and apply for the plan’s stated duration (one year).
         </p>
         <ul>
-          <li>Buying the same plan again while you are a member renews it from the day your current term ends.</li>
-          <li>Moving up to a higher plan starts it immediately and ends your lower plan; the unused part of the lower plan is not credited.</li>
-          <li>You cannot buy a lower plan while a higher plan is active.</li>
+          <li>Members get an additional {MEMBER_DISCOUNT}% off the current selling price of eligible products, including products already on sale. Sale price, member discount and coupons together can never take more than our maximum combined discount off the list price.</li>
+          <li>Active members get free shipping on every order.</li>
+          <li>Buying the plan again while you are a member renews it from the day your current term ends.</li>
+          <li>Memberships bought on our earlier Bronze, Silver or Gold plans continue until their end date with at least the same benefits.</li>
         </ul>
       </>
     ),
