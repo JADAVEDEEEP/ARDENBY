@@ -33,7 +33,7 @@ Collection tiles use the first real photo of a product in that collection; Supre
 
 ## 4. Things I could not do under your database rules
 
-- **Newsletter:** the database has no subscriber/email table, so the sign-up is hidden everywhere (home + footer). Create a table, or approve one, and I will build the working form with validation and rate limiting.
+- **Newsletter:** phase 1 (double opt-in sign-up + confirm page) is coded; run `node scripts/apply-newsletter-migration.js` (dry run) then `--apply` after a backup. Unsubscribe, admin, campaigns are later phases.
 - **Per-product fields without a column** (is_ai_generated, care instructions as a separate field, GSM): GSM is written into `fabric_details`; care goes into the existing `wash_care`; AI flag lives in `image-log.json`.
 - **"Each product in exactly one collection and several categories":** `products` has one `category_slug`. The collection is stored there; Top Wear / Bottom Wear / Plus Size are stored as slug tokens in the existing `tags` column (the shop and backend filters read them).
 - **Rating stars** are hidden below 3 reviews everywhere (cards and product page).

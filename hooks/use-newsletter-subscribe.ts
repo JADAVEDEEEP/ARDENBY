@@ -3,18 +3,51 @@
 import { useState } from 'react';
 import type { FormEvent } from 'react';
 
-/** Newsletter sign-up is NOT built yet: there is no endpoint and nothing is stored. Until it is,
- *  the forms are disabled and say so honestly. When a real endpoint exists, set NEWSLETTER_AVAILABLE
- *  to true and implement the submit below. Never show a "subscribed" message without a stored result. */
-export const NEWSLETTER_AVAILABLE = false;
-export const NEWSLETTER_UNAVAILABLE_TEXT = 'Newsletter sign-up is not available yet. Please check back soon.';
+import { isValidNewsletterEmail, subscribeToNewsletter } from '@/lib/newsletter-api';
+
+export type NewsletterStatus = 'idle' | 'loading' | 'success' | 'error';
+
+/** Wording shown next to the Join button. The server records which version the visitor saw
+ *  (CONSENT_TEXT_VERSION in the backend); change both together if this text changes. */
+export const NEWSLETTER_CONSENT_TEXT =
+  'By joining you agree to receive KOVENIK marketing emails. We will email you once to confirm. Unsubscribe anytime.';
 
 export function useNewsletterSubscribe() {
   const [email, setEmail] = useState('');
+  const [website, setWebsite] = useState(''); // honeypot
+  const [status, setStatus] = useState<NewsletterStatus>('idle');
+  const [message, setMessage] = useState('');
 
-  const handleSubscribe = (e: FormEvent) => {
-    e.preventDefault(); // nothing is submitted or stored
+  const handleSubscribe = async (e: FormEvent) => {
+    e.preventDefault();
+    if (status === 'loading') return;
+
+    if (!isValidNewsletterEmail(email)) {
+      setStatus('error');
+      setMessage('Please enter a valid email address.');
+      return;
+    }
+
+    setStatus('loading');
+    setMessage('');
+    const result = await subscribeToNewsletter(email, website);
+    if (result.ok) {
+      setStatus('success');
+      setMessage(result.message || 'Almost there! Check your inbox for a confirmation email to finish joining.');
+      setEmail('');
+    } else {
+      setStatus('error');
+      setMessage(result.message);
+    }
   };
 
-  return { email, setEmail, subscribed: false, available: NEWSLETTER_AVAILABLE, handleSubscribe };
+  const onEmailChange = (value: string) => {
+    setEmail(value);
+    if (status === 'error') {
+      setStatus('idle');
+      setMessage('');
+    }
+  };
+
+  return { email, setEmail: onEmailChange, website, setWebsite, status, message, handleSubscribe };
 }
