@@ -24,6 +24,9 @@ export const RETURN_WINDOW_DAYS = 7;
 /** NEEDS APPROVAL: date shown as "Last updated" on the legal pages. */
 export const POLICY_UPDATED = '5 November 2026';
 
+/** The Privacy Policy changed after the shared date above (newsletter section added), so it carries its own. */
+export const PRIVACY_UPDATED = '16 November 2026';
+
 export const inr = (value: number) => `₹${value.toLocaleString('en-IN')}`;
 
 const clean = (value: string | undefined) => (value || '').trim();

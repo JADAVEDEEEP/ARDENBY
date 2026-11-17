@@ -18,6 +18,7 @@ import {
   ImageIcon,
   LayoutDashboard,
   LogOut,
+  Mail,
   Menu,
   PackageCheck,
   PackageX,
@@ -38,11 +39,23 @@ import {
 import { useAdminAccess } from '@/components/admin/use-admin-access';
 import { cn } from '@/lib/utils';
 
+type NavChild = { href: string; label: string; exact?: boolean };
+
 type NavItem = {
   href: string;
   label: string;
   icon: ComponentType<{ className?: string }>;
+  /** Shown under the item while the visitor is inside that section. */
+  children?: NavChild[];
 };
+
+const newsletterChildren: NavChild[] = [
+  { href: '/admin/newsletter', label: 'Overview', exact: true },
+  { href: '/admin/newsletter/subscribers', label: 'Subscribers' },
+  { href: '/admin/newsletter/campaigns', label: 'Campaigns' },
+  { href: '/admin/newsletter/templates', label: 'Email Templates' },
+  { href: '/admin/newsletter/analytics', label: 'Campaign Analytics' },
+];
 
 // Customers (Super Admin only) is intentionally not listed. Reviews, Returns,
 // Stock history, Exports and Security are listed; the backend decides what each
@@ -61,6 +74,7 @@ const adminLinks: NavItem[] = [
   { href: '/admin/coupons', label: 'Coupons', icon: BadgePercent },
   { href: '/admin/reviews', label: 'Reviews', icon: Star },
   { href: '/admin/returns', label: 'Returns', icon: PackageX },
+  { href: '/admin/newsletter', label: 'Newsletter', icon: Mail, children: newsletterChildren },
   { href: '/admin/exports', label: 'Exports', icon: Download },
   { href: '/admin/security', label: 'Security', icon: ShieldCheck },
   { href: '/admin/settings', label: 'Settings', icon: Settings },
@@ -74,8 +88,14 @@ function isActive(pathname: string, href: string) {
   return href === '/admin' ? pathname === '/admin' : pathname.startsWith(href);
 }
 
+function isChildActive(pathname: string, child: NavChild) {
+  return child.exact ? pathname === child.href : pathname.startsWith(child.href);
+}
+
 function pageTitle(pathname: string) {
-  return adminLinks.find((l) => isActive(pathname, l.href))?.label ?? 'Admin';
+  const item = adminLinks.find((l) => isActive(pathname, l.href));
+  const child = item?.children?.find((c) => isChildActive(pathname, c));
+  return child ? `${item?.label} · ${child.label}` : item?.label ?? 'Admin';
 }
 
 function Wordmark({ size = 'lg' }: { size?: 'lg' | 'sm' }) {
@@ -120,22 +140,57 @@ function NavList({ pathname }: { pathname: string }) {
       {adminLinks.map((item) => {
         const Icon = item.icon;
         const active = isActive(pathname, item.href);
+        const open = Boolean(item.children) && active;
+        // With sub-pages, the parent row is only "current" when none of its children is.
+        const childCurrent = open && item.children!.some((c) => isChildActive(pathname, c));
+        const highlighted = active && !childCurrent;
         return (
-          <Link
-            key={item.href}
-            href={item.href}
-            title={item.label}
-            aria-current={active ? 'page' : undefined}
-            className={cn(
-              'group relative flex items-center gap-3.5 rounded-lg px-4 py-3 text-[15px] font-medium outline-none transition-colors focus-visible:ring-2 focus-visible:ring-[#E53935] md:justify-center md:px-0 lg:justify-start lg:px-4',
-              active
-                ? 'bg-[#E53935] text-white'
-                : 'text-[#C9CCD3] hover:bg-white/10 hover:text-white'
+          <div key={item.href}>
+            <Link
+              href={item.href}
+              title={item.label}
+              aria-current={highlighted ? 'page' : undefined}
+              aria-expanded={item.children ? open : undefined}
+              className={cn(
+                'group relative flex items-center gap-3.5 rounded-lg px-4 py-3 text-[15px] font-medium outline-none transition-colors focus-visible:ring-2 focus-visible:ring-[#E53935] md:justify-center md:px-0 lg:justify-start lg:px-4',
+                highlighted
+                  ? 'bg-[#E53935] text-white'
+                  : active
+                    ? 'bg-white/10 text-white'
+                    : 'text-[#C9CCD3] hover:bg-white/10 hover:text-white'
+              )}
+            >
+              <Icon className="h-5 w-5 shrink-0" />
+              <span className="md:hidden lg:inline">{item.label}</span>
+              {item.children && (
+                <ChevronDown
+                  aria-hidden="true"
+                  className={cn('ml-auto h-4 w-4 transition-transform md:hidden lg:block', open && 'rotate-180')}
+                />
+              )}
+            </Link>
+            {open && (
+              <ul className="mt-1 space-y-0.5 md:hidden lg:block" aria-label={`${item.label} sections`}>
+                {item.children!.map((child) => {
+                  const here = isChildActive(pathname, child);
+                  return (
+                    <li key={child.href}>
+                      <Link
+                        href={child.href}
+                        aria-current={here ? 'page' : undefined}
+                        className={cn(
+                          'ml-6 flex items-center gap-2 rounded-md border-l border-white/15 py-2 pl-4 pr-3 text-[14px] outline-none transition-colors focus-visible:ring-2 focus-visible:ring-[#E53935]',
+                          here ? 'bg-[#E53935] font-semibold text-white' : 'text-[#C9CCD3] hover:bg-white/10 hover:text-white'
+                        )}
+                      >
+                        {child.label}
+                      </Link>
+                    </li>
+                  );
+                })}
+              </ul>
             )}
-          >
-            <Icon className="h-5 w-5 shrink-0" />
-            <span className="md:hidden lg:inline">{item.label}</span>
-          </Link>
+          </div>
         );
       })}
     </nav>

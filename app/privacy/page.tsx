@@ -4,12 +4,12 @@ import Link from 'next/link';
 import { Callout, Container, Eyebrow, LegalDocument, PageTitle } from '@/components/info/info-ui';
 import type { LegalSectionDef } from '@/components/info/info-ui';
 import { SupportContact } from '@/components/info/support-contact';
-import { BUSINESS, POLICY_UPDATED } from '@/lib/policy-facts';
+import { BUSINESS, PRIVACY_UPDATED } from '@/lib/policy-facts';
 
 export const metadata: Metadata = {
   title: 'Privacy Policy | KOVENIK',
   description:
-    'How KOVENIK collects, uses, shares and protects your personal information, how payments are handled, and how to delete your account.',
+    'How KOVENIK collects, uses, shares and protects your personal information, how payments and newsletter sign-ups are handled, and how to delete your account.',
   alternates: { canonical: '/privacy' },
   robots: { index: true, follow: true },
 };
@@ -72,11 +72,71 @@ const sections: LegalSectionDef[] = [
           <li>take, pack, deliver, cancel, return and refund your orders;</li>
           <li>apply coupons and membership benefits you are entitled to;</li>
           <li>email you about your orders, cancellations, returns and refunds;</li>
+          <li>send you our newsletter, but only if you sign up for it and confirm your email (see “Newsletter and marketing emails”);</li>
           <li>answer your questions and resolve problems;</li>
           <li>detect fraud and keep the website secure; and</li>
           <li>meet our legal, tax and accounting obligations.</li>
         </ul>
         <p>We do not sell your personal information.</p>
+      </>
+    ),
+  },
+  {
+    id: 'newsletter',
+    title: 'Newsletter and marketing emails',
+    content: (
+      <>
+        <p>
+          Our newsletter is optional. You do not need an account to join, and joining is separate from placing an
+          order. We email you updates, new arrivals and limited-drop announcements only if you ask us to.
+        </p>
+        <h3>How you subscribe (and give consent)</h3>
+        <ul>
+          <li>
+            You enter your email address in the newsletter box on our website. The box tells you that you are agreeing
+            to receive KOVENIK marketing emails.
+          </li>
+          <li>
+            We then send one email with a confirmation link. <strong>You are not subscribed until you click it.</strong>{' '}
+            The link works once and expires after 48 hours. If you did not sign up, ignore that email and you will not be
+            subscribed.
+          </li>
+        </ul>
+        <h3>What we store</h3>
+        <ul>
+          <li>Your email address and whether you are waiting to confirm, subscribed or unsubscribed.</li>
+          <li>
+            When you signed up, confirmed and (if you did) unsubscribed, and which part of the site you used, so that
+            we can show that you agreed.
+          </li>
+          <li>
+            Which version of the sign-up wording you saw, your browser type, and a scrambled (hashed) fingerprint of your
+            internet address. We keep the fingerprint, not the internet address itself.
+          </li>
+        </ul>
+        <p>
+          We use this only to run the newsletter. We do not sell it or share it with anyone for their own marketing. Our
+          email provider (Brevo) delivers the messages for us.
+        </p>
+        <h3>Unsubscribing</h3>
+        <ul>
+          <li>
+            Every newsletter will carry an unsubscribe link, and many email apps also show their own “Unsubscribe”
+            button. Either one stops our newsletter straight away, with no login and no reason needed.
+          </li>
+          <li>
+            You can also ask us to unsubscribe you through our <Link href="/contact">contact page</Link>.
+          </li>
+          <li>
+            Unsubscribing does not stop emails about your orders, returns, refunds or account security (such as
+            one-time passcodes), because you need those.
+          </li>
+          <li>
+            After you unsubscribe we keep your address marked “unsubscribed” so that we do not email you again by
+            mistake. If you want it removed from our records completely, <SupportContact /> and tell us. If you ever
+            sign up again, you will need to confirm your email again.
+          </li>
+        </ul>
       </>
     ),
   },
@@ -142,7 +202,8 @@ const sections: LegalSectionDef[] = [
             the coordinates you share are sent to it.
           </li>
           <li>
-            <strong>Email delivery provider (Brevo)</strong> — to send one-time passcodes and order emails.
+            <strong>Email delivery provider (Brevo)</strong> — to send one-time passcodes, order emails and, if you have
+            subscribed, our newsletter.
           </li>
           <li>
             <strong>Image hosting (Cloudinary)</strong> — to store and serve product, banner and review images.
@@ -266,7 +327,7 @@ export default function PrivacyPage() {
                 language, because your information is yours.
               </p>
               <p className="mt-6 text-[14px] font-semibold uppercase tracking-[0.16em] text-[#555555]">
-                Last updated: <time dateTime="2026-11-05">{POLICY_UPDATED}</time>
+                Last updated: <time dateTime="2026-11-16">{PRIVACY_UPDATED}</time>
               </p>
             </div>
 
@@ -277,6 +338,7 @@ export default function PrivacyPage() {
                 <li>Card and UPI details stay with Razorpay, not with us.</li>
                 <li>No advertising trackers on the site today.</li>
                 <li>You can delete your account yourself, any time.</li>
+                <li>Newsletter emails only after you confirm, and you can unsubscribe in one click.</li>
               </ul>
             </aside>
           </div>

@@ -6,19 +6,20 @@ import type { Product } from '@/types';
 
 import { FilterChips } from './FilterChips';
 import type { ChipOption } from './FilterChips';
+import { prioritizeNewCollection } from '@/lib/new-collection';
+
 import { ProductCard } from './ProductCard';
 import { ProductSkeletonCard } from './ProductRail';
 import { SectionHeader } from './ui/SectionHeader';
 
 interface ExploreCategoryProps {
   products: Product[];
-  /** Product ids already shown in New Arrivals: kept out of this grid so no row repeats. */
-  excludeIds?: ReadonlySet<string>;
   loading: boolean;
   error: string;
   onRetry: () => void;
 }
 
+// Only the loading skeleton uses a fixed count; the real grid is not limited.
 const GRID_LIMIT = 8;
 
 const CHIPS: readonly ChipOption[] = [
@@ -48,15 +49,13 @@ function matches(product: Product, filter: string): boolean {
   }
 }
 
-export function ExploreCategory({ products, excludeIds, loading, error, onRetry }: ExploreCategoryProps) {
+export function ExploreCategory({ products, loading, error, onRetry }: ExploreCategoryProps) {
   const [active, setActive] = useState('all');
 
   const visible = useMemo(() => {
-    const matching = products.filter((p) => matches(p, active));
-    const fresh = excludeIds ? matching.filter((p) => !excludeIds.has(p.id)) : matching;
-    // Prefer products not already shown above; only fall back to repeats if a category would be near-empty.
-    return (fresh.length >= 4 || !excludeIds ? fresh : matching).slice(0, GRID_LIMIT);
-  }, [products, active, excludeIds]);
+    // Every tab lists ALL of its products, the imported catalogue products first, then the older ones.
+    return prioritizeNewCollection(products.filter((p) => matches(p, active)));
+  }, [products, active]);
 
   return (
     <section aria-labelledby="home-explore" className="w-full bg-kv-bg py-10 md:py-14">

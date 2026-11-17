@@ -76,6 +76,20 @@ const ACTIONS = [
   'settings.update',
   'export.orders',
   'export.sales_summary',
+  'export.newsletter',
+  'newsletter.view_list',
+  'newsletter.unsubscribe',
+  'newsletter.campaign.create',
+  'newsletter.campaign.update',
+  'newsletter.campaign.duplicate',
+  'newsletter.campaign.test_send',
+  'newsletter.campaign.schedule',
+  'newsletter.campaign.send',
+  'newsletter.campaign.cancel',
+  'newsletter.template.create',
+  'newsletter.template.update',
+  'newsletter.template.delete',
+  'export.newsletter_campaign',
 ];
 
 const when = (iso: string) =>

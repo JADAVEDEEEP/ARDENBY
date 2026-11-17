@@ -18,6 +18,7 @@ test('review moderation, returns, stock history, exports and security are linked
     ['/admin/returns', 'returns'],
     ['/admin/inventory/history', path.join('inventory', 'history')],
     ['/admin/exports', 'exports'],
+    ['/admin/newsletter', 'newsletter'],
     ['/admin/security', 'security'],
   ]) {
     assert.ok(shell.includes(`href: '${href}'`), href);

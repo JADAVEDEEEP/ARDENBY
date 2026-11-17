@@ -47,3 +47,5 @@ export const subscribeToNewsletter = (email: string, website = '') =>
   post('/api/newsletter/subscribe', { email: email.trim(), source: 'home', website });
 
 export const confirmNewsletter = (token: string) => post('/api/newsletter/confirm', { token });
+
+export const unsubscribeNewsletter = (token: string) => post('/api/newsletter/unsubscribe', { token });

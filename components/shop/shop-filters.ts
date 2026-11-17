@@ -1,3 +1,4 @@
+import { prioritizeNewCollection } from '@/lib/new-collection';
 import {
   canonicalColorName,
   carriesSize,
@@ -179,7 +180,9 @@ export function applyFilters(products: any[], f: ShopFilters): any[] {
     default:
       sorted.sort((a, b) => Number(b.bestSeller) - Number(a.bestSeller));
   }
-  return sorted;
+  // Default ("Relevance") and "New arrivals" lead with the 34 imported catalogue products; older products
+  // follow in the order above. Explicit price / best-selling / discount sorts are left exactly as chosen.
+  return f.sort === 'relevance' || f.sort === 'new' ? prioritizeNewCollection(sorted) : sorted;
 }
 
 /** Filters that count toward the "N filters" badge (category and sort don't). */

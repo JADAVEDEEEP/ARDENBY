@@ -13,17 +13,17 @@ import { ProductRail } from '@/components/home/ProductRail';
 import { PromoBanner } from '@/components/home/PromoBanner';
 import { USPStrip } from '@/components/home/USPStrip';
 import { useHomeProducts } from '@/hooks/use-home-products';
+import { isNewCollection, prioritizeNewCollection } from '@/lib/new-collection';
 
-const RAIL_LIMIT = 8;
-const EXPLORE_LIMIT = 8;
 
 export default function HomePage() {
-  const { products, loading, error, retry } = useHomeProducts();
+  const { products: feed, loading, error, retry } = useHomeProducts();
 
-  // The API returns products newest first, so New Arrivals is simply the newest 8.
-  const newArrivals = useMemo(() => products.slice(0, RAIL_LIMIT), [products]);
-  // Shop by category never repeats a product already shown in New Arrivals.
-  const shownIds = useMemo(() => new Set(newArrivals.map((p) => p.id)), [newArrivals]);
+  // The 34 imported catalogue products lead every product section (see lib/new-collection.ts); the older
+  // products stay in the list after them, so sections that look for a specific collection still find them.
+  const products = useMemo(() => prioritizeNewCollection(feed), [feed]);
+  // New Arrivals shows exactly the 34, read live from the API.
+  const newArrivals = useMemo(() => products.filter(isNewCollection), [products]);
 
   return (
     <>
@@ -42,7 +42,7 @@ export default function HomePage() {
           onRetry={retry}
         />
         <CollectionGrid products={products} />
-        <ExploreCategory products={products} excludeIds={shownIds} loading={loading} error={error} onRetry={retry} />
+        <ExploreCategory products={products} loading={loading} error={error} onRetry={retry} />
         <MembershipBanner />
         <Newsletter />
       </div>
