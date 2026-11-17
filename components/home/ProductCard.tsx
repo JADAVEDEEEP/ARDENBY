@@ -80,12 +80,6 @@ export const ProductCard = memo(function ProductCard({ product, priority = false
             )}
           </Link>
 
-          {fit && (
-            <span className="pointer-events-none absolute left-0 top-3 bg-kv-bg px-2.5 py-1 text-[12px] font-bold uppercase tracking-[0.08em] text-kv-ink">
-              {fit}
-            </span>
-          )}
-
           <button
             type="button"
             onClick={toggle}
@@ -121,6 +115,12 @@ export const ProductCard = memo(function ProductCard({ product, priority = false
 
           {/* Pricing is pinned to the bottom so rows line up whatever the title length. */}
           <div className="mt-auto pt-2">
+            {fit && (
+              // The fit tag sits above the price (not on the photo) at every screen size, so it never covers the model.
+              <span className="mb-1.5 inline-block bg-kv-gold px-2 py-1 text-[11px] font-bold uppercase leading-none tracking-[0.08em] text-white md:text-[12px]">
+                {fit}
+              </span>
+            )}
             <div className="flex flex-wrap items-baseline gap-x-2 gap-y-0.5">
               <span className="whitespace-nowrap text-[16px] font-bold leading-6 text-kv-ink md:text-[18px]">{formatINR(price)}</span>
               {onSale && (
