@@ -3,15 +3,16 @@
 import Link from 'next/link';
 import { usePathname, useSearchParams } from 'next/navigation';
 import type { FormEvent } from 'react';
-import { Suspense, useEffect, useRef, useState } from 'react';
+import { Suspense, useEffect, useState } from 'react';
 
-import { ChevronDown, Heart, Menu, Search, ShoppingCart, User } from 'lucide-react';
+import { Heart, Menu, Search, ShoppingCart, User } from 'lucide-react';
 
 import { cn } from '@/lib/utils';
 
 import { HeaderMember } from '@/components/membership/header-member';
 
 import { KovenikBrand } from './kovenik-brand';
+import { NavbarMega } from './navbar-mega';
 import type { UserProfile } from './navbar';
 import { CATEGORY_LINKS, COLLECTION_LINKS, PRIMARY_LINKS } from './navbar-links';
 
@@ -39,90 +40,6 @@ const ICON_BTN =
   'relative flex h-11 w-11 shrink-0 items-center justify-center text-kv-ink transition-colors hover:text-kv-gold-text';
 const BADGE =
   'absolute right-0 top-0 flex h-5 min-w-[20px] items-center justify-center rounded-full bg-kv-gold px-1 text-[12px] font-bold leading-none text-white';
-
-/** "Collections" with a dropdown of the four collections. Opens on hover, focus or click; Esc closes. */
-function CollectionsMenu({ activeSlug }: { activeSlug: string | null }) {
-  // Opens on hover; a click pins it open (so hovering first and then clicking the arrow no longer closes it).
-  const [hover, setHover] = useState(false);
-  const [pinned, setPinned] = useState(false);
-  const open = hover || pinned;
-  const setOpen = (v: boolean) => {
-    setHover(v);
-    if (!v) setPinned(false);
-  };
-  const wrapRef = useRef<HTMLLIElement>(null);
-
-  // Click anywhere outside closes a pinned menu.
-  useEffect(() => {
-    if (!pinned) return;
-    const onDown = (e: MouseEvent) => {
-      if (!wrapRef.current?.contains(e.target as Node)) setOpen(false);
-    };
-    document.addEventListener('mousedown', onDown);
-    return () => document.removeEventListener('mousedown', onDown);
-  }, [pinned]);
-  const active = [...COLLECTION_LINKS, ...CATEGORY_LINKS].some((c) => c.slug === activeSlug);
-
-  return (
-    <li
-      ref={wrapRef}
-      className="relative h-full"
-      onMouseEnter={() => setHover(true)}
-      onMouseLeave={() => setHover(false)}
-      onBlur={(e) => {
-        if (!wrapRef.current?.contains(e.relatedTarget as Node | null)) setOpen(false);
-      }}
-      onKeyDown={(e) => {
-        if (e.key === 'Escape') setOpen(false);
-      }}
-    >
-      <button
-        type="button"
-        aria-expanded={open}
-        aria-haspopup="true"
-        aria-controls="collections-menu"
-        onClick={() => (pinned ? setOpen(false) : setPinned(true))}
-        className="relative flex h-full items-center gap-1 whitespace-nowrap text-[16px] font-bold uppercase tracking-[0.08em] text-kv-ink transition-colors duration-200 hover:text-kv-gold-text xl:text-[17px]"
-      >
-        Collections
-        <ChevronDown className={cn('h-4 w-4 transition-transform duration-200', open && 'rotate-180')} aria-hidden="true" />
-        {active && <span aria-hidden="true" className="absolute inset-x-0 bottom-0 h-[3px] bg-kv-gold" />}
-      </button>
-      <div
-        id="collections-menu"
-        aria-hidden={!open}
-        className={cn(
-          'absolute left-1/2 top-full z-50 w-[460px] -translate-x-1/2 grid-cols-2 gap-x-2 border border-kv-line bg-kv-bg px-3 py-4 shadow-[0_8px_24px_rgba(0,0,0,0.08)]',
-          open ? 'grid' : 'hidden'
-        )}
-      >
-        {[
-          { title: 'Collections', items: COLLECTION_LINKS },
-          { title: 'Categories', items: CATEGORY_LINKS },
-        ].map((group) => (
-          <div key={group.title} className="px-2">
-            <p className="mb-1 border-b border-kv-line px-3 pb-2 text-[12px] font-bold uppercase tracking-[0.2em] text-kv-gold-text">
-              {group.title}
-            </p>
-            <ul>
-              {group.items.map((c) => (
-                <li key={c.slug}>
-                  <Link
-                    href={c.href}
-                    onClick={() => setOpen(false)}
-                    className="flex min-h-[44px] items-center px-3 text-[14px] font-bold uppercase tracking-[0.08em] text-kv-ink transition-colors duration-200 hover:bg-kv-band hover:text-kv-gold-text"
-                  >
-                    {c.label}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-        ))}
-      </div>
-    </li>
-  );
-}
 
 /* Reports ?category= / ?collection=. Isolated in a Suspense boundary so
  * useSearchParams never forces the rest of the app into client rendering. */
@@ -273,28 +190,11 @@ export function NavbarHeader({
             </div>
           </div>
 
-          <nav aria-label="Primary" className="border-t border-kv-line">
-            <ul className="kv-gutter flex h-14 w-full items-center justify-center gap-8 xl:gap-14">
-              {rowTwoLinks.map((link) => {
-                if (link.key === 'collections') {
-                  return <CollectionsMenu key={link.key} activeSlug={onShop ? category : null} />;
-                }
-                const active = activeKey(link.key);
-                return (
-                  <li key={link.key} className="h-full">
-                    <Link
-                      href={link.href}
-                      aria-current={active ? 'page' : undefined}
-                      className="relative flex h-full items-center whitespace-nowrap text-[16px] font-bold uppercase tracking-[0.08em] text-kv-ink transition-colors duration-200 hover:text-kv-gold-text xl:text-[17px]"
-                    >
-                      {link.label}
-                      {active && <span aria-hidden="true" className="absolute inset-x-0 bottom-0 h-[3px] bg-kv-gold" />}
-                    </Link>
-                  </li>
-                );
-              })}
-            </ul>
-          </nav>
+          <NavbarMega
+            links={rowTwoLinks}
+            isActive={activeKey}
+            collectionsActive={onShop && [...COLLECTION_LINKS, ...CATEGORY_LINKS].some((c) => c.slug === category)}
+          />
         </div>
 
         {/* ===================== MOBILE / TABLET ===================== */}

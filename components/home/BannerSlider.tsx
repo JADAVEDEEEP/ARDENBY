@@ -5,7 +5,6 @@ import type { PointerEvent as ReactPointerEvent, ReactNode } from 'react';
 
 import Image from 'next/image';
 import Link from 'next/link';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
 
 import { useBanners } from '@/hooks/use-banners';
 import { isSafeBannerLink, type PublicBanner } from '@/lib/banner-api';
@@ -19,9 +18,6 @@ const FALLBACK = {
   image: '/images/hero-black-tee.jpg',
   alt: 'Model wearing a KOVENIK black oversized graphic tee',
 };
-
-const ARROW =
-  'pointer-events-auto flex h-11 w-11 items-center justify-center rounded-full bg-white/90 text-kv-ink shadow-sm transition-colors hover:bg-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white min-[1080px]:absolute min-[1080px]:top-[40%] min-[1080px]:h-12 min-[1080px]:w-12 min-[1080px]:-translate-y-1/2';
 
 function SlideLink({
   banner,
@@ -205,15 +201,6 @@ export function BannerSlider() {
 
       {count > 1 && (
         <div className="pointer-events-none absolute inset-x-0 bottom-2 z-10 flex items-center justify-center gap-1 min-[1080px]:inset-0 min-[1080px]:items-end min-[1080px]:pb-3">
-          <button
-            type="button"
-            onClick={() => go(current - 1)}
-            aria-label="Previous banner"
-            className={cn(ARROW, 'min-[1080px]:left-4')}
-          >
-            <ChevronLeft className="h-5 w-5" />
-          </button>
-
           <div className="pointer-events-auto flex items-center" role="group" aria-label="Choose banner">
             {slides.map((banner, i) => (
               <button
@@ -233,15 +220,6 @@ export function BannerSlider() {
               </button>
             ))}
           </div>
-
-          <button
-            type="button"
-            onClick={() => go(current + 1)}
-            aria-label="Next banner"
-            className={cn(ARROW, 'min-[1080px]:right-4')}
-          >
-            <ChevronRight className="h-5 w-5" />
-          </button>
         </div>
       )}
     </div>

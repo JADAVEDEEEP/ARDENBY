@@ -10,9 +10,12 @@ import { ChevronDown, User, X } from 'lucide-react';
 
 import { SafeImage } from '@/components/home/ui/SafeImage';
 import { categoryImage, PRODUCT_FALLBACK_IMAGE } from '@/components/home/home-assets';
+import { inCategory } from '@/components/shop/shop-filters';
+import { useCategories } from '@/hooks/use-categories';
+import type { StoreCategory } from '@/hooks/use-categories';
 import { useHomeProducts } from '@/hooks/use-home-products';
+import { prioritizeNewCollection } from '@/lib/new-collection';
 import { cn } from '@/lib/utils';
-import type { Product } from '@/types';
 
 import { KovenikBrand } from './kovenik-brand';
 import type { UserProfile } from './navbar';
@@ -46,22 +49,13 @@ const COLLECTIONS = [
   { label: 'Best Sellers', href: '/shop?collection=bestSeller', image: categoryImage('all-products') },
 ];
 
-/* Category tiles. `match` picks a real product photo; `fallback` is the existing category photo. */
-const CATEGORY_TILES = [
-  { id: 'oversized', label: 'Oversized Tees', href: '/shop?fit=Oversized', fallback: categoryImage('supreme-edition'), match: (p: Product) => p.fit === 'Oversized' },
-  { id: 'graphic', label: 'Graphic Tees', href: '/shop?category=epic-thread', fallback: categoryImage('epic-thread'), match: (p: Product) => p.category === 'epic-thread' || /graphic|printed|dtf/i.test(p.tags.join(' ')) },
-  { id: 'shirts', label: 'Shirts', href: '/shop?category=top-wear', fallback: categoryImage('top-wear'), match: (p: Product) => /\bshirt\b/i.test(p.name.replace(/t-?shirt/gi, '')) },
-  { id: 'hoodies', label: 'Hoodies', href: '/shop?fit=Hoodie', fallback: categoryImage('ardenby-premium'), match: (p: Product) => p.fit === 'Hoodie' || /hoodie|sweatshirt/i.test(p.name) },
-  { id: 'bottom', label: 'Bottom Wear', href: '/shop?category=bottom-wear', fallback: categoryImage('bottom-wear'), match: (p: Product) => p.category === 'bottom-wear' },
-  { id: 'plus', label: 'Plus Size', href: '/shop?category=plus-size', fallback: categoryImage('plus-size'), match: (p: Product) => p.sizes.includes('XXL') },
-  { id: 'all', label: 'All Products', href: '/shop', fallback: categoryImage('all-products'), match: () => true },
-] as const;
-
-/* Which tiles lead for each tab (all seven stay available). */
-const TAB_ORDER: Record<TabKey, string[]> = {
-  top: ['oversized', 'graphic', 'shirts', 'hoodies', 'bottom', 'plus', 'all'],
-  bottom: ['bottom', 'all', 'oversized', 'graphic', 'shirts', 'hoodies', 'plus'],
-  plus: ['plus', 'oversized', 'graphic', 'shirts', 'hoodies', 'bottom', 'all'],
+/* The Categories tiles are the store's real categories, fetched from the database (see useCategories).
+   This only decides which categories lead for each tab; every category still appears. */
+const ALL_PRODUCTS_SLUG = 'all-products';
+const TAB_LEAD: Record<TabKey, string[]> = {
+  top: ['top-wear', 'oversize-polo', 'oversize-round-neck', 'premium-round-neck'],
+  bottom: ['bottom-wear', 'trousers'],
+  plus: ['plus-size'],
 };
 
 const TOP_LINKS = [
@@ -135,6 +129,7 @@ export function NavbarMobileDrawer({
   const [page, setPage] = useState(0);
   const [pages, setPages] = useState(1);
   const { products } = useHomeProducts();
+  const { categories } = useCategories();
 
   const close = useCallback(() => setMobileOpen(false), [setMobileOpen]);
 
@@ -195,17 +190,29 @@ export function NavbarMobileDrawer({
     return () => window.clearTimeout(t);
   }, [mobileOpen, updatePages]);
 
-  // Each tile prefers a product no earlier tile used, so the photos don't repeat.
+  // One tile per real category. Each shows a real product photo from that category (the newest catalogue
+  // products first), preferring a product no earlier tile used so the photos don't repeat.
   const tiles = useMemo(() => {
+    const lead = TAB_LEAD[tab];
+    const real = categories.filter((c) => c.slug !== ALL_PRODUCTS_SLUG);
+    const ordered = [
+      ...lead.map((slug) => real.find((c) => c.slug === slug)).filter((c): c is StoreCategory => Boolean(c)),
+      ...real.filter((c) => !lead.includes(c.slug)),
+    ];
     const used = new Set<string>();
-    return TAB_ORDER[tab].map((id) => {
-      const def = CATEGORY_TILES.find((t) => t.id === id)!;
-      const matches = def.id === 'all' ? [] : products.filter((p) => def.match(p) && p.images?.[0]);
-      const product = matches.find((p) => !used.has(p.id));
+    const out = ordered.map((c) => {
+      const matches = prioritizeNewCollection(inCategory(products, c.slug)).filter((p) => p.images?.[0]);
+      const product = matches.find((p) => !used.has(p.id)) ?? matches[0];
       if (product) used.add(product.id);
-      return { ...def, image: product?.images[0] || def.fallback };
+      return { id: c.slug, label: c.name, href: `/shop?category=${c.slug}`, image: product?.images[0] || categoryImage(c.slug), fallback: categoryImage(c.slug) };
     });
-  }, [tab, products]);
+    const all = categories.find((c) => c.slug === ALL_PRODUCTS_SLUG);
+    if (all || out.length) {
+      const first = products.find((p) => p.images?.[0]);
+      out.push({ id: 'all', label: 'All Products', href: '/shop', image: first?.images[0] || categoryImage('all-products'), fallback: categoryImage('all-products') });
+    }
+    return out;
+  }, [tab, products, categories]);
 
   const bestSellerImage = products.find((p) => p.bestSeller && p.images?.[0])?.images[0];
   const firstName = user?.fullName?.trim().split(/\s+/)[0];
