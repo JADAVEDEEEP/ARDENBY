@@ -2,8 +2,11 @@
 
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { AlertCircle, Check, LocateFixed, Loader2, MapPin, Search } from 'lucide-react';
-import type { Map as LeafletMap, Marker } from 'leaflet';
-import 'leaflet/dist/leaflet.css';
+import type { Map as MapLibreMap, Marker } from 'maplibre-gl';
+import 'maplibre-gl/dist/maplibre-gl.css';
+
+const OLA_HOST = 'https://api.olamaps.io';
+const PROXY = '/api/ola-maps';
 
 export type PickedAddress = {
   /** Building / apartment / society / bungalow name. Only set when the customer picked a specific place. */
@@ -15,6 +18,9 @@ export type PickedAddress = {
   state: string;
   pincode: string;
   country: string;
+  /** Map pin the address was resolved from; saved with the address so the exact spot is kept. */
+  latitude?: number;
+  longitude?: number;
 };
 
 type Point = { lat: number; lng: number };
@@ -29,7 +35,7 @@ class LocationLookupError extends Error {
 
 type ApiBody<T> = ({ success?: boolean; error?: string } & T) | null;
 
-/** Calls one of our own /api routes (which hold the LocationIQ token) and maps failures onto lookup errors. */
+/** Calls one of our own /api routes (which hold the Ola Maps credentials) and maps failures onto lookup errors. */
 async function callApi<T extends object>(path: string, params: Record<string, string | number>, signal?: AbortSignal): Promise<T> {
   const query = new URLSearchParams(Object.entries(params).map(([k, v]) => [k, String(v)]));
   let res: Response;
@@ -37,10 +43,12 @@ async function callApi<T extends object>(path: string, params: Record<string, st
     res = await fetch(`${path}?${query}`, { cache: 'no-store', signal });
   } catch (err) {
     if ((err as Error).name === 'AbortError') throw err;
+    console.error(`[location] network failure calling ${path}:`, err);
     throw new LocationLookupError('unavailable');
   }
   const body = (await res.json().catch(() => null)) as ApiBody<T>;
   if (res.ok && body?.success) return body as T;
+  if (body?.error !== 'none') console.error(`[location] ${path} failed: HTTP ${res.status}, error=${body?.error ?? 'no body'}`);
   if (body?.error === 'none') throw new LocationLookupError('none');
   if (body?.error === 'rate-limited') throw new LocationLookupError('quota');
   if (body?.error === 'not-configured') throw new LocationLookupError('missing-key');
@@ -112,7 +120,9 @@ export function CurrentLocationButton({ onPick, inputClassName = 'kv-input' }: P
       const { places } = await callApi<{ places: NearbyPlace[] }>('/api/places/nearby', { lat: p.lat, lng: p.lng });
       nearbyCache.current.set(key, places);
       if (seq === nearbySeq.current) setNearby(places);
-    } catch {
+    } catch (err) {
+      // Not an error to show: the manual building-name field below is the fallback.
+      if (!(err instanceof LocationLookupError && err.kind === 'none')) console.error('[location] nearby buildings lookup failed:', err);
       if (seq === nearbySeq.current) setNearby([]);
     } finally {
       if (seq === nearbySeq.current) setNearbyLoading(false);
@@ -121,8 +131,9 @@ export function CurrentLocationButton({ onPick, inputClassName = 'kv-input' }: P
 
   // ---- Map --------------------------------------------------------------------------------------
   const mapEl = useRef<HTMLDivElement | null>(null);
-  const mapRef = useRef<LeafletMap | null>(null);
+  const mapRef = useRef<MapLibreMap | null>(null);
   const markerRef = useRef<Marker | null>(null);
+  const resizeObsRef = useRef<ResizeObserver | null>(null);
   const [mapFailed, setMapFailed] = useState(false);
   const dragSeq = useRef(0);
 
@@ -136,7 +147,7 @@ export function CurrentLocationButton({ onPick, inputClassName = 'kv-input' }: P
       try {
         const address = await reverseGeocode(p);
         if (seq === dragSeq.current) {
-          onPickRef.current(address);
+          onPickRef.current({ ...address, latitude: p.lat, longitude: p.lng });
           setSuccess(true);
         }
       } catch (err) {
@@ -151,43 +162,75 @@ export function CurrentLocationButton({ onPick, inputClassName = 'kv-input' }: P
   useEffect(() => {
     if (!position || !mapEl.current) return;
     if (mapRef.current) {
-      mapRef.current.setView([position.lat, position.lng], Math.max(mapRef.current.getZoom(), 17));
-      markerRef.current?.setLatLng([position.lat, position.lng]);
+      mapRef.current.easeTo({ center: [position.lng, position.lat], zoom: Math.max(mapRef.current.getZoom(), 17), duration: 400 });
+      markerRef.current?.setLngLat([position.lng, position.lat]);
       return;
     }
     let cancelled = false;
-    void import('leaflet')
-      .then((L) => {
+    void import('maplibre-gl')
+      .then((mod) => {
+        const maplibregl = mod.default ?? mod;
         if (cancelled || !mapEl.current || mapRef.current) return;
-        const map = L.map(mapEl.current, { center: [position.lat, position.lng], zoom: 17, zoomControl: true, attributionControl: true });
-        // Tiles come through our own route so the LocationIQ token stays on the server.
-        L.tileLayer('/api/map-tiles/{z}/{x}/{y}', {
+        let tileErrors = 0;
+        // MapLibre fetches tiles inside a Web Worker, which cannot resolve a relative URL, so the proxy URL must be absolute.
+        const proxy = `${window.location.origin}${PROXY}`;
+        const map = new maplibregl.Map({
+          container: mapEl.current,
+          // Style, tiles, fonts and sprites all come through our own route, so the Ola credentials stay on the server.
+          style: `${proxy}?u=${encodeURIComponent(`${OLA_HOST}/tiles/vector/v1/styles/default-light-standard/style.json`)}`,
+          center: [position.lng, position.lat],
+          zoom: 17,
           maxZoom: 19,
-          attribution: '© <a href="https://locationiq.com">LocationIQ</a> © <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
-        }).addTo(map);
-        const icon = L.divIcon({
-          className: '',
-          iconSize: [32, 40],
-          iconAnchor: [16, 40],
-          html:
-            '<svg width="32" height="40" viewBox="0 0 32 40" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">' +
-            '<path d="M16 0C7.2 0 0 7 0 15.6 0 27 16 40 16 40s16-13 16-24.4C32 7 24.8 0 16 0z" fill="#1B7F3B"/>' +
-            '<circle cx="16" cy="15.5" r="6" fill="#fff"/></svg>',
+          attributionControl: false,
+          // Every request the map makes to api.olamaps.io is rewritten to the proxy.
+          transformRequest: (url) =>
+            url.startsWith(OLA_HOST) ? { url: `${proxy}?u=${encodeURIComponent(url)}` } : { url },
         });
-        const marker = L.marker([position.lat, position.lng], { icon, draggable: true, keyboard: true, title: 'Drag to adjust your location' }).addTo(map);
+        map.addControl(new maplibregl.NavigationControl({ showCompass: false }), 'top-right');
+        map.addControl(new maplibregl.AttributionControl({ compact: true, customAttribution: '© Ola Maps © OpenStreetMap contributors' }));
+        map.on('error', (e) => {
+          const err = e.error as (Error & { status?: number; url?: string }) | undefined;
+          // Style-validation notes (e.g. an optional layer missing from a source) do not stop the map from drawing.
+          if (/^Source layer /.test(err?.message ?? "")) return;
+          console.error(`[map] resource error: ${err?.message ?? 'unknown'}${err?.status ? ` (HTTP ${err.status})` : ''}${err?.url ? ` ${err.url}` : ''}`);
+          // Show the notice only once several resources fail; a gray map almost always means the credentials are missing or rejected.
+          if (++tileErrors === 3) {
+            console.error('[map] Ola map resources are failing to load. Check OLA_MAPS_CLIENT_ID / OLA_MAPS_CLIENT_SECRET on the server.');
+            setNotice('The map picture could not be loaded, but you can still type your address below.');
+          }
+        });
+
+        const pin = document.createElement('div');
+        pin.title = 'Drag to adjust your location';
+        pin.innerHTML =
+          '<svg width="32" height="40" viewBox="0 0 32 40" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" style="display:block">' +
+          '<path d="M16 0C7.2 0 0 7 0 15.6 0 27 16 40 16 40s16-13 16-24.4C32 7 24.8 0 16 0z" fill="#1B7F3B"/>' +
+          '<circle cx="16" cy="15.5" r="6" fill="#fff"/></svg>';
+        const marker = new maplibregl.Marker({ element: pin, anchor: 'bottom', draggable: true }).setLngLat([position.lng, position.lat]).addTo(map);
         marker.on('dragend', () => {
-          const ll = marker.getLatLng();
+          const ll = marker.getLngLat();
           void onPinMovedRef.current({ lat: ll.lat, lng: ll.lng });
         });
         map.on('click', (e) => {
-          marker.setLatLng(e.latlng);
-          void onPinMovedRef.current({ lat: e.latlng.lat, lng: e.latlng.lng });
+          marker.setLngLat(e.lngLat);
+          void onPinMovedRef.current({ lat: e.lngLat.lat, lng: e.lngLat.lng });
         });
         mapRef.current = map;
         markerRef.current = marker;
-        setTimeout(() => map.invalidateSize(), 0);
+        // Inside a modal the container can be mid-animation or scrolled; re-measure now, shortly after,
+        // and whenever the container is resized, otherwise the map draws gray or partly rendered.
+        const refresh = () => map.resize();
+        setTimeout(refresh, 0);
+        setTimeout(refresh, 300);
+        if (typeof ResizeObserver !== 'undefined') {
+          resizeObsRef.current = new ResizeObserver(refresh);
+          resizeObsRef.current.observe(mapEl.current);
+        }
       })
-      .catch(() => setMapFailed(true));
+      .catch((err) => {
+        console.error('[map] map failed to initialise:', err);
+        setMapFailed(true);
+      });
     return () => {
       cancelled = true;
     };
@@ -195,6 +238,7 @@ export function CurrentLocationButton({ onPick, inputClassName = 'kv-input' }: P
 
   useEffect(
     () => () => {
+      resizeObsRef.current?.disconnect();
       mapRef.current?.remove();
       mapRef.current = null;
       markerRef.current = null;
@@ -213,7 +257,7 @@ export function CurrentLocationButton({ onPick, inputClassName = 'kv-input' }: P
         setNotice(`We only deliver within India, but your location is in ${address.country}. Please type your address below.`);
         return;
       }
-      onPickRef.current(address);
+      onPickRef.current({ ...address, latitude: p.lat, longitude: p.lng });
       setSuccess(true);
     } catch (err) {
       setNotice(lookupMessage(err));
@@ -288,7 +332,7 @@ export function CurrentLocationButton({ onPick, inputClassName = 'kv-input' }: P
         setNotice(`We only deliver within India, but that place is in ${address.country}.`);
         return;
       }
-      onPickRef.current(address);
+      onPickRef.current({ ...address, latitude: details.lat || place.lat, longitude: details.lng || place.lng });
       setSuccess(true);
       setSelectedId(place.id);
       if (from === 'search') {
@@ -343,10 +387,13 @@ export function CurrentLocationButton({ onPick, inputClassName = 'kv-input' }: P
       } catch (err) {
         if ((err as Error).name === 'AbortError') return;
         setSuggestions([]);
+        const kind = err instanceof LocationLookupError ? err.kind : 'unavailable';
         setSearchNote(
-          err instanceof LocationLookupError && err.kind === 'quota'
+          kind === 'quota'
             ? 'Too many searches. Please wait a moment.'
-            : 'Search is not available right now. You can type the address below.',
+            : kind === 'denied' || kind === 'missing-key'
+              ? 'Address search is not available right now. You can type the address below.'
+              : 'Search failed. Check your connection, or type the address below.',
         );
         setSearching(false);
       }
@@ -379,7 +426,7 @@ export function CurrentLocationButton({ onPick, inputClassName = 'kv-input' }: P
           autoComplete="off"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
-          placeholder="Search building, apartment, society or area"
+          placeholder="Search building, society or area"
           className={inputClassName}
           style={{ paddingLeft: 40, paddingRight: 40 }}
         />
@@ -488,5 +535,29 @@ export function CurrentLocationButton({ onPick, inputClassName = 'kv-input' }: P
         </p>
       )}
     </div>
+  );
+}
+
+/** Shows that a map pin is saved with the address, and lets the customer remove it. Renders nothing without one. */
+export function SavedPinNotice({
+  latitude,
+  longitude,
+  onClear,
+}: {
+  latitude?: number | null;
+  longitude?: number | null;
+  onClear: () => void;
+}) {
+  if (latitude == null || longitude == null) return null;
+  return (
+    <p className="mt-2 flex flex-wrap items-center gap-x-2 gap-y-1 text-[13px] text-[#666666]">
+      <MapPin className="h-4 w-4 shrink-0 text-[#1B7F3B]" aria-hidden />
+      <span>
+        Map pin saved ({latitude.toFixed(5)}, {longitude.toFixed(5)})
+      </span>
+      <button type="button" onClick={onClear} className="font-medium text-[#111111] underline underline-offset-2">
+        Remove pin
+      </button>
+    </p>
   );
 }

@@ -1,39 +1,31 @@
 import { NextRequest } from 'next/server';
 
-import { LiqAddress, LiqError, errorResponse, json, liq, parseCoords, throttled } from '@/lib/locationiq-server';
+import { OlaError, errorResponse, json, ola, parseCoords, throttled } from '@/lib/ola-server';
 
 export const dynamic = 'force-dynamic';
 
-type NearbyItem = {
-  name?: string;
-  class?: string;
-  type?: string;
-  distance?: number;
-  lat?: string;
-  lon?: string;
-  osm_type?: string;
-  osm_id?: string;
-  address?: LiqAddress;
+type Prediction = {
+  place_id?: string;
+  types?: string[];
+  distance_meters?: number;
+  structured_formatting?: { main_text?: string; secondary_text?: string };
 };
-
-// Place types that only name an area, not a building the customer could live in.
-const AREA_ONLY = new Set(['suburb', 'neighbourhood', 'quarter', 'city', 'town', 'village', 'hamlet', 'city_block', 'district', 'borough']);
-
-// Structures nobody receives a delivery in.
-const NOT_DELIVERABLE = new Set(['industrial', 'service', 'transformer_tower', 'garage', 'garages', 'roof', 'shed', 'hut', 'toilets', 'train_station', 'transportation']);
 
 const label = (value: string) => value.replace(/_/g, ' ').replace(/^./, (c) => c.toUpperCase());
 
-function kindOf(cls: string, type: string) {
-  if (cls === 'landuse' && type === 'residential') return 'Residential society';
-  if (cls === 'place') return 'Residential area';
-  if (['house', 'detached', 'semidetached_house', 'bungalow', 'villa'].includes(type)) return 'House / bungalow';
-  if (['apartments', 'residential', 'dormitory'].includes(type)) return 'Apartments';
-  if (cls === 'building' && type === 'yes') return 'Building';
-  return label(type) || 'Place';
+// Ola tags buildings loosely, so only the type families a customer could live in get a specific label.
+function kindOf(types: string[]) {
+  if (types.includes('premise') || types.includes('subpremise')) return 'Apartments';
+  if (types.includes('street_address')) return 'House / bungalow';
+  if (types.includes('neighborhood') || types.includes('sublocality')) return 'Residential area';
+  return types[0] ? label(types[0]) : 'Place';
 }
 
-// Named buildings, societies and landmarks around a point, nearest first.
+// Types that are never a delivery address.
+const NOT_DELIVERABLE = new Set(['airport', 'bus_station', 'transit_station', 'train_station', 'gas_station', 'atm', 'parking']);
+
+// Named buildings, societies and landmarks around a point, nearest first (GET /places/v1/nearbysearch).
+// Results carry no coordinates; the details route supplies them when the customer picks one.
 export async function GET(request: NextRequest) {
   if (throttled(request, 'nearby', 20)) return json({ success: false, error: 'rate-limited' }, 429);
 
@@ -42,49 +34,39 @@ export async function GET(request: NextRequest) {
   if (!coords) return json({ success: false, error: 'invalid-coordinates' }, 400);
 
   try {
-    const data = await liq<NearbyItem[]>(
-      '/nearby',
-      {
-        lat: coords.lat.toFixed(5),
-        lon: coords.lng.toFixed(5),
-        tag: 'landuse,building,place,leisure,office,tourism',
-        radius: '400',
-        format: 'json',
-        'accept-language': 'en',
-      },
+    const data = await ola<{ predictions?: Prediction[] }>(
+      '/places/v1/nearbysearch',
+      { layers: 'venue', location: `${coords.lat.toFixed(5)},${coords.lng.toFixed(5)}`, radius: '400', language: 'en' },
       10 * 60_000,
     );
 
     const seen = new Set<string>();
-    const places = data
+    const places = (data.predictions ?? [])
       .filter((p) => {
-        const name = p.name?.trim() ?? '';
-        if (name.length < 3 || /^[\d\s-]+$/.test(name) || !p.osm_type || !p.osm_id) return false;
-        if (p.class === 'building' && NOT_DELIVERABLE.has(p.type ?? '')) return false;
-        if (/substation|transformer/i.test(name)) return false;
-        if (p.class === 'place' && AREA_ONLY.has(p.type ?? '')) return false;
-        if (p.class === 'landuse' && p.type !== 'residential') return false;
+        const name = p.structured_formatting?.main_text?.trim() ?? '';
+        if (!p.place_id || name.length < 3 || /^[\d\s-]+$/.test(name)) return false;
+        if ((p.types ?? []).some((t) => NOT_DELIVERABLE.has(t))) return false;
         const key = name.toLowerCase();
         if (seen.has(key)) return false;
         seen.add(key);
         return true;
       })
-      .sort((a, b) => (a.distance ?? 0) - (b.distance ?? 0))
+      .sort((a, b) => (a.distance_meters ?? 0) - (b.distance_meters ?? 0))
       .slice(0, 12)
       .map((p) => ({
-        id: `${p.osm_type![0].toUpperCase()}${p.osm_id}`,
-        name: p.name!.trim(),
-        kind: kindOf(p.class ?? '', p.type ?? ''),
-        distance: Math.round(p.distance ?? 0),
-        lat: Number(p.lat),
-        lng: Number(p.lon),
-        subtitle: [p.address?.road, p.address?.suburb].filter(Boolean).join(', '),
+        id: p.place_id!,
+        name: p.structured_formatting!.main_text!.trim(),
+        kind: kindOf(p.types ?? []),
+        distance: Math.round(p.distance_meters ?? 0),
+        lat: 0,
+        lng: 0,
+        subtitle: (p.structured_formatting?.secondary_text ?? '').split(',').slice(0, 2).join(',').trim(),
       }));
 
     return json({ success: true, places });
   } catch (err) {
     // No named place nearby is a normal outcome, not an error.
-    if (err instanceof LiqError && err.kind === 'none') return json({ success: true, places: [] });
+    if (err instanceof OlaError && err.kind === 'none') return json({ success: true, places: [] });
     return errorResponse(err);
   }
 }

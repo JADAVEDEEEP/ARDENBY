@@ -57,6 +57,8 @@ export interface Address {
   state: string;
   address_type: string;
   is_default: boolean;
+  latitude?: number | null;
+  longitude?: number | null;
 }
 
 export interface AddressForm {
@@ -68,6 +70,9 @@ export interface AddressForm {
   state: string;
   address_type: string;
   is_default: boolean;
+  /** Map pin; both set or both null. */
+  latitude: number | null;
+  longitude: number | null;
 }
 
 export interface Coupon {

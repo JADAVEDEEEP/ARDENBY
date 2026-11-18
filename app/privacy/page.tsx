@@ -198,7 +198,7 @@ const sections: LegalSectionDef[] = [
             <strong>Google</strong> — if you choose “Sign in with Google”.
           </li>
           <li>
-            <strong>LocationIQ</strong> — address search and map lookups when you add an address; the text you type or
+            <strong>Ola Maps</strong> — address search and map lookups when you add an address; the text you type or
             the coordinates you share are sent to it.
           </li>
           <li>

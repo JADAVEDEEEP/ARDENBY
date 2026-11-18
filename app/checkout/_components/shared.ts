@@ -10,6 +10,8 @@ export type Address = {
   state: string;
   address_type: string;
   is_default: boolean;
+  latitude?: number | null;
+  longitude?: number | null;
 };
 
 export type AddressForm = {
@@ -21,6 +23,9 @@ export type AddressForm = {
   state: string;
   address_type: string;
   is_default: boolean;
+  /** Map pin; both set or both null. Optional everywhere: an address without a pin is valid. */
+  latitude: number | null;
+  longitude: number | null;
 };
 
 export type PaymentId = 'online' | 'cod';

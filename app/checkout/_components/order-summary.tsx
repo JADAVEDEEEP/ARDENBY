@@ -249,12 +249,15 @@ export function PlaceOrderButton({
   busy,
   disabled,
   total,
+  showTotal = true,
   className = '',
 }: {
   label: string;
   busy: boolean;
   disabled?: boolean;
   total: number;
+  /** Hide the price inside the button where the total is already shown beside it. */
+  showTotal?: boolean;
   className?: string;
 }) {
   return (
@@ -266,8 +269,8 @@ export function PlaceOrderButton({
       className={`ck-cta ${className}`}
     >
       {busy ? <Loader2 className="h-5 w-5 animate-spin" /> : <Lock className="h-5 w-5" />}
-      <span>{label}</span>
-      {!busy && (
+      <span className="whitespace-nowrap">{label}</span>
+      {!busy && showTotal && (
         <>
           <span aria-hidden>·</span>
           <span>{formatINR(total)}</span>

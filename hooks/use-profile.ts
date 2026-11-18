@@ -46,6 +46,8 @@ const [coupons, setCoupons] = useState<any[]>([]);
     state: '',
     address_type: 'Home',
     is_default: false,
+    latitude: null as number | null,
+    longitude: null as number | null,
   });
   const [oldPassword, setOldPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
@@ -385,6 +387,8 @@ if (section === 'addresses' || section === 'overview') {
       state: '',
       address_type: 'Home',
       is_default: false,
+      latitude: null,
+      longitude: null,
     });
     setEditingAddressId(null);
   };
@@ -407,6 +411,8 @@ if (section === 'addresses' || section === 'overview') {
           addressForm.address_type,
         isDefault:
           addressForm.is_default,
+        latitude: addressForm.latitude,
+        longitude: addressForm.longitude,
       };
       if (editingAddressId) {
         await profileRequest(
@@ -456,6 +462,8 @@ if (section === 'addresses' || section === 'overview') {
       is_default: Boolean(
         address.is_default
       ),
+      latitude: address.latitude ?? null,
+      longitude: address.longitude ?? null,
     });
     setShowAddressForm(true);
   };

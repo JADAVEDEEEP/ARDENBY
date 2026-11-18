@@ -13,7 +13,8 @@ import {
   type AddressErrors,
   type AddressForm,
 } from './shared';
-import { CurrentLocationButton, type PickedAddress } from '../../../components/profile/CurrentLocationButton';
+import { CurrentLocationButton, SavedPinNotice, type PickedAddress } from '../../../components/profile/CurrentLocationButton';
+import { pincodeMismatch } from '../../../lib/ola-client';
 
 const EMPTY_FORM: AddressForm = {
   name: '',
@@ -24,6 +25,8 @@ const EMPTY_FORM: AddressForm = {
   state: '',
   address_type: 'Home',
   is_default: false,
+  latitude: null,
+  longitude: null,
 };
 
 /** Masked phone, e.g. +91 98•••• ••10. Falls back to the stored value if it is not 10 digits. */
@@ -72,6 +75,7 @@ function AddressModal({
   onSubmit: () => void;
 }) {
   const [errors, setErrors] = useState<AddressErrors>({});
+  const [checking, setChecking] = useState(false);
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => e.key === 'Escape' && !saving && onClose();
@@ -102,6 +106,10 @@ function AddressModal({
     if (p.city) patch.city = p.city;
     if (p.state) patch.state = p.state;
     if (p.pincode) patch.pincode = p.pincode;
+    if (p.latitude != null && p.longitude != null) {
+      patch.latitude = p.latitude;
+      patch.longitude = p.longitude;
+    }
     set(patch);
   };
 
@@ -118,6 +126,8 @@ function AddressModal({
     />
   );
 
+  const sectionLabel = 'text-[13px] font-semibold uppercase tracking-[0.08em] text-[#666666]';
+
   const modal = (
     <div className="ck-scope fixed inset-0 z-[9500] flex items-center justify-center bg-black/50 p-3 backdrop-blur-sm sm:p-6"
       onMouseDown={(e) => e.target === e.currentTarget && !saving && onClose()}>
@@ -127,7 +137,7 @@ function AddressModal({
         role="dialog"
         aria-modal="true"
         aria-labelledby="address-modal-title"
-        className="flex w-full max-w-xl flex-col overflow-hidden rounded-[16px] border border-[#E5E5E5] bg-white"
+        className="flex w-full max-w-xl flex-col overflow-hidden rounded-[16px] border border-[#E5E5E5] bg-white md:max-w-5xl"
         style={{ maxHeight: 'calc(100dvh - 1.5rem)' }}
       >
         <div className="flex shrink-0 items-center justify-between border-b border-[#E5E5E5] px-5 py-4 sm:px-6">
@@ -135,13 +145,14 @@ function AddressModal({
             <h3 id="address-modal-title" className="ck-h">
               {editingId ? 'Edit address' : 'Add new address'}
             </h3>
+            <p className="mt-0.5 text-[14px] text-[#666666]">Pin your location on the map, then confirm your details.</p>
           </div>
           <button
             type="button"
             onClick={onClose}
             disabled={saving}
             aria-label="Close"
-            className="flex h-11 w-11 items-center justify-center rounded-full border border-[#E5E5E5] text-[#111111] hover:border-[#111111] disabled:opacity-50"
+            className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-[#E5E5E5] text-[#111111] hover:border-[#111111] disabled:opacity-50"
           >
             <X className="h-4 w-4" />
           </button>
@@ -149,95 +160,124 @@ function AddressModal({
 
         <form
           noValidate
-          onSubmit={(e) => {
+          onSubmit={async (e) => {
             // Rendered via a portal: stop React from bubbling the submit to
             // the checkout <form>, which would place an order.
             e.preventDefault();
             e.stopPropagation();
-            if (saving) return;
+            if (saving || checking) return;
             const found = validateAddress(form);
+            if (Object.keys(found).length === 0) {
+              setChecking(true);
+              const mismatch = await pincodeMismatch(form);
+              setChecking(false);
+              if (mismatch) found.pincode = mismatch;
+            }
             setErrors(found);
             if (Object.keys(found).length === 0) onSubmit();
           }}
           className="flex min-h-0 flex-1 flex-col"
         >
-         <div className="ck-scroll min-h-0 flex-1 space-y-4 overflow-y-auto overscroll-contain p-5 sm:p-6">
-          <div className="grid">
+         <div className="ck-scroll min-h-0 flex-1 overflow-y-auto overscroll-contain md:grid md:grid-cols-2 md:items-start">
+          {/* Left: find the place */}
+          <section aria-label="Location" className="space-y-3 border-b border-[#E5E5E5] p-5 sm:p-6 md:border-b-0 md:border-r">
+            <p className={sectionLabel}>1 · Find your location</p>
             <CurrentLocationButton onPick={applyPicked} inputClassName="ck-input" />
-          </div>
-          <div className="grid gap-4 sm:grid-cols-2">
-            <Field label="Full name" error={errors.name}>
-              {input('name', 'e.g. Aarav Mehta')}
+            <SavedPinNotice latitude={form.latitude} longitude={form.longitude} onClear={() => set({ latitude: null, longitude: null })} />
+          </section>
+
+          {/* Right: confirm the details */}
+          <section aria-label="Delivery details" className="space-y-4 p-5 sm:p-6">
+            <p className={sectionLabel}>2 · Delivery details</p>
+
+            <div className="grid gap-4 sm:grid-cols-2">
+              <Field label="Full name" error={errors.name}>
+                {input('name', 'e.g. Aarav Mehta')}
+              </Field>
+              <Field label="Phone number" error={errors.phone}>
+                {input('phone', '+91 98765 43210', 'tel', 'tel')}
+              </Field>
+            </div>
+
+            <Field label="Address" error={errors.address}>
+              <textarea
+                rows={3}
+                value={form.address}
+                onChange={(e) => set({ address: e.target.value })}
+                placeholder="House / flat no., building, street, area"
+                aria-invalid={Boolean(errors.address)}
+                className="ck-input resize-none"
+              />
             </Field>
-            <Field label="Phone number" error={errors.phone}>
-              {input('phone', '+91 98765 43210', 'tel', 'tel')}
-            </Field>
-            <Field label="Pincode" error={errors.pincode}>
-              {input('pincode', '380015', 'text', 'numeric')}
-            </Field>
-            <Field label="City" error={errors.city}>
-              {input('city', 'Ahmedabad')}
-            </Field>
+
+            <div className="grid gap-4 sm:grid-cols-2">
+              <Field label="Pincode" error={errors.pincode}>
+                {input('pincode', '380015', 'text', 'numeric')}
+              </Field>
+              <Field label="City" error={errors.city}>
+                {input('city', 'Ahmedabad')}
+              </Field>
+            </div>
             <Field label="State" error={errors.state}>
               {input('state', 'Gujarat')}
             </Field>
-            <Field label="Address type">
-              <select
-                value={form.address_type}
-                onChange={(e) => set({ address_type: e.target.value })}
-                className="ck-input"
+
+            <fieldset className="space-y-1.5">
+              <legend className="text-[15px] font-semibold text-[#111111]">Address type</legend>
+              <div role="radiogroup" aria-label="Address type" className="grid grid-cols-3 gap-2">
+                {['Home', 'Work', 'Other'].map((type) => {
+                  const active = form.address_type === type;
+                  return (
+                    <button
+                      key={type}
+                      type="button"
+                      role="radio"
+                      aria-checked={active}
+                      onClick={() => set({ address_type: type })}
+                      className={`min-h-[44px] border text-[15px] font-semibold transition-colors ${
+                        active ? 'border-[#111111] bg-[#111111] text-white' : 'border-[#BDBDBD] bg-white text-[#111111] hover:border-[#111111]'
+                      }`}
+                    >
+                      {type}
+                    </button>
+                  );
+                })}
+              </div>
+            </fieldset>
+
+            <label className="flex min-h-[44px] items-center gap-3 text-[16px] text-[#111111]">
+              <input
+                type="checkbox"
+                checked={form.is_default}
+                onChange={(e) => set({ is_default: e.target.checked })}
+                className="h-5 w-5 accent-[#111111]"
+              />
+              Make this my default address
+            </label>
+
+            {error && (
+              <div
+                role="alert"
+                className="flex items-start gap-2 rounded-[4px] border border-[#C8211F] bg-white px-4 py-3 text-[15px] text-[#C8211F]"
               >
-                <option value="Home">Home</option>
-                <option value="Work">Work</option>
-                <option value="Other">Other</option>
-              </select>
-            </Field>
-          </div>
-
-          <Field label="Address" error={errors.address}>
-            <textarea
-              rows={3}
-              value={form.address}
-              onChange={(e) => set({ address: e.target.value })}
-              placeholder="House / flat no., street, area"
-              aria-invalid={Boolean(errors.address)}
-              className="ck-input resize-none"
-            />
-          </Field>
-
-          <label className="flex min-h-[44px] items-center gap-3 text-[16px] text-[#111111]">
-            <input
-              type="checkbox"
-              checked={form.is_default}
-              onChange={(e) => set({ is_default: e.target.checked })}
-              className="h-5 w-5 accent-[#111111]"
-            />
-            Make this my default address
-          </label>
-
-          {error && (
-            <div
-              role="alert"
-              className="flex items-start gap-2 rounded-[4px] border border-[#C8211F] bg-white px-4 py-3 text-[15px] text-[#C8211F]"
-            >
-              <AlertCircle className="mt-0.5 h-4 w-4 shrink-0" />
-              {error}
-            </div>
-          )}
-
+                <AlertCircle className="mt-0.5 h-4 w-4 shrink-0" />
+                {error}
+              </div>
+            )}
+          </section>
          </div>
 
-          <div className="flex shrink-0 flex-col-reverse gap-3 border-t border-[#E5E5E5] bg-[#FFFFFF] px-5 py-4 sm:flex-row sm:justify-end sm:px-6">
-            <button type="button" onClick={onClose} disabled={saving} className="ck-ghost">
+          <div className="flex shrink-0 flex-row gap-3 border-t border-[#E5E5E5] bg-[#FFFFFF] px-5 py-4 sm:justify-end sm:px-6">
+            <button type="button" onClick={onClose} disabled={saving} className="ck-ghost flex-1 sm:flex-none">
               Cancel
             </button>
             <button
               type="submit"
-              disabled={saving}
-              className="ck-cta !w-auto !px-6"
+              disabled={saving || checking}
+              className="ck-cta !w-auto !px-6 flex-1 sm:flex-none"
             >
-              {saving && <Loader2 className="h-4 w-4 animate-spin" />}
-              {saving ? 'Saving…' : error ? 'Retry save' : editingId ? 'Save changes' : 'Save address'}
+              {(saving || checking) && <Loader2 className="h-4 w-4 animate-spin" />}
+              {checking ? 'Checking address…' : saving ? 'Saving…' : error ? 'Retry save' : editingId ? 'Save changes' : 'Save address'}
             </button>
           </div>
         </form>
@@ -314,6 +354,8 @@ export function AddressManager({
       state: a.state,
       address_type: a.address_type || 'Home',
       is_default: Boolean(a.is_default),
+      latitude: a.latitude ?? null,
+      longitude: a.longitude ?? null,
     });
     setModalOpen(true);
   };
@@ -334,6 +376,8 @@ export function AddressManager({
         state: form.state.trim(),
         addressType: form.address_type,
         isDefault: form.is_default,
+        latitude: form.latitude,
+        longitude: form.longitude,
       };
 
       let preferredAddressId: string | null = editingId;
@@ -447,7 +491,7 @@ export function AddressManager({
 
         {loading ? (
           <div
-            className="flex min-h-[140px] items-center justify-center rounded-[12px] border border-[#E5E5E5] bg-[#F5F5F5]"
+            className="flex min-h-[140px] items-center justify-center rounded-[8px] border border-[#E5E5E5] bg-[#F5F5F5]"
             aria-busy="true"
             aria-label="Loading addresses"
           >
@@ -465,7 +509,7 @@ export function AddressManager({
                     onClick={() => onSelect(a)}
                     role="radio"
                     aria-checked={on}
-                    className="flex-1 rounded-t-[12px] p-4 text-left sm:p-5"
+                    className="flex-1 rounded-t-[8px] p-4 text-left sm:p-5"
                   >
                     <div className="flex items-start gap-3">
                       <span
@@ -531,10 +575,10 @@ export function AddressManager({
             <button
               type="button"
               onClick={openAdd}
-              className="group flex min-h-[132px] flex-col items-center justify-center gap-2.5 rounded-[12px] border border-dashed border-[#BDBDBD] bg-[#FAFAFA] text-[15px] font-semibold text-[#111111] transition hover:border-[#111111]"
+              className="group flex min-h-[52px] items-center justify-center gap-2.5 rounded-[8px] border border-dashed border-[#BDBDBD] bg-[#FAFAFA] px-4 text-[15px] font-semibold text-[#111111] transition hover:border-[#111111] md:col-span-2"
             >
-              <span className="flex h-11 w-11 items-center justify-center rounded-full bg-[#111111] text-white">
-                <Plus className="h-5 w-5" />
+              <span className="flex h-7 w-7 items-center justify-center rounded-full bg-[#111111] text-white">
+                <Plus className="h-4 w-4" />
               </span>
               Add new address
             </button>

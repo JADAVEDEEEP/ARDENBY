@@ -6,6 +6,7 @@ import { motion } from 'framer-motion';
 import {
   ArrowLeft,
   ArrowRight,
+  Check,
   Loader2,
   Lock,
   MapPin,
@@ -50,7 +51,7 @@ function Shell({ children }: { children: React.ReactNode }) {
 
 function SectionCard({
   index,
-  icon,
+  done,
   title,
   sub,
   badge,
@@ -58,7 +59,8 @@ function SectionCard({
   id,
 }: {
   index: string;
-  icon: React.ReactNode;
+  /** Shows a tick instead of the step number once the step is complete. */
+  done?: boolean;
   title: string;
   sub: string;
   badge?: React.ReactNode;
@@ -67,14 +69,14 @@ function SectionCard({
 }) {
   return (
     <section className="ck-panel p-4 sm:p-6" aria-labelledby={id}>
-      <header className="mb-5 flex items-center justify-between gap-3">
+      <header className="mb-5 flex items-center justify-between gap-3 border-b border-[#EDEDED] pb-4">
         <div className="flex min-w-0 items-center gap-3">
-          <span aria-hidden className="ck-icon-sq">
-            {icon}
+          <span aria-hidden className="ck-step">
+            {done ? <Check className="h-4 w-4" strokeWidth={3} /> : index}
           </span>
           <div className="min-w-0">
             <h2 id={id} className="ck-h">
-              {index}. {title}
+              {title}
             </h2>
             <p className="mt-0.5 text-[14px] leading-5 text-[#666666]">{sub}</p>
           </div>
@@ -87,7 +89,7 @@ function SectionCard({
 }
 
 function Badge({ children }: { children: React.ReactNode }) {
-  return <span className="ck-chip">{children}</span>;
+  return <span className="inline-flex items-center gap-1.5 text-[13px] font-medium text-[#666666]">{children}</span>;
 }
 
 type PendingOrder = { id: string; number: string; addressId: string };
@@ -467,7 +469,7 @@ function CheckoutPageView() {
             <SectionCard
               id="delivery-heading"
               index="1"
-              icon={<MapPin className="h-5 w-5" />}
+              done={Boolean(selectedAddress)}
               title="Delivery address"
               sub="Where should we send your KOVENIK drop?"
               badge={
@@ -482,7 +484,7 @@ function CheckoutPageView() {
                 <h3 className="mb-3 flex items-center gap-2 text-[16px] font-bold leading-6 text-[#111111]">
                   <Truck className="h-5 w-5" aria-hidden /> Delivery options
                 </h3>
-                <div className="grid gap-3 sm:grid-cols-2">
+                <div className="space-y-2.5">
                   <div className="ck-tile flex min-h-[72px] items-center gap-3.5 p-4" data-on="true">
                     <span aria-hidden className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full border-2 border-[#111111]">
                       <span className="h-3 w-3 rounded-full bg-[#111111]" />
@@ -496,21 +498,18 @@ function CheckoutPageView() {
                     </span>
                   </div>
 
-                  <div className="ck-tile flex min-h-[72px] items-center gap-3.5 p-4" data-disabled="true" aria-disabled="true">
-                    <span aria-hidden className="flex h-6 w-6 shrink-0 rounded-full border-2 border-[#BDBDBD]" />
-                    <span className="min-w-0 flex-1">
-                      <span className="block text-[16px] font-bold leading-6">Express delivery</span>
-                      <span className="block text-[14px] leading-5 sm:text-[15px]">Coming soon</span>
-                    </span>
-                    <Zap className="h-5 w-5 shrink-0 text-[#666666]" aria-hidden />
-                  </div>
+                  <p className="flex items-center gap-2 text-[13px] text-[#666666]">
+                    <Zap className="h-4 w-4 shrink-0" aria-hidden /> Express delivery is coming soon.
+                  </p>
                 </div>
 
                 {selectedAddress && (
                   <p className="mt-4 flex items-start gap-2 text-[14px] leading-5 text-[#444444] sm:text-[15px]">
                     <MapPin className="mt-0.5 h-4 w-4 shrink-0" aria-hidden />
-                    Delivering to pincode <strong className="font-semibold text-[#111111]">{selectedAddress.pincode}</strong> ·{' '}
-                    {selectedAddress.city}, {selectedAddress.state}
+                    <span>
+                      Delivering to pincode <strong className="font-semibold text-[#111111]">{selectedAddress.pincode}</strong> ·{' '}
+                      {selectedAddress.city}, {selectedAddress.state}
+                    </span>
                   </p>
                 )}
               </div>
@@ -519,7 +518,6 @@ function CheckoutPageView() {
             <SectionCard
               id="payment-heading"
               index="2"
-              icon={<CreditCard className="h-5 w-5" />}
               title="Payment"
               sub="Choose how you’d like to pay"
               badge={
@@ -578,7 +576,7 @@ function CheckoutPageView() {
               <p className="mt-1 text-[12px] font-semibold text-[#111111]">You save {formatINR(totalSavings)}</p>
             )}
           </div>
-          <PlaceOrderButton label={ctaLabel} busy={busy} total={total} className="!min-h-[52px] min-w-0 flex-1 !px-3" />
+          <PlaceOrderButton label={ctaLabel} busy={busy} total={total} showTotal={false} className="!min-h-[52px] min-w-0 flex-1 !px-3" />
         </div>
       </div>
     </Shell>

@@ -34,8 +34,8 @@
   position: relative;
   background: var(--ck-bg);
   border: 1px solid var(--ck-line);
-  border-radius: 16px;
-  box-shadow: var(--ck-shadow);
+  border-radius: 12px;
+  box-shadow: 0 1px 2px rgba(17,17,17,.04);
 }
 .ck-panel-grey {
   position: relative;
@@ -47,12 +47,12 @@
   position: relative;
   background: var(--ck-bg);
   border: 1px solid var(--ck-line);
-  border-radius: 12px;
+  border-radius: 8px;
   transition: border-color 0.2s, box-shadow 0.2s;
 }
 .ck-tile:hover { border-color: var(--ck-line-strong); }
 /* Selected: ring via box-shadow so the tile never changes size (no layout shift). */
-.ck-tile[data-on='true'] { border-color: var(--ck-ink); box-shadow: 0 0 0 1px var(--ck-ink), 0 6px 16px -10px rgba(17,17,17,.35); background: #FCFCFC; }
+.ck-tile[data-on='true'] { border-color: var(--ck-ink); box-shadow: 0 0 0 1px var(--ck-ink); background: #FCFCFC; }
 .ck-tile[data-disabled='true'] { background: var(--ck-card); color: var(--ck-muted); cursor: not-allowed; }
 .ck-tile[data-disabled='true'] * { cursor: not-allowed; }
 
@@ -86,7 +86,7 @@
   background: #111111;
   color: #ffffff;
   border: 0;
-  border-radius: 12px;
+  border-radius: 8px;
   padding: 0 20px;
   font-size: 16px; font-weight: 700; letter-spacing: 0.02em;
   box-shadow: 0 8px 20px -10px rgba(17,17,17,.6);
@@ -100,7 +100,7 @@
   display: inline-flex; align-items: center; justify-content: center; gap: 8px;
   min-height: 48px;
   border: 1px solid #111111;
-  border-radius: 12px;
+  border-radius: 8px;
   background: #ffffff;
   padding: 0 18px;
   font-size: 16px; font-weight: 600;
@@ -114,7 +114,7 @@
   width: 100%;
   min-height: 52px;
   border: 1px solid var(--ck-line-strong);
-  border-radius: 10px;
+  border-radius: 8px;
   background: #ffffff;
   padding: 10px 14px;
   font-size: 16px; color: var(--ck-ink);
@@ -153,8 +153,14 @@ select.ck-input { appearance: auto; }
 @media (min-width: 640px) { .ck-h { font-size: 22px; } }
 .ck-icon-sq {
   display: flex; align-items: center; justify-content: center; flex-shrink: 0;
-  width: 40px; height: 40px; border-radius: 10px;
+  width: 40px; height: 40px; border-radius: 8px;
   background: #F5F5F5; border: 1px solid var(--ck-line); color: var(--ck-ink);
+}
+/* Numbered step marker for section headers */
+.ck-step {
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+  width: 32px; height: 32px; border-radius: 999px;
+  background: var(--ck-ink); color: #fff; font-size: 15px; font-weight: 700;
 }
 .ck-pill-save {
   display: flex; align-items: center; justify-content: center; gap: 8px;

@@ -4,7 +4,8 @@ import { useRef, useState } from 'react';
 import { AlertCircle, Check, ChevronDown, MapPin, Plus, X } from 'lucide-react';
 import type { useProfile } from '../../hooks/use-profile';
 import { EmptyPanel, SectionTitle } from './metal';
-import { CurrentLocationButton, type PickedAddress } from './CurrentLocationButton';
+import { CurrentLocationButton, SavedPinNotice, type PickedAddress } from './CurrentLocationButton';
+import { pincodeMismatch } from '../../lib/ola-client';
 
 type ProfileState = ReturnType<typeof useProfile>;
 
@@ -101,6 +102,7 @@ export function AddressesSection({ profile }: { profile: ProfileState }) {
       city: picked.city || form.city,
       pincode: picked.pincode || form.pincode,
       state: matchedState || form.state,
+      ...(picked.latitude != null && picked.longitude != null ? { latitude: picked.latitude, longitude: picked.longitude } : {}),
     });
     setErrors((e) => ({ ...e, pincode: undefined, city: undefined, state: undefined }));
   };
@@ -138,8 +140,11 @@ export function AddressesSection({ profile }: { profile: ProfileState }) {
     setErrors({});
   };
 
-  const submit = (e: React.FormEvent) => {
+  const [checking, setChecking] = useState(false);
+
+  const submit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (checking) return;
     const next: Errors = {};
     if (form.name.trim().length < 2) next.name = 'Enter the recipient’s full name.';
     if (tenDigits(form.phone).length !== 10) next.phone = 'Enter a 10-digit mobile number.';
@@ -148,6 +153,12 @@ export function AddressesSection({ profile }: { profile: ProfileState }) {
     if (!area.trim()) next.area = 'Enter your area, street or locality.';
     if (!form.city.trim()) next.city = 'Enter your city.';
     if (!form.state.trim()) next.state = 'Select your state.';
+    if (Object.keys(next).length === 0) {
+      setChecking(true);
+      const mismatch = await pincodeMismatch({ address: form.address, city: form.city, state: form.state, pincode: form.pincode });
+      setChecking(false);
+      if (mismatch) next.pincode = mismatch;
+    }
     setErrors(next);
     if (Object.keys(next).length > 0) return;
     void profile.saveAddress(e);
@@ -278,6 +289,7 @@ export function AddressesSection({ profile }: { profile: ProfileState }) {
 
           <div className="mt-6 grid gap-x-6 gap-y-5 sm:grid-cols-2">
             <CurrentLocationButton onPick={applyPicked} />
+            <SavedPinNotice latitude={form.latitude} longitude={form.longitude} onClear={() => setField({ latitude: null, longitude: null })} />
 
             <div>
               <label htmlFor="addr-name" className="kv-field-label">Full name</label>
