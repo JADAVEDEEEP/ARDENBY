@@ -2,80 +2,11 @@ import './globals.css';
 
 import type { Metadata } from 'next';
 
-import {
-  Archivo,
-  Bodoni_Moda,
-  Cormorant_Garamond,
-  Inter,
-  Lora,
-  Manrope,
-  Oswald,
-  Unbounded,
-} from 'next/font/google';
+import { archivo, bodoni, inter, lora, manrope, oswald, serif, unbounded } from './fonts';
 
 import { Providers } from '@/components/providers';
 
 import { SiteShell } from '@/components/layout/site-shell';
-
-const inter = Inter({
-  subsets: ['latin'],
-  variable: '--font-inter',
-  display: 'swap',
-});
-
-// Lora 500: headings on the light storefront (italic gold accent word).
-const lora = Lora({
-  subsets: ['latin'],
-  weight: ['500'],
-  style: ['normal', 'italic'],
-  variable: '--font-lora',
-  display: 'swap',
-});
-
-const serif = Cormorant_Garamond({
-  subsets: ['latin'],
-  weight: ['400', '500', '600', '700'],
-  variable: '--font-serif',
-  display: 'swap',
-});
-
-// Display serif for the chrome homepage, navbar and footer.
-const bodoni = Bodoni_Moda({
-  subsets: ['latin'],
-  variable: '--font-bodoni',
-  display: 'swap',
-});
-
-// Oswald: uppercase headings on the storefront.
-const oswald = Oswald({
-  subsets: ['latin'],
-  weight: ['500', '600', '700'],
-  variable: '--font-oswald',
-  display: 'swap',
-});
-
-// Archivo (with the width axis) is the storefront body font.
-const archivo = Archivo({
-  subsets: ['latin'],
-  axes: ['wdth'],
-  variable: '--font-archivo',
-  display: 'swap',
-});
-
-// Category page: Unbounded for the hero title, Manrope for UI text.
-const unbounded = Unbounded({
-  subsets: ['latin'],
-  weight: ['800'],
-  variable: '--font-unbounded',
-  display: 'swap',
-});
-
-const manrope = Manrope({
-  subsets: ['latin'],
-  weight: ['400', '500', '600', '700', '800'],
-  variable: '--font-manrope',
-  display: 'swap',
-});
 
 export const metadata: Metadata = {
   metadataBase: new URL(
