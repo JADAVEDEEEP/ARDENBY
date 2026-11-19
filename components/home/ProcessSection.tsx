@@ -1,6 +1,5 @@
 import Link from 'next/link';
 
-import Image from 'next/image';
 import { philosophy } from './home-content';
 
 export function ProcessSection() {
@@ -11,25 +10,13 @@ export function ProcessSection() {
           id="home-process"
           className="mb-6 max-w-[760px] font-oswald text-[26px] font-semibold uppercase leading-tight tracking-[0.06em] text-kv-ink md:mb-8 md:text-[36px]"
         >
-          Crafted with care, from start to finish.
+          What defines a KOVENIK piece.
         </h2>
 
-        <div className="grid gap-8 md:grid-cols-2 md:items-center md:gap-12">
-          <div className="relative aspect-[4/3] w-full overflow-hidden bg-kv-ink">
-            <Image
-              src="/images/fit-study.png"
-              alt="Model in a cream oversized KOVENIK tee and grey trousers, with callouts for the drop-shoulder fit, signature branding and 240 GSM cotton"
-              fill
-              loading="lazy"
-              sizes="(min-width: 1280px) 616px, (min-width: 768px) 50vw, 100vw"
-              className="object-cover"
-            />
-          </div>
-
+        <div className="grid gap-8 md:items-center md:gap-12">
           <div>
             <p className="max-w-[520px] text-[15px] leading-[1.6] text-kv-sub md:text-[17px]">
-              Take a peek behind the curtain and discover how we create each piece with meticulous attention to
-              detail, sustainable practices, and a deep respect for craftsmanship.
+              Relaxed shapes and bold graphics, designed for everyday wear.
             </p>
 
             <ol className="mt-7 space-y-6">

@@ -6,7 +6,7 @@ import type { Product } from '@/types';
 import { SectionHeader } from './ui/SectionHeader';
 
 const COLLECTIONS = [
-  { slug: 'supreme-edition', label: 'Supreme Edition', text: 'Heavyweight silhouettes for everyday rotation' },
+  { slug: 'apex-edition', label: 'Apex Edition', text: 'Heavyweight silhouettes for everyday rotation' },
   { slug: 'epic-thread', label: 'Epic Thread', text: 'Premium graphics, clean streetwear finish' },
   { slug: 'ardenby-premium', label: 'Kovenik Premium', text: 'Elevated essentials built for daily wear' },
   { slug: 'the-print-club', label: 'The Print Club', text: 'Limited edition drop artwork' },

@@ -128,10 +128,10 @@ declare global {
 
 const megaMenu = [
   {
-    title: 'Supreme Edition',
-    slug: 'supreme-edition',
+    title: 'Apex Edition',
+    slug: 'apex-edition',
     desc: 'Heavyweight oversized cotton',
-    featured: products.filter((p) => p.category === 'supreme-edition').slice(0, 3),
+    featured: products.filter((p) => p.category === 'apex-edition').slice(0, 3),
   },
   {
     title: 'Epic Thread',
@@ -154,7 +154,7 @@ const megaMenu = [
 ];
 
 const topNavItems = [
-  { label: 'SUPREME EDITION', slug: 'supreme-edition' },
+  { label: 'APEX EDITION', slug: 'apex-edition' },
   { label: 'EPIC THREAD', slug: 'epic-thread' },
   { label: 'ARDENBY PREMIUM', slug: 'ardenby-premium' },
   { label: 'THE PRINT CLUB', slug: 'the-print-club' },
@@ -750,7 +750,7 @@ export function Navbar() {
                   className="relative py-5"
                   onMouseEnter={() => {
                     if (
-                      item.slug === 'supreme-edition' ||
+                      item.slug === 'apex-edition' ||
                       item.slug === 'epic-thread'
                     ) {
                       setMegaOpen(true);

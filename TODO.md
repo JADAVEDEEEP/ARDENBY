@@ -38,9 +38,9 @@ Collection tiles use the first real photo of a product in that collection; Supre
 - **"Each product in exactly one collection and several categories":** `products` has one `category_slug`. The collection is stored there; Top Wear / Bottom Wear / Plus Size are stored as slug tokens in the existing `tags` column (the shop and backend filters read them).
 - **Rating stars** are hidden below 3 reviews everywhere (cards and product page).
 
-## 5. Naming risk: "Supreme Edition"
+## 5. Naming risk: "Supreme Edition" (DONE 2026-11-19: renamed to "Apex Edition")
 
-"Supreme" is a registered trademark of the streetwear brand Supreme; using it as a collection name may invite a legal complaint. Not renamed (as asked). Three alternatives: **Apex Edition**, **Heavyweight Series**, **Monolith Edition**. (The URL slug `supreme-edition` is used in links/orders, so a rename needs a redirect.)
+"Supreme" is a registered trademark of the streetwear brand Supreme; using it as a collection name may invite a legal complaint. Renamed on 2026-11-19 to Apex Edition (slug apex-edition; old /shop?category=supreme-edition links redirect). Three alternatives: **Apex Edition**, **Heavyweight Series**, **Monolith Edition**. (The URL slug `supreme-edition` is used in links/orders, so a rename needs a redirect.)
 
 ## 6. Not built / only partly done
 

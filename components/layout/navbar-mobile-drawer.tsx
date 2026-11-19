@@ -42,7 +42,7 @@ const TABS: { key: TabKey; label: string }[] = [
 
 /* Collection cards (swipe row). Images are the existing category photos. */
 const COLLECTIONS = [
-  { label: 'Supreme Edition', href: '/shop?category=supreme-edition', image: categoryImage('supreme-edition') },
+  { label: 'Apex Edition', href: '/shop?category=apex-edition', image: categoryImage('apex-edition') },
   { label: 'Epic Thread', href: '/shop?category=epic-thread', image: categoryImage('epic-thread') },
   { label: 'Kovenik Premium', href: '/shop?category=ardenby-premium', image: categoryImage('ardenby-premium') },
   { label: 'The Print Club', href: '/shop?category=the-print-club', image: categoryImage('the-print-club') },

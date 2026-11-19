@@ -6,6 +6,17 @@ const nextConfig = {
     ignoreDuringBuilds: true,
   },
   images: { unoptimized: true },
+  // The collection was renamed. Keep old links, bookmarks and emails working.
+  async redirects() {
+    return [
+      {
+        source: '/shop',
+        has: [{ type: 'query', key: 'category', value: 'supreme-edition' }],
+        destination: '/shop?category=apex-edition',
+        permanent: true,
+      },
+    ];
+  },
   async headers() {
     // Baseline browser protections. A full Content-Security-Policy is deliberately
     // not set here: checkout loads Razorpay and Google scripts, so one needs to be

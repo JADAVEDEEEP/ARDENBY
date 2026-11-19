@@ -1,9 +1,9 @@
 import { Layers, Shirt, Star } from 'lucide-react';
 
 const ITEMS = [
-  { Icon: Layers, text: '240 GSM heavyweight combed cotton' },
-  { Icon: Star, text: 'Limited drops, zero restocks' },
-  { Icon: Shirt, text: 'Drop-shoulder relaxed fit' },
+  { Icon: Layers, text: 'Oversized, relaxed fits' },
+  { Icon: Star, text: 'Bold graphic designs' },
+  { Icon: Shirt, text: 'Drop-shoulder cut' },
 ] as const;
 
 export function USPStrip() {

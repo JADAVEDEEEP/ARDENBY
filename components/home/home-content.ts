@@ -3,18 +3,18 @@
 export const philosophy = [
   {
     num: '01',
-    title: '240 GSM Engineered Fabric',
-    desc: 'Custom heavyweight combed cotton. Bio-washed, pre-shrunk, and crafted to retain architecture after every wash.',
+    title: 'Oversized, Relaxed Fits',
+    desc: 'Roomy cuts made for everyday wear. Fabric and care details are listed on each product page.',
   },
   {
     num: '02',
-    title: 'Limited Edition Drop Artwork',
-    desc: 'Original high-density DTF and puff graphic designs. Exclusive runs with zero restocks.',
+    title: 'Graphic Artwork',
+    desc: 'Bold graphic designs across tees, polos and trousers.',
   },
   {
     num: '03',
     title: 'Drop-Shoulder Silhouette',
-    desc: 'Precision tailored streetwear fits engineered with dropped armholes for the ideal relaxed drape.',
+    desc: 'Dropped armholes for a relaxed drape.',
   },
 ] as const;
 

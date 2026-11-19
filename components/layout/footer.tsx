@@ -35,7 +35,7 @@ const footerColumns = [
   {
     title: "Categories",
     links: [
-      { label: "Supreme Edition", href: "/shop?category=supreme-edition" },
+      { label: "Apex Edition", href: "/shop?category=apex-edition" },
       { label: "Epic Thread", href: "/shop?category=epic-thread" },
       { label: "Kovenik Premium", href: "/shop?category=ardenby-premium" },
       { label: "The Print Club", href: "/shop?category=the-print-club" },

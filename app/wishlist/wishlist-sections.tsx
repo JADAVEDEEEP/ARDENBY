@@ -163,7 +163,7 @@ export function ExploreTile() {
         Find your next piece.
       </h2>
       <p className="mt-3 hidden text-[16px] font-medium leading-6 text-[#595959] lg:block">
-        New drops from Supreme Edition and The Print Club.
+        New drops from Apex Edition and The Print Club.
       </p>
       <Link
         href="/shop"

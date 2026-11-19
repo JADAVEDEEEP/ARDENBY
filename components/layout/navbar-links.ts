@@ -1,6 +1,6 @@
 /** The one primary navigation, shared by the desktop header and the mobile drawer. */
 export const COLLECTION_LINKS = [
-  { label: 'Supreme Edition', slug: 'supreme-edition', href: '/shop?category=supreme-edition' },
+  { label: 'Apex Edition', slug: 'apex-edition', href: '/shop?category=apex-edition' },
   { label: 'Epic Thread', slug: 'epic-thread', href: '/shop?category=epic-thread' },
   { label: 'Kovenik Premium', slug: 'ardenby-premium', href: '/shop?category=ardenby-premium' },
   { label: 'The Print Club', slug: 'the-print-club', href: '/shop?category=the-print-club' },

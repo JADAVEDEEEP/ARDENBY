@@ -5,7 +5,7 @@ import { SafeImage } from './ui/SafeImage';
 
 const ITEMS = [
   { slug: 'all-products', label: 'All Products', href: '/shop' },
-  { slug: 'supreme-edition', label: 'Supreme Edition', href: '/shop?category=supreme-edition' },
+  { slug: 'apex-edition', label: 'Apex Edition', href: '/shop?category=apex-edition' },
   { slug: 'epic-thread', label: 'Epic Thread', href: '/shop?category=epic-thread' },
   { slug: 'ardenby-premium', label: 'Kovenik Premium', href: '/shop?category=ardenby-premium' },
   { slug: 'the-print-club', label: 'The Print Club', href: '/shop?category=the-print-club' },

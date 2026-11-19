@@ -42,7 +42,7 @@ export function PromoBanner({ products }: { products: Product[] }) {
 
         <div className="order-2 flex flex-col justify-center px-4 py-8 md:order-1 md:px-16 md:py-12">
           <p className="text-[12px] font-bold uppercase tracking-[0.28em] text-kv-gold-dark md:text-[13px]">
-            Limited edition drop · 01
+            Featured collection
           </p>
           <h2 id="home-featured" className="mt-4 font-oswald text-[48px] font-bold uppercase leading-[0.95] text-white md:text-[84px]">
             The Print
@@ -50,7 +50,7 @@ export function PromoBanner({ products }: { products: Product[] }) {
             Club
           </h2>
           <p className="mt-5 max-w-[460px] text-[15px] leading-[1.6] text-kv-mist md:text-[17px]">
-            Original high-density DTF and puff graphic designs. Exclusive runs with zero restocks.
+            Bold graphic streetwear designs from KOVENIK.
           </p>
 
           <div className="mt-7 flex flex-col gap-3 sm:flex-row">

@@ -2,8 +2,8 @@ import type { Product } from '@/types';
 
 export const topNavItems = [
   {
-    label: 'SUPREME EDITION',
-    slug: 'supreme-edition',
+    label: 'APEX EDITION',
+    slug: 'apex-edition',
     desc: 'Heavyweight oversized drops',
   },
   {

@@ -82,9 +82,9 @@ export const products: Product[] = [
 
     name: 'Phantom Beige Oversized Tee',
 
-    category: 'supreme-edition',
+    category: 'apex-edition',
 
-    categoryLabel: 'Supreme Edition',
+    categoryLabel: 'Apex Edition',
 
     fit: 'Oversized',
 
@@ -507,9 +507,9 @@ export const products: Product[] = [
 
     name: 'Midnight Royal Oversized Tee',
 
-    category: 'supreme-edition',
+    category: 'apex-edition',
 
-    categoryLabel: 'Supreme Edition',
+    categoryLabel: 'Apex Edition',
 
     fit: 'Oversized',
 
@@ -917,9 +917,9 @@ export const products: Product[] = [
 
     name: 'Tokyo Blue Oversized Tee',
 
-    category: 'supreme-edition',
+    category: 'apex-edition',
 
-    categoryLabel: 'Supreme Edition',
+    categoryLabel: 'Apex Edition',
 
     fit: 'Oversized',
 
@@ -1796,7 +1796,7 @@ export function getRecentlyViewed(currentId: string, count = 4): Product[] {
 
 export const categories = [
 
-  { slug: 'supreme-edition', name: 'Supreme Edition', desc: 'Heavyweight oversized drops' },
+  { slug: 'apex-edition', name: 'Apex Edition', desc: 'Heavyweight oversized drops' },
 
   { slug: 'epic-thread', name: 'Epic Thread', desc: 'Graphic & printed tees' },
 
@@ -1860,7 +1860,7 @@ export const heroSlides = [
 
     cta: 'SHOP TEES',
 
-    href: '/shop?category=supreme-edition',
+    href: '/shop?category=apex-edition',
 
   },
 
@@ -1884,7 +1884,7 @@ export const heroSlides = [
 
 export const editorialBanners = {
 
-  supreme: 'https://images.pexels.com/photos/32321512/pexels-photo-32321512.jpeg?auto=compress&cs=tinysrgb&w=1200&h=800&fit=crop',
+  apex: 'https://images.pexels.com/photos/32321512/pexels-photo-32321512.jpeg?auto=compress&cs=tinysrgb&w=1200&h=800&fit=crop',
 
   printClub: 'https://images.pexels.com/photos/32796327/pexels-photo-32796327.jpeg?auto=compress&cs=tinysrgb&w=1200&h=800&fit=crop',
 

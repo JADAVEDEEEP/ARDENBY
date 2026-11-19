@@ -157,37 +157,15 @@ export default function AboutPage() {
       <section aria-labelledby="quality-title" className="bg-[#F5F5F5] py-16 md:py-28">
         <Container>
           <div className="grid items-center gap-12 md:grid-cols-12 md:gap-8">
-            <div className="md:col-span-6">
-              <div className="relative aspect-[4/3] w-full overflow-hidden bg-[#111111]">
-                <Image
-                  src="/images/fit-study.png"
-                  alt="KOVENIK fit study: a model in a cream oversized tee with callouts for the drop-shoulder fit, signature branding and 240 GSM cotton fabric"
-                  fill
-                  loading="lazy"
-                  sizes="(min-width: 768px) 50vw, 100vw"
-                  className="object-cover"
-                />
-              </div>
-            </div>
-            <div className="md:col-span-5 md:col-start-8">
-              <Eyebrow>Quality &amp; craftsmanship</Eyebrow>
+            <div className="md:col-span-8">
+              <Eyebrow>Design &amp; fit</Eyebrow>
               <h2 id="quality-title" className="mt-5 font-oswald text-[clamp(34px,6vw,68px)] font-bold uppercase leading-[0.98]">
-                Fabric you can feel
+                Made for everyday wear
               </h2>
               <p className="mt-7 max-w-[46ch] text-[18px] leading-[1.75] text-[#3A3A3A] md:text-[20px]">
-                Our tees are cut from custom heavyweight combed cotton at 240 GSM, bio-washed and pre-shrunk, so they keep
-                their structure wash after wash.
+                Relaxed, oversized shapes with a drop-shoulder cut and bold graphics. Fabric and care details for each
+                piece are listed on its product page.
               </p>
-              <dl className="mt-9 grid grid-cols-2 gap-6 border-t-2 border-[#111111] pt-6">
-                <div>
-                  <dt className="text-[13px] font-bold uppercase tracking-[0.18em] text-[#555555]">Weight</dt>
-                  <dd className="mt-1 font-oswald text-[40px] font-bold leading-none">240 GSM</dd>
-                </div>
-                <div>
-                  <dt className="text-[13px] font-bold uppercase tracking-[0.18em] text-[#555555]">Finish</dt>
-                  <dd className="mt-1 font-oswald text-[28px] font-bold uppercase leading-[1.1]">Bio-washed, pre-shrunk</dd>
-                </div>
-              </dl>
             </div>
           </div>
         </Container>

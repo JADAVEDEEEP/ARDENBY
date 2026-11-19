@@ -29,7 +29,7 @@ export type FitType =
   | 'Jogger';
 
 export type CategorySlug =
-  | 'supreme-edition'
+  | 'apex-edition'
   | 'epic-thread'
   | 'ardenby-premium'
   | 'the-print-club'

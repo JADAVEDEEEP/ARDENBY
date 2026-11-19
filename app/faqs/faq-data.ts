@@ -170,7 +170,7 @@ export const FAQS: FaqItem[] = [
     id: 'fabric',
     category: 'Products & Sizing',
     q: 'What are the T-shirts made of?',
-    a: 'Our heavyweight tees are cut from 240 GSM combed cotton in a drop-shoulder silhouette. Details for each piece are on its product page.',
+    a: 'Fabric and care details for each piece are listed on its product page.',
   },
   {
     id: 'limited-drops',

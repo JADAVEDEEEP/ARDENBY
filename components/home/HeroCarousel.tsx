@@ -61,7 +61,7 @@ export function HeroCarousel({ products }: HeroCarouselProps) {
 
         {/* Desktop panel */}
         <div className="kv-gutter hidden flex-col items-center justify-center py-10 text-center md:flex">
-          <p className="text-[13px] font-bold uppercase tracking-[0.2em] text-kv-gold-text">Graphic streetwear · 240 GSM</p>
+          <p className="text-[13px] font-bold uppercase tracking-[0.2em] text-kv-gold-text">Graphic streetwear</p>
           <h1 className="mt-3 font-oswald text-[56px] font-bold uppercase leading-none tracking-[0.04em] text-kv-ink lg:text-[64px]">
             Art you can wear
           </h1>
@@ -85,7 +85,7 @@ export function HeroCarousel({ products }: HeroCarouselProps) {
           )}
 
           <p className="mt-7 text-[15px] font-bold uppercase tracking-[0.12em] text-kv-ink">
-            Supreme Edition | Epic Thread | Kovenik Premium
+            Apex Edition | Epic Thread | Kovenik Premium
           </p>
           <div className="mt-7">{buttons}</div>
         </div>

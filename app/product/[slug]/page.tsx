@@ -945,6 +945,9 @@ export default function ProductPage() {
                   <strong className="font-semibold text-[var(--ink)]">Fabric details:</strong> {product.fabricDetails}
                 </p>
               )}
+              <p className="mt-3 text-[13px] text-[var(--soft)]">
+                Product images are for illustration. Actual colour, print placement and fit may vary slightly.
+              </p>
               {stripCols.length > 0 && (
                 <ul className="mt-6 grid grid-cols-2 gap-4 sm:grid-cols-3">
                   {stripCols.map(([label, value], index) => {
