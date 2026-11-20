@@ -26,7 +26,7 @@ export const BANNER_TYPES = ['image/jpeg', 'image/png', 'image/webp', 'image/avi
 
 /** Fetches the banners customers should see right now. Throws when the server cannot be reached. */
 export async function fetchPublicBanners(signal?: AbortSignal): Promise<PublicBanner[]> {
-  const response = await fetch(apiUrl('/api/banners'), { cache: 'no-store', signal });
+  const response = await fetch(apiUrl('/api/banners'), { signal });
   if (!response.ok) throw new Error(`Banners API failed with status ${response.status}`);
 
   const data: unknown = await response.json();

@@ -5,7 +5,8 @@ const nextConfig = {
   eslint: {
     ignoreDuringBuilds: true,
   },
-  images: { unoptimized: true },
+  // Cloudinary resizing via a custom loader (see lib/image-loader.ts); no Vercel optimiser needed.
+  images: { loader: 'custom', loaderFile: './lib/image-loader.ts' },
   // The collection was renamed. Keep old links, bookmarks and emails working.
   async redirects() {
     return [

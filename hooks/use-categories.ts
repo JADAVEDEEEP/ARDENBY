@@ -14,7 +14,7 @@ function fetchCategories(): Promise<StoreCategory[]> {
   if (cached && Date.now() - cached.at < CACHE_MS) return cached.promise;
 
   const promise = (async () => {
-    const response = await fetch(apiUrl('/api/categories'), { cache: 'no-store' });
+    const response = await fetch(apiUrl('/api/categories'));
     if (!response.ok) throw new Error(`Categories API failed with status ${response.status}`);
     const data: any = await response.json();
     const list: unknown = Array.isArray(data)

@@ -37,7 +37,8 @@
     ".next-qa/types/**/*.ts",
     ".next-maptest/types/**/*.ts",
     ".next-liq/types/**/*.ts",
-    ".next-audit/types/**/*.ts"
+    ".next-audit/types/**/*.ts",
+    ".next-check/types/**/*.ts"
   ],
   "exclude": [
     "node_modules"
