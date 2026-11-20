@@ -6,6 +6,15 @@ import type { Product } from '@/types';
 /** Canonical origin used for sitemap, canonical URLs and structured data. */
 export const SITE_URL = (process.env.NEXT_PUBLIC_SITE_URL || 'https://kovenik.in').replace(/\/+$/, '');
 
+/** True on a test copy of the site (address starts with "staging."): search engines must not index it. */
+export const IS_STAGING = (() => {
+  try {
+    return new URL(SITE_URL).hostname.startsWith('staging.');
+  } catch {
+    return false;
+  }
+})();
+
 const FETCH_TIMEOUT_MS = 8000;
 
 /** `status` is 0 when the API could not be reached at all. */

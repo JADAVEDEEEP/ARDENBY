@@ -7,11 +7,14 @@ import { archivo, bodoni, inter, lora, manrope, oswald, serif, unbounded } from 
 import { Providers } from '@/components/providers';
 
 import { SiteShell } from '@/components/layout/site-shell';
+import { IS_STAGING } from '@/lib/site';
 
 export const metadata: Metadata = {
   metadataBase: new URL(
     process.env.NEXT_PUBLIC_SITE_URL || 'https://kovenik.in'
   ),
+
+  ...(IS_STAGING ? { robots: { index: false, follow: false } } : {}),
 
   title: "KÖVENIK — Wear Beyond Ordinary | Premium Men's Clothing",
 

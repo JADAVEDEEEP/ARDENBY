@@ -1,8 +1,13 @@
 import type { MetadataRoute } from 'next';
 
-import { SITE_URL } from '@/lib/site';
+import { IS_STAGING, SITE_URL } from '@/lib/site';
 
 export default function robots(): MetadataRoute.Robots {
+  // A staging copy must never appear in search results.
+  if (IS_STAGING) {
+    return { rules: [{ userAgent: '*', disallow: '/' }] };
+  }
+
   return {
     rules: [
       {
