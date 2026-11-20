@@ -34,7 +34,7 @@ const clean = (value: string | undefined) => (value || '').trim();
 /** Optional business details, supplied by the owner through environment variables. */
 export const BUSINESS = {
   /** Public support address. Not configured = not shown (and not invented). */
-  supportEmail: clean(process.env.NEXT_PUBLIC_SUPPORT_EMAIL),
+  supportEmail: clean(process.env.NEXT_PUBLIC_SUPPORT_EMAIL) || 'info.kovenik@gmail.com',
   supportPhone: clean(process.env.NEXT_PUBLIC_SUPPORT_PHONE),
   supportHours: clean(process.env.NEXT_PUBLIC_SUPPORT_HOURS),
   /** Business / brand display name. Does NOT claim registered legal status; only put a registered
