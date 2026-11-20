@@ -7,12 +7,10 @@ import { archivo, bodoni, inter, lora, manrope, oswald, serif, unbounded } from 
 import { Providers } from '@/components/providers';
 
 import { SiteShell } from '@/components/layout/site-shell';
-import { IS_STAGING } from '@/lib/site';
+import { IS_STAGING, SITE_URL } from '@/lib/site';
 
 export const metadata: Metadata = {
-  metadataBase: new URL(
-    process.env.NEXT_PUBLIC_SITE_URL || 'https://kovenik.in'
-  ),
+  metadataBase: new URL(SITE_URL),
 
   ...(IS_STAGING ? { robots: { index: false, follow: false } } : {}),
 

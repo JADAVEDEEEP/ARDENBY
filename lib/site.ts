@@ -4,7 +4,12 @@ import type { ApiProduct } from '@/lib/home-products';
 import type { Product } from '@/types';
 
 /** Canonical origin used for sitemap, canonical URLs and structured data. */
-export const SITE_URL = (process.env.NEXT_PUBLIC_SITE_URL || 'https://kovenik.in').replace(/\/+$/, '');
+export const SITE_URL = (
+  process.env.NEXT_PUBLIC_SITE_URL ||
+  process.env.NEXT_SITE_URL ||
+  process.env.SITE_URL ||
+  'https://kovenik.in'
+).replace(/\/+$/, '');
 
 /** True on a test copy of the site (address starts with "staging."): search engines must not index it. */
 export const IS_STAGING = (() => {
