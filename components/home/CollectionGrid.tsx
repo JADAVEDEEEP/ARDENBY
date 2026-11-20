@@ -14,10 +14,28 @@ const COLLECTIONS = [
 
 /**
  * Collections: one tile per collection, each showing a real KOVENIK product from that collection.
- * No stock photography. If a collection has no product photo yet, a clean branded tile is shown
- * instead (never another brand's image).
+ * No stock photography. A collection with no visible product uses another KOVENIK product photo; only if
+ * there are no product photos at all is a clean branded tile shown (never another brand's image).
  */
 export function CollectionGrid({ products }: { products: Product[] }) {
+  // A collection with no visible product of its own borrows a photo from the live catalogue, a different
+  // one per tile (spread across the list), so a tile is never blank.
+  const withPhoto = products.filter((p) => p.images?.[0]);
+  const used = new Set<string>();
+  const ownPhoto = (slug: string) => withPhoto.find((p) => p.category === slug)?.images[0];
+  COLLECTIONS.forEach((c) => {
+    const own = ownPhoto(c.slug);
+    if (own) used.add(own);
+  });
+  const spare = withPhoto.map((p) => p.images[0]).filter((url) => !used.has(url));
+  let borrowed = 0;
+  const pickSpare = () => {
+    if (spare.length === 0) return undefined;
+    const idx = Math.floor((spare.length / (COLLECTIONS.length + 1)) * (borrowed + 1)) % spare.length;
+    borrowed += 1;
+    return spare[idx];
+  };
+
   return (
     <section aria-labelledby="home-collections" className="bg-kv-bg py-10 md:py-12">
       <div className="kv-gutter mx-auto w-full max-w-[1600px]">
@@ -25,7 +43,7 @@ export function CollectionGrid({ products }: { products: Product[] }) {
 
         <ul className="grid grid-cols-2 gap-3 md:gap-5 lg:grid-cols-4">
           {COLLECTIONS.map((c) => {
-            const photo = products.find((p) => p.category === c.slug && p.images?.[0])?.images[0];
+            const photo = ownPhoto(c.slug) ?? pickSpare();
             return (
               <li key={c.slug}>
                 <Link href={`/shop?category=${c.slug}`} className="group block">
