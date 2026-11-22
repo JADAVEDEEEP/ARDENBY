@@ -136,9 +136,9 @@ export function AdminCancelDialog({
         role="dialog"
         aria-modal="true"
         aria-labelledby="admin-cancel-title"
-        className="relative max-h-[92vh] w-full max-w-lg overflow-y-auto rounded-xl border border-[#E4E7EC] bg-white p-6 shadow-xl"
+        className="relative max-h-[92vh] w-full max-w-lg overflow-y-auto rounded-xl border border-[#E3E5EE] bg-white p-6 shadow-xl"
       >
-        <h2 id="admin-cancel-title" className="text-[20px] font-bold text-[#111111]">
+        <h2 id="admin-cancel-title" className="text-[20px] font-bold text-[#11162B]">
           Cancel order {orderNumber}
         </h2>
 
@@ -163,8 +163,8 @@ export function AdminCancelDialog({
                   .map((item) => {
                     const quantity = picked[item.orderItemId] || 0;
                     return (
-                      <li key={item.orderItemId} className="flex items-center justify-between gap-3 rounded-lg border border-[#E4E7EC] px-3 py-2">
-                        <label className="flex min-w-0 flex-1 items-center gap-2 text-[14px]">
+                      <li key={item.orderItemId} className="flex items-center justify-between gap-3 rounded-lg border border-[#E3E5EE] px-3 py-2">
+                        <label className="flex min-w-0 flex-1 items-center gap-2 text-[15px]">
                           <input
                             type="checkbox"
                             checked={quantity > 0}
@@ -173,12 +173,12 @@ export function AdminCancelDialog({
                             }
                           />
                           <span className="min-w-0 truncate">
-                            {item.name} <span className="text-[#626875]">({[item.size, item.color].filter(Boolean).join(', ')})</span>
+                            {item.name} <span className="text-[#5A6075]">({[item.size, item.color].filter(Boolean).join(', ')})</span>
                           </span>
                         </label>
                         <select
                           aria-label={`Quantity of ${item.name}`}
-                          className="h-9 rounded-lg border border-[#D0D5DD] bg-white px-2 text-[14px]"
+                          className="h-10 rounded-lg border border-[#E3E5EE] bg-white px-2 text-[15px]"
                           value={quantity}
                           onChange={(e) => setPicked((p) => ({ ...p, [item.orderItemId]: Number(e.target.value) }))}
                         >
@@ -219,8 +219,8 @@ export function AdminCancelDialog({
 
             {options.paidOnline ? (
               preview?.breakdown && (
-                <div className="rounded-lg border border-[#E4E7EC] bg-[#F9FAFB] p-3 text-[13px] text-[#344054]">
-                  <p className="font-semibold text-[#111111]">Refund the server will send</p>
+                <div className="rounded-lg border border-[#E3E5EE] bg-[#F5F6FA] p-3 text-[14px] text-[#5A6075]">
+                  <p className="font-semibold text-[#11162B]">Refund the server will send</p>
                   <ul className="mt-1 space-y-0.5">
                     {preview.breakdown.lines.map((l) => (
                       <li key={l.orderItemId}>
@@ -229,18 +229,18 @@ export function AdminCancelDialog({
                     ))}
                     {preview.breakdown.includesShipping && <li>Shipping: {inr(preview.breakdown.shipping)}</li>}
                   </ul>
-                  <p className="mt-2 text-[15px] font-bold text-[#111111]">Total {inr(preview.breakdown.final)}</p>
-                  <p className="mt-1 text-[12px] text-[#626875]">
+                  <p className="mt-2 text-[15px] font-bold text-[#11162B]">Total {inr(preview.breakdown.final)}</p>
+                  <p className="mt-1 text-[13px] text-[#5A6075]">
                     {preview.wholeOrder ? 'Every remaining item is cancelled, so shipping is refunded too.' : 'Part of the order stays; shipping is not refunded.'}
                   </p>
                 </div>
               )
             ) : (
-              <p className="text-[13px] text-[#626875]">Nothing was paid online for this order, so there is no refund.</p>
+              <p className="text-[14px] text-[#5A6075]">Nothing was paid online for this order, so there is no refund.</p>
             )}
 
             {error && <Notice tone="error">{error}</Notice>}
-            {problem && items.length >= 0 && error === '' && <p className="text-[13px] text-[#626875]">{problem}</p>}
+            {problem && items.length >= 0 && error === '' && <p className="text-[14px] text-[#5A6075]">{problem}</p>}
 
             <div className="flex justify-end gap-3">
               <button type="button" className={btnOutline} onClick={onClose}>

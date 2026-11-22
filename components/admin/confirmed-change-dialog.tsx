@@ -21,7 +21,7 @@ export type ConfirmedResult = {
 };
 
 const field =
-  'w-full rounded-lg border border-[#E53935]/25 bg-[#111111] px-3 py-2 text-sm text-[#F7F7F7] outline-none transition focus:border-[#E53935]/70';
+  'w-full rounded-lg border border-[#E3E5EE] bg-[#FFFFFF] px-3 py-2 text-[15px] text-[#11162B] outline-none transition focus:border-[#4338CA]/70';
 
 export function ConfirmedChangeDialog({
   title,
@@ -117,19 +117,19 @@ export function ConfirmedChangeDialog({
         role="alertdialog"
         aria-modal="true"
         aria-labelledby="cc-title"
-        className="relative max-h-[92vh] w-full max-w-md overflow-y-auto rounded-xl border border-[#E53935]/30 bg-[#1A1A1A] p-6 shadow-[0_20px_50px_rgba(0,0,0,0.5)]"
+        className="relative max-h-[92vh] w-full max-w-md overflow-y-auto rounded-xl border border-[#E3E5EE] bg-[#FFFFFF] p-6 shadow-[0_20px_50px_rgba(0,0,0,0.5)]"
       >
-        <h2 id="cc-title" className="font-serif text-xl text-[#F7F7F7]">
+        <h2 id="cc-title" className="font-serif text-xl text-[#11162B]">
           {title}
         </h2>
-        <div className="mt-2 text-sm leading-6 text-[#BBBBBB]">{body}</div>
-        {subject && <p className="mt-1 truncate text-xs text-[#7A7A7A]">{subject}</p>}
+        <div className="mt-2 text-[15px] leading-6 text-[#5A6075]">{body}</div>
+        {subject && <p className="mt-1 truncate text-[13px] text-[#5A6075]">{subject}</p>}
 
         {step === 'reason' ? (
           <div className="mt-4 space-y-4">
             {extraFields}
             <div>
-              <label htmlFor="cc-reason" className="mb-1.5 block text-xs font-semibold text-[#E5E5E5]">
+              <label htmlFor="cc-reason" className="mb-1.5 block text-[13px] font-semibold text-[#11162B]">
                 Reason (kept in the audit log)
               </label>
               <textarea
@@ -142,17 +142,17 @@ export function ConfirmedChangeDialog({
                 className={field}
               />
             </div>
-            <p className="text-xs text-[#979797]">
+            <p className="text-[13px] text-[#5A6075]">
               We will e-mail a confirmation code to your own address. Nothing changes until you enter it.
             </p>
           </div>
         ) : (
           <div className="mt-4 space-y-3">
-            <p className="text-sm text-[#BBBBBB]">
+            <p className="text-[15px] text-[#5A6075]">
               A 6-digit code was sent to your e-mail. It works once and expires in 10 minutes.
             </p>
             <div>
-              <label htmlFor="cc-code" className="mb-1.5 block text-xs font-semibold text-[#E5E5E5]">
+              <label htmlFor="cc-code" className="mb-1.5 block text-[13px] font-semibold text-[#11162B]">
                 Confirmation code
               </label>
               <input
@@ -169,7 +169,7 @@ export function ConfirmedChangeDialog({
         )}
 
         {error && (
-          <p role="alert" className="mt-4 rounded-lg border border-[#D98B7E]/40 bg-[#D98B7E]/10 px-3 py-2 text-sm text-[#E2A79D]">
+          <p role="alert" className="mt-4 rounded-lg border border-[#9A2C1F]/40 bg-[#FBE3DF]/10 px-3 py-2 text-[15px] text-[#9A2C1F]">
             {error}
           </p>
         )}
@@ -179,7 +179,7 @@ export function ConfirmedChangeDialog({
             type="button"
             onClick={onCancel}
             disabled={busy}
-            className="h-10 rounded-lg border border-[#E53935]/30 px-4 text-sm text-[#E5E5E5] transition hover:bg-[#272727]"
+            className="h-11 rounded-lg border border-[#E3E5EE] px-4 text-[15px] text-[#11162B] transition hover:bg-[#FFFFFF]"
           >
             Cancel
           </button>
@@ -188,8 +188,8 @@ export function ConfirmedChangeDialog({
             onClick={() => void (step === 'reason' ? sendCode() : apply())}
             disabled={busy || (step === 'reason' && !canStart)}
             className={cn(
-              'inline-flex h-10 items-center gap-2 rounded-lg px-4 text-sm font-semibold transition disabled:opacity-60',
-              danger ? 'bg-[#B5584A] text-white hover:bg-[#C4665A]' : 'bg-[#E53935] text-white hover:bg-[#C62E2B]'
+              'inline-flex h-11 items-center gap-2 rounded-lg px-4 text-[15px] font-semibold transition disabled:opacity-60',
+              danger ? 'bg-[#9A2C1F] text-white hover:bg-[#9A2C1F]/90' : 'bg-[#4338CA] text-white hover:bg-[#4338CA]'
             )}
           >
             {busy && <Loader2 className="h-4 w-4 animate-spin" />}

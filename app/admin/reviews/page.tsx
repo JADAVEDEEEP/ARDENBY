@@ -156,26 +156,26 @@ export default function AdminReviewsPage() {
             {status || rating || search ? 'Try different filters.' : 'Reviews appear here once customers post them.'}
           </EmptyState>
         ) : (
-          <ul className="divide-y divide-[#E4E7EC]" aria-busy={loading}>
+          <ul className="divide-y divide-[#E3E5EE]" aria-busy={loading}>
             {reviews.map((r) => (
               <li key={r.id} className="flex flex-col gap-3 px-5 py-4 md:flex-row md:items-start md:justify-between">
                 <div className="min-w-0 space-y-1">
                   <div className="flex flex-wrap items-center gap-2">
-                    <span className="font-semibold text-[#111111]">{r.productName}</span>
-                    <span className="text-[13px] text-[#C47A16]" aria-label={`${r.rating} out of 5`}>
+                    <span className="font-semibold text-[#11162B]">{r.productName}</span>
+                    <span className="text-[14px] text-[#7A4F00]" aria-label={`${r.rating} out of 5`}>
                       {'★'.repeat(Math.round(r.rating))}
-                      <span className="text-[#D0D5DD]">{'★'.repeat(5 - Math.round(r.rating))}</span>
+                      <span className="text-[#5A6075]">{'★'.repeat(5 - Math.round(r.rating))}</span>
                     </span>
                     {r.verified && <StatusPill tone="success">Verified buyer</StatusPill>}
                     {r.hidden && <StatusPill tone="error">Hidden</StatusPill>}
                   </div>
-                  <p className="text-[13px] text-[#626875]">
+                  <p className="text-[14px] text-[#5A6075]">
                     {r.authorName} · {when(r.createdAt)}
                   </p>
-                  <p className="text-[14px] font-semibold text-[#111111]">{r.title}</p>
-                  <p className="whitespace-pre-wrap break-words text-[14px] text-[#344054]">{r.comment}</p>
+                  <p className="text-[15px] font-semibold text-[#11162B]">{r.title}</p>
+                  <p className="whitespace-pre-wrap break-words text-[15px] text-[#5A6075]">{r.comment}</p>
                   {r.moderation && (
-                    <p className="text-[12px] text-[#626875]">
+                    <p className="text-[13px] text-[#5A6075]">
                       Last action: {r.moderation.status === 'hidden' ? 'hidden' : 'restored'} by {r.moderation.by} on{' '}
                       {when(r.moderation.at)} — “{r.moderation.reason}”
                     </p>

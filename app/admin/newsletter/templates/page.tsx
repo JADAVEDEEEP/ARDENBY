@@ -62,21 +62,21 @@ export default function TemplatesPage() {
             Open a campaign and choose &ldquo;Save as template&rdquo;, or create one here.
           </EmptyState>
         ) : (
-          <ul className="divide-y divide-[#E4E7EC]" aria-busy={loading}>
+          <ul className="divide-y divide-[#E3E5EE]" aria-busy={loading}>
             {templates.map((t) => (
               <li key={t.id} className="flex flex-col gap-3 px-5 py-4 md:flex-row md:items-center md:justify-between">
                 <div className="min-w-0">
-                  <p className="truncate text-[15px] font-semibold text-[#111111]">{t.name}</p>
-                  <p className="truncate text-[13px] text-[#626875]">{t.subject || 'No subject saved'} · Updated {when(t.updatedAt)}</p>
+                  <p className="truncate text-[15px] font-semibold text-[#11162B]">{t.name}</p>
+                  <p className="truncate text-[14px] text-[#5A6075]">{t.subject || 'No subject saved'} · Updated {when(t.updatedAt)}</p>
                 </div>
                 <div className="flex flex-wrap gap-2">
-                  <Link href={`/admin/newsletter/campaigns/new?template=${t.id}`} className={`${btnPrimary} !min-h-0 !px-3 !py-1.5 !text-[13px]`}>
+                  <Link href={`/admin/newsletter/campaigns/new?template=${t.id}`} className={`${btnPrimary} !min-h-0 !px-3 !py-1.5 !text-[14px]`}>
                     Use for a campaign
                   </Link>
-                  <Link href={`/admin/newsletter/templates/${t.id}`} className={`${btnOutline} !min-h-0 !px-3 !py-1.5 !text-[13px]`}>
+                  <Link href={`/admin/newsletter/templates/${t.id}`} className={`${btnOutline} !min-h-0 !px-3 !py-1.5 !text-[14px]`}>
                     <Pencil className="h-4 w-4" /> Edit
                   </Link>
-                  <button type="button" className={`${btnDanger} !min-h-0 !px-3 !py-1.5 !text-[13px]`} onClick={() => { setNotice(''); setTarget(t); }} aria-label={`Delete ${t.name}`}>
+                  <button type="button" className={`${btnDanger} !min-h-0 !px-3 !py-1.5 !text-[14px]`} onClick={() => { setNotice(''); setTarget(t); }} aria-label={`Delete ${t.name}`}>
                     <Trash2 className="h-4 w-4" /> Delete
                   </button>
                 </div>

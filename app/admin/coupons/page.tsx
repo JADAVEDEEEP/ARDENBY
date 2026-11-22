@@ -235,13 +235,13 @@ export default function CouponManagementPage() {
 
       <div className="mb-6 grid grid-cols-2 gap-4 lg:grid-cols-4">
         {[
-          ['Total coupons', stats.total, 'text-[#111111]'],
-          ['Active', stats.active, 'text-[#16845B]'],
-          ['Inactive', stats.inactive, 'text-[#C47A16]'],
-          ['Expired', stats.expired, 'text-[#D92D20]'],
+          ['Total coupons', stats.total, 'text-[#11162B]'],
+          ['Active', stats.active, 'text-[#17603F]'],
+          ['Inactive', stats.inactive, 'text-[#7A4F00]'],
+          ['Expired', stats.expired, 'text-[#9A2C1F]'],
         ].map(([label, value, color]) => (
-          <div key={String(label)} className="rounded-xl border border-[#E4E7EC] bg-white p-5">
-            <p className="text-[14px] font-semibold text-[#626875]">{label}</p>
+          <div key={String(label)} className="rounded-xl border border-[#E3E5EE] bg-white p-5">
+            <p className="text-[15px] font-semibold text-[#5A6075]">{label}</p>
             <p className={cn('mt-1.5 text-[34px] font-bold leading-none', String(color))}>{value}</p>
           </div>
         ))}
@@ -266,7 +266,7 @@ export default function CouponManagementPage() {
           <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
             <div>
               <label htmlFor="c-code" className={labelClass}>
-                Coupon code <span className="text-[#E53935]">*</span>
+                Coupon code <span className="text-[#4338CA]">*</span>
               </label>
               <input
                 id="c-code"
@@ -277,7 +277,7 @@ export default function CouponManagementPage() {
                 maxLength={30}
                 className={cn(fieldClass, 'font-mono uppercase')}
               />
-              <p className="mt-1.5 text-[12px] text-[#626875]">Letters, numbers, - and _ only.</p>
+              <p className="mt-1.5 text-[13px] text-[#5A6075]">Letters, numbers, - and _ only.</p>
             </div>
 
             <div className="xl:col-span-2">
@@ -296,7 +296,7 @@ export default function CouponManagementPage() {
 
             <div>
               <label htmlFor="c-type" className={labelClass}>
-                Discount type <span className="text-[#E53935]">*</span>
+                Discount type <span className="text-[#4338CA]">*</span>
               </label>
               <select
                 id="c-type"
@@ -311,7 +311,7 @@ export default function CouponManagementPage() {
 
             <div>
               <label htmlFor="c-value" className={labelClass}>
-                Discount value <span className="text-[#E53935]">*</span>
+                Discount value <span className="text-[#4338CA]">*</span>
               </label>
               <input
                 id="c-value"
@@ -339,7 +339,7 @@ export default function CouponManagementPage() {
                 onChange={(e) => updateForm('min_order', e.target.value)}
                 className={fieldClass}
               />
-              <p className="mt-1.5 text-[12px] text-[#626875]">0 for no minimum.</p>
+              <p className="mt-1.5 text-[13px] text-[#5A6075]">0 for no minimum.</p>
             </div>
 
             <div>
@@ -361,7 +361,7 @@ export default function CouponManagementPage() {
 
             <div>
               <label htmlFor="c-expiry" className={labelClass}>
-                Expiry date &amp; time <span className="text-[#E53935]">*</span>
+                Expiry date &amp; time <span className="text-[#4338CA]">*</span>
               </label>
               <input
                 id="c-expiry"
@@ -380,8 +380,8 @@ export default function CouponManagementPage() {
                 aria-label="Coupon active"
                 onClick={() => updateForm('active', !form.active)}
                 className={cn(
-                  'relative h-7 w-12 shrink-0 rounded-full outline-none transition focus-visible:ring-2 focus-visible:ring-[#E53935]/50 focus-visible:ring-offset-2',
-                  form.active ? 'bg-[#E53935]' : 'bg-[#D0D5DD]'
+                  'relative h-7 w-12 shrink-0 rounded-full outline-none transition focus-visible:ring-2 focus-visible:ring-[#4338CA]/50 focus-visible:ring-offset-2',
+                  form.active ? 'bg-[#4338CA]' : 'bg-[#F5F6FA]'
                 )}
               >
                 <span
@@ -392,13 +392,13 @@ export default function CouponManagementPage() {
                 />
               </button>
               <div>
-                <p className="text-[14px] font-semibold text-[#111111]">{form.active ? 'Active' : 'Inactive'}</p>
-                <p className="text-[12px] text-[#626875]">Inactive coupons cannot be used.</p>
+                <p className="text-[15px] font-semibold text-[#11162B]">{form.active ? 'Active' : 'Inactive'}</p>
+                <p className="text-[13px] text-[#5A6075]">Inactive coupons cannot be used.</p>
               </div>
             </div>
           </div>
 
-          <div className="mt-6 flex flex-wrap items-center gap-3 border-t border-[#E4E7EC] pt-5">
+          <div className="mt-6 flex flex-wrap items-center gap-3 border-t border-[#E3E5EE] pt-5">
             <button disabled={saving} type="submit" className={btnPrimary}>
               {saving ? 'Saving…' : editingId ? 'Update coupon' : 'Create coupon'}
             </button>
@@ -444,8 +444,8 @@ export default function CouponManagementPage() {
           </EmptyState>
         ) : (
           <div className="overflow-x-auto">
-            <table className="w-full min-w-[960px] border-collapse text-left text-[14px]">
-              <thead className="bg-[#F5F6F8] text-[12px] uppercase tracking-wider text-[#626875]">
+            <table className="w-full min-w-[960px] border-collapse text-left text-[15px]">
+              <thead className="bg-[#F5F6FA] text-[13px] uppercase tracking-wider text-[#5A6075]">
                 <tr>
                   {['Code', 'Description', 'Type', 'Value', 'Min order', 'Max discount', 'Expiry', 'Status', 'Actions'].map(
                     (heading) => (
@@ -456,19 +456,19 @@ export default function CouponManagementPage() {
                   )}
                 </tr>
               </thead>
-              <tbody className="divide-y divide-[#E4E7EC]">
+              <tbody className="divide-y divide-[#E3E5EE]">
                 {filteredCoupons.map((coupon) => {
                   const expired = isExpired(coupon);
                   return (
-                    <tr key={coupon.id} className="transition hover:bg-[#F9FAFB]">
-                      <td className="px-4 py-3.5 font-mono font-bold tracking-wide text-[#111111]">{coupon.code}</td>
-                      <td className="max-w-56 truncate px-4 py-3.5 text-[#626875]">{coupon.description || '—'}</td>
+                    <tr key={coupon.id} className="transition hover:bg-[#F5F6FA]">
+                      <td className="px-4 py-3.5 font-mono font-bold tracking-wide text-[#11162B]">{coupon.code}</td>
+                      <td className="max-w-56 truncate px-4 py-3.5 text-[#5A6075]">{coupon.description || '—'}</td>
                       <td className="px-4 py-3.5">
                         <StatusPill tone="neutral">
                           {coupon.discount_type === 'percentage' ? 'Percentage' : 'Flat'}
                         </StatusPill>
                       </td>
-                      <td className="px-4 py-3.5 font-semibold text-[#111111]">
+                      <td className="px-4 py-3.5 font-semibold text-[#11162B]">
                         {coupon.discount_type === 'percentage'
                           ? `${Number(coupon.discount_value)}%`
                           : money(coupon.discount_value)}
@@ -495,7 +495,7 @@ export default function CouponManagementPage() {
                             type="button"
                             onClick={() => editCoupon(coupon)}
                             aria-label={`Edit ${coupon.code}`}
-                            className="flex h-10 w-10 items-center justify-center rounded-lg border border-[#D0D5DD] text-[#111111] transition hover:border-[#111111]"
+                            className="flex h-10 w-10 items-center justify-center rounded-lg border border-[#E3E5EE] text-[#11162B] transition hover:border-[#E3E5EE]"
                           >
                             <Pencil className="h-4 w-4" />
                           </button>
@@ -528,7 +528,7 @@ export default function CouponManagementPage() {
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel>Cancel</AlertDialogCancel>
-            <AlertDialogAction onClick={() => void confirmDelete()} className="bg-[#D92D20] text-white hover:bg-[#B42318]">
+            <AlertDialogAction onClick={() => void confirmDelete()} className="bg-[#9A2C1F] text-white hover:bg-[#9A2C1F]/90">
               Delete coupon
             </AlertDialogAction>
           </AlertDialogFooter>

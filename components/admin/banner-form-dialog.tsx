@@ -70,20 +70,20 @@ function ImagePicker({
     <div>
       <label htmlFor={id} className={labelClass}>
         {label}
-        {optional && <span className="ml-1 font-normal text-[#626875]">(optional)</span>}
+        {optional && <span className="ml-1 font-normal text-[#5A6075]">(optional)</span>}
       </label>
-      <div className={`relative overflow-hidden rounded-lg border border-dashed border-[#D0D5DD] bg-[#F5F6F8] ${frameClass}`}>
+      <div className={`relative overflow-hidden rounded-lg border border-dashed border-[#E3E5EE] bg-[#F5F6FA] ${frameClass}`}>
         {shown ? (
           // eslint-disable-next-line @next/next/no-img-element
           <img src={shown} alt={`${label} preview`} className="h-full w-full object-cover" />
         ) : (
-          <div className="flex h-full flex-col items-center justify-center gap-1 px-3 text-center text-[13px] text-[#626875]">
+          <div className="flex h-full flex-col items-center justify-center gap-1 px-3 text-center text-[14px] text-[#5A6075]">
             <ImagePlus className="h-6 w-6" />
             No image chosen
           </div>
         )}
       </div>
-      <p className="mt-1.5 text-[12px] text-[#626875]">{hint}</p>
+      <p className="mt-1.5 text-[13px] text-[#5A6075]">{hint}</p>
       <div className="mt-2 flex flex-wrap gap-2">
         <label htmlFor={id} className={`${btnOutline} cursor-pointer`}>
           {shown ? 'Replace image' : 'Choose image'}
@@ -185,10 +185,10 @@ export function BannerFormDialog({
         role="dialog"
         aria-modal="true"
         aria-labelledby="banner-form-title"
-        className="relative my-4 w-full max-w-3xl rounded-xl border border-[#E4E7EC] bg-white shadow-xl"
+        className="relative my-4 w-full max-w-3xl rounded-xl border border-[#E3E5EE] bg-white shadow-xl"
       >
-        <header className="flex items-center justify-between border-b border-[#E4E7EC] px-5 py-4 md:px-6">
-          <h2 id="banner-form-title" className="text-[20px] font-bold text-[#111111]">
+        <header className="flex items-center justify-between border-b border-[#E3E5EE] px-5 py-4 md:px-6">
+          <h2 id="banner-form-title" className="text-[20px] font-bold text-[#11162B]">
             {editing ? 'Edit banner' : 'New banner'}
           </h2>
           <button
@@ -196,7 +196,7 @@ export function BannerFormDialog({
             onClick={onClose}
             disabled={busy}
             aria-label="Close"
-            className="flex h-10 w-10 items-center justify-center rounded-lg text-[#626875] hover:bg-[#F5F6F8]"
+            className="flex h-10 w-10 items-center justify-center rounded-lg text-[#5A6075] hover:bg-[#F5F6FA]"
           >
             <X className="h-5 w-5" />
           </button>
@@ -245,13 +245,13 @@ export function BannerFormDialog({
                 placeholder="New collection"
                 className={fieldClass}
               />
-              <p className="mt-1.5 text-[12px] text-[#626875]">Shown to screen readers and used to identify the banner here.</p>
+              <p className="mt-1.5 text-[13px] text-[#5A6075]">Shown to screen readers and used to identify the banner here.</p>
             </div>
 
             <div>
               <label htmlFor="banner-link" className={labelClass}>
                 Destination link
-                <span className="ml-1 font-normal text-[#626875]">(optional)</span>
+                <span className="ml-1 font-normal text-[#5A6075]">(optional)</span>
               </label>
               <input
                 id="banner-link"
@@ -277,7 +277,7 @@ export function BannerFormDialog({
                 <input id="banner-end" type="datetime-local" value={endAt} onChange={(e) => setEndAt(e.target.value)} className={fieldClass} />
               </div>
             </div>
-            <p className="-mt-3 text-[12px] text-[#626875]">Your local time. Leave empty for no start or end limit.</p>
+            <p className="-mt-3 text-[13px] text-[#5A6075]">Your local time. Leave empty for no start or end limit.</p>
 
             <div>
               <label htmlFor="banner-order" className={labelClass}>
@@ -293,15 +293,15 @@ export function BannerFormDialog({
                 onChange={(e) => setSortOrder(e.target.value)}
                 className={fieldClass}
               />
-              <p className="mt-1.5 text-[12px] text-[#626875]">Lower numbers show first.</p>
+              <p className="mt-1.5 text-[13px] text-[#5A6075]">Lower numbers show first.</p>
             </div>
 
-            <label className="flex min-h-11 cursor-pointer items-center gap-3 text-[14px] font-semibold text-[#111111]">
+            <label className="flex min-h-11 cursor-pointer items-center gap-3 text-[15px] font-semibold text-[#11162B]">
               <input
                 type="checkbox"
                 checked={active}
                 onChange={(e) => setActive(e.target.checked)}
-                className="h-5 w-5 accent-[#E53935]"
+                className="h-5 w-5 accent-[#4338CA]"
               />
               Active (show on the homepage when within its dates)
             </label>
@@ -314,7 +314,7 @@ export function BannerFormDialog({
           </div>
         )}
 
-        <footer className="flex justify-end gap-3 border-t border-[#E4E7EC] px-5 py-4 md:px-6">
+        <footer className="flex justify-end gap-3 border-t border-[#E3E5EE] px-5 py-4 md:px-6">
           <button type="button" className={btnOutline} onClick={onClose} disabled={busy}>
             Cancel
           </button>

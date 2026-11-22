@@ -60,7 +60,7 @@ export function EmailPreview({
   return (
     <div className={cn('flex min-h-0 flex-col', className)}>
       <div className="mb-3 flex items-center justify-between gap-3">
-        <div className="inline-flex rounded-lg border border-[#D0D5DD] bg-white p-0.5" role="group" aria-label="Preview size">
+        <div className="inline-flex rounded-lg border border-[#E3E5EE] bg-white p-0.5" role="group" aria-label="Preview size">
           {(
             [
               ['desktop', 'Desktop', Monitor],
@@ -74,7 +74,7 @@ export function EmailPreview({
               aria-pressed={device === key}
               className={cn(
                 'inline-flex items-center gap-1.5 rounded-md px-3 py-1.5 text-[13px] font-semibold transition-colors',
-                device === key ? 'bg-[#111111] text-white' : 'text-[#475467] hover:bg-[#F2F4F7]'
+                device === key ? 'bg-[#11162B] text-white' : 'text-[#5A6075] hover:bg-[#F5F6FA]'
               )}
             >
               <Icon className="h-4 w-4" /> {label}
@@ -82,7 +82,7 @@ export function EmailPreview({
           ))}
         </div>
         {loading && (
-          <span className="inline-flex items-center gap-1.5 text-[12px] text-[#626875]" role="status">
+          <span className="inline-flex items-center gap-1.5 text-[12px] text-[#5A6075]" role="status">
             <Loader2 className="h-3.5 w-3.5 animate-spin" /> Updating
           </span>
         )}
@@ -103,7 +103,7 @@ export function EmailPreview({
         </Notice>
       )}
 
-      <div className="min-h-[420px] flex-1 overflow-auto rounded-xl border border-[#E4E7EC] bg-[#F2F4F7] p-3">
+      <div className="min-h-[420px] flex-1 overflow-auto rounded-xl border border-[#E3E5EE] bg-[#F5F6FA] p-3">
         {html ? (
           <iframe
             title="Email preview"
@@ -112,7 +112,7 @@ export function EmailPreview({
             className={cn('mx-auto block h-[640px] max-w-full rounded-md border-0 bg-white shadow-sm transition-[width]', device === 'mobile' ? 'w-[375px]' : 'w-[640px]')}
           />
         ) : (
-          <p className="p-6 text-center text-[14px] text-[#626875]">{loading ? 'Building preview…' : 'The preview appears here.'}</p>
+          <p className="p-6 text-center text-[14px] text-[#5A6075]">{loading ? 'Building preview…' : 'The preview appears here.'}</p>
         )}
       </div>
     </div>

@@ -59,11 +59,11 @@ export function ConfirmDialog({
   return (
     <div className="fixed inset-0 z-[70] flex items-center justify-center p-4">
       <div className="absolute inset-0 bg-black/50" onClick={() => !busy && onClose()} />
-      <div role="dialog" aria-modal="true" aria-labelledby="confirm-title" className="relative max-h-[90vh] w-full max-w-md overflow-auto rounded-xl border border-[#E4E7EC] bg-white p-6 shadow-xl">
-        <h2 id="confirm-title" className="text-[20px] font-bold text-[#111111]">
+      <div role="dialog" aria-modal="true" aria-labelledby="confirm-title" className="relative max-h-[90vh] w-full max-w-md overflow-auto rounded-xl border border-[#E3E5EE] bg-white p-6 shadow-xl">
+        <h2 id="confirm-title" className="text-[20px] font-bold text-[#11162B]">
           {title}
         </h2>
-        {description && <div className="mt-2 text-[14px] leading-6 text-[#626875]">{description}</div>}
+        {description && <div className="mt-2 text-[15px] leading-6 text-[#5A6075]">{description}</div>}
         {children && <div className="mt-4">{children}</div>}
 
         {typeToConfirm && (

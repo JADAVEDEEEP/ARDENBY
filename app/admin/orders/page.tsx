@@ -3,7 +3,6 @@
 import { Fragment, useEffect, useMemo, useRef, useState } from "react";
 
 import {
-  ArrowLeft,
   CheckCircle2,
   ChevronDown,
   ChevronRight,
@@ -425,18 +424,18 @@ function RefundBadge({ order }: { order: Order }) {
 
   if (state === "partial") {
     return (
-      <span className="ml-1.5 inline-flex items-center gap-1 whitespace-nowrap rounded-full border border-[#2563EB]/30 bg-[#2563EB]/10 px-2 py-1 text-[12px] font-bold uppercase tracking-wide text-[#1D4ED8]">
+      <span className="inline-flex items-center gap-1 whitespace-nowrap rounded-full bg-[#E6E5FA] px-2 py-1 text-[12px] font-bold uppercase tracking-wide text-[#2E2699]">
         Partially Refunded
       </span>
     );
   }
 
   return state === "pending" ? (
-    <span className="ml-1.5 inline-flex items-center gap-1 whitespace-nowrap rounded-full border border-[#C47A16]/30 bg-[#C47A16]/10 px-2 py-1 text-[12px] font-bold uppercase tracking-wide text-[#8A540C]">
+    <span className="inline-flex items-center gap-1 whitespace-nowrap rounded-full bg-[#FBEFD3] px-2 py-1 text-[12px] font-bold uppercase tracking-wide text-[#7A4F00]">
       Refund Pending
     </span>
   ) : (
-    <span className="ml-1.5 inline-flex items-center gap-1 whitespace-nowrap rounded-full border border-[#16845B]/30 bg-[#16845B]/10 px-2 py-1 text-[12px] font-bold uppercase tracking-wide text-[#0F6446]">
+    <span className="inline-flex items-center gap-1 whitespace-nowrap rounded-full bg-[#DDF2E8] px-2 py-1 text-[12px] font-bold uppercase tracking-wide text-[#17603F]">
       Refunded
     </span>
   );
@@ -453,7 +452,7 @@ function statusStyles(
   if (value.includes("request")) {
     return {
       className:
-        "border-[#C47A16]/30 bg-[#C47A16]/10 text-[#8A540C]",
+        "border-transparent bg-[#FBEFD3] text-[#7A4F00]",
       icon: Clock3,
     };
   }
@@ -461,7 +460,7 @@ function statusStyles(
   if (value.includes("cancel")) {
     return {
       className:
-        "border-[#D92D20]/30 bg-[#D92D20]/8 text-[#B42318]",
+        "border-transparent bg-[#FBE3DF] text-[#9A2C1F]",
       icon: XCircle,
     };
   }
@@ -469,7 +468,7 @@ function statusStyles(
   if (value.includes("return")) {
     return {
       className:
-        "border-[#C47A16]/30 bg-[#C47A16]/10 text-[#8A540C]",
+        "border-transparent bg-[#FBEFD3] text-[#7A4F00]",
       icon: Package,
     };
   }
@@ -477,7 +476,7 @@ function statusStyles(
   if (value.includes("deliver")) {
     return {
       className:
-        "border-[#E4E7EC] bg-[#F5F6F8] text-[#0F6446]",
+        "border-transparent bg-[#DDF2E8] text-[#17603F]",
       icon: CheckCircle2,
     };
   }
@@ -485,7 +484,7 @@ function statusStyles(
   if (value.includes("ship")) {
     return {
       className:
-        "border-[#E4E7EC] bg-[#F2F4F7] text-[#475467]",
+        "border-transparent bg-[#E6E5FA] text-[#2E2699]",
       icon: Truck,
     };
   }
@@ -497,14 +496,14 @@ function statusStyles(
   ) {
     return {
       className:
-        "border-[#E4E7EC] bg-[#F2F4F7] text-[#475467]",
+        "border-transparent bg-[#E6E5FA] text-[#2E2699]",
       icon: PackageCheck,
     };
   }
 
   return {
     className:
-      "border-[#C47A16]/30 bg-[#C47A16]/10 text-[#8A540C]",
+      "border-transparent bg-[#FBEFD3] text-[#7A4F00]",
     icon: Clock3,
   };
 }
@@ -1043,7 +1042,7 @@ export default function AdminOrdersPage() {
   ======================================================= */
 
   return (
-    <div className="min-h-full bg-[#F5F6F8] text-[#4A5160]">
+    <div className="min-h-full bg-[#F5F6FA] text-[#5A6075]">
 
       {cancelDialogOpen && selectedOrderId && (
         <AdminCancelDialog
@@ -1065,19 +1064,19 @@ export default function AdminOrdersPage() {
             HEADER
         ================================================== */}
 
-        <section className="mb-6 flex flex-col gap-4 border-b border-[#E4E7EC] pb-6 sm:flex-row sm:items-end sm:justify-between">
+        <section className="mb-6 flex flex-col gap-4 border-b border-[#E3E5EE] pb-6 sm:flex-row sm:items-end sm:justify-between">
 
           <div>
 
-            <p className="text-[12px] font-semibold uppercase tracking-[0.32em] text-[#E53935]">
+            <p className="text-[13px] font-semibold uppercase tracking-[0.32em] text-[#4338CA]">
               Store Management
             </p>
 
-            <h1 className="mt-2 text-[32px] font-bold text-[#111111] sm:text-[40px]">
+            <h1 className="mt-2 text-[32px] font-bold text-[#11162B] sm:text-[40px]">
               Orders
             </h1>
 
-            <p className="mt-2 text-[14px] text-[#626875]">
+            <p className="mt-2 text-[15px] text-[#5A6075]">
               Review customer orders and move each one through fulfilment.
             </p>
 
@@ -1087,7 +1086,7 @@ export default function AdminOrdersPage() {
             type="button"
             onClick={loadOrders}
             disabled={loading}
-            className="flex h-10 w-fit items-center gap-2 rounded-lg border border-[#D0D5DD] bg-white px-4 text-[12px] font-semibold text-[#4A5160] transition hover:border-[#E53935] hover:text-[#E53935] disabled:opacity-50"
+            className="flex h-11 w-fit items-center gap-2 rounded-lg border border-[#E3E5EE] bg-white px-4 text-[13px] font-semibold text-[#5A6075] transition hover:border-[#4338CA] hover:text-[#4338CA] disabled:opacity-50"
           >
             <RefreshCw
               className={`h-3.5 w-3.5 ${
@@ -1107,7 +1106,7 @@ export default function AdminOrdersPage() {
         ================================================== */}
 
         {error && (
-          <div className="mb-4 rounded-lg border border-[#D92D20]/30 bg-[#D92D20]/8 px-4 py-3 text-xs text-[#B42318]">
+          <div className="mb-4 rounded-lg border border-[#9A2C1F]/30 bg-[#FBE3DF]/8 px-4 py-3 text-[13px] text-[#9A2C1F]">
             {error}
           </div>
         )}
@@ -1117,7 +1116,7 @@ export default function AdminOrdersPage() {
         ================================================== */}
 
         {success && (
-          <div className="mb-4 rounded-lg border border-[#E4E7EC] bg-[#F5F6F8] px-4 py-3 text-xs text-[#0F6446]">
+          <div className="mb-4 rounded-lg border border-[#E3E5EE] bg-[#F5F6FA] px-4 py-3 text-[13px] text-[#17603F]">
             {success}
           </div>
         )}
@@ -1181,80 +1180,32 @@ export default function AdminOrdersPage() {
         </section>
 
         {/* ==================================================
-            MOBILE SWITCH
-        ================================================== */}
-
-        {selectedOrder && (
-          <div className="mt-5 flex overflow-hidden rounded-lg border border-[#E4E7EC] bg-white xl:hidden">
-
-            <button
-              type="button"
-              onClick={() =>
-                setMobilePane(
-                  "list"
-                )
-              }
-              className={`flex-1 py-3 text-xs font-semibold ${
-                mobilePane === "list"
-                  ? "bg-[#F2F4F7] text-[#E53935]"
-                  : "text-[#626875]"
-              }`}
-            >
-              Order List
-            </button>
-
-            <button
-              type="button"
-              onClick={() =>
-                setMobilePane(
-                  "detail"
-                )
-              }
-              className={`flex-1 py-3 text-xs font-semibold ${
-                mobilePane ===
-                "detail"
-                  ? "bg-[#F2F4F7] text-[#E53935]"
-                  : "text-[#626875]"
-              }`}
-            >
-              Order Details
-            </button>
-
-          </div>
-        )}
-
-        {/* ==================================================
             MAIN
         ================================================== */}
 
-        <section className="mt-5 grid gap-5 xl:grid-cols-[minmax(0,1.55fr)_minmax(360px,0.85fr)]">
+        <section className="mt-5 grid gap-5 2xl:grid-cols-[minmax(0,1fr)_440px] 2xl:items-start">
 
           {/* ==================================================
               ORDER LIST
           ================================================== */}
 
           <div
-            className={`min-w-0 overflow-hidden rounded-xl border border-[#E4E7EC] bg-white ${
-              selectedOrder &&
-              mobilePane === "detail"
-                ? "hidden xl:block"
-                : ""
-            }`}
+            className={`min-w-0 overflow-hidden rounded-xl border border-[#E3E5EE] bg-white`}
           >
 
             {/* LIST HEADER */}
 
-            <div className="border-b border-[#E4E7EC] p-4 sm:p-5">
+            <div className="border-b border-[#E3E5EE] p-4 sm:p-5">
 
               <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
 
                 <div>
 
-                  <h2 className="font-bold text-lg text-[#4A5160]">
+                  <h2 className="font-bold text-lg text-[#11162B]">
                     All Orders
                   </h2>
 
-                  <p className="mt-1 text-[12px] text-[#626875]">
+                  <p className="mt-1 text-[13px] text-[#5A6075]">
                     {
                       filteredOrders.length
                     }{" "}
@@ -1271,7 +1222,7 @@ export default function AdminOrdersPage() {
 
                 <div className="relative w-full lg:max-w-[280px]">
 
-                  <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[#626875]" />
+                  <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[#5A6075]" />
 
                   <input
                     value={search}
@@ -1284,7 +1235,7 @@ export default function AdminOrdersPage() {
                       )
                     }
                     placeholder="Search order or customer..."
-                    className="h-10 w-full rounded-lg border border-[#D0D5DD] bg-white pl-10 pr-3 text-xs text-[#4A5160] outline-none placeholder:text-[#6E6E6E] focus:border-[#E53935]"
+                    className="h-10 w-full rounded-lg border border-[#E3E5EE] bg-white pl-10 pr-3 text-[13px] text-[#5A6075] outline-none placeholder:text-[#5A6075] focus:border-[#4338CA]"
                   />
 
                 </div>
@@ -1293,7 +1244,7 @@ export default function AdminOrdersPage() {
 
               {/* FILTER TABS */}
 
-              <div className="mt-5 flex overflow-x-auto border-b border-[#E4E7EC]">
+              <div className="mt-5 flex overflow-x-auto border-b border-[#E3E5EE]">
 
                 {[
                   "All",
@@ -1338,27 +1289,27 @@ export default function AdminOrdersPage() {
                             filter
                           )
                         }
-                        className={`relative shrink-0 px-5 py-3 text-xs font-semibold ${
+                        className={`relative shrink-0 px-4 py-3 text-[13px] font-semibold ${
                           active
-                            ? "text-[#E53935]"
-                            : "text-[#848484]"
+                            ? "text-[#4338CA]"
+                            : "text-[#5A6075]"
                         }`}
                       >
 
                         {filter}
 
                         <span
-                          className={`ml-2 rounded-full px-1.5 py-0.5 text-[12px] ${
+                          className={`ml-2 rounded-full px-1.5 py-0.5 text-[13px] ${
                             active
-                              ? "bg-[#E53935]/10 text-[#E53935]"
-                              : "bg-[#F2F4F7] text-[#626875]"
+                              ? "bg-[#4338CA]/10 text-[#4338CA]"
+                              : "bg-[#F5F6FA] text-[#5A6075]"
                           }`}
                         >
                           {count}
                         </span>
 
                         {active && (
-                          <span className="absolute bottom-[-1px] left-0 right-0 h-[2px] bg-[#E53935]" />
+                          <span className="absolute bottom-[-1px] left-0 right-0 h-[2px] bg-[#4338CA]" />
                         )}
 
                       </button>
@@ -1381,7 +1332,7 @@ export default function AdminOrdersPage() {
                   (item) => (
                     <div
                       key={item}
-                      className="h-20 animate-pulse rounded-lg bg-[#F2F4F7]"
+                      className="h-20 animate-pulse rounded-lg bg-[#F5F6FA]"
                     />
                   )
                 )}
@@ -1394,13 +1345,13 @@ export default function AdminOrdersPage() {
 
                 <div>
 
-                  <ShoppingBag className="mx-auto h-8 w-8 text-[#626875]" />
+                  <ShoppingBag className="mx-auto h-8 w-8 text-[#5A6075]" />
 
-                  <p className="font-bold mt-3 text-lg text-[#4A5160]">
+                  <p className="font-bold mt-3 text-lg text-[#11162B]">
                     No orders found
                   </p>
 
-                  <p className="mt-1 text-xs text-[#626875]">
+                  <p className="mt-1 text-[13px] text-[#5A6075]">
                     {search
                       ? "Try another search."
                       : "Orders will appear here when available."}
@@ -1417,35 +1368,31 @@ export default function AdminOrdersPage() {
                     DESKTOP TABLE
                 ================================================== */}
 
-                <div className="overflow-x-auto">
+                <div className="hidden overflow-x-auto md:block">
 
-                  <table className="w-full min-w-[720px] border-collapse">
+                  <table className="w-full border-collapse">
 
                     <thead>
 
-                      <tr className="border-b border-[#E4E7EC] bg-[#F5F6F8]">
+                      <tr className="border-b border-[#E3E5EE] bg-[#F5F6FA]">
 
-                        <th className="px-4 py-4 text-left text-[12px] font-semibold uppercase tracking-[0.14em] text-[#626875]">
+                        <th className="px-4 py-3 text-left text-[12px] font-semibold uppercase tracking-[0.14em] text-[#5A6075]">
                           Order
                         </th>
 
-                        <th className="px-3 py-4 text-left text-[12px] font-semibold uppercase tracking-[0.14em] text-[#626875]">
+                        <th className="px-3 py-3 text-left text-[12px] font-semibold uppercase tracking-[0.14em] text-[#5A6075]">
                           Customer
                         </th>
 
-                        <th className="px-3 py-4 text-left text-[12px] font-semibold uppercase tracking-[0.14em] text-[#626875]">
-                          Date
-                        </th>
-
-                        <th className="px-3 py-4 text-center text-[12px] font-semibold uppercase tracking-[0.14em] text-[#626875]">
+                        <th className="px-3 py-3 text-center text-[12px] font-semibold uppercase tracking-[0.14em] text-[#5A6075]">
                           Items
                         </th>
 
-                        <th className="px-3 py-4 text-left text-[12px] font-semibold uppercase tracking-[0.14em] text-[#626875]">
+                        <th className="px-3 py-3 text-left text-[12px] font-semibold uppercase tracking-[0.14em] text-[#5A6075]">
                           Status
                         </th>
 
-                        <th className="px-4 py-4 text-right text-[12px] font-semibold uppercase tracking-[0.14em] text-[#626875]">
+                        <th className="px-4 py-3 text-right text-[12px] font-semibold uppercase tracking-[0.14em] text-[#5A6075]">
                           Total
                         </th>
 
@@ -1506,40 +1453,31 @@ export default function AdminOrdersPage() {
                                     databaseId
                                   )
                                 }
-                                className={`cursor-pointer border-b border-[#E4E7EC] transition ${
+                                className={`cursor-pointer border-b border-[#E3E5EE] transition ${
                                   selectedOrderId ===
                                   databaseId
-                                    ? "bg-[#F2F4F7]"
-                                    : "hover:bg-white"
+                                    ? "bg-[#E6E5FA]/40"
+                                    : "hover:bg-[#F5F6FA]"
                                 }`}
                               >
 
                                 {/* ORDER */}
 
-                                <td className="px-4 py-5">
+                                <td className="px-4 py-4">
 
                                   <div className="flex min-w-0 items-center gap-3">
 
-                                    <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-[#D0D5DD] bg-[#F2F4F7] text-[#E53935]">
-                                      <ShoppingBag className="h-4 w-4" />
-                                    </div>
-
                                     <div className="min-w-0">
 
-                                      <p className="truncate text-sm font-semibold text-[#4A5160]">
+                                      <p className="truncate text-[15px] font-semibold text-[#11162B]">
                                         #
                                         {
                                           orderNumber
                                         }
                                       </p>
 
-                                      <p className="mt-1 truncate text-[12px] text-[#626875]">
-                                        Order{" "}
-                                        #
-                                        {
-                                          index +
-                                          1
-                                        }
+                                      <p className="mt-1 truncate text-[13px] text-[#5A6075]">
+                                        {formatDate(getDate(order))}
                                       </p>
 
                                     </div>
@@ -1550,15 +1488,15 @@ export default function AdminOrdersPage() {
 
                                 {/* CUSTOMER */}
 
-                                <td className="max-w-[160px] px-3 py-5">
+                                <td className="max-w-[220px] px-3 py-4">
 
-                                  <p className="truncate text-sm font-semibold text-[#4A5160]">
+                                  <p className="truncate text-[15px] font-semibold text-[#11162B]">
                                     {getCustomer(
                                       order
                                     )}
                                   </p>
 
-                                  <p className="mt-1 truncate text-[12px] text-[#626875]">
+                                  <p className="mt-1 truncate text-[13px] text-[#5A6075]">
                                     {getPhone(
                                       order
                                     ) ||
@@ -1567,23 +1505,9 @@ export default function AdminOrdersPage() {
 
                                 </td>
 
-                                {/* DATE */}
-
-                                <td className="whitespace-nowrap px-3 py-5">
-
-                                  <span className="text-xs text-[#626875]">
-                                    {shortDate(
-                                      getDate(
-                                        order
-                                      )
-                                    )}
-                                  </span>
-
-                                </td>
-
                                 {/* ITEMS */}
 
-                                <td className="px-3 py-5 text-center">
+                                <td className="px-3 py-4 text-center">
 
                                   <button
                                     type="button"
@@ -1600,7 +1524,7 @@ export default function AdminOrdersPage() {
                                       );
 
                                     }}
-                                    className="inline-flex h-8 min-w-[34px] items-center justify-center rounded-lg border border-[#D0D5DD] bg-[#F2F4F7] px-2 text-xs font-bold text-[#E53935] hover:border-[#E53935]"
+                                    className="inline-flex h-8 min-w-[34px] items-center justify-center rounded-lg border border-[#E3E5EE] bg-[#F5F6FA] px-2 text-[13px] font-bold text-[#4338CA] hover:border-[#4338CA]"
                                   >
                                     {
                                       items.length
@@ -1611,10 +1535,12 @@ export default function AdminOrdersPage() {
 
                                 {/* STATUS */}
 
-                                <td className="px-3 py-5">
+                                <td className="px-3 py-4">
+
+                                  <div className="flex flex-col items-start gap-1.5">
 
                                   <span
-                                    className={`inline-flex items-center gap-1.5 whitespace-nowrap rounded-full border px-2.5 py-1.5 text-[12px] font-semibold ${style.className}`}
+                                    className={`inline-flex items-center gap-1.5 whitespace-nowrap rounded-full border px-2.5 py-1 text-[13px] font-semibold ${style.className}`}
                                   >
 
                                     <StatusIcon className="h-3 w-3" />
@@ -1626,13 +1552,15 @@ export default function AdminOrdersPage() {
 
                                   <RefundBadge order={order} />
 
+                                  </div>
+
                                 </td>
 
                                 {/* TOTAL */}
 
-                                <td className="whitespace-nowrap px-4 py-5 text-right">
+                                <td className="whitespace-nowrap px-4 py-4 text-right">
 
-                                  <span className="text-sm font-bold text-[#E53935]">
+                                  <span className="text-[15px] font-bold text-[#11162B]">
                                     {formatMoney(
                                       getAmount(
                                         order
@@ -1650,22 +1578,22 @@ export default function AdminOrdersPage() {
 
                               {expanded && (
 
-                                <tr className="border-b border-[#E4E7EC] bg-[#F5F6F8]">
+                                <tr className="border-b border-[#E3E5EE] bg-[#F5F6FA]">
 
                                   <td
-                                    colSpan={6}
+                                    colSpan={5}
                                     className="px-4 py-4"
                                   >
 
-                                    <div className="rounded-xl border border-[#E4E7EC] bg-white p-4">
+                                    <div className="rounded-xl border border-[#E3E5EE] bg-white p-4">
 
                                       <div className="mb-3 flex items-center justify-between">
 
-                                        <p className="text-[12px] font-semibold uppercase tracking-[0.18em] text-[#8D8D8D]">
+                                        <p className="text-[13px] font-semibold uppercase tracking-[0.18em] text-[#5A6075]">
                                           Order Items
                                         </p>
 
-                                        <span className="text-[12px] text-[#777777]">
+                                        <span className="text-[13px] text-[#5A6075]">
                                           {
                                             items.length
                                           }{" "}
@@ -1685,7 +1613,7 @@ export default function AdminOrdersPage() {
                                         {items.length ===
                                         0 ? (
 
-                                          <div className="rounded-lg border border-dashed border-[#D0D5DD] p-5 text-center text-xs text-[#626875]">
+                                          <div className="rounded-lg border border-dashed border-[#E3E5EE] p-5 text-center text-[13px] text-[#5A6075]">
                                             No item details returned by the API.
                                           </div>
 
@@ -1737,12 +1665,12 @@ export default function AdminOrdersPage() {
                                                     item.id ||
                                                     `${name}-${itemIndex}`
                                                   }
-                                                  className="flex items-center gap-4 rounded-lg border border-[#D0D5DD] bg-[#242424] p-3"
+                                                  className="flex items-center gap-4 rounded-lg border border-[#E3E5EE] bg-white p-3"
                                                 >
 
                                                   {/* IMAGE */}
 
-                                                  <div className="h-16 w-16 shrink-0 overflow-hidden rounded-lg border border-[#D0D5DD] bg-[#F2F4F7]">
+                                                  <div className="h-16 w-16 shrink-0 overflow-hidden rounded-lg border border-[#E3E5EE] bg-[#F5F6FA]">
 
                                                     {image ? (
 
@@ -1760,7 +1688,7 @@ export default function AdminOrdersPage() {
 
                                                       <div className="flex h-full w-full items-center justify-center">
 
-                                                        <Package className="h-5 w-5 text-[#626875]" />
+                                                        <Package className="h-5 w-5 text-[#5A6075]" />
 
                                                       </div>
 
@@ -1772,13 +1700,13 @@ export default function AdminOrdersPage() {
 
                                                   <div className="min-w-0 flex-1">
 
-                                                    <p className="truncate text-sm font-semibold text-[#4A5160]">
+                                                    <p className="truncate text-[15px] font-semibold text-[#11162B]">
                                                       {
                                                         name
                                                       }
                                                     </p>
 
-                                                    <div className="mt-1 flex flex-wrap gap-x-4 gap-y-1 text-[12px] text-[#626875]">
+                                                    <div className="mt-1 flex flex-wrap gap-x-4 gap-y-1 text-[13px] text-[#5A6075]">
 
                                                       <span>
                                                         Qty:{" "}
@@ -1813,13 +1741,13 @@ export default function AdminOrdersPage() {
 
                                                   <div className="shrink-0 text-right">
 
-                                                    <p className="text-sm font-bold text-[#E53935]">
+                                                    <p className="text-[15px] font-bold text-[#11162B]">
                                                       {formatMoney(
                                                         total
                                                       )}
                                                     </p>
 
-                                                    <p className="mt-1 text-[12px] text-[#626875]">
+                                                    <p className="mt-1 text-[13px] text-[#5A6075]">
                                                       {formatMoney(
                                                         unitPrice
                                                       )}{" "}
@@ -1863,7 +1791,7 @@ export default function AdminOrdersPage() {
                     MOBILE
                 ================================================== */}
 
-                <div className="divide-y divide-[#E4E7EC] md:hidden">
+                <div className="divide-y divide-[#E3E5EE] md:hidden">
 
                   {filteredOrders.map(
                     (
@@ -1904,27 +1832,27 @@ export default function AdminOrdersPage() {
                           className={`flex w-full items-center justify-between gap-3 px-4 py-5 text-left ${
                             selectedOrderId ===
                             databaseId
-                              ? "bg-[#F2F4F7]"
+                              ? "bg-[#F5F6FA]"
                               : ""
                           }`}
                         >
 
                           <div className="flex min-w-0 items-center gap-3">
 
-                            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg border border-[#D0D5DD] bg-[#F2F4F7] text-[#E53935]">
+                            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg border border-[#E3E5EE] bg-[#F5F6FA] text-[#4338CA]">
                               <ShoppingBag className="h-4 w-4" />
                             </div>
 
                             <div className="min-w-0">
 
-                              <p className="truncate text-sm font-semibold text-[#4A5160]">
+                              <p className="truncate text-[15px] font-semibold text-[#11162B]">
                                 #
                                 {
                                   orderNumber
                                 }
                               </p>
 
-                              <p className="mt-1 truncate text-[12px] text-[#626875]">
+                              <p className="mt-1 truncate text-[13px] text-[#5A6075]">
                                 {getCustomer(
                                   order
                                 )}{" "}
@@ -1937,7 +1865,7 @@ export default function AdminOrdersPage() {
                               </p>
 
                               <span
-                                className={`mt-2 inline-flex items-center gap-1 rounded-full border px-2 py-1 text-[12px] font-semibold ${style.className}`}
+                                className={`mt-2 inline-flex items-center gap-1 rounded-full border px-2 py-1 text-[13px] font-semibold ${style.className}`}
                               >
 
                                 <StatusIcon className="h-2.5 w-2.5" />
@@ -1955,7 +1883,7 @@ export default function AdminOrdersPage() {
 
                           <div className="flex shrink-0 items-center gap-2">
 
-                            <span className="text-sm font-bold text-[#E53935]">
+                            <span className="text-[15px] font-bold text-[#11162B]">
                               {formatMoney(
                                 getAmount(
                                   order
@@ -1963,7 +1891,7 @@ export default function AdminOrdersPage() {
                               )}
                             </span>
 
-                            <ChevronRight className="h-4 w-4 text-[#626875]" />
+                            <ChevronRight className="h-4 w-4 text-[#5A6075]" />
 
                           </div>
 
@@ -1984,82 +1912,63 @@ export default function AdminOrdersPage() {
               ORDER DETAILS
           ================================================== */}
 
+          {selectedOrder && mobilePane === "detail" && (
+            <div
+              className="fixed inset-0 z-[55] bg-[#11162B]/40 2xl:hidden"
+              onClick={() => setMobilePane("list")}
+              aria-hidden="true"
+            />
+          )}
+
           <div
-            className={`min-w-0 overflow-hidden rounded-xl border border-[#E4E7EC] bg-white ${
-              selectedOrder &&
-              mobilePane === "list"
-                ? "hidden xl:block"
-                : ""
-            }`}
+            role={selectedOrder && mobilePane === "detail" ? "dialog" : undefined}
+            aria-label="Order details"
+            className={`min-w-0 bg-white ${
+              selectedOrder && mobilePane === "detail"
+                ? "fixed inset-y-0 right-0 z-[60] w-full max-w-[480px] overflow-y-auto border-l border-[#E3E5EE]"
+                : "hidden"
+            } 2xl:sticky 2xl:top-[88px] 2xl:z-auto 2xl:block 2xl:max-h-[calc(100vh-112px)] 2xl:max-w-none 2xl:overflow-y-auto 2xl:rounded-xl 2xl:border`}
           >
 
             {/* DETAIL HEADER */}
 
-            <div className="border-b border-[#E4E7EC] p-5">
+            <div className="sticky top-0 z-10 border-b border-[#E3E5EE] bg-white px-5 py-4">
 
-              <button
-                type="button"
-                onClick={() =>
-                  setMobilePane(
-                    "list"
-                  )
-                }
-                className="mb-4 flex items-center gap-1.5 text-[12px] font-semibold text-[#E53935] xl:hidden"
-              >
+              <div className="flex items-center justify-between gap-3">
 
-                <ArrowLeft className="h-3.5 w-3.5" />
+                <p className="text-[13px] font-semibold uppercase tracking-[0.24em] text-[#4338CA]">
+                  Order Details
+                </p>
 
-                Back to orders
-
-              </button>
-
-              <p className="text-[12px] font-semibold uppercase tracking-[0.24em] text-[#E53935]">
-                Order Details
-              </p>
-
-              <div className="mt-2 flex items-center justify-between gap-3">
-
-                <div className="min-w-0">
-
-                  <h2 className="font-bold text-xl text-[#4A5160]">
-                    {selectedOrder
-                      ? "Order Summary"
-                      : "Select an order"}
-                  </h2>
-
-                  {selectedOrder && (
-                    <p className="mt-1 truncate text-[12px] text-[#626875]">
-                      #
-                      {
-                        getOrderNumber(
-                          selectedOrder
-                        )
-                      }
-                    </p>
-                  )}
-
-                </div>
-
-                {selectedOrder && (
-                  <span
-                    className={`shrink-0 rounded-full border px-3 py-1.5 text-[12px] font-semibold ${
-                      statusStyles(
-                        selectedOrder.status
-                      ).className
-                    }`}
-                  >
-                    {
-                      selectedOrder.status ||
-                      "Pending"
-                    }
-                  </span>
-                )}
-
-                {selectedOrder && (
-                  <RefundBadge order={selectedOrder} />
-                )}
+                <button
+                  type="button"
+                  onClick={() => setMobilePane("list")}
+                  aria-label="Close order details"
+                  className="flex h-9 w-9 items-center justify-center rounded-lg border border-[#E3E5EE] text-[#5A6075] transition hover:bg-[#F5F6FA] hover:text-[#11162B] 2xl:hidden"
+                >
+                  <XCircle className="h-4 w-4" />
+                </button>
 
               </div>
+
+              <h2 className="mt-2 break-all text-lg font-bold leading-snug text-[#11162B]">
+                {selectedOrder
+                  ? `#${getOrderNumber(selectedOrder)}`
+                  : "Select an order"}
+              </h2>
+
+              {selectedOrder && (
+                <div className="mt-3 flex flex-wrap items-center gap-2">
+                  <span
+                    className={`inline-flex items-center rounded-full border px-3 py-1 text-[13px] font-semibold ${
+                      statusStyles(selectedOrder.status).className
+                    }`}
+                  >
+                    {selectedOrder.status || "Pending"}
+                  </span>
+                  <RefundBadge order={selectedOrder} />
+                </div>
+              )}
 
             </div>
 
@@ -2067,23 +1976,23 @@ export default function AdminOrdersPage() {
 
             {!selectedOrder ? (
 
-              <div className="flex min-h-[350px] items-center justify-center px-6 text-center text-xs text-[#626875]">
+              <div className="flex min-h-[350px] items-center justify-center px-6 text-center text-[13px] text-[#5A6075]">
                 Select an order to view its details.
               </div>
 
             ) : (
 
-              <div className="space-y-6 p-5">
+              <div className="space-y-7 p-5">
 
                 {/* CUSTOMER */}
 
                 <div>
 
-                  <p className="text-[12px] font-semibold uppercase tracking-[0.18em] text-[#626875]">
+                  <p className="text-[13px] font-semibold uppercase tracking-[0.18em] text-[#5A6075]">
                     Customer
                   </p>
 
-                  <p className="mt-2 text-base font-semibold text-[#4A5160]">
+                  <p className="mt-2 text-base font-semibold text-[#11162B]">
                     {
                       getCustomer(
                         selectedOrder
@@ -2094,7 +2003,7 @@ export default function AdminOrdersPage() {
                   {getCustomerEmail(
                     selectedOrder
                   ) && (
-                    <p className="mt-1 break-all text-xs text-[#626875]">
+                    <p className="mt-1 break-all text-[13px] text-[#5A6075]">
                       {
                         getCustomerEmail(
                           selectedOrder
@@ -2106,7 +2015,7 @@ export default function AdminOrdersPage() {
                   {getPhone(
                     selectedOrder
                   ) && (
-                    <p className="mt-1 text-xs text-[#626875]">
+                    <p className="mt-1 text-[13px] text-[#5A6075]">
                       {
                         getPhone(
                           selectedOrder
@@ -2175,11 +2084,11 @@ export default function AdminOrdersPage() {
 
                   <div className="flex items-center justify-between">
 
-                    <p className="text-[12px] font-semibold uppercase tracking-[0.18em] text-[#626875]">
+                    <p className="text-[13px] font-semibold uppercase tracking-[0.18em] text-[#5A6075]">
                       Order Items
                     </p>
 
-                    <span className="text-[12px] text-[#626875]">
+                    <span className="text-[13px] text-[#5A6075]">
                       {
                         getItems(
                           selectedOrder
@@ -2204,7 +2113,7 @@ export default function AdminOrdersPage() {
                       selectedOrder
                     ).length === 0 ? (
 
-                      <div className="rounded-lg border border-dashed border-[#D0D5DD] p-5 text-center text-xs text-[#626875]">
+                      <div className="rounded-lg border border-dashed border-[#E3E5EE] p-5 text-center text-[13px] text-[#5A6075]">
                         No item details returned by the API.
                       </div>
 
@@ -2258,12 +2167,12 @@ export default function AdminOrdersPage() {
                                 item.id ||
                                 `${name}-${index}`
                               }
-                              className="flex gap-3 rounded-xl border border-[#E4E7EC] bg-white p-3"
+                              className="flex gap-3 rounded-xl border border-[#E3E5EE] bg-white p-3"
                             >
 
                               {/* IMAGE */}
 
-                              <div className="h-[68px] w-[68px] shrink-0 overflow-hidden rounded-lg border border-[#D0D5DD] bg-[#F2F4F7]">
+                              <div className="h-[68px] w-[68px] shrink-0 overflow-hidden rounded-lg border border-[#E3E5EE] bg-[#F5F6FA]">
 
                                 {image ? (
 
@@ -2280,7 +2189,7 @@ export default function AdminOrdersPage() {
                                 ) : (
 
                                   <div className="flex h-full w-full items-center justify-center">
-                                    <Package className="h-5 w-5 text-[#626875]" />
+                                    <Package className="h-5 w-5 text-[#5A6075]" />
                                   </div>
 
                                 )}
@@ -2291,13 +2200,13 @@ export default function AdminOrdersPage() {
 
                               <div className="min-w-0 flex-1">
 
-                                <p className="text-sm font-semibold text-[#4A5160]">
+                                <p className="text-[15px] font-semibold text-[#11162B]">
                                   {
                                     name
                                   }
                                 </p>
 
-                                <div className="mt-2 flex flex-wrap gap-x-3 gap-y-1 text-[12px] text-[#626875]">
+                                <div className="mt-2 flex flex-wrap gap-x-3 gap-y-1 text-[13px] text-[#5A6075]">
 
                                   <span>
                                     Qty:{" "}
@@ -2326,7 +2235,7 @@ export default function AdminOrdersPage() {
 
                                 </div>
 
-                                <p className="mt-2 text-sm font-bold text-[#E53935]">
+                                <p className="mt-2 text-[15px] font-bold text-[#11162B]">
                                   {formatMoney(
                                     total
                                   )}
@@ -2361,13 +2270,13 @@ export default function AdminOrdersPage() {
 
                   <div>
 
-                    <p className="text-[12px] font-semibold uppercase tracking-[0.18em] text-[#626875]">
+                    <p className="text-[13px] font-semibold uppercase tracking-[0.18em] text-[#5A6075]">
                       Shipping Address
                     </p>
 
-                    <div className="mt-3 rounded-xl border border-[#E4E7EC] bg-white p-4">
+                    <div className="mt-3 rounded-xl border border-[#E3E5EE] bg-white p-4">
 
-                      <p className="text-xs leading-6 text-[#4A5160]">
+                      <p className="text-[13px] leading-6 text-[#5A6075]">
                         {
                           getAddress(
                             selectedOrder
@@ -2387,13 +2296,13 @@ export default function AdminOrdersPage() {
 
                 {refundState(selectedOrder) ===
                   "pending" && (
-                  <div className="rounded-lg border border-[#C47A16]/30 bg-[#C47A16]/10 p-4">
+                  <div className="rounded-lg border border-[#7A4F00]/30 bg-[#7A4F00]/10 p-4">
 
-                    <p className="text-[12px] font-semibold uppercase tracking-[0.18em] text-[#8A540C]">
+                    <p className="text-[13px] font-semibold uppercase tracking-[0.18em] text-[#7A4F00]">
                       Refund pending
                     </p>
 
-                    <p className="mt-2 text-xs leading-5 text-[#4A5160]">
+                    <p className="mt-2 text-[13px] leading-5 text-[#5A6075]">
                       The customer sees this order as
                       Cancelled. The Razorpay refund is
                       not confirmed yet: it could not be
@@ -2415,7 +2324,7 @@ export default function AdminOrdersPage() {
                       disabled={
                         retrying
                       }
-                      className="mt-3 h-10 rounded-lg border border-[#C47A16]/30 bg-amber-600/90 px-5 text-xs font-bold text-[#111111] transition hover:bg-amber-500 disabled:cursor-not-allowed disabled:opacity-50"
+                      className="mt-3 h-11 rounded-lg border border-[#7A4F00]/30 bg-[#7A4F00] px-5 text-[13px] font-bold text-white transition hover:bg-[#7A4F00]/90 disabled:cursor-not-allowed disabled:opacity-50"
                     >
                       {retrying
                         ? "Checking refund..."
@@ -2429,9 +2338,9 @@ export default function AdminOrdersPage() {
                     UPDATE STATUS
                 ================================================== */}
 
-                <div className="border-t border-[#E4E7EC] pt-5">
+                <div className="border-t border-[#E3E5EE] pt-5">
 
-                  <p className="text-[12px] font-semibold uppercase tracking-[0.18em] text-[#626875]">
+                  <p className="text-[13px] font-semibold uppercase tracking-[0.18em] text-[#5A6075]">
                     Update Status
                   </p>
 
@@ -2449,7 +2358,7 @@ export default function AdminOrdersPage() {
                               .value
                           )
                         }
-                        className="h-11 w-full appearance-none rounded-lg border border-[#D0D5DD] bg-white px-3 pr-9 text-xs font-medium text-[#4A5160] outline-none focus:border-[#E53935]"
+                        className="h-11 w-full appearance-none rounded-lg border border-[#E3E5EE] bg-white px-3 pr-9 text-[13px] font-medium text-[#5A6075] outline-none focus:border-[#4338CA]"
                       >
 
                         {STATUS_OPTIONS.map(
@@ -2474,7 +2383,7 @@ export default function AdminOrdersPage() {
 
                       </select>
 
-                      <ChevronDown className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[#8B8B8B]" />
+                      <ChevronDown className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[#5A6075]" />
 
                     </div>
 
@@ -2494,7 +2403,7 @@ export default function AdminOrdersPage() {
                         ).toLowerCase() ===
                           "cancellation requested"
                       }
-                      className="h-11 rounded-lg border border-[#E53935] bg-[#E53935] px-6 text-xs font-bold text-white transition hover:bg-[#E53935] disabled:cursor-not-allowed disabled:opacity-40"
+                      className="h-11 rounded-lg border border-[#4338CA] bg-[#4338CA] px-6 text-[13px] font-bold text-white transition hover:bg-[#4338CA] disabled:cursor-not-allowed disabled:opacity-40"
                     >
                       {updating
                         ? "Updating..."
@@ -2533,19 +2442,19 @@ function OrderStat({
   icon: any;
 }) {
   return (
-    <div className="rounded-xl border border-[#E4E7EC] bg-white p-4 sm:p-5">
+    <div className="rounded-xl border border-[#E3E5EE] bg-white p-4 sm:p-5">
 
       <div className="flex items-center justify-between">
 
-        <p className="text-[12px] font-semibold uppercase tracking-[0.12em] text-[#858585]">
+        <p className="text-[13px] font-semibold uppercase tracking-[0.12em] text-[#5A6075]">
           {title}
         </p>
 
-        <Icon className="h-4 w-4 text-[#E53935]" />
+        <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-[#E6E5FA] text-[#2E2699]"><Icon className="h-4 w-4" /></span>
 
       </div>
 
-      <p className="font-bold mt-3 text-2xl text-[#4A5160]">
+      <p className="mt-3 text-[28px] font-bold leading-none text-[#11162B]">
         {value}
       </p>
 
@@ -2565,13 +2474,13 @@ function InfoBox({
   value: string;
 }) {
   return (
-    <div className="rounded-xl border border-[#D0D5DD] bg-white p-4">
+    <div className="rounded-xl border border-[#E3E5EE] bg-[#F5F6FA] p-4">
 
-      <p className="text-[12px] font-semibold uppercase tracking-[0.12em] text-[#626875]">
+      <p className="text-[12px] font-semibold uppercase tracking-[0.12em] text-[#5A6075]">
         {label}
       </p>
 
-      <p className="mt-2 truncate text-sm font-semibold text-[#4A5160]">
+      <p className="mt-2 truncate text-[15px] font-semibold text-[#11162B]">
         {value}
       </p>
 

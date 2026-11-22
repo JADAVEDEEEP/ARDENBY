@@ -76,9 +76,9 @@ export default function CampaignAnalyticsPage() {
             [overview.providerData ? 'Delivery rate' : 'Acceptance rate', pct(overview.providerData ? overview.rates.delivery : overview.rates.acceptance)],
             ['Unsubscribe rate', pct(overview.rates.unsubscribe)],
           ].map(([label, value]) => (
-            <div key={label} className="rounded-2xl border border-[#E4E7EC] bg-white p-4">
-              <p className="text-[13px] font-semibold text-[#626875]">{label}</p>
-              <p className="mt-1 text-[26px] font-bold leading-tight text-[#111111]">{value}</p>
+            <div key={label} className="rounded-2xl border border-[#E3E5EE] bg-white p-4">
+              <p className="text-[14px] font-semibold text-[#5A6075]">{label}</p>
+              <p className="mt-1 text-[26px] font-bold leading-tight text-[#11162B]">{value}</p>
             </div>
           ))}
         </div>
@@ -96,14 +96,14 @@ export default function CampaignAnalyticsPage() {
           <div className="h-[280px]" role="img" aria-label="Bar chart comparing recent campaigns">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={overview.performance.map((p) => ({ ...p, name: p.name.length > 14 ? `${p.name.slice(0, 13)}…` : p.name }))} margin={{ left: -10, right: 8, top: 8 }}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#E4E7EC" vertical={false} />
-                <XAxis dataKey="name" tick={{ fontSize: 12, fill: '#626875' }} tickLine={false} />
-                <YAxis allowDecimals={false} tick={{ fontSize: 12, fill: '#626875' }} tickLine={false} axisLine={false} />
+                <CartesianGrid strokeDasharray="3 3" stroke="#F5F6FA" vertical={false} />
+                <XAxis dataKey="name" tick={{ fontSize: 12, fill: '#5A6075' }} tickLine={false} />
+                <YAxis allowDecimals={false} tick={{ fontSize: 12, fill: '#5A6075' }} tickLine={false} axisLine={false} />
                 <Tooltip cursor={{ fill: 'rgba(17,17,17,0.04)' }} />
                 <Legend wrapperStyle={{ fontSize: 12 }} />
-                <Bar dataKey="sent" name="Sent" fill="#111111" radius={[3, 3, 0, 0]} />
-                <Bar dataKey="failed" name="Failed" fill="#C62828" radius={[3, 3, 0, 0]} />
-                <Bar dataKey="unsubscribed" name="Unsubscribed" fill="#98A2B3" radius={[3, 3, 0, 0]} />
+                <Bar dataKey="sent" name="Sent" fill="#11162B" radius={[3, 3, 0, 0]} />
+                <Bar dataKey="failed" name="Failed" fill="#9A2C1F" radius={[3, 3, 0, 0]} />
+                <Bar dataKey="unsubscribed" name="Unsubscribed" fill="#5A6075" radius={[3, 3, 0, 0]} />
               </BarChart>
             </ResponsiveContainer>
           </div>
@@ -126,8 +126,8 @@ export default function CampaignAnalyticsPage() {
           <EmptyState icon={BarChart3} title="No campaigns found">Results appear here once a campaign has been sent.</EmptyState>
         ) : (
           <div className="overflow-x-auto" aria-busy={loading}>
-            <table className="w-full min-w-[1000px] text-left text-[14px]">
-              <thead className="border-b border-[#E4E7EC] text-[12px] uppercase tracking-wide text-[#626875]">
+            <table className="w-full min-w-[1000px] text-left text-[15px]">
+              <thead className="border-b border-[#E3E5EE] text-[13px] uppercase tracking-wide text-[#5A6075]">
                 <tr>
                   <th className="px-5 py-3 font-semibold">Campaign</th>
                   <th className="px-3 py-3 font-semibold">Status</th>
@@ -141,25 +141,25 @@ export default function CampaignAnalyticsPage() {
                   <th className="px-5 py-3 text-right font-semibold">Took</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-[#E4E7EC]">
+              <tbody className="divide-y divide-[#E3E5EE]">
                 {campaigns.map((c) => {
                   const s = c.stats;
                   const started = Boolean(s && s.queued > 0);
                   return (
                     <tr key={c.id}>
                       <td className="max-w-[260px] px-5 py-3">
-                        <Link href={`/admin/newsletter/campaigns/${c.id}`} className="block truncate font-semibold text-[#111111] hover:text-[#C62828]">{c.name}</Link>
-                        <span className="block text-[12px] text-[#626875]">{c.completedAt ? when(c.completedAt) : c.scheduledAt ? `Scheduled ${when(c.scheduledAt)}` : when(c.updatedAt)}</span>
+                        <Link href={`/admin/newsletter/campaigns/${c.id}`} className="block truncate font-semibold text-[#11162B] hover:text-[#9A2C1F]">{c.name}</Link>
+                        <span className="block text-[13px] text-[#5A6075]">{c.completedAt ? when(c.completedAt) : c.scheduledAt ? `Scheduled ${when(c.scheduledAt)}` : when(c.updatedAt)}</span>
                       </td>
                       <td className="px-3 py-3"><CampaignStatusBadge status={c.status} /></td>
-                      <td className="px-3 py-3 text-right text-[#344054]">{started ? num(s!.queued) : '—'}</td>
-                      <td className="px-3 py-3 text-right text-[#344054]">{started ? num(s!.sent) : '—'}</td>
-                      <td className="px-3 py-3 text-right text-[#344054]">{started ? num(s!.delivered) : '—'}</td>
-                      <td className={`px-3 py-3 text-right ${started && s!.failed > 0 ? 'font-semibold text-[#C62828]' : 'text-[#344054]'}`}>{started ? num(s!.failed) : '—'}</td>
-                      <td className="px-3 py-3 text-right text-[#344054]">{started ? num(s!.bounced) : '—'}</td>
-                      <td className="px-3 py-3 text-right text-[#344054]">{started ? num(s!.unsubscribed) : '—'}</td>
-                      <td className="px-3 py-3 text-right text-[#344054]">{started ? pct(s!.providerData ? s!.deliveryRate : s!.acceptanceRate) : '—'}</td>
-                      <td className="whitespace-nowrap px-5 py-3 text-right text-[#344054]">{started ? formatDuration(s!.completionSeconds) : '—'}</td>
+                      <td className="px-3 py-3 text-right text-[#5A6075]">{started ? num(s!.queued) : '—'}</td>
+                      <td className="px-3 py-3 text-right text-[#5A6075]">{started ? num(s!.sent) : '—'}</td>
+                      <td className="px-3 py-3 text-right text-[#5A6075]">{started ? num(s!.delivered) : '—'}</td>
+                      <td className={`px-3 py-3 text-right ${started && s!.failed > 0 ? 'font-semibold text-[#9A2C1F]' : 'text-[#5A6075]'}`}>{started ? num(s!.failed) : '—'}</td>
+                      <td className="px-3 py-3 text-right text-[#5A6075]">{started ? num(s!.bounced) : '—'}</td>
+                      <td className="px-3 py-3 text-right text-[#5A6075]">{started ? num(s!.unsubscribed) : '—'}</td>
+                      <td className="px-3 py-3 text-right text-[#5A6075]">{started ? pct(s!.providerData ? s!.deliveryRate : s!.acceptanceRate) : '—'}</td>
+                      <td className="whitespace-nowrap px-5 py-3 text-right text-[#5A6075]">{started ? formatDuration(s!.completionSeconds) : '—'}</td>
                     </tr>
                   );
                 })}
@@ -169,7 +169,7 @@ export default function CampaignAnalyticsPage() {
         )}
         {pagination && <Pager pagination={pagination} onPage={setPage} busy={loading} noun="campaign" />}
       </Card>
-      <p className="mt-3 text-[12px] text-[#626875]">&ldquo;Delivery&rdquo; is delivered ÷ sent when Brevo has reported delivery data, otherwise the share accepted by the mail server.</p>
+      <p className="mt-3 text-[13px] text-[#5A6075]">&ldquo;Delivery&rdquo; is delivered ÷ sent when Brevo has reported delivery data, otherwise the share accepted by the mail server.</p>
     </div>
   );
 }

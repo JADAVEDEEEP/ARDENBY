@@ -120,14 +120,14 @@ export default function ExportsPage() {
         </div>
 
         {isOwner ? (
-          <label className="mt-4 flex items-start gap-2 text-[14px] text-[#111111]">
+          <label className="mt-4 flex items-start gap-2 text-[15px] text-[#11162B]">
             <input type="checkbox" className="mt-1" checked={includeCustomer} onChange={(e) => setIncludeCustomer(e.target.checked)} />
             <span>
               Include customer details (name, e-mail, phone, city, state, pincode). Personal data — keep the file safe.
             </span>
           </label>
         ) : (
-          <p className="mt-4 text-[13px] text-[#626875]">
+          <p className="mt-4 text-[14px] text-[#5A6075]">
             Customer details are not included. Only a Super Admin can export them.
           </p>
         )}

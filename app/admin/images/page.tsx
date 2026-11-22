@@ -76,8 +76,8 @@ export default function AdminImagesPage() {
         data.products.map((p) => (
           <Card key={p.id}>
             <div className="flex flex-wrap items-baseline justify-between gap-2">
-              <h2 className="text-[16px] font-bold text-[#111111]">{p.name}</h2>
-              <span className="text-[13px] text-[#5F5F5F]">{p.collection}</span>
+              <h2 className="text-[16px] font-bold text-[#11162B]">{p.name}</h2>
+              <span className="text-[14px] text-[#5A6075]">{p.collection}</span>
             </div>
 
             <ul className="mt-4 grid grid-cols-2 gap-3 md:grid-cols-4">
@@ -86,24 +86,24 @@ export default function AdminImagesPage() {
                 const key = `${p.id}:${shot}`;
                 return (
                   <li key={shot}>
-                    <div className="relative aspect-[4/5] overflow-hidden bg-[#F7F5F2]">
+                    <div className="relative aspect-[4/5] overflow-hidden bg-[#F5F6FA]">
                       {img ? (
                         // eslint-disable-next-line @next/next/no-img-element
                         <img src={img.url} alt={`${p.name}: ${SHOT_LABEL[shot]}`} className="h-full w-full object-cover" loading="lazy" />
                       ) : (
-                        <span className="flex h-full items-center justify-center text-[13px] text-[#5F5F5F]">No image</span>
+                        <span className="flex h-full items-center justify-center text-[14px] text-[#5A6075]">No image</span>
                       )}
                       {img?.aiGenerated && (
-                        <span className="absolute left-0 top-2 bg-[#111111] px-2 py-0.5 text-[11px] font-bold uppercase tracking-wide text-white">AI</span>
+                        <span className="absolute left-0 top-2 bg-[#11162B] px-2 py-0.5 text-[12px] font-bold uppercase tracking-wide text-white">AI</span>
                       )}
                     </div>
-                    <p className="mt-1.5 text-[13px] font-semibold">{SHOT_LABEL[shot]}</p>
+                    <p className="mt-1.5 text-[14px] font-semibold">{SHOT_LABEL[shot]}</p>
                     {(!img || img.aiGenerated) && (
                       <button
                         type="button"
                         onClick={() => regenerate(p.id, shot)}
                         disabled={!data.canGenerate || busy !== ''}
-                        className="mt-1 inline-flex min-h-[40px] items-center gap-1.5 text-[13px] font-semibold text-[#111111] underline underline-offset-4 disabled:opacity-50"
+                        className="mt-1 inline-flex min-h-[40px] items-center gap-1.5 text-[14px] font-semibold text-[#11162B] underline underline-offset-4 disabled:opacity-50"
                       >
                         <RefreshCw className={`h-3.5 w-3.5 ${busy === key ? 'animate-spin' : ''}`} aria-hidden="true" />
                         {busy === key ? 'Generating…' : img ? 'Regenerate' : 'Generate'}
@@ -114,7 +114,7 @@ export default function AdminImagesPage() {
               })}
             </ul>
 
-            <label className="mt-4 block text-[13px] font-semibold text-[#111111]" htmlFor={`prompt-${p.id}`}>
+            <label className="mt-4 block text-[14px] font-semibold text-[#11162B]" htmlFor={`prompt-${p.id}`}>
               Custom direction (optional, applied to the next regenerate)
             </label>
             <input

@@ -39,7 +39,7 @@ export function SuperAdminGuard({ children }: { children: React.ReactNode }) {
 
   if (!allowed) {
     return (
-      <div className="rounded-md border border-[#E5E5E5] bg-white p-5 text-sm text-[#6A6A6A]">
+      <div className="rounded-md border border-[#E3E5EE] bg-white p-5 text-[15px] text-[#5A6075]">
         Checking super admin access...
       </div>
     );

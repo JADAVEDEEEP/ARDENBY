@@ -13,10 +13,10 @@ import type { Overview } from '@/lib/newsletter-campaign-api';
 
 function Metric({ label, value, hint, tone }: { label: string; value: string; hint?: string; tone?: 'red' }) {
   return (
-    <div className="rounded-2xl border border-[#E4E7EC] bg-white p-4 md:p-5">
-      <p className="text-[13px] font-semibold text-[#626875]">{label}</p>
-      <p className={`mt-1 text-[28px] font-bold leading-tight ${tone === 'red' ? 'text-[#C62828]' : 'text-[#111111]'}`}>{value}</p>
-      {hint && <p className="mt-0.5 text-[12px] leading-snug text-[#626875]">{hint}</p>}
+    <div className="rounded-2xl border border-[#E3E5EE] bg-white p-4 md:p-5">
+      <p className="text-[14px] font-semibold text-[#5A6075]">{label}</p>
+      <p className={`mt-1 text-[28px] font-bold leading-tight ${tone === 'red' ? 'text-[#9A2C1F]' : 'text-[#11162B]'}`}>{value}</p>
+      {hint && <p className="mt-0.5 text-[13px] leading-snug text-[#5A6075]">{hint}</p>}
     </div>
   );
 }
@@ -111,33 +111,33 @@ export default function NewsletterOverviewPage() {
                 <div className="h-[300px]" role="img" aria-label="Bar chart of emails sent, failed and unsubscribed per campaign">
                   <ResponsiveContainer width="100%" height="100%">
                     <BarChart data={data.performance.map((p) => ({ ...p, name: p.name.length > 14 ? `${p.name.slice(0, 13)}…` : p.name }))} margin={{ left: -10, right: 8, top: 8 }}>
-                      <CartesianGrid strokeDasharray="3 3" stroke="#E4E7EC" vertical={false} />
-                      <XAxis dataKey="name" tick={{ fontSize: 12, fill: '#626875' }} tickLine={false} />
-                      <YAxis allowDecimals={false} tick={{ fontSize: 12, fill: '#626875' }} tickLine={false} axisLine={false} />
+                      <CartesianGrid strokeDasharray="3 3" stroke="#F5F6FA" vertical={false} />
+                      <XAxis dataKey="name" tick={{ fontSize: 12, fill: '#5A6075' }} tickLine={false} />
+                      <YAxis allowDecimals={false} tick={{ fontSize: 12, fill: '#5A6075' }} tickLine={false} axisLine={false} />
                       <Tooltip cursor={{ fill: 'rgba(17,17,17,0.04)' }} />
                       <Legend wrapperStyle={{ fontSize: 12 }} />
-                      <Bar dataKey="sent" name="Sent" fill="#111111" radius={[3, 3, 0, 0]} />
-                      <Bar dataKey="failed" name="Failed" fill="#C62828" radius={[3, 3, 0, 0]} />
-                      <Bar dataKey="unsubscribed" name="Unsubscribed" fill="#98A2B3" radius={[3, 3, 0, 0]} />
+                      <Bar dataKey="sent" name="Sent" fill="#11162B" radius={[3, 3, 0, 0]} />
+                      <Bar dataKey="failed" name="Failed" fill="#9A2C1F" radius={[3, 3, 0, 0]} />
+                      <Bar dataKey="unsubscribed" name="Unsubscribed" fill="#5A6075" radius={[3, 3, 0, 0]} />
                     </BarChart>
                   </ResponsiveContainer>
                 </div>
               )}
             </Card>
 
-            <Card title="Recent activity" bodyClassName="p-0" action={<Link href="/admin/newsletter/campaigns" className="text-[13px] font-semibold text-[#C62828] hover:underline">All campaigns</Link>}>
+            <Card title="Recent activity" bodyClassName="p-0" action={<Link href="/admin/newsletter/campaigns" className="text-[14px] font-semibold text-[#9A2C1F] hover:underline">All campaigns</Link>}>
               {data.recent.length === 0 ? (
                 <EmptyState icon={Mail} title="No campaigns yet">
                   Create your first campaign to see it here.
                 </EmptyState>
               ) : (
-                <ul className="divide-y divide-[#E4E7EC]">
+                <ul className="divide-y divide-[#E3E5EE]">
                   {data.recent.map((c) => (
                     <li key={c.id}>
-                      <Link href={`/admin/newsletter/campaigns/${c.id}`} className="flex items-start justify-between gap-3 px-5 py-3 hover:bg-[#F9FAFB]">
+                      <Link href={`/admin/newsletter/campaigns/${c.id}`} className="flex items-start justify-between gap-3 px-5 py-3 hover:bg-[#F5F6FA]">
                         <span className="min-w-0">
-                          <span className="block truncate text-[14px] font-semibold text-[#111111]">{c.name}</span>
-                          <span className="block text-[12px] text-[#626875]">
+                          <span className="block truncate text-[15px] font-semibold text-[#11162B]">{c.name}</span>
+                          <span className="block text-[13px] text-[#5A6075]">
                             {c.status === 'scheduled' ? `Scheduled ${when(c.scheduledAt)}` : c.completedAt ? `Finished ${when(c.completedAt)}` : `Updated ${when(c.updatedAt)}`}
                             {c.stats && c.stats.queued > 0 ? ` · ${num(c.stats.sent)}/${num(c.stats.queued)} sent` : ''}
                           </span>

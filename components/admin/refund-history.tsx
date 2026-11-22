@@ -111,7 +111,7 @@ export function RefundHistory({
   return (
     <section aria-label="Refund history" className="space-y-3">
       <div className="flex flex-wrap items-center justify-between gap-2">
-        <p className="text-[12px] font-semibold uppercase tracking-[0.18em] text-[#626875]">Refund history</p>
+        <p className="text-[13px] font-semibold uppercase tracking-[0.18em] text-[#5A6075]">Refund history</p>
         {data.canCheck && (
           <button type="button" className={btnOutline} onClick={() => void check()} disabled={checking}>
             {checking ? <Loader2 className="h-4 w-4 animate-spin" /> : <RefreshCw className="h-4 w-4" />}
@@ -120,16 +120,16 @@ export function RefundHistory({
         )}
       </div>
 
-      <dl className="grid grid-cols-2 gap-2 text-[13px]">
+      <dl className="grid grid-cols-2 gap-2 text-[14px]">
         {[
           ['Paid by customer', data.totals.paid],
           ['Refunded (confirmed)', data.totals.refundedConfirmed],
           ['Refund in progress', data.totals.inProgress],
           ['Still with us', data.totals.stillHeld],
         ].map(([label, value]) => (
-          <div key={String(label)} className="rounded-lg border border-[#E4E7EC] bg-[#F9FAFB] px-3 py-2">
-            <dt className="text-[#626875]">{label}</dt>
-            <dd className="font-semibold text-[#111111]">{inr(Number(value))}</dd>
+          <div key={String(label)} className="rounded-lg border border-[#E3E5EE] bg-[#F5F6FA] px-3 py-2">
+            <dt className="text-[#5A6075]">{label}</dt>
+            <dd className="font-semibold text-[#11162B]">{inr(Number(value))}</dd>
           </div>
         ))}
       </dl>
@@ -139,27 +139,27 @@ export function RefundHistory({
 
       <ul className="space-y-2">
         {data.entries.map((e) => (
-          <li key={`${e.kind}-${e.id}`} className="rounded-lg border border-[#E4E7EC] p-3 text-[13px]">
+          <li key={`${e.kind}-${e.id}`} className="rounded-lg border border-[#E3E5EE] p-3 text-[14px]">
             <div className="flex flex-wrap items-center justify-between gap-2">
-              <span className="font-semibold text-[#111111]">
+              <span className="font-semibold text-[#11162B]">
                 {e.kind === 'cancellation' ? (e.wholeOrder ? 'Order cancelled' : 'Items cancelled') : 'Return'}
                 {e.amount !== null && e.amount > 0 ? ` · ${inr(e.amount)}` : ''}
               </span>
               <StatusPill tone={TONE[e.status || ''] || 'neutral'}>{e.statusLabel}</StatusPill>
             </div>
-            <p className="mt-1 text-[#344054]">
+            <p className="mt-1 text-[#5A6075]">
               {e.items.map((i) => `${i.quantity} × ${i.name}`).join(', ') || '—'}
             </p>
-            <p className="mt-1 text-[#626875]">
+            <p className="mt-1 text-[#5A6075]">
               {when(e.at)} · {e.by} · {e.reason}
             </p>
             {(e.refundId || e.reference) && (
-              <p className="mt-1 break-all text-[#626875]">
+              <p className="mt-1 break-all text-[#5A6075]">
                 {e.refundId ? `Razorpay refund ${e.refundId}` : `Reference ${e.reference}`}
                 {e.completedAt ? ` · confirmed ${when(e.completedAt)}` : ''}
               </p>
             )}
-            {e.error && <p className="mt-1 text-[#B42318]">{e.error}</p>}
+            {e.error && <p className="mt-1 text-[#9A2C1F]">{e.error}</p>}
           </li>
         ))}
       </ul>

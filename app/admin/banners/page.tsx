@@ -127,7 +127,7 @@ export default function AdminBannersPage() {
         title="Banners"
         subtitle="Promotional banners in the homepage hero slider. Only active banners inside their dates are shown, in display order."
         actions={
-          <button type="button" className={btnPrimary} onClick={() => setForm({ banner: null })}>
+          <button type="button" className={`${btnPrimary} !min-h-12 !px-7 !py-3 !text-[15px]`} onClick={() => setForm({ banner: null })}>
             <Plus className="h-4 w-4" />
             New banner
           </button>
@@ -153,7 +153,7 @@ export default function AdminBannersPage() {
             Create a banner to start the homepage slider. Without any, the homepage shows its standard hero image.
           </EmptyState>
         ) : (
-          <ul className="divide-y divide-[#E4E7EC]">
+          <ul className="divide-y divide-[#E3E5EE]">
             {banners.map((banner, index) => {
               const status = STATUS[banner.status];
               const busy = busyId === banner.id;
@@ -166,11 +166,11 @@ export default function AdminBannersPage() {
                         aria-label={`Move ${banner.name} up`}
                         disabled={index === 0 || busyId !== null}
                         onClick={() => void move(index, -1)}
-                        className="flex h-8 w-8 items-center justify-center rounded-md border border-[#E4E7EC] text-[#626875] hover:border-[#111111] hover:text-[#111111] disabled:opacity-40"
+                        className="flex h-8 w-8 items-center justify-center rounded-md border border-[#E3E5EE] text-[#5A6075] hover:border-[#E3E5EE] hover:text-[#11162B] disabled:opacity-40"
                       >
                         <ArrowUp className="h-4 w-4" />
                       </button>
-                      <span className="text-[12px] font-semibold text-[#626875]" title="Display order">
+                      <span className="text-[13px] font-semibold text-[#5A6075]" title="Display order">
                         {banner.sortOrder}
                       </span>
                       <button
@@ -178,7 +178,7 @@ export default function AdminBannersPage() {
                         aria-label={`Move ${banner.name} down`}
                         disabled={index === banners.length - 1 || busyId !== null}
                         onClick={() => void move(index, 1)}
-                        className="flex h-8 w-8 items-center justify-center rounded-md border border-[#E4E7EC] text-[#626875] hover:border-[#111111] hover:text-[#111111] disabled:opacity-40"
+                        className="flex h-8 w-8 items-center justify-center rounded-md border border-[#E3E5EE] text-[#5A6075] hover:border-[#E3E5EE] hover:text-[#11162B] disabled:opacity-40"
                       >
                         <ArrowDown className="h-4 w-4" />
                       </button>
@@ -189,18 +189,18 @@ export default function AdminBannersPage() {
                       src={banner.imageUrl}
                       alt={banner.name}
                       loading="lazy"
-                      className="aspect-[9/7] w-32 shrink-0 rounded-lg border border-[#E4E7EC] bg-[#F5F6F8] object-cover sm:w-44"
+                      className="aspect-[9/7] w-32 shrink-0 rounded-lg border border-[#E3E5EE] bg-[#F5F6FA] object-cover sm:w-44"
                     />
                   </div>
 
                   <div className="min-w-0 flex-1">
                     <div className="flex flex-wrap items-center gap-2">
-                      <h2 className="truncate text-[16px] font-bold text-[#111111]">{banner.name}</h2>
+                      <h2 className="truncate text-[16px] font-bold text-[#11162B]">{banner.name}</h2>
                       <StatusPill tone={status.tone}>{status.label}</StatusPill>
                       {banner.mobileImageUrl && <StatusPill tone="neutral">Mobile image</StatusPill>}
                     </div>
-                    <p className="mt-1 text-[13px] text-[#626875]">{schedule(banner)}</p>
-                    <p className="mt-0.5 flex items-center gap-1 truncate text-[13px] text-[#626875]">
+                    <p className="mt-1 text-[14px] text-[#5A6075]">{schedule(banner)}</p>
+                    <p className="mt-0.5 flex items-center gap-1 truncate text-[14px] text-[#5A6075]">
                       {banner.linkUrl ? (
                         <>
                           <ExternalLink className="h-3.5 w-3.5 shrink-0" />
@@ -253,12 +253,12 @@ export default function AdminBannersPage() {
             role="alertdialog"
             aria-modal="true"
             aria-labelledby="banner-delete-title"
-            className="relative w-full max-w-md rounded-xl border border-[#E4E7EC] bg-white p-6 shadow-xl"
+            className="relative w-full max-w-md rounded-xl border border-[#E3E5EE] bg-white p-6 shadow-xl"
           >
-            <h2 id="banner-delete-title" className="text-[20px] font-bold text-[#111111]">
+            <h2 id="banner-delete-title" className="text-[20px] font-bold text-[#11162B]">
               Delete this banner?
             </h2>
-            <p className="mt-2 text-[14px] leading-6 text-[#626875]">
+            <p className="mt-2 text-[15px] leading-6 text-[#5A6075]">
               &ldquo;{deleting.name}&rdquo; and its uploaded images will be removed. This cannot be undone. To hide it
               temporarily, deactivate it instead.
             </p>

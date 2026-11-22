@@ -19,10 +19,10 @@ export function Pager({
   if (total === 0) return null;
 
   const button =
-    'flex h-9 w-9 items-center justify-center rounded-lg border border-[#D0D5DD] bg-white text-[#111111] transition hover:border-[#111111] disabled:opacity-40';
+    'flex h-9 w-9 items-center justify-center rounded-lg border border-[#E3E5EE] bg-white text-[#11162B] transition hover:border-[#E3E5EE] disabled:opacity-40';
 
   return (
-    <div className="flex flex-wrap items-center justify-between gap-3 border-t border-[#E4E7EC] px-5 py-3 text-[13px] text-[#626875]">
+    <div className="flex flex-wrap items-center justify-between gap-3 border-t border-[#E3E5EE] px-5 py-3 text-[14px] text-[#5A6075]">
       <span>
         Page {page} of {totalPages} · {total} {noun}
         {total === 1 ? '' : 's'}

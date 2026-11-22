@@ -26,9 +26,9 @@ type Response = {
   pagination: { page: number; limit: number; total: number; totalPages: number };
 };
 
-const card = 'rounded-xl border border-[#E53935]/20 bg-gradient-to-b from-[#1A1A1A] to-[#111111]';
+const card = 'rounded-xl border border-[#E3E5EE] bg-[#FFFFFF]';
 const field =
-  'h-10 rounded-lg border border-[#E53935]/25 bg-[#1A1A1A]/80 px-3 text-sm text-[#F7F7F7] outline-none transition focus:border-[#E53935]/70';
+  'h-11 rounded-lg border border-[#E3E5EE] bg-[#FFFFFF]/80 px-3 text-[15px] text-[#11162B] outline-none transition focus:border-[#4338CA]/70';
 
 const ACTIONS = [
   'user.role_change',
@@ -162,8 +162,8 @@ export default function AuditLogPage() {
   return (
     <div className="space-y-5">
       <div>
-        <h1 className="font-serif text-2xl text-[#F7F7F7]">Audit log</h1>
-        <p className="mt-1 max-w-2xl text-sm text-[#979797]">
+        <h1 className="font-serif text-2xl text-[#11162B]">Audit log</h1>
+        <p className="mt-1 max-w-2xl text-[15px] text-[#5A6075]">
           Who did what, and when. Entries can only be added, never edited or deleted from this application. Passwords and
           tokens are never written here.
         </p>
@@ -184,7 +184,7 @@ export default function AuditLogPage() {
           <option value="failure">Failed</option>
         </select>
         <input
-          className={cn(field, 'min-w-[200px] placeholder:text-[#7A7A7A]')}
+          className={cn(field, 'min-w-[200px] placeholder:text-[#5A6075]')}
           placeholder="Person (e-mail)"
           aria-label="Filter by person"
           value={actorInput}
@@ -196,15 +196,15 @@ export default function AuditLogPage() {
           type="button"
           onClick={() => void load()}
           disabled={loading}
-          className="inline-flex h-10 items-center gap-2 rounded-lg border border-[#E53935]/30 px-3 text-xs font-semibold text-[#E5E5E5] transition hover:bg-[#272727] disabled:opacity-60"
+          className="inline-flex h-11 items-center gap-2 rounded-lg border border-[#E3E5EE] px-3 text-[13px] font-semibold text-[#11162B] transition hover:bg-[#FFFFFF] disabled:opacity-60"
         >
-          <RefreshCw className={cn('h-4 w-4 text-[#E53935]', loading && 'animate-spin')} />
+          <RefreshCw className={cn('h-4 w-4 text-[#4338CA]', loading && 'animate-spin')} />
           Refresh
         </button>
       </div>
 
       {error && (
-        <div role="alert" className="flex items-center gap-2 rounded-lg border border-[#D98B7E]/40 bg-[#D98B7E]/10 px-4 py-2.5 text-sm text-[#E2A79D]">
+        <div role="alert" className="flex items-center gap-2 rounded-lg border border-[#9A2C1F]/40 bg-[#FBE3DF]/10 px-4 py-2.5 text-[15px] text-[#9A2C1F]">
           <AlertTriangle className="h-4 w-4 shrink-0" />
           {error}
         </div>
@@ -214,18 +214,18 @@ export default function AuditLogPage() {
         {!data && loading ? (
           <div className="space-y-px">
             {Array.from({ length: 6 }).map((_, i) => (
-              <div key={i} className="h-14 animate-pulse bg-[#1A1A1A]" />
+              <div key={i} className="h-14 animate-pulse bg-[#FFFFFF]" />
             ))}
           </div>
         ) : !data || data.logs.length === 0 ? (
-          <p className="px-5 py-12 text-center text-sm text-[#7A7A7A]">
+          <p className="px-5 py-12 text-center text-[15px] text-[#5A6075]">
             No entries match. If this is empty on a fresh install, the audit database update may not be applied yet.
           </p>
         ) : (
           <div className={cn('overflow-x-auto', loading && 'opacity-60')}>
-            <table className="w-full min-w-[860px] text-left text-sm">
+            <table className="w-full min-w-[860px] text-left text-[15px]">
               <thead>
-                <tr className="border-b border-[#E53935]/20 text-[10px] uppercase tracking-[0.18em] text-[#7A7A7A]">
+                <tr className="border-b border-[#E3E5EE] text-[12px] uppercase tracking-[0.18em] text-[#5A6075]">
                   <th className="px-5 py-3 font-semibold">When</th>
                   <th className="px-3 py-3 font-semibold">Who</th>
                   <th className="px-3 py-3 font-semibold">Action</th>
@@ -237,24 +237,24 @@ export default function AuditLogPage() {
               <tbody>
                 {data.logs.map((entry) => (
                   <Fragment key={entry.id}>
-                    <tr className="border-b border-[#E53935]/10">
-                      <td className="whitespace-nowrap px-5 py-3 text-[#BBBBBB]">{when(entry.createdAt)}</td>
+                    <tr className="border-b border-[#4338CA]/10">
+                      <td className="whitespace-nowrap px-5 py-3 text-[#5A6075]">{when(entry.createdAt)}</td>
                       <td className="px-3 py-3">
-                        <p className="text-[#F7F7F7]">{entry.actorEmail || 'System'}</p>
-                        <p className="text-xs text-[#7A7A7A]">{entry.actorRole || ''}</p>
+                        <p className="text-[#11162B]">{entry.actorEmail || 'System'}</p>
+                        <p className="text-[13px] text-[#5A6075]">{entry.actorRole || ''}</p>
                       </td>
-                      <td className="px-3 py-3 font-mono text-xs text-[#E5E5E5]">{entry.action}</td>
-                      <td className="max-w-[200px] truncate px-3 py-3 text-xs text-[#979797]" title={entry.resourceId || ''}>
+                      <td className="px-3 py-3 font-mono text-[13px] text-[#11162B]">{entry.action}</td>
+                      <td className="max-w-[200px] truncate px-3 py-3 text-[13px] text-[#5A6075]" title={entry.resourceId || ''}>
                         {entry.resourceType}
                         {entry.resourceId ? ` · ${entry.resourceId}` : ''}
                       </td>
                       <td className="px-3 py-3">
                         <span
                           className={cn(
-                            'rounded-full border px-2.5 py-0.5 text-[11px] font-medium',
+                            'rounded-full border px-2.5 py-0.5 text-[12px] font-medium',
                             entry.outcome === 'success'
-                              ? 'border-[#7FAF7F]/40 text-[#9BC49B]'
-                              : 'border-[#D98B7E]/50 text-[#E2A79D]'
+                              ? 'border-[#17603F]/40 text-[#17603F]'
+                              : 'border-[#9A2C1F]/50 text-[#9A2C1F]'
                           )}
                         >
                           {entry.outcome === 'success' ? 'Done' : 'Failed'}
@@ -263,7 +263,7 @@ export default function AuditLogPage() {
                       <td className="px-5 py-3 text-right">
                         <button
                           type="button"
-                          className="text-xs font-semibold text-[#E53935] hover:underline"
+                          className="text-[13px] font-semibold text-[#4338CA] hover:underline"
                           onClick={() => setOpen(open === entry.id ? null : entry.id)}
                           aria-expanded={open === entry.id}
                         >
@@ -272,25 +272,25 @@ export default function AuditLogPage() {
                       </td>
                     </tr>
                     {open === entry.id && (
-                      <tr className="border-b border-[#E53935]/10 bg-[#0F0F0F]">
-                        <td colSpan={6} className="space-y-3 px-5 py-4 text-xs text-[#BBBBBB]">
+                      <tr className="border-b border-[#4338CA]/10 bg-[#FFFFFF]">
+                        <td colSpan={6} className="space-y-3 px-5 py-4 text-[13px] text-[#5A6075]">
                           {entry.reason && (
                             <p>
-                              <span className="font-semibold text-[#F7F7F7]">Reason: </span>
+                              <span className="font-semibold text-[#11162B]">Reason: </span>
                               {entry.reason}
                             </p>
                           )}
                           <div className="grid gap-4 md:grid-cols-2">
                             <div>
-                              <p className="mb-1 font-semibold text-[#F7F7F7]">Before</p>
-                              <pre className="overflow-x-auto whitespace-pre-wrap break-words rounded-lg bg-[#1A1A1A] p-3">{pretty(entry.before)}</pre>
+                              <p className="mb-1 font-semibold text-[#11162B]">Before</p>
+                              <pre className="overflow-x-auto whitespace-pre-wrap break-words rounded-lg bg-[#FFFFFF] p-3">{pretty(entry.before)}</pre>
                             </div>
                             <div>
-                              <p className="mb-1 font-semibold text-[#F7F7F7]">After</p>
-                              <pre className="overflow-x-auto whitespace-pre-wrap break-words rounded-lg bg-[#1A1A1A] p-3">{pretty(entry.after)}</pre>
+                              <p className="mb-1 font-semibold text-[#11162B]">After</p>
+                              <pre className="overflow-x-auto whitespace-pre-wrap break-words rounded-lg bg-[#FFFFFF] p-3">{pretty(entry.after)}</pre>
                             </div>
                           </div>
-                          {entry.ip && <p className="text-[#7A7A7A]">From address {entry.ip}</p>}
+                          {entry.ip && <p className="text-[#5A6075]">From address {entry.ip}</p>}
                         </td>
                       </tr>
                     )}
@@ -302,7 +302,7 @@ export default function AuditLogPage() {
         )}
 
         {data && data.pagination.total > 0 && (
-          <div className="flex flex-wrap items-center justify-between gap-3 border-t border-[#E53935]/20 px-5 py-3 text-xs text-[#979797]">
+          <div className="flex flex-wrap items-center justify-between gap-3 border-t border-[#E3E5EE] px-5 py-3 text-[13px] text-[#5A6075]">
             <span>
               Page {data.pagination.page} of {totalPages} · {data.pagination.total} entr
               {data.pagination.total === 1 ? 'y' : 'ies'}
@@ -313,7 +313,7 @@ export default function AuditLogPage() {
                 onClick={() => setPage((p) => Math.max(p - 1, 1))}
                 disabled={page <= 1 || loading}
                 aria-label="Previous page"
-                className="flex h-8 w-8 items-center justify-center rounded-md border border-[#E53935]/30 transition hover:bg-[#272727] disabled:opacity-40"
+                className="flex h-8 w-8 items-center justify-center rounded-md border border-[#E3E5EE] transition hover:bg-[#FFFFFF] disabled:opacity-40"
               >
                 <ChevronLeft className="h-4 w-4" />
               </button>
@@ -322,7 +322,7 @@ export default function AuditLogPage() {
                 onClick={() => setPage((p) => Math.min(p + 1, totalPages))}
                 disabled={page >= totalPages || loading}
                 aria-label="Next page"
-                className="flex h-8 w-8 items-center justify-center rounded-md border border-[#E53935]/30 transition hover:bg-[#272727] disabled:opacity-40"
+                className="flex h-8 w-8 items-center justify-center rounded-md border border-[#E3E5EE] transition hover:bg-[#FFFFFF] disabled:opacity-40"
               >
                 <ChevronRight className="h-4 w-4" />
               </button>

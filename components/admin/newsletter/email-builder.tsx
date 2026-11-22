@@ -19,21 +19,21 @@ function ColorField({ value, onChange, optional }: { value: string; onChange: (v
       <input
         type="color"
         aria-label="Pick a colour"
-        value={valid ? value : '#111111'}
+        value={valid ? value : '#11162B'}
         onChange={(e) => onChange(e.target.value.toUpperCase())}
-        className="h-10 w-12 cursor-pointer rounded-md border border-[#D0D5DD] bg-white p-1"
+        className="h-10 w-12 cursor-pointer rounded-md border border-[#E3E5EE] bg-white p-1"
       />
       <input
         className={`${fieldClass} max-w-[130px] font-mono`}
         value={value}
         maxLength={7}
-        placeholder={optional ? 'Default' : '#111111'}
+        placeholder={optional ? 'Default' : '#11162B'}
         aria-label="Colour code"
         aria-invalid={value !== '' && !valid}
         onChange={(e) => onChange(e.target.value)}
       />
       {optional && value && (
-        <button type="button" className="text-[13px] font-semibold text-[#626875] underline" onClick={() => onChange('')}>
+        <button type="button" className="text-[14px] font-semibold text-[#5A6075] underline" onClick={() => onChange('')}>
           Use default
         </button>
       )}
@@ -67,17 +67,17 @@ function ProductPicker({ value, onChange }: { value: string; onChange: (slug: st
 
   return (
     <div>
-      <div className="mb-2 text-[14px] text-[#344054]">
+      <div className="mb-2 text-[15px] text-[#5A6075]">
         {value ? (
           <>
             Selected: <strong className="break-all">{value}</strong>
           </>
         ) : (
-          <span className="text-[#626875]">No product chosen yet.</span>
+          <span className="text-[#5A6075]">No product chosen yet.</span>
         )}
       </div>
       <div className="relative">
-        <Search className="pointer-events-none absolute left-3 top-3 h-4 w-4 text-[#98A2B3]" />
+        <Search className="pointer-events-none absolute left-3 top-3 h-4 w-4 text-[#5A6075]" />
         <input
           className={`${fieldClass} pl-9`}
           placeholder="Search your catalogue by name"
@@ -91,15 +91,15 @@ function ProductPicker({ value, onChange }: { value: string; onChange: (slug: st
         />
       </div>
       {open && (
-        <ul className="mt-2 max-h-56 overflow-auto rounded-lg border border-[#E4E7EC] bg-white" role="listbox" aria-busy={busy}>
-          {hits.length === 0 && <li className="px-3 py-3 text-[13px] text-[#626875]">{busy ? 'Searching…' : 'No products found.'}</li>}
+        <ul className="mt-2 max-h-56 overflow-auto rounded-lg border border-[#E3E5EE] bg-white" role="listbox" aria-busy={busy}>
+          {hits.length === 0 && <li className="px-3 py-3 text-[14px] text-[#5A6075]">{busy ? 'Searching…' : 'No products found.'}</li>}
           {hits.map((p) => (
             <li key={p.slug}>
               <button
                 type="button"
                 role="option"
                 aria-selected={p.slug === value}
-                className="flex w-full items-center gap-3 px-3 py-2 text-left text-[14px] hover:bg-[#F5F6F8]"
+                className="flex w-full items-center gap-3 px-3 py-2 text-left text-[15px] hover:bg-[#F5F6FA]"
                 onClick={() => {
                   onChange(p.slug);
                   setOpen(false);
@@ -109,11 +109,11 @@ function ProductPicker({ value, onChange }: { value: string; onChange: (slug: st
                   // eslint-disable-next-line @next/next/no-img-element
                   <img src={p.image} alt="" className="h-10 w-10 rounded object-cover" />
                 ) : (
-                  <span className="h-10 w-10 rounded bg-[#F2F4F7]" />
+                  <span className="h-10 w-10 rounded bg-[#F5F6FA]" />
                 )}
                 <span className="min-w-0">
-                  <span className="block truncate font-semibold text-[#111111]">{p.name}</span>
-                  <span className="block text-[12px] text-[#626875]">₹{p.price.toLocaleString('en-IN')}</span>
+                  <span className="block truncate font-semibold text-[#11162B]">{p.name}</span>
+                  <span className="block text-[13px] text-[#5A6075]">₹{p.price.toLocaleString('en-IN')}</span>
                 </span>
               </button>
             </li>
@@ -200,10 +200,10 @@ export function EmailBuilder({ design, onChange, disabled }: { design: Design; o
   return (
     <div className={cn('space-y-3', disabled && 'pointer-events-none opacity-60')} aria-disabled={disabled}>
       {/* brand style */}
-      <section className="rounded-xl border border-[#E4E7EC] bg-white">
+      <section className="rounded-xl border border-[#E3E5EE] bg-white">
         <button
           type="button"
-          className="flex w-full items-center justify-between px-4 py-3 text-left text-[15px] font-bold text-[#111111]"
+          className="flex w-full items-center justify-between px-4 py-3 text-left text-[15px] font-bold text-[#11162B]"
           onClick={() => setStyleOpen((v) => !v)}
           aria-expanded={styleOpen}
         >
@@ -211,7 +211,7 @@ export function EmailBuilder({ design, onChange, disabled }: { design: Design; o
           <ChevronDown className={cn('h-4 w-4 transition-transform', styleOpen && 'rotate-180')} />
         </button>
         {styleOpen && (
-          <div className="grid gap-4 border-t border-[#E4E7EC] p-4 sm:grid-cols-2">
+          <div className="grid gap-4 border-t border-[#E3E5EE] p-4 sm:grid-cols-2">
             <div>
               <label className={labelClass} htmlFor="style-font">Body font</label>
               <select id="style-font" className={fieldClass} value={design.style.font} onChange={(e) => setStyle('font', e.target.value)}>
@@ -242,7 +242,7 @@ export function EmailBuilder({ design, onChange, disabled }: { design: Design; o
                 <ColorField value={design.style[key]} onChange={(v) => setStyle(key, v)} />
               </div>
             ))}
-            <p className="text-[12px] text-[#626875] sm:col-span-2">Email clients only support a few fonts, so the choices are limited on purpose.</p>
+            <p className="text-[13px] text-[#5A6075] sm:col-span-2">Email clients only support a few fonts, so the choices are limited on purpose.</p>
           </div>
         )}
       </section>
@@ -254,7 +254,7 @@ export function EmailBuilder({ design, onChange, disabled }: { design: Design; o
           const open = openId === block.id;
           const summary = String(block.text || block.label || block.productSlug || block.tagline || '').slice(0, 60);
           return (
-            <li key={block.id} className="rounded-xl border border-[#E4E7EC] bg-white">
+            <li key={block.id} className="rounded-xl border border-[#E3E5EE] bg-white">
               <div className="flex items-center gap-2 px-3 py-2">
                 <button
                   type="button"
@@ -262,43 +262,43 @@ export function EmailBuilder({ design, onChange, disabled }: { design: Design; o
                   onClick={() => setOpenId(open ? null : block.id)}
                   aria-expanded={open}
                 >
-                  <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-[#F2F4F7] text-[12px] font-bold text-[#475467]">{index + 1}</span>
+                  <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-[#F5F6FA] text-[13px] font-bold text-[#5A6075]">{index + 1}</span>
                   <span className="min-w-0">
-                    <span className="block text-[14px] font-bold text-[#111111]">{def.label}</span>
-                    {summary && !open && <span className="block truncate text-[12px] text-[#626875]">{summary}</span>}
+                    <span className="block text-[15px] font-bold text-[#11162B]">{def.label}</span>
+                    {summary && !open && <span className="block truncate text-[13px] text-[#5A6075]">{summary}</span>}
                   </span>
-                  <ChevronDown className={cn('ml-auto h-4 w-4 shrink-0 text-[#626875] transition-transform', open && 'rotate-180')} />
+                  <ChevronDown className={cn('ml-auto h-4 w-4 shrink-0 text-[#5A6075] transition-transform', open && 'rotate-180')} />
                 </button>
                 <div className="flex shrink-0 items-center">
-                  <button type="button" aria-label={`Move ${def.label} up`} disabled={index === 0} onClick={() => move(index, -1)} className="rounded p-1.5 text-[#475467] hover:bg-[#F2F4F7] disabled:opacity-30">
+                  <button type="button" aria-label={`Move ${def.label} up`} disabled={index === 0} onClick={() => move(index, -1)} className="rounded p-1.5 text-[#5A6075] hover:bg-[#F5F6FA] disabled:opacity-30">
                     <ArrowUp className="h-4 w-4" />
                   </button>
-                  <button type="button" aria-label={`Move ${def.label} down`} disabled={index === design.blocks.length - 1} onClick={() => move(index, 1)} className="rounded p-1.5 text-[#475467] hover:bg-[#F2F4F7] disabled:opacity-30">
+                  <button type="button" aria-label={`Move ${def.label} down`} disabled={index === design.blocks.length - 1} onClick={() => move(index, 1)} className="rounded p-1.5 text-[#5A6075] hover:bg-[#F5F6FA] disabled:opacity-30">
                     <ArrowDown className="h-4 w-4" />
                   </button>
-                  <button type="button" aria-label={`Duplicate ${def.label}`} disabled={atLimit} onClick={() => copy(index)} className="rounded p-1.5 text-[#475467] hover:bg-[#F2F4F7] disabled:opacity-30">
+                  <button type="button" aria-label={`Duplicate ${def.label}`} disabled={atLimit} onClick={() => copy(index)} className="rounded p-1.5 text-[#5A6075] hover:bg-[#F5F6FA] disabled:opacity-30">
                     <Copy className="h-4 w-4" />
                   </button>
-                  <button type="button" aria-label={`Delete ${def.label}`} onClick={() => remove(block.id)} className="rounded p-1.5 text-[#B42318] hover:bg-[#FEE4E2]">
+                  <button type="button" aria-label={`Delete ${def.label}`} onClick={() => remove(block.id)} className="rounded p-1.5 text-[#9A2C1F] hover:bg-[#FBE3DF]">
                     <Trash2 className="h-4 w-4" />
                   </button>
                 </div>
               </div>
               {open && (
-                <div className="space-y-4 border-t border-[#E4E7EC] p-4">
-                  <p className="text-[13px] text-[#626875]">{def.hint}</p>
+                <div className="space-y-4 border-t border-[#E3E5EE] p-4">
+                  <p className="text-[14px] text-[#5A6075]">{def.hint}</p>
                   {def.fields.map((field) => {
                     const id = `${block.id}-${field.key}`;
                     return (
                       <div key={field.key}>
                         <label className={labelClass} htmlFor={id}>
                           {field.label}
-                          {field.required && <span className="text-[#B42318]"> *</span>}
+                          {field.required && <span className="text-[#9A2C1F]"> *</span>}
                         </label>
                         <FieldInput id={id} field={field} value={String(block[field.key] ?? '')} onChange={(v) => patch(block.id, field.key, v)} />
-                        {field.help && <p className="mt-1 text-[12px] text-[#626875]">{field.help}</p>}
+                        {field.help && <p className="mt-1 text-[13px] text-[#5A6075]">{field.help}</p>}
                         {field.max && field.kind !== 'select' && field.kind !== 'color' && (
-                          <p className="mt-1 text-right text-[11px] text-[#98A2B3]">{String(block[field.key] ?? '').length}/{field.max}</p>
+                          <p className="mt-1 text-right text-[12px] text-[#5A6075]">{String(block[field.key] ?? '').length}/{field.max}</p>
                         )}
                       </div>
                     );
@@ -315,21 +315,21 @@ export function EmailBuilder({ design, onChange, disabled }: { design: Design; o
         <button type="button" className={btnOutline} onClick={() => setAdding((v) => !v)} disabled={atLimit} aria-expanded={adding}>
           <Plus className="h-4 w-4" /> Add a block
         </button>
-        {atLimit && <span className="ml-3 text-[13px] text-[#626875]">An email can have at most {MAX_BLOCKS} blocks.</span>}
+        {atLimit && <span className="ml-3 text-[14px] text-[#5A6075]">An email can have at most {MAX_BLOCKS} blocks.</span>}
         {adding && (
           <ul className="mt-3 grid gap-2 sm:grid-cols-2">
             {BLOCK_ORDER.map((type) => (
               <li key={type}>
-                <button type="button" onClick={() => add(type)} className="w-full rounded-lg border border-[#D0D5DD] bg-white px-3 py-2.5 text-left transition hover:border-[#111111]">
-                  <span className="block text-[14px] font-bold text-[#111111]">{BLOCK_DEFS[type].label}</span>
-                  <span className="block text-[12px] text-[#626875]">{BLOCK_DEFS[type].hint}</span>
+                <button type="button" onClick={() => add(type)} className="w-full rounded-lg border border-[#E3E5EE] bg-white px-3 py-2.5 text-left transition hover:border-[#E3E5EE]">
+                  <span className="block text-[15px] font-bold text-[#11162B]">{BLOCK_DEFS[type].label}</span>
+                  <span className="block text-[13px] text-[#5A6075]">{BLOCK_DEFS[type].hint}</span>
                 </button>
               </li>
             ))}
           </ul>
         )}
       </div>
-      <p className="text-[12px] text-[#626875]">
+      <p className="text-[13px] text-[#5A6075]">
         The footer with the unsubscribe link and KOVENIK&apos;s postal address is added to every email automatically and cannot be removed.
       </p>
     </div>

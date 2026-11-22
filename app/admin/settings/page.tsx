@@ -129,7 +129,7 @@ function SaveBar({
   onReset: () => void;
 }) {
   return (
-    <div className="mt-6 flex flex-wrap items-center gap-3 border-t border-[#E4E7EC] pt-5">
+    <div className="mt-6 flex flex-wrap items-center gap-3 border-t border-[#E3E5EE] pt-5">
       <button type="submit" disabled={!dirty || saving} className={btnPrimary}>
         <Save className="h-4 w-4" />
         {saving ? 'Saving…' : 'Save changes'}
@@ -137,7 +137,7 @@ function SaveBar({
       <button type="button" disabled={!dirty || saving} onClick={onReset} className={btnOutline}>
         Discard
       </button>
-      {dirty && !message && <span className="text-[13px] font-medium text-[#C47A16]">Unsaved changes</span>}
+      {dirty && !message && <span className="text-[14px] font-medium text-[#7A4F00]">Unsaved changes</span>}
       {message && <Notice tone={message.tone}>{message.text}</Notice>}
     </div>
   );
@@ -160,7 +160,7 @@ function Field({
         {label}
       </label>
       {children}
-      {hint && <p className="mt-1.5 text-[12px] text-[#626875]">{hint}</p>}
+      {hint && <p className="mt-1.5 text-[13px] text-[#5A6075]">{hint}</p>}
     </div>
   );
 }
@@ -181,10 +181,10 @@ function Toggle({
   return (
     <div className="flex items-center justify-between gap-4 py-4">
       <div className="min-w-0">
-        <label htmlFor={id} className="block cursor-pointer text-[15px] font-semibold text-[#111111]">
+        <label htmlFor={id} className="block cursor-pointer text-[15px] font-semibold text-[#11162B]">
           {label}
         </label>
-        <p className="mt-0.5 text-[13px] text-[#626875]">{description}</p>
+        <p className="mt-0.5 text-[14px] text-[#5A6075]">{description}</p>
       </div>
       <button
         id={id}
@@ -193,8 +193,8 @@ function Toggle({
         aria-checked={checked}
         onClick={() => onChange(!checked)}
         className={cn(
-          'relative h-7 w-12 shrink-0 rounded-full outline-none transition focus-visible:ring-2 focus-visible:ring-[#E53935]/50 focus-visible:ring-offset-2',
-          checked ? 'bg-[#E53935]' : 'bg-[#D0D5DD]'
+          'relative h-7 w-12 shrink-0 rounded-full outline-none transition focus-visible:ring-2 focus-visible:ring-[#4338CA]/50 focus-visible:ring-offset-2',
+          checked ? 'bg-[#4338CA]' : 'bg-[#F5F6FA]'
         )}
       >
         <span
@@ -210,10 +210,10 @@ function Toggle({
 
 function ReadOnly({ label, value, note }: { label: string; value: string; note?: string }) {
   return (
-    <div className="rounded-lg border border-[#E4E7EC] bg-[#F5F6F8] px-4 py-3">
-      <p className="text-[12px] font-semibold uppercase tracking-wide text-[#626875]">{label}</p>
-      <p className="mt-1 text-[18px] font-bold text-[#111111]">{value}</p>
-      {note && <p className="mt-1 text-[12px] text-[#626875]">{note}</p>}
+    <div className="rounded-lg border border-[#E3E5EE] bg-[#F5F6FA] px-4 py-3">
+      <p className="text-[13px] font-semibold uppercase tracking-wide text-[#5A6075]">{label}</p>
+      <p className="mt-1 text-[18px] font-bold text-[#11162B]">{value}</p>
+      {note && <p className="mt-1 text-[13px] text-[#5A6075]">{note}</p>}
     </div>
   );
 }
@@ -255,7 +255,7 @@ function StoreTab({ saved, onSaved, onDirty }: SectionProps<Store>) {
             </Field>
           </div>
         </div>
-        <h3 className="mb-4 mt-8 text-[16px] font-bold text-[#111111]">Support contact</h3>
+        <h3 className="mb-4 mt-8 text-[16px] font-bold text-[#11162B]">Support contact</h3>
         <div className="grid gap-5 md:grid-cols-3">
           <Field id="supportEmail" label="Support email">
             <input id="supportEmail" type="email" className={fieldClass} value={d.supportEmail} onChange={(e) => f.set('supportEmail', e.target.value)} />
@@ -283,11 +283,11 @@ function BrandTab({ saved, onSaved, onDirty }: SectionProps<Brand>) {
         <div className="grid gap-6 md:grid-cols-[220px_1fr]">
           <div>
             <p className={labelClass}>Current logo</p>
-            <div className="flex h-32 items-center justify-center rounded-lg bg-[#111111] p-4">
+            <div className="flex h-32 items-center justify-center rounded-lg bg-[#11162B] p-4">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img src="/kovenik-logo.svg" alt="KOVENIK logo" className="max-h-full max-w-full object-contain" />
             </div>
-            <p className="mt-2 text-[12px] text-[#626875]">
+            <p className="mt-2 text-[13px] text-[#5A6075]">
               The logo is part of the site build and is not editable here, so existing brand assets stay untouched.
             </p>
           </div>
@@ -330,15 +330,15 @@ function FulfilmentTab({ config }: { config: Config }) {
         <ReadOnly label="Free shipping" value={config.shipping.freeForMembers === false ? 'None' : 'Active members'} note="Decided by the server from the customer's active membership" />
         <ReadOnly label="GST" value={`${Math.round(config.shipping.gstRate * 100)}%`} note="Applied after any coupon" />
       </div>
-      <h3 className="mb-3 mt-8 text-[16px] font-bold text-[#111111]">Order statuses</h3>
+      <h3 className="mb-3 mt-8 text-[16px] font-bold text-[#11162B]">Order statuses</h3>
       <div className="flex flex-wrap gap-2">
         {config.orderStatuses.map((s) => (
-          <span key={s} className="rounded-full bg-[#F2F4F7] px-3.5 py-1.5 text-[13px] font-semibold text-[#111111]">
+          <span key={s} className="rounded-full bg-[#F5F6FA] px-3.5 py-1.5 text-[14px] font-semibold text-[#11162B]">
             {s}
           </span>
         ))}
       </div>
-      <p className="mt-5 text-[13px] text-[#626875]">
+      <p className="mt-5 text-[14px] text-[#5A6075]">
         Customers can cancel while an order is Pending, Confirmed or Processing. Currency ({config.currency}) and
         timezone ({config.timezone}) apply to every order and cannot be changed retroactively.
       </p>
@@ -356,7 +356,7 @@ function NotificationsTab({ saved, onSaved, onDirty }: SectionProps<Notification
         title="Admin alerts"
         description="Choose which alerts appear under the bell in the admin header. Alerts are computed live from your orders and stock."
       >
-        <div className="divide-y divide-[#E4E7EC]">
+        <div className="divide-y divide-[#E3E5EE]">
           <Toggle id="newOrders" checked={d.newOrders} onChange={(v) => f.set('newOrders', v)} label="New orders" description="Orders placed in the last 24 hours." />
           <Toggle id="lowStock" checked={d.lowStock} onChange={(v) => f.set('lowStock', v)} label="Low-stock alerts" description="Products at or below the threshold, and sold-out products." />
           <Toggle id="failedPayments" checked={d.failedPayments} onChange={(v) => f.set('failedPayments', v)} label="Failed payments" description="Payments that failed in the last 7 days." />
@@ -437,7 +437,7 @@ function AccountTab({ signOut }: { signOut: () => void }) {
         </form>
       </Card>
       <Card title="Session & security">
-        <ul className="list-disc space-y-1.5 pl-5 text-[14px] text-[#626875]">
+        <ul className="list-disc space-y-1.5 pl-5 text-[15px] text-[#5A6075]">
           <li>Admin access needs a private entry link, your password and an emailed one-time code.</li>
           <li>Your role is re-checked on the server for every request.</li>
           <li>Keys, secrets and database credentials are never shown in this panel.</li>
@@ -519,7 +519,7 @@ function SettingsInner() {
     <div>
       <PageHeader title="Settings" subtitle="Store details, brand, alerts and your account." />
 
-      <div role="tablist" aria-label="Settings sections" className="mb-6 flex gap-1 overflow-x-auto rounded-xl border border-[#E4E7EC] bg-white p-1.5">
+      <div role="tablist" aria-label="Settings sections" className="mb-6 flex gap-1 overflow-x-auto rounded-xl border border-[#E3E5EE] bg-white p-1.5">
         {TABS.map((t) => {
           const Icon = t.icon;
           const active = tab === t.id;
@@ -531,8 +531,8 @@ function SettingsInner() {
               aria-selected={active}
               onClick={() => switchTab(t.id)}
               className={cn(
-                'flex min-h-11 shrink-0 items-center gap-2 rounded-lg px-4 text-[14px] font-semibold outline-none transition focus-visible:ring-2 focus-visible:ring-[#E53935]/50',
-                active ? 'bg-[#111111] text-white' : 'text-[#626875] hover:bg-[#F2F4F7] hover:text-[#111111]'
+                'flex min-h-11 shrink-0 items-center gap-2 rounded-lg px-4 text-[15px] font-semibold outline-none transition focus-visible:ring-2 focus-visible:ring-[#4338CA]/50',
+                active ? 'bg-[#11162B] text-white' : 'text-[#5A6075] hover:bg-[#F5F6FA] hover:text-[#11162B]'
               )}
             >
               <Icon className="h-4 w-4" />
@@ -564,9 +564,9 @@ function SettingsInner() {
         </div>
       )}
 
-      <p className="mt-8 text-[13px] text-[#626875]">
+      <p className="mt-8 text-[14px] text-[#5A6075]">
         Customer accounts are managed by the Super Admin.{' '}
-        <Link href="/admin" className="font-semibold text-[#E53935]">
+        <Link href="/admin" className="font-semibold text-[#4338CA]">
           Back to dashboard
         </Link>
       </p>

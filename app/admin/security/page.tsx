@@ -64,12 +64,12 @@ export default function SecurityPage() {
       >
         {confirming ? (
           <div className="flex flex-wrap items-center gap-3">
-            <p className="text-[14px] text-[#111111]">Sign out of all devices now?</p>
+            <p className="text-[15px] text-[#11162B]">Sign out of all devices now?</p>
             <button type="button" className={btnDanger} disabled={busy} onClick={() => void signOutEverywhere()}>
               <LogOut className="h-4 w-4" />
               {busy ? 'Signing out…' : 'Yes, sign out everywhere'}
             </button>
-            <button type="button" className="text-[14px] font-semibold text-[#626875] underline" onClick={() => setConfirming(false)} disabled={busy}>
+            <button type="button" className="text-[15px] font-semibold text-[#5A6075] underline" onClick={() => setConfirming(false)} disabled={busy}>
               Cancel
             </button>
           </div>
@@ -94,14 +94,14 @@ export default function SecurityPage() {
             New sign-ins from now on will appear here.
           </EmptyState>
         ) : (
-          <ul className="divide-y divide-[#E4E7EC]">
+          <ul className="divide-y divide-[#E3E5EE]">
             {logins.map((l) => (
-              <li key={l.id} className="flex flex-col gap-1 px-5 py-3 text-[14px] sm:flex-row sm:items-center sm:justify-between">
-                <span className="font-medium text-[#111111]">{when(l.at)}</span>
-                <span className="text-[#626875]">
+              <li key={l.id} className="flex flex-col gap-1 px-5 py-3 text-[15px] sm:flex-row sm:items-center sm:justify-between">
+                <span className="font-medium text-[#11162B]">{when(l.at)}</span>
+                <span className="text-[#5A6075]">
                   {l.method === 'google' ? 'Google' : 'Password + e-mail code'} · {l.ip || 'unknown address'}
                 </span>
-                <span className="max-w-[320px] truncate text-[12px] text-[#98A0AE]" title={l.userAgent || ''}>
+                <span className="max-w-[320px] truncate text-[13px] text-[#5A6075]" title={l.userAgent || ''}>
                   {l.userAgent || ''}
                 </span>
               </li>

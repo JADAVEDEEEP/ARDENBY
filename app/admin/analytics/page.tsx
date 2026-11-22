@@ -76,10 +76,10 @@ const PRESETS: { id: Preset; label: string }[] = [
   { id: 'custom', label: 'Custom Range' },
 ];
 
-const INK = '#111111';
-const RED = '#E53935';
-const GRID = '#E4E7EC';
-const MUTED = '#626875';
+const INK = '#11162B';
+const RED = '#4338CA';
+const GRID = '#F5F6FA';
+const MUTED = '#5A6075';
 
 /* ------------------------------------------------------------------ */
 /* Helpers                                                             */
@@ -155,7 +155,7 @@ function Delta({
   if (value === undefined) return null;
   if (value === null) {
     return (
-      <p className="mt-3 text-[13px] text-[#626875]">
+      <p className="mt-3 text-[14px] text-[#5A6075]">
         <span className="font-semibold">N/A</span> · no earlier data to compare
       </p>
     );
@@ -164,11 +164,11 @@ function Delta({
   const good = inverse ? value < 0 : value > 0;
   const Icon = flat ? Minus : value > 0 ? ArrowUpRight : ArrowDownRight;
   return (
-    <p className="mt-3 flex flex-wrap items-center gap-x-1.5 text-[13px] text-[#626875]">
+    <p className="mt-3 flex flex-wrap items-center gap-x-1.5 text-[14px] text-[#5A6075]">
       <span
         className={cn(
           'inline-flex items-center gap-0.5 font-bold',
-          flat ? 'text-[#626875]' : good ? 'text-[#16845B]' : 'text-[#D92D20]'
+          flat ? 'text-[#5A6075]' : good ? 'text-[#17603F]' : 'text-[#9A2C1F]'
         )}
       >
         <Icon className="h-4 w-4" />
@@ -199,15 +199,15 @@ function Kpi({
   return (
     <div
       className={cn(
-        'rounded-xl border border-[#E4E7EC] bg-white p-5 shadow-[0_1px_2px_rgba(16,24,40,0.04)]',
-        accent && 'border-t-[3px] border-t-[#E53935]'
+        'rounded-xl border border-[#E3E5EE] bg-white p-5 shadow-[0_1px_2px_rgba(16,24,40,0.04)]',
+        accent && 'border-t-[3px] border-t-[#4338CA]'
       )}
     >
-      <p className="text-[14px] font-semibold text-[#626875]">{label}</p>
-      <p className="mt-2 text-[34px] font-bold leading-none tracking-tight text-[#111111] md:text-[40px]">
+      <p className="text-[15px] font-semibold text-[#5A6075]">{label}</p>
+      <p className="mt-2 text-[34px] font-bold leading-none tracking-tight text-[#11162B] md:text-[40px]">
         {value}
       </p>
-      {note && <p className="mt-2 text-[13px] text-[#626875]">{note}</p>}
+      {note && <p className="mt-2 text-[14px] text-[#5A6075]">{note}</p>}
       <Delta value={delta} inverse={inverse} label={compareLabel} />
     </div>
   );
@@ -226,9 +226,9 @@ function ChartTooltip({
 }) {
   if (!active || !payload?.length) return null;
   return (
-    <div className="rounded-lg border border-[#E4E7EC] bg-white px-3 py-2 text-[13px] shadow-lg">
-      <p className="font-semibold text-[#111111]">{label}</p>
-      <p className="text-[#626875]">
+    <div className="rounded-lg border border-[#E3E5EE] bg-white px-3 py-2 text-[14px] shadow-lg">
+      <p className="font-semibold text-[#11162B]">{label}</p>
+      <p className="text-[#5A6075]">
         {money ? inr(payload[0].value) : `${payload[0].value} orders`}
       </p>
     </div>
@@ -236,14 +236,14 @@ function ChartTooltip({
 }
 
 const STATUS_COLOR: Record<string, string> = {
-  delivered: '#16845B',
-  shipped: '#111111',
-  processing: '#C47A16',
-  confirmed: '#C47A16',
-  pending: '#98A0AE',
-  cancelled: '#D92D20',
-  returned: '#D92D20',
-  'cancellation requested': '#D92D20',
+  delivered: '#17603F',
+  shipped: '#11162B',
+  processing: '#7A4F00',
+  confirmed: '#7A4F00',
+  pending: '#5A6075',
+  cancelled: '#9A2C1F',
+  returned: '#9A2C1F',
+  'cancellation requested': '#9A2C1F',
 };
 
 function HBars({
@@ -260,17 +260,17 @@ function HBars({
     <ul className="space-y-4">
       {rows.map((r) => (
         <li key={r.key}>
-          <div className="flex items-baseline justify-between gap-3 text-[14px]">
-            <span className="min-w-0 truncate font-semibold text-[#111111]">{r.label}</span>
-            <span className="shrink-0 font-bold text-[#111111]">{format(r.value)}</span>
+          <div className="flex items-baseline justify-between gap-3 text-[15px]">
+            <span className="min-w-0 truncate font-semibold text-[#11162B]">{r.label}</span>
+            <span className="shrink-0 font-bold text-[#11162B]">{format(r.value)}</span>
           </div>
-          <div className="mt-1.5 h-2 overflow-hidden rounded-full bg-[#F2F4F7]">
+          <div className="mt-1.5 h-2 overflow-hidden rounded-full bg-[#F5F6FA]">
             <div
               className="h-full rounded-full"
               style={{ width: `${Math.max((r.value / max) * 100, 2)}%`, background: r.color ?? color }}
             />
           </div>
-          {r.sub && <p className="mt-1 text-[12px] text-[#626875]">{r.sub}</p>}
+          {r.sub && <p className="mt-1 text-[13px] text-[#5A6075]">{r.sub}</p>}
         </li>
       ))}
     </ul>
@@ -399,21 +399,21 @@ export default function AnalyticsPage() {
               onClick={() => choose(p.id)}
               aria-pressed={preset === p.id}
               className={cn(
-                'min-h-10 rounded-full border px-4 text-[14px] font-semibold outline-none transition focus-visible:ring-2 focus-visible:ring-[#E53935]/40',
+                'min-h-10 rounded-full border px-4 text-[15px] font-semibold outline-none transition focus-visible:ring-2 focus-visible:ring-[#4338CA]/40',
                 preset === p.id
-                  ? 'border-[#111111] bg-[#111111] text-white'
-                  : 'border-[#D0D5DD] bg-white text-[#111111] hover:border-[#111111]'
+                  ? 'border-[#E3E5EE] bg-[#11162B] text-white'
+                  : 'border-[#E3E5EE] bg-white text-[#11162B] hover:border-[#E3E5EE]'
               )}
             >
               {p.label}
             </button>
           ))}
-          <label className="ml-auto flex min-h-10 cursor-pointer items-center gap-2 text-[14px] font-semibold text-[#111111]">
+          <label className="ml-auto flex min-h-10 cursor-pointer items-center gap-2 text-[15px] font-semibold text-[#11162B]">
             <input
               type="checkbox"
               checked={compare}
               onChange={(e) => setCompare(e.target.checked)}
-              className="h-4 w-4 accent-[#E53935]"
+              className="h-4 w-4 accent-[#4338CA]"
             />
             Compare with previous period
           </label>
@@ -451,18 +451,18 @@ export default function AnalyticsPage() {
               type="button"
               onClick={applyCustom}
               disabled={customInvalid}
-              className="inline-flex min-h-11 items-center rounded-lg bg-[#E53935] px-5 text-[14px] font-semibold text-white transition hover:bg-[#C62E2B] disabled:opacity-50"
+              className="inline-flex min-h-11 items-center rounded-lg bg-[#4338CA] px-5 text-[15px] font-semibold text-white transition hover:bg-[#4338CA] disabled:opacity-50"
             >
               Apply
             </button>
             {customFrom && customTo && customFrom > customTo && (
-              <p className="text-[13px] font-medium text-[#D92D20]">Start date must be before the end date.</p>
+              <p className="text-[14px] font-medium text-[#9A2C1F]">Start date must be before the end date.</p>
             )}
           </div>
         )}
 
-        <p className="text-[13px] text-[#626875]">
-          Showing <span className="font-semibold text-[#111111]">{rangeLabel(range)}</span> · grouped by{' '}
+        <p className="text-[14px] text-[#5A6075]">
+          Showing <span className="font-semibold text-[#11162B]">{rangeLabel(range)}</span> · grouped by{' '}
           {data?.granularity ?? 'day'} · times in IST · amounts in INR
         </p>
       </Card>
@@ -561,7 +561,7 @@ export default function AnalyticsPage() {
                         <CartesianGrid stroke={GRID} vertical={false} />
                         <XAxis dataKey="label" tick={{ fill: MUTED, fontSize: 12 }} tickLine={false} axisLine={{ stroke: GRID }} minTickGap={24} />
                         <YAxis allowDecimals={false} tick={{ fill: MUTED, fontSize: 12 }} tickLine={false} axisLine={false} width={32} />
-                        <Tooltip content={<ChartTooltip />} cursor={{ fill: '#F2F4F7' }} />
+                        <Tooltip content={<ChartTooltip />} cursor={{ fill: '#F5F6FA' }} />
                         <Bar dataKey="orders" fill={INK} radius={[4, 4, 0, 0]} maxBarSize={36} />
                       </BarChart>
                     </ResponsiveContainer>
@@ -591,20 +591,20 @@ export default function AnalyticsPage() {
                   {data.topProducts.length === 0 ? (
                     <EmptyState title="No product sales yet" />
                   ) : (
-                    <ol className="divide-y divide-[#E4E7EC]">
+                    <ol className="divide-y divide-[#E3E5EE]">
                       {data.topProducts.map((p, i) => (
                         <li key={p.id} className="flex items-center gap-4 py-3">
-                          <span className="w-5 text-[14px] font-bold text-[#98A0AE]">{i + 1}</span>
-                          <span className="h-12 w-12 shrink-0 overflow-hidden rounded-lg bg-[#F2F4F7]">
+                          <span className="w-5 text-[15px] font-bold text-[#5A6075]">{i + 1}</span>
+                          <span className="h-12 w-12 shrink-0 overflow-hidden rounded-lg bg-[#F5F6FA]">
                             {p.image && (
                               // eslint-disable-next-line @next/next/no-img-element
                               <img src={p.image} alt="" className="h-full w-full object-cover" loading="lazy" />
                             )}
                           </span>
-                          <span className="min-w-0 flex-1 truncate text-[15px] font-semibold text-[#111111]">{p.name}</span>
+                          <span className="min-w-0 flex-1 truncate text-[15px] font-semibold text-[#11162B]">{p.name}</span>
                           <span className="text-right">
-                            <span className="block text-[15px] font-bold text-[#111111]">{p.units} sold</span>
-                            <span className="block text-[13px] text-[#626875]">{inr(p.revenue)}</span>
+                            <span className="block text-[15px] font-bold text-[#11162B]">{p.units} sold</span>
+                            <span className="block text-[14px] text-[#5A6075]">{inr(p.revenue)}</span>
                           </span>
                         </li>
                       ))}
@@ -634,15 +634,15 @@ export default function AnalyticsPage() {
                 <div className="space-y-6">
                   <Card title="Payment methods" description="Paid revenue by method">
                     {data.paymentMethods.length === 0 ? (
-                      <p className="text-[14px] text-[#626875]">No paid orders yet.</p>
+                      <p className="text-[15px] text-[#5A6075]">No paid orders yet.</p>
                     ) : (
-                      <ul className="divide-y divide-[#E4E7EC]">
+                      <ul className="divide-y divide-[#E3E5EE]">
                         {data.paymentMethods.map((m) => (
-                          <li key={m.method} className="flex items-center justify-between py-3 text-[14px]">
-                            <span className="font-semibold uppercase text-[#111111]">{m.method}</span>
+                          <li key={m.method} className="flex items-center justify-between py-3 text-[15px]">
+                            <span className="font-semibold uppercase text-[#11162B]">{m.method}</span>
                             <span className="text-right">
-                              <span className="block font-bold text-[#111111]">{inr(m.revenue)}</span>
-                              <span className="block text-[12px] text-[#626875]">{m.orders} orders</span>
+                              <span className="block font-bold text-[#11162B]">{inr(m.revenue)}</span>
+                              <span className="block text-[13px] text-[#5A6075]">{m.orders} orders</span>
                             </span>
                           </li>
                         ))}
@@ -652,15 +652,15 @@ export default function AnalyticsPage() {
 
                   <Card title="Coupon performance" description="Paid orders that used a coupon">
                     {data.coupons.length === 0 ? (
-                      <p className="text-[14px] text-[#626875]">No coupons used in this period.</p>
+                      <p className="text-[15px] text-[#5A6075]">No coupons used in this period.</p>
                     ) : (
-                      <ul className="divide-y divide-[#E4E7EC]">
+                      <ul className="divide-y divide-[#E3E5EE]">
                         {data.coupons.map((cp) => (
-                          <li key={cp.code} className="flex items-center justify-between py-3 text-[14px]">
-                            <span className="font-mono font-bold text-[#111111]">{cp.code}</span>
+                          <li key={cp.code} className="flex items-center justify-between py-3 text-[15px]">
+                            <span className="font-mono font-bold text-[#11162B]">{cp.code}</span>
                             <span className="text-right">
-                              <span className="block font-bold text-[#111111]">{cp.uses} use{cp.uses === 1 ? '' : 's'}</span>
-                              <span className="block text-[12px] text-[#626875]">{inr(cp.discount)} discounted</span>
+                              <span className="block font-bold text-[#11162B]">{cp.uses} use{cp.uses === 1 ? '' : 's'}</span>
+                              <span className="block text-[13px] text-[#5A6075]">{inr(cp.discount)} discounted</span>
                             </span>
                           </li>
                         ))}

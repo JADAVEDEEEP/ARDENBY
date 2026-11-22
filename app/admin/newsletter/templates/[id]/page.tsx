@@ -86,7 +86,7 @@ export default function TemplateEditorPage() {
 
   return (
     <div>
-      <Link href="/admin/newsletter/templates" className="mb-3 inline-flex items-center gap-1.5 text-[14px] font-semibold text-[#475467] hover:text-[#111111]">
+      <Link href="/admin/newsletter/templates" className="mb-3 inline-flex items-center gap-1.5 text-[15px] font-semibold text-[#5A6075] hover:text-[#11162B]">
         <ArrowLeft className="h-4 w-4" /> Email templates
       </Link>
       <PageHeader
@@ -99,14 +99,14 @@ export default function TemplateEditorPage() {
       />
       {error && <Notice tone="error" className="mb-4">{error}</Notice>}
       {notice && <Notice tone="success" className="mb-4">{notice}</Notice>}
-      {dirty && <p className="mb-3 text-[13px] font-semibold text-[#8A540C]">You have unsaved changes.</p>}
+      {dirty && <p className="mb-3 text-[14px] font-semibold text-[#7A4F00]">You have unsaved changes.</p>}
 
       <div className="grid gap-6 xl:grid-cols-2">
         <div className="space-y-4">
           <Card title="Details">
             <div className="space-y-4">
               <div>
-                <label className={labelClass} htmlFor="t-name">Template name <span className="text-[#B42318]">*</span></label>
+                <label className={labelClass} htmlFor="t-name">Template name <span className="text-[#9A2C1F]">*</span></label>
                 <input id="t-name" className={fieldClass} maxLength={120} value={name} onChange={(e) => { setName(e.target.value); setDirty(true); }} />
               </div>
               <div>

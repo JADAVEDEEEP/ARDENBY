@@ -103,7 +103,7 @@ function Wordmark({ size = 'lg' }: { size?: 'lg' | 'sm' }) {
     <span className="flex flex-col items-center leading-none">
       <span
         className={cn(
-          'font-oswald font-bold uppercase text-white',
+          'font-oswald font-bold uppercase text-[#11162B]',
           size === 'lg' ? 'text-[26px] tracking-[0.2em]' : 'text-[20px] tracking-[0.18em]'
         )}
       >
@@ -111,8 +111,8 @@ function Wordmark({ size = 'lg' }: { size?: 'lg' | 'sm' }) {
       </span>
       <span
         className={cn(
-          'font-semibold uppercase text-[#E53935]',
-          size === 'lg' ? 'mt-2 text-[10px] tracking-[0.5em]' : 'mt-1 text-[9px] tracking-[0.45em]'
+          'rounded-full bg-[#E6E5FA] px-2.5 py-1 font-semibold uppercase text-[#2E2699]',
+          size === 'lg' ? 'mt-2 text-[12px] tracking-[0.5em]' : 'mt-1 text-[9px] tracking-[0.45em]'
         )}
       >
         Admin
@@ -125,7 +125,7 @@ function Avatar({ user, className }: { user: AdminUser | null; className?: strin
   return (
     <span
       className={cn(
-        'flex shrink-0 items-center justify-center rounded-full bg-[#111111] text-sm font-bold text-white',
+        'flex shrink-0 items-center justify-center rounded-full bg-[#11162B] text-[15px] font-bold text-white',
         className
       )}
     >
@@ -152,12 +152,12 @@ function NavList({ pathname }: { pathname: string }) {
               aria-current={highlighted ? 'page' : undefined}
               aria-expanded={item.children ? open : undefined}
               className={cn(
-                'group relative flex items-center gap-3.5 rounded-lg px-4 py-3 text-[15px] font-medium outline-none transition-colors focus-visible:ring-2 focus-visible:ring-[#E53935] md:justify-center md:px-0 lg:justify-start lg:px-4',
+                'group relative flex items-center gap-3.5 rounded-lg px-4 py-3 text-[15px] font-medium outline-none transition-colors focus-visible:ring-2 focus-visible:ring-[#4338CA] md:justify-center md:px-0 lg:justify-start lg:px-4',
                 highlighted
-                  ? 'bg-[#E53935] text-white'
+                  ? 'bg-[#E6E5FA] text-[#2E2699]'
                   : active
-                    ? 'bg-white/10 text-white'
-                    : 'text-[#C9CCD3] hover:bg-white/10 hover:text-white'
+                    ? 'bg-[#E6E5FA]/60 text-[#2E2699]'
+                    : 'text-[#5A6075] hover:bg-[#F5F6FA] hover:text-[#11162B]'
               )}
             >
               <Icon className="h-5 w-5 shrink-0" />
@@ -179,8 +179,8 @@ function NavList({ pathname }: { pathname: string }) {
                         href={child.href}
                         aria-current={here ? 'page' : undefined}
                         className={cn(
-                          'ml-6 flex items-center gap-2 rounded-md border-l border-white/15 py-2 pl-4 pr-3 text-[14px] outline-none transition-colors focus-visible:ring-2 focus-visible:ring-[#E53935]',
-                          here ? 'bg-[#E53935] font-semibold text-white' : 'text-[#C9CCD3] hover:bg-white/10 hover:text-white'
+                          'ml-6 flex items-center gap-2 rounded-md border-l border-[#E3E5EE] py-2 pl-4 pr-3 text-[15px] outline-none transition-colors focus-visible:ring-2 focus-visible:ring-[#4338CA]',
+                          here ? 'bg-[#E6E5FA] font-semibold text-[#2E2699]' : 'text-[#5A6075] hover:bg-[#F5F6FA] hover:text-[#11162B]'
                         )}
                       >
                         {child.label}
@@ -234,16 +234,16 @@ function ProfileMenu({
         onClick={() => setOpen((v) => !v)}
         aria-haspopup="menu"
         aria-expanded={open}
-        className="flex items-center gap-2.5 rounded-full py-1 pl-1 pr-2 outline-none transition hover:bg-[#F2F4F7] focus-visible:ring-2 focus-visible:ring-[#E53935]"
+        className="flex items-center gap-2.5 rounded-full py-1 pl-1 pr-2 outline-none transition hover:bg-[#F5F6FA] focus-visible:ring-2 focus-visible:ring-[#4338CA]"
       >
         <Avatar user={user} className="h-10 w-10" />
         {!compactName && (
           <>
-            <span className="hidden max-w-[140px] truncate text-[14px] font-semibold text-[#111111] lg:block">
+            <span className="hidden max-w-[140px] truncate text-[15px] font-semibold text-[#11162B] lg:block">
               {user?.fullName || 'Admin'}
             </span>
             <ChevronDown
-              className={cn('hidden h-4 w-4 text-[#626875] transition-transform lg:block', open && 'rotate-180')}
+              className={cn('hidden h-4 w-4 text-[#5A6075] transition-transform lg:block', open && 'rotate-180')}
             />
           </>
         )}
@@ -252,28 +252,28 @@ function ProfileMenu({
       {open && (
         <div
           role="menu"
-          className="absolute right-0 z-50 mt-2 w-64 overflow-hidden rounded-xl border border-[#E4E7EC] bg-white shadow-[0_12px_32px_rgba(16,24,40,0.14)]"
+          className="absolute right-0 z-50 mt-2 w-64 overflow-hidden rounded-xl border border-[#E3E5EE] bg-white shadow-[0_12px_32px_rgba(16,24,40,0.14)]"
         >
-          <div className="border-b border-[#E4E7EC] px-4 py-3">
-            <p className="truncate text-[14px] font-semibold text-[#111111]">{user?.fullName || 'Admin'}</p>
-            <p className="truncate text-[13px] text-[#626875]">{user?.email || ''}</p>
+          <div className="border-b border-[#E3E5EE] px-4 py-3">
+            <p className="truncate text-[15px] font-semibold text-[#11162B]">{user?.fullName || 'Admin'}</p>
+            <p className="truncate text-[14px] text-[#5A6075]">{user?.email || ''}</p>
           </div>
           <Link
             href="/admin/settings?tab=account"
             role="menuitem"
             onClick={() => setOpen(false)}
-            className="flex w-full items-center gap-2.5 px-4 py-3 text-left text-[14px] text-[#111111] transition hover:bg-[#F5F6F8]"
+            className="flex w-full items-center gap-2.5 px-4 py-3 text-left text-[15px] text-[#11162B] transition hover:bg-[#F5F6FA]"
           >
-            <UserCog className="h-4 w-4 text-[#626875]" />
+            <UserCog className="h-4 w-4 text-[#5A6075]" />
             Profile &amp; security
           </Link>
           <button
             type="button"
             role="menuitem"
             onClick={onLogout}
-            className="flex w-full items-center gap-2.5 px-4 py-3 text-left text-[14px] text-[#111111] transition hover:bg-[#F5F6F8]"
+            className="flex w-full items-center gap-2.5 px-4 py-3 text-left text-[15px] text-[#11162B] transition hover:bg-[#F5F6FA]"
           >
-            <LogOut className="h-4 w-4 text-[#E53935]" />
+            <LogOut className="h-4 w-4 text-[#4338CA]" />
             Log out
           </button>
         </div>
@@ -316,23 +316,23 @@ function NotificationBell() {
         }}
         aria-label={count ? `Notifications, ${count} alerts` : 'Notifications'}
         aria-expanded={open}
-        className="relative flex h-10 w-10 items-center justify-center rounded-full border border-[#E4E7EC] bg-white text-[#111111] outline-none transition hover:border-[#111111] focus-visible:ring-2 focus-visible:ring-[#E53935]"
+        className="relative flex h-10 w-10 items-center justify-center rounded-full border border-[#E3E5EE] bg-white text-[#11162B] outline-none transition hover:border-[#11162B] focus-visible:ring-2 focus-visible:ring-[#4338CA]"
       >
         <Bell className="h-[18px] w-[18px]" />
         {count > 0 && (
-          <span className="absolute -right-0.5 -top-0.5 flex h-[18px] min-w-[18px] items-center justify-center rounded-full bg-[#E53935] px-1 text-[11px] font-bold text-white">
+          <span className="absolute -right-0.5 -top-0.5 flex h-[18px] min-w-[18px] items-center justify-center rounded-full bg-[#4338CA] px-1 text-[12px] font-bold text-white">
             {count}
           </span>
         )}
       </button>
       {open && (
-        <div className="absolute right-0 z-50 mt-2 w-80 max-w-[calc(100vw-2rem)] rounded-xl border border-[#E4E7EC] bg-white p-2 shadow-[0_12px_32px_rgba(16,24,40,0.14)]">
-          <p className="px-3 py-2 text-[12px] font-semibold uppercase tracking-wider text-[#626875]">
+        <div className="absolute right-0 z-50 mt-2 w-80 max-w-[calc(100vw-2rem)] rounded-xl border border-[#E3E5EE] bg-white p-2 shadow-[0_12px_32px_rgba(16,24,40,0.14)]">
+          <p className="px-3 py-2 text-[13px] font-semibold uppercase tracking-wider text-[#5A6075]">
             Alerts
           </p>
-          {failed && <p className="px-3 pb-3 text-[14px] text-[#B42318]">Could not load alerts.</p>}
+          {failed && <p className="px-3 pb-3 text-[15px] text-[#9A2C1F]">Could not load alerts.</p>}
           {!failed && alerts && alerts.length === 0 && (
-            <p className="px-3 pb-3 text-[14px] text-[#626875]">You&apos;re all caught up.</p>
+            <p className="px-3 pb-3 text-[15px] text-[#5A6075]">You&apos;re all caught up.</p>
           )}
           {!failed &&
             alerts?.map((a) => (
@@ -340,7 +340,7 @@ function NotificationBell() {
                 key={a.type}
                 href={a.href}
                 onClick={() => setOpen(false)}
-                className="block rounded-lg px-3 py-2.5 text-[14px] font-medium text-[#111111] transition hover:bg-[#F5F6F8]"
+                className="block rounded-lg px-3 py-2.5 text-[15px] font-medium text-[#11162B] transition hover:bg-[#F5F6FA]"
               >
                 {a.title}
               </Link>
@@ -348,7 +348,7 @@ function NotificationBell() {
           <Link
             href="/admin/settings?tab=notifications"
             onClick={() => setOpen(false)}
-            className="mt-1 block border-t border-[#E4E7EC] px-3 py-2.5 text-[13px] font-semibold text-[#E53935]"
+            className="mt-1 block border-t border-[#E3E5EE] px-3 py-2.5 text-[14px] font-semibold text-[#4338CA]"
           >
             Notification preferences
           </Link>
@@ -359,7 +359,7 @@ function NotificationBell() {
 }
 
 function Frame({ children }: { children: ReactNode }) {
-  return <main className="min-h-screen bg-[#F5F6F8] font-sans text-[#111111]">{children}</main>;
+  return <main className="min-h-screen bg-[#F5F6FA] font-sans text-[#11162B]">{children}</main>;
 }
 
 export function AdminShell({ children }: { children: React.ReactNode }) {
@@ -420,13 +420,13 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
     <Frame>
       <div className="min-h-screen md:grid md:grid-cols-[76px_minmax(0,1fr)] lg:grid-cols-[264px_minmax(0,1fr)]">
         {/* Desktop / tablet sidebar */}
-        <aside className="sticky top-0 hidden h-screen flex-col bg-[#111111] md:flex">
+        <aside className="sticky top-0 hidden h-screen flex-col border-r border-[#E3E5EE] bg-white md:flex">
           <Link
             href="/admin"
             aria-label="KOVENIK Admin home"
-            className="flex h-[84px] items-center justify-center border-b border-white/10 outline-none focus-visible:ring-2 focus-visible:ring-[#E53935]"
+            className="flex h-[84px] items-center justify-center border-b border-[#E3E5EE] outline-none focus-visible:ring-2 focus-visible:ring-[#4338CA]"
           >
-            <span className="font-oswald text-2xl font-bold tracking-widest text-white lg:hidden">K</span>
+            <span className="font-oswald text-2xl font-bold tracking-widest text-[#11162B] lg:hidden">K</span>
             <span className="hidden lg:block">
               <Wordmark />
             </span>
@@ -436,19 +436,19 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
             <NavList pathname={pathname} />
           </div>
 
-          <div className="border-t border-white/10 p-3">
+          <div className="border-t border-[#E3E5EE] p-3">
             <div className="flex items-center gap-3 rounded-lg p-2 md:justify-center lg:justify-start">
-              <Avatar user={user} className="h-10 w-10 bg-white !text-[#111111]" />
+              <Avatar user={user} className="h-10 w-10 !text-white" />
               <div className="min-w-0 flex-1 md:hidden lg:block">
-                <p className="truncate text-[14px] font-semibold text-white">{user?.fullName || 'Admin'}</p>
-                <p className="truncate text-[12px] text-[#A3A8B3]">{user?.email || 'Administrator'}</p>
+                <p className="truncate text-[15px] font-semibold text-[#11162B]">{user?.fullName || 'Admin'}</p>
+                <p className="truncate text-[13px] text-[#5A6075]">{user?.email || 'Administrator'}</p>
               </div>
               <button
                 type="button"
                 onClick={handleLogout}
                 aria-label="Log out"
                 title="Log out"
-                className="hidden rounded-md p-2 text-[#C9CCD3] outline-none transition hover:bg-white/10 hover:text-white focus-visible:ring-2 focus-visible:ring-[#E53935] lg:block"
+                className="hidden rounded-md p-2 text-[#5A6075] outline-none transition hover:bg-[#F5F6FA] hover:text-[#11162B] focus-visible:ring-2 focus-visible:ring-[#4338CA] lg:block"
               >
                 <LogOut className="h-4 w-4" />
               </button>
@@ -459,16 +459,16 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
         {/* Main column */}
         <div className="flex min-w-0 flex-col">
           {/* Mobile header */}
-          <header className="sticky top-0 z-40 flex h-16 items-center justify-between border-b border-[#E4E7EC] bg-white px-4 md:hidden">
+          <header className="sticky top-0 z-40 flex h-16 items-center justify-between border-b border-[#E3E5EE] bg-white px-4 md:hidden">
             <button
               type="button"
               onClick={() => setDrawerOpen(true)}
               aria-label="Open menu"
-              className="flex h-11 w-11 items-center justify-center rounded-lg text-[#111111] outline-none transition hover:bg-[#F2F4F7] focus-visible:ring-2 focus-visible:ring-[#E53935]"
+              className="flex h-11 w-11 items-center justify-center rounded-lg text-[#11162B] outline-none transition hover:bg-[#F5F6FA] focus-visible:ring-2 focus-visible:ring-[#4338CA]"
             >
               <Menu className="h-6 w-6" />
             </button>
-            <h2 className="text-[17px] font-bold text-[#111111]">{title}</h2>
+            <h2 className="text-[17px] font-bold text-[#11162B]">{title}</h2>
             <div className="flex items-center gap-1">
               <NotificationBell />
               <ProfileMenu user={user} onLogout={handleLogout} compactName />
@@ -476,17 +476,17 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
           </header>
 
           {/* Desktop / tablet header */}
-          <header className="sticky top-0 z-40 hidden h-[72px] items-center justify-between gap-6 border-b border-[#E4E7EC] bg-white px-6 md:flex lg:px-8">
-            <nav aria-label="Breadcrumb" className="flex items-center gap-2 text-[14px] text-[#626875]">
-              <Link href="/admin" className="hover:text-[#111111]">
+          <header className="sticky top-0 z-40 hidden h-[72px] items-center justify-between gap-6 border-b border-[#E3E5EE] bg-white px-6 md:flex lg:px-8">
+            <nav aria-label="Breadcrumb" className="flex items-center gap-2 text-[15px] text-[#5A6075]">
+              <Link href="/admin" className="hover:text-[#11162B]">
                 Admin
               </Link>
               <span aria-hidden>/</span>
-              <span className="font-semibold text-[#111111]">{title}</span>
+              <span className="font-semibold text-[#11162B]">{title}</span>
             </nav>
             <div className="flex items-center gap-3">
-              <span className="hidden items-center gap-2 rounded-lg border border-[#E4E7EC] px-3 py-2 text-[13px] font-medium text-[#111111] xl:flex">
-                <CalendarDays className="h-4 w-4 text-[#E53935]" />
+              <span className="hidden items-center gap-2 rounded-lg border border-[#E3E5EE] px-3 py-2 text-[14px] font-medium text-[#11162B] xl:flex">
+                <CalendarDays className="h-4 w-4 text-[#4338CA]" />
                 {today}
               </span>
               <NotificationBell />
@@ -503,7 +503,7 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
       {/* Mobile bottom navigation */}
       <nav
         aria-label="Quick navigation"
-        className="fixed inset-x-0 bottom-0 z-40 flex border-t border-[#E4E7EC] bg-white pb-[env(safe-area-inset-bottom)] md:hidden"
+        className="fixed inset-x-0 bottom-0 z-40 flex border-t border-[#E3E5EE] bg-white pb-[env(safe-area-inset-bottom)] md:hidden"
       >
         {bottomItems.map((item) => {
           const Icon = item.icon;
@@ -514,8 +514,8 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
               href={item.href}
               aria-current={active ? 'page' : undefined}
               className={cn(
-                'flex min-h-14 flex-1 flex-col items-center justify-center gap-1 py-2 text-[12px] font-semibold transition-colors',
-                active ? 'text-[#E53935]' : 'text-[#626875]'
+                'flex min-h-14 flex-1 flex-col items-center justify-center gap-1 py-2 text-[13px] font-semibold transition-colors',
+                active ? 'text-[#4338CA]' : 'text-[#5A6075]'
               )}
             >
               <Icon className="h-5 w-5" />
@@ -526,7 +526,7 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
         <button
           type="button"
           onClick={() => setDrawerOpen(true)}
-          className="flex min-h-14 flex-1 flex-col items-center justify-center gap-1 py-2 text-[12px] font-semibold text-[#626875]"
+          className="flex min-h-14 flex-1 flex-col items-center justify-center gap-1 py-2 text-[13px] font-semibold text-[#5A6075]"
         >
           <Menu className="h-5 w-5" />
           More
@@ -550,17 +550,17 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
           aria-modal="true"
           aria-label="Navigation menu"
           className={cn(
-            'absolute inset-y-0 left-0 flex h-full w-[300px] max-w-[85vw] flex-col bg-[#111111] shadow-2xl transition-transform duration-300 ease-out',
+            'absolute inset-y-0 left-0 flex h-full w-[300px] max-w-[85vw] flex-col bg-white shadow-2xl transition-transform duration-300 ease-out',
             drawerOpen ? 'translate-x-0' : '-translate-x-full'
           )}
         >
-          <div className="flex h-[84px] items-center justify-between border-b border-white/10 px-5">
+          <div className="flex h-[84px] items-center justify-between border-b border-[#E3E5EE] px-5">
             <Wordmark />
             <button
               type="button"
               onClick={() => setDrawerOpen(false)}
               aria-label="Close menu"
-              className="flex h-11 w-11 items-center justify-center rounded-lg border border-white/20 text-white outline-none transition hover:bg-white/10 focus-visible:ring-2 focus-visible:ring-[#E53935]"
+              className="flex h-11 w-11 items-center justify-center rounded-lg border border-[#E3E5EE] text-[#11162B] outline-none transition hover:bg-[#F5F6FA] focus-visible:ring-2 focus-visible:ring-[#4338CA]"
             >
               <X className="h-5 w-5" />
             </button>
@@ -570,18 +570,18 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
             <NavList pathname={pathname} />
           </div>
 
-          <div className="border-t border-white/10 p-4 pb-[max(1rem,env(safe-area-inset-bottom))]">
+          <div className="border-t border-[#E3E5EE] p-4 pb-[max(1rem,env(safe-area-inset-bottom))]">
             <div className="mb-3 flex items-center gap-3">
-              <Avatar user={user} className="h-10 w-10 bg-white !text-[#111111]" />
+              <Avatar user={user} className="h-10 w-10 !text-white" />
               <div className="min-w-0">
-                <p className="truncate text-[14px] font-semibold text-white">{user?.fullName || 'Admin'}</p>
-                <p className="truncate text-[12px] text-[#A3A8B3]">{user?.email || 'Administrator'}</p>
+                <p className="truncate text-[15px] font-semibold text-[#11162B]">{user?.fullName || 'Admin'}</p>
+                <p className="truncate text-[13px] text-[#5A6075]">{user?.email || 'Administrator'}</p>
               </div>
             </div>
             <button
               type="button"
               onClick={handleLogout}
-              className="flex h-11 w-full items-center justify-center gap-2 rounded-lg border border-white/25 text-[14px] font-semibold text-white transition hover:bg-[#E53935] hover:border-[#E53935]"
+              className="flex h-11 w-full items-center justify-center gap-2 rounded-lg border border-[#E3E5EE] text-[15px] font-semibold text-[#11162B] transition hover:bg-[#F5F6FA]"
             >
               <LogOut className="h-4 w-4" />
               Log out

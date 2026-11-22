@@ -212,14 +212,14 @@ function PlansTab({ onNotice, onError }: TabProps) {
             Run <code>node scripts/seed-membership-plans.js --apply</code> on the server to create KOVENIK MEMBER.
           </EmptyState>
         ) : (
-          <ul className="divide-y divide-[#E4E7EC]">
+          <ul className="divide-y divide-[#E3E5EE]">
             {activePlans.map((p) => (
               <li key={p.id} className="flex flex-wrap items-center justify-between gap-3 py-3">
                 <div>
                   <p className="font-semibold">
-                    {p.name} <span className="font-normal text-[#626875]">· {formatINR(p.price)} · {p.durationDays} days · {p.discountPercent}% off</span>
+                    {p.name} <span className="font-normal text-[#5A6075]">· {formatINR(p.price)} · {p.durationDays} days · {p.discountPercent}% off</span>
                   </p>
-                  <p className="text-[13px] text-[#626875]">
+                  <p className="text-[14px] text-[#5A6075]">
                     Flat {p.discountPercent}% off eligible products
                     {p.freeDelivery ? ' · free shipping' : ''}
                   </p>
@@ -242,12 +242,12 @@ function PlansTab({ onNotice, onError }: TabProps) {
           title="Retired plans"
           description="The old Bronze, Silver and Gold plans are no longer sold. They are kept so existing members and purchase history stay intact; a term already paid for runs until its end date and is treated as KOVENIK MEMBER (never worse than what was bought)."
         >
-          <ul className="divide-y divide-[#E4E7EC]">
+          <ul className="divide-y divide-[#E3E5EE]">
             {retiredPlans.map((p) => (
               <li key={p.id} className="flex flex-wrap items-center justify-between gap-3 py-3">
                 <p className="font-semibold">
                   {p.name}{' '}
-                  <span className="font-normal text-[#626875]">
+                  <span className="font-normal text-[#5A6075]">
                     · {formatINR(p.price)} · {p.durationDays} days · {p.discountPercent}% off{p.freeDelivery ? ' · free shipping' : ''}
                   </span>
                 </p>
@@ -287,16 +287,16 @@ function PlansTab({ onNotice, onError }: TabProps) {
               <label className={labelClass}>Description</label>
               <input className={fieldClass} value={form.description} onChange={(e) => set('description', e.target.value)} />
             </div>
-            <label className="flex items-center gap-2 text-[14px]">
+            <label className="flex items-center gap-2 text-[15px]">
               <input type="checkbox" checked={form.freeDelivery} onChange={(e) => set('freeDelivery', e.target.checked)} /> Free shipping on every order (not part of the standard plan)
             </label>
-            <label className="flex items-center gap-2 text-[14px]">
+            <label className="flex items-center gap-2 text-[15px]">
               <input type="checkbox" checked={form.active} onChange={(e) => set('active', e.target.checked)} /> Enabled (shown and purchasable)
             </label>
           </div>
 
           <h3 className="mb-2 mt-6 text-[15px] font-bold">Benefits shown to customers</h3>
-          <p className="mb-3 text-[13px] text-[#626875]">
+          <p className="mb-3 text-[14px] text-[#5A6075]">
             Removing a row hides it; nothing is deleted. Only list benefits that are actually delivered.
           </p>
           <div className="space-y-2">
@@ -311,7 +311,7 @@ function PlansTab({ onNotice, onError }: TabProps) {
                 </select>
                 <input className={fieldClass} placeholder="Value" value={b.value} onChange={(e) => set('benefits', form.benefits.map((x, j) => (j === i ? { ...x, value: e.target.value } : x)))} />
                 <input className={fieldClass} placeholder="Text shown to customers" value={b.description} onChange={(e) => set('benefits', form.benefits.map((x, j) => (j === i ? { ...x, description: e.target.value } : x)))} />
-                <label className="flex items-center gap-1.5 text-[13px]">
+                <label className="flex items-center gap-1.5 text-[14px]">
                   <input type="checkbox" checked={b.active} onChange={(e) => set('benefits', form.benefits.map((x, j) => (j === i ? { ...x, active: e.target.checked } : x)))} /> On
                 </label>
                 <button className={btnDanger} aria-label="Remove benefit" onClick={() => set('benefits', form.benefits.filter((_, j) => j !== i))}>
@@ -380,9 +380,9 @@ function ProductRules({ plan, onNotice, onError }: { plan: MembershipPlan } & Ta
         <Spinner />
       ) : (
         <div className="overflow-x-auto">
-          <table className="w-full min-w-[640px] text-left text-[14px]">
+          <table className="w-full min-w-[640px] text-left text-[15px]">
             <thead>
-              <tr className="border-b border-[#E4E7EC] text-[12px] uppercase tracking-wide text-[#626875]">
+              <tr className="border-b border-[#E3E5EE] text-[13px] uppercase tracking-wide text-[#5A6075]">
                 <th className="py-2 pr-3">Product</th><th className="pr-3">Selling price</th><th className="pr-3">Eligible</th><th className="pr-3">Fixed member price (₹)</th><th />
               </tr>
             </thead>
@@ -403,7 +403,7 @@ function RuleLine({ row, busy, onSave }: { row: RuleRow; busy: boolean; onSave: 
   const [price, setPrice] = useState(row.memberPrice == null ? '' : String(row.memberPrice));
   const dirty = eligible !== row.eligible || price !== (row.memberPrice == null ? '' : String(row.memberPrice));
   return (
-    <tr className="border-b border-[#F2F4F7]">
+    <tr className="border-b border-[#E3E5EE]">
       <td className="py-2 pr-3">{row.name}</td>
       <td className="pr-3 tabular-nums">{formatINR(row.price)}</td>
       <td className="pr-3"><input type="checkbox" checked={eligible} onChange={(e) => setEligible(e.target.checked)} aria-label={`${row.name} eligible`} /></td>
@@ -445,8 +445,8 @@ function PurchasesTab({ onNotice, onError }: TabProps) {
           ['Expired members', String(data.summary.expiredMembers)],
           ['Membership revenue', formatINR(data.summary.revenue)],
         ].map(([label, value]) => (
-          <div key={label} className="rounded-lg border border-[#E4E7EC] bg-white p-4">
-            <p className="text-[13px] text-[#626875]">{label}</p>
+          <div key={label} className="rounded-lg border border-[#E3E5EE] bg-white p-4">
+            <p className="text-[14px] text-[#5A6075]">{label}</p>
             <p className="mt-1 text-[24px] font-bold tabular-nums">{value}</p>
           </div>
         ))}
@@ -471,21 +471,21 @@ function PurchasesTab({ onNotice, onError }: TabProps) {
           <div className="overflow-x-auto">
             <table className="w-full min-w-[900px] text-left text-[13.5px]">
               <thead>
-                <tr className="border-b border-[#E4E7EC] text-[12px] uppercase tracking-wide text-[#626875]">
+                <tr className="border-b border-[#E3E5EE] text-[13px] uppercase tracking-wide text-[#5A6075]">
                   <th className="py-2 pr-3">Customer</th><th className="pr-3">Plan</th><th className="pr-3">Status</th><th className="pr-3">Payment</th>
                   <th className="pr-3">Amount</th><th className="pr-3">Term</th><th className="pr-3">Razorpay reference</th><th />
                 </tr>
               </thead>
               <tbody>
                 {data.purchases.map((p) => (
-                  <tr key={p.id} className="border-b border-[#F2F4F7] align-top">
-                    <td className="py-2 pr-3"><div className="font-medium">{p.name}</div><div className="text-[#626875]">{p.email}</div></td>
+                  <tr key={p.id} className="border-b border-[#E3E5EE] align-top">
+                    <td className="py-2 pr-3"><div className="font-medium">{p.name}</div><div className="text-[#5A6075]">{p.email}</div></td>
                     <td className="pr-3">{p.planName}</td>
                     <td className="pr-3"><StatusPill tone={statusTone(p.status)}>{PURCHASE_STATUS[p.status] ?? p.status}</StatusPill></td>
                     <td className="pr-3">{PAYMENT_STATUS[p.paymentStatus] ?? p.paymentStatus}</td>
                     <td className="pr-3 tabular-nums">{p.amount == null ? '—' : formatINR(p.amount)}</td>
                     <td className="pr-3 text-[12.5px]">{p.startDate ? `${when(p.startDate)} → ${when(p.endDate!)}` : `Bought ${when(p.purchasedAt)}`}</td>
-                    <td className="max-w-[200px] break-all pr-3 text-[12px] text-[#626875]">{p.razorpayPaymentId || p.razorpayOrderId || '—'}</td>
+                    <td className="max-w-[200px] break-all pr-3 text-[13px] text-[#5A6075]">{p.razorpayPaymentId || p.razorpayOrderId || '—'}</td>
                     <td className="whitespace-nowrap">
                       {(p.status === 'active' || p.status === 'pending') && (
                         <button className={btnDanger} onClick={() => setAction({ purchase: p, kind: 'cancel' })}>Cancel</button>
@@ -501,7 +501,7 @@ function PurchasesTab({ onNotice, onError }: TabProps) {
           </div>
         )}
 
-        <div className="mt-4 flex items-center justify-between text-[13px] text-[#626875]">
+        <div className="mt-4 flex items-center justify-between text-[14px] text-[#5A6075]">
           <span>Page {data.page} of {pages} · {data.total} total</span>
           <div className="flex gap-2">
             <button className={btnOutline} disabled={page <= 1} onClick={() => setPage(page - 1)}>Previous</button>

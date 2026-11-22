@@ -7,7 +7,6 @@ import { ExploreCategory } from '@/components/home/ExploreCategory';
 import { HeroCarousel } from '@/components/home/HeroCarousel';
 import { MobileCategoryIcons } from '@/components/home/MobileCategoryIcons';
 import { MembershipBanner } from '@/components/home/MembershipBanner';
-import { MobileShopBar } from '@/components/home/MobileShopBar';
 import { Newsletter } from '@/components/home/Newsletter';
 import { ProductRail } from '@/components/home/ProductRail';
 import { PromoBanner } from '@/components/home/PromoBanner';
@@ -27,8 +26,7 @@ export default function HomePage() {
 
   return (
     <>
-      {/* pb-24 keeps the fixed mobile shop bar from covering the footer. */}
-      <div className="kv-flat w-full overflow-x-hidden bg-kv-bg pb-24 md:pb-0">
+      <div className="kv-flat w-full overflow-x-hidden bg-kv-bg">
         <MobileCategoryIcons />
         <HeroCarousel products={products} />
         <USPStrip />
@@ -47,7 +45,6 @@ export default function HomePage() {
         <Newsletter />
       </div>
 
-      <MobileShopBar />
     </>
   );
 }

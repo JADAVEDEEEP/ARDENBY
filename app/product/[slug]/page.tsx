@@ -28,7 +28,6 @@ import { formatINR, discountPercent } from '@/lib/format';
 import { CouponOfferLine, MemberPriceNote } from '@/components/membership/member-price-tag';
 import { useWishlistStore } from '@/store/wishlist-store';
 import { useCartStore } from '@/store/cart-store';
-import { MobileShopBar } from '@/components/home/MobileShopBar';
 import { useHeaderHeight } from '@/components/shop/use-header-height';
 import { ProductStage } from './product-stage';
 import { ProductReviews } from '@/components/product/product-reviews';
@@ -1550,7 +1549,6 @@ export default function ProductPage() {
         </section>
       )}
 
-      <MobileShopBar />
 
       {/* MOBILE STICKY BAR: always visible on mobile/tablet (wishlist + Add to Cart); hides at the footer */}
       {!footerInView && (

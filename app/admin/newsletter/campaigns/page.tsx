@@ -126,8 +126,8 @@ export default function CampaignsPage() {
           </EmptyState>
         ) : (
           <div className="overflow-x-auto" aria-busy={loading}>
-            <table className="w-full min-w-[820px] text-left text-[14px]">
-              <thead className="border-b border-[#E4E7EC] text-[12px] uppercase tracking-wide text-[#626875]">
+            <table className="w-full min-w-[820px] text-left text-[15px]">
+              <thead className="border-b border-[#E3E5EE] text-[13px] uppercase tracking-wide text-[#5A6075]">
                 <tr>
                   <th className="px-5 py-3 font-semibold">Campaign</th>
                   <th className="px-3 py-3 font-semibold">Status</th>
@@ -138,19 +138,19 @@ export default function CampaignsPage() {
                   <th className="px-5 py-3 text-right font-semibold">Actions</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-[#E4E7EC]">
+              <tbody className="divide-y divide-[#E3E5EE]">
                 {campaigns.map((c) => (
                   <tr key={c.id} className="align-top">
                     <td className="max-w-[300px] px-5 py-3">
-                      <Link href={`/admin/newsletter/campaigns/${c.id}`} className="block truncate font-semibold text-[#111111] hover:text-[#C62828]">
+                      <Link href={`/admin/newsletter/campaigns/${c.id}`} className="block truncate font-semibold text-[#11162B] hover:text-[#9A2C1F]">
                         {c.name}
                       </Link>
-                      <span className="block truncate text-[12px] text-[#626875]">{c.subject || 'No subject yet'}</span>
+                      <span className="block truncate text-[13px] text-[#5A6075]">{c.subject || 'No subject yet'}</span>
                     </td>
                     <td className="px-3 py-3">
                       <CampaignStatusBadge status={c.status} />
                     </td>
-                    <td className="whitespace-nowrap px-3 py-3 text-[#344054]">
+                    <td className="whitespace-nowrap px-3 py-3 text-[#5A6075]">
                       {c.status === 'scheduled'
                         ? when(c.scheduledAt)
                         : c.completedAt
@@ -159,15 +159,15 @@ export default function CampaignsPage() {
                             ? when(c.startedAt)
                             : `Edited ${when(c.updatedAt)}`}
                     </td>
-                    <td className="px-3 py-3 text-right text-[#344054]">{c.totalRecipients ? num(c.totalRecipients) : '—'}</td>
-                    <td className="px-3 py-3 text-right text-[#344054]">{c.stats ? num(c.stats.sent) : '—'}</td>
-                    <td className={`px-3 py-3 text-right ${c.stats && c.stats.failed > 0 ? 'font-semibold text-[#C62828]' : 'text-[#344054]'}`}>{c.stats ? num(c.stats.failed) : '—'}</td>
+                    <td className="px-3 py-3 text-right text-[#5A6075]">{c.totalRecipients ? num(c.totalRecipients) : '—'}</td>
+                    <td className="px-3 py-3 text-right text-[#5A6075]">{c.stats ? num(c.stats.sent) : '—'}</td>
+                    <td className={`px-3 py-3 text-right ${c.stats && c.stats.failed > 0 ? 'font-semibold text-[#9A2C1F]' : 'text-[#5A6075]'}`}>{c.stats ? num(c.stats.failed) : '—'}</td>
                     <td className="px-5 py-3 text-right">
                       <div className="flex justify-end gap-2">
-                        <Link href={`/admin/newsletter/campaigns/${c.id}`} className={`${btnOutline} !min-h-0 !px-3 !py-1.5 !text-[13px]`}>
+                        <Link href={`/admin/newsletter/campaigns/${c.id}`} className={`${btnOutline} !min-h-0 !px-3 !py-1.5 !text-[14px]`}>
                           {c.status === 'draft' ? 'Edit' : 'View'}
                         </Link>
-                        <button type="button" className={`${btnOutline} !min-h-0 !px-3 !py-1.5 !text-[13px]`} disabled={busyId === c.id} onClick={() => void duplicate(c.id)} aria-label={`Duplicate ${c.name}`}>
+                        <button type="button" className={`${btnOutline} !min-h-0 !px-3 !py-1.5 !text-[14px]`} disabled={busyId === c.id} onClick={() => void duplicate(c.id)} aria-label={`Duplicate ${c.name}`}>
                           <Copy className="h-4 w-4" /> Duplicate
                         </button>
                       </div>

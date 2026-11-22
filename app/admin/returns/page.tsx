@@ -299,7 +299,7 @@ export default function AdminReturnsPage() {
             Requests show up once customers ask to return a delivered order (and returns are switched on).
           </EmptyState>
         ) : (
-          <ul className="divide-y divide-[#E4E7EC]" aria-busy={loading}>
+          <ul className="divide-y divide-[#E3E5EE]" aria-busy={loading}>
             {rows.map((r) => (
               <ReturnCard key={r.id} r={r} busy={busyId === r.id} setAction={setAction} onRetry={() => void retryRefund(r)} />
             ))}
@@ -380,26 +380,26 @@ function ReturnCard({
   return (
     <li className="space-y-3 px-5 py-4">
       <div className="flex flex-wrap items-center gap-2">
-        <span className="font-semibold text-[#111111]">Order {r.orderNumber || r.orderId}</span>
+        <span className="font-semibold text-[#11162B]">Order {r.orderNumber || r.orderId}</span>
         <StatusPill tone={STATUS_TONE[r.status] || 'neutral'}>{r.status}</StatusPill>
         {r.order && (
-          <span className="text-[13px] text-[#626875]">
+          <span className="text-[14px] text-[#5A6075]">
             {inr(r.order.total)} · {r.order.paymentMethod.toUpperCase()} · {r.order.paymentStatus}
           </span>
         )}
       </div>
-      <p className="text-[13px] text-[#626875]">
+      <p className="text-[14px] text-[#5A6075]">
         {r.customer?.name || 'Customer'} ({r.customer?.email}) · requested {when(r.requestedAt)}
       </p>
 
-      <div className="rounded-lg border border-[#E4E7EC] bg-[#F9FAFB] px-3 py-2 text-[13px] text-[#344054]">
+      <div className="rounded-lg border border-[#E3E5EE] bg-[#F5F6FA] px-3 py-2 text-[14px] text-[#5A6075]">
         <ul className="space-y-1">
           {r.items.map((item) => (
             <li key={item.orderItemId}>
               {item.quantity} of {item.orderedQuantity} × {item.name}
               {[item.size, item.color].filter(Boolean).length > 0 && ` (${[item.size, item.color].filter(Boolean).join(', ')})`} — {inr(item.unitPrice)} each
               {item.inspection && (
-                <span className="ml-1 text-[#626875]">
+                <span className="ml-1 text-[#5A6075]">
                   → {item.inspection.label}
                   {item.inspection.refundable ? ', refundable' : ', not refundable'}
                   {item.inspection.restocked ? ', back in stock' : ', not restocked'}
@@ -412,32 +412,32 @@ function ReturnCard({
         </ul>
       </div>
 
-      <p className="text-[14px] text-[#344054]">
-        <span className="font-semibold text-[#111111]">Reason: </span>
+      <p className="text-[15px] text-[#5A6075]">
+        <span className="font-semibold text-[#11162B]">Reason: </span>
         {r.reasonLabel || r.customerReason}
         {r.description ? ` — ${r.description}` : ''}
       </p>
       {r.decisionReason && (
-        <p className="text-[14px] text-[#344054]">
-          <span className="font-semibold text-[#111111]">Decision note: </span>
+        <p className="text-[15px] text-[#5A6075]">
+          <span className="font-semibold text-[#11162B]">Decision note: </span>
           {r.decisionReason}
         </p>
       )}
       {r.trackingReference && (
-        <p className="text-[14px] text-[#344054]">
-          <span className="font-semibold text-[#111111]">Customer’s tracking reference: </span>
+        <p className="text-[15px] text-[#5A6075]">
+          <span className="font-semibold text-[#11162B]">Customer’s tracking reference: </span>
           {r.trackingReference}
         </p>
       )}
 
       {!r.refund.status && r.refund.upiId && (
-        <p className="text-[13px] text-[#626875]">
-          Customer’s UPI ID for the refund: <strong className="text-[#111111]">{r.refund.upiId}</strong>
+        <p className="text-[14px] text-[#5A6075]">
+          Customer’s UPI ID for the refund: <strong className="text-[#11162B]">{r.refund.upiId}</strong>
         </p>
       )}
 
       {r.refund.status && (
-        <p className="text-[13px] text-[#626875]">
+        <p className="text-[14px] text-[#5A6075]">
           {REFUND_TEXT[r.refund.status] || r.refund.status}
           {r.refund.amount != null && ` — ${inr(r.refund.amount)}`}
           {r.refund.calculated != null && r.refund.deduction ? ` (calculated ${inr(r.refund.calculated)}, deduction ${inr(r.refund.deduction)}${r.refund.deductionReason ? `: ${r.refund.deductionReason}` : ''})` : ''}
@@ -491,16 +491,16 @@ function ReturnCard({
               : 'Check refund status'}
           </button>
         )}
-        <button type="button" className="text-[13px] font-semibold text-[#626875] underline" onClick={() => setShowHistory((v) => !v)}>
+        <button type="button" className="text-[14px] font-semibold text-[#5A6075] underline" onClick={() => setShowHistory((v) => !v)}>
           {showHistory ? 'Hide history' : 'History'}
         </button>
       </div>
 
       {showHistory && (
-        <ol className="space-y-1 border-l-2 border-[#E4E7EC] pl-4 text-[13px] text-[#344054]" aria-label="Return history">
+        <ol className="space-y-1 border-l-2 border-[#E3E5EE] pl-4 text-[14px] text-[#5A6075]" aria-label="Return history">
           {r.history.map((h, i) => (
             <li key={i}>
-              <span className="font-semibold text-[#111111]">{h.to}</span> · {when(h.at)} · {h.actorRole || 'system'}
+              <span className="font-semibold text-[#11162B]">{h.to}</span> · {when(h.at)} · {h.actorRole || 'system'}
               {h.note ? ` — ${h.note}` : ''}
             </li>
           ))}
@@ -519,8 +519,8 @@ function Overlay({ title, children, onClose, busy }: { title: string; children: 
   return (
     <div className="fixed inset-0 z-[70] flex items-center justify-center p-4">
       <div className="absolute inset-0 bg-black/50" onClick={() => !busy && onClose()} />
-      <div role="dialog" aria-modal="true" aria-label={title} className="relative max-h-[92vh] w-full max-w-xl overflow-y-auto rounded-xl border border-[#E4E7EC] bg-white p-6 shadow-xl">
-        <h2 className="text-[20px] font-bold text-[#111111]">{title}</h2>
+      <div role="dialog" aria-modal="true" aria-label={title} className="relative max-h-[92vh] w-full max-w-xl overflow-y-auto rounded-xl border border-[#E3E5EE] bg-white p-6 shadow-xl">
+        <h2 className="text-[20px] font-bold text-[#11162B]">{title}</h2>
         {children}
       </div>
     </div>
@@ -566,7 +566,7 @@ function InspectDialog({ row, onClose, onDone }: { row: ReturnRow; onClose: () =
 
   return (
     <Overlay title="Inspect the returned items" onClose={onClose} busy={busy}>
-      <p className="mt-2 text-[14px] text-[#626875]">
+      <p className="mt-2 text-[15px] text-[#5A6075]">
         Check each item. Only items judged “unused, original condition” go back into stock. Anything else stays out of stock unless you explicitly authorise it.
       </p>
       <div className="mt-4 space-y-4">
@@ -574,8 +574,8 @@ function InspectDialog({ row, onClose, onDone }: { row: ReturnRow; onClose: () =
           const e = entries[item.orderItemId];
           const unused = e.result === 'unused_original';
           return (
-            <fieldset key={item.orderItemId} className="rounded-lg border border-[#E4E7EC] p-3">
-              <legend className="px-1 text-[14px] font-semibold text-[#111111]">
+            <fieldset key={item.orderItemId} className="rounded-lg border border-[#E3E5EE] p-3">
+              <legend className="px-1 text-[15px] font-semibold text-[#11162B]">
                 {item.quantity} × {item.name} {[item.size, item.color].filter(Boolean).length > 0 && `(${[item.size, item.color].filter(Boolean).join(', ')})`}
               </legend>
               <label className={labelClass} htmlFor={`res-${item.orderItemId}`}>
@@ -596,7 +596,7 @@ function InspectDialog({ row, onClose, onDone }: { row: ReturnRow; onClose: () =
                   </option>
                 ))}
               </select>
-              <label className="mt-3 flex items-center gap-2 text-[14px]">
+              <label className="mt-3 flex items-center gap-2 text-[15px]">
                 <input type="checkbox" checked={e.refundable} onChange={(ev) => set(item.orderItemId, { refundable: ev.target.checked })} />
                 Refund this item
               </label>
@@ -609,11 +609,11 @@ function InspectDialog({ row, onClose, onDone }: { row: ReturnRow; onClose: () =
                 placeholder={unused ? 'Notes (optional)' : 'Inspection notes (required)'}
                 aria-label={`Inspection notes for ${item.name}`}
               />
-              <p className="mt-2 text-[13px] text-[#626875]">
+              <p className="mt-2 text-[14px] text-[#5A6075]">
                 {unused ? 'Will be put back in stock.' : 'Will NOT be put back in stock.'}
               </p>
               {!unused && e.result !== 'incorrect_item' && (
-                <label className="mt-1 flex items-start gap-2 text-[13px] text-[#8A540C]">
+                <label className="mt-1 flex items-start gap-2 text-[14px] text-[#7A4F00]">
                   <input type="checkbox" className="mt-0.5" checked={e.authorize} onChange={(ev) => set(item.orderItemId, { authorize: ev.target.checked })} />
                   I authorise putting this item back in stock anyway
                 </label>
@@ -730,8 +730,8 @@ function RefundDialog({ row, onClose, onDone }: { row: ReturnRow; onClose: () =>
           {preview.error}
         </Notice>
       ) : (
-        <div className="mt-3 rounded-lg border border-[#E4E7EC] bg-[#F9FAFB] p-3 text-[13px] text-[#344054]">
-          <p className="font-semibold text-[#111111]">How the amount is worked out (by the server)</p>
+        <div className="mt-3 rounded-lg border border-[#E3E5EE] bg-[#F5F6FA] p-3 text-[14px] text-[#5A6075]">
+          <p className="font-semibold text-[#11162B]">How the amount is worked out (by the server)</p>
           <ul className="mt-1 space-y-0.5">
             {preview.lines.map((l) => (
               <li key={l.orderItemId}>
@@ -754,21 +754,21 @@ function RefundDialog({ row, onClose, onDone }: { row: ReturnRow; onClose: () =>
               )}
             </p>
           ) : (
-            <p className="mt-1 text-[#626875]">
+            <p className="mt-1 text-[#5A6075]">
               Shipping{row.order?.paidCod ? ' and the COD handling fee are' : ' is'} not refunded on a change-of-mind return.
             </p>
           )}
-          <p className="mt-2 text-[15px] font-bold text-[#111111]">Calculated refund {inr(preview.calculated)}</p>
+          <p className="mt-2 text-[15px] font-bold text-[#11162B]">Calculated refund {inr(preview.calculated)}</p>
         </div>
       )}
 
       {previews && (
-        <label className="mt-4 flex items-start gap-2.5 rounded-lg border border-[#E4E7EC] bg-white p-3 text-[13px] text-[#344054]">
+        <label className="mt-4 flex items-start gap-2.5 rounded-lg border border-[#E3E5EE] bg-white p-3 text-[14px] text-[#5A6075]">
           <input type="checkbox" className="mt-0.5" checked={sellerFault} onChange={(e) => setSellerFault(e.target.checked)} />
           <span>
-            <strong className="text-[#111111]">Seller’s fault</strong> (wrong, damaged or defective product): also refund shipping
+            <strong className="text-[#11162B]">Seller’s fault</strong> (wrong, damaged or defective product): also refund shipping
             and the COD handling fee. No deduction is allowed.
-            <span className="mt-0.5 block text-[#626875]">
+            <span className="mt-0.5 block text-[#5A6075]">
               Customer’s reason: {row.reasonLabel || '—'}. {row.sellerFaultDefault ? 'Ticked because of that reason.' : 'Not ticked: this is a change-of-mind reason.'}
             </span>
           </span>
@@ -791,32 +791,32 @@ function RefundDialog({ row, onClose, onDone }: { row: ReturnRow; onClose: () =>
             aria-label="Reason for the deduction"
           />
         )}
-        {final != null && <p className="mt-2 text-[15px] font-bold text-[#111111]">Customer receives {inr(final)}</p>}
+        {final != null && <p className="mt-2 text-[15px] font-bold text-[#11162B]">Customer receives {inr(final)}</p>}
       </div>
 
       {viaPayout ? (
-        <div className="mt-4 space-y-1 rounded-lg border border-[#E4E7EC] p-3 text-[13px] text-[#344054]">
-          <p className="font-semibold text-[#111111]">Cash on delivery: UPI payout through RazorpayX</p>
+        <div className="mt-4 space-y-1 rounded-lg border border-[#E3E5EE] p-3 text-[14px] text-[#5A6075]">
+          <p className="font-semibold text-[#11162B]">Cash on delivery: UPI payout through RazorpayX</p>
           <p>
-            Customer’s UPI ID: <strong className="text-[#111111]">{upiId}</strong>
+            Customer’s UPI ID: <strong className="text-[#11162B]">{upiId}</strong>
           </p>
-          <p className="text-[#626875]">
+          <p className="text-[#5A6075]">
             The amount above is sent once. The customer sees Refunded only after RazorpayX confirms the payout.
           </p>
-          <button type="button" className="mt-1 text-[13px] font-semibold text-[#626875] underline" onClick={() => setManual(true)}>
+          <button type="button" className="mt-1 text-[14px] font-semibold text-[#5A6075] underline" onClick={() => setManual(true)}>
             Pay manually instead
           </button>
         </div>
       ) : cod ? (
-        <div className="mt-4 space-y-2 rounded-lg border border-[#E4E7EC] p-3">
-          <p className="text-[13px] text-[#626875]">Cash on delivery: pay the customer back yourself, then record how.</p>
+        <div className="mt-4 space-y-2 rounded-lg border border-[#E3E5EE] p-3">
+          <p className="text-[14px] text-[#5A6075]">Cash on delivery: pay the customer back yourself, then record how.</p>
           {upiId && (
-            <p className="text-[13px] text-[#344054]">
-              Customer’s UPI ID: <strong className="text-[#111111]">{upiId}</strong>
+            <p className="text-[14px] text-[#5A6075]">
+              Customer’s UPI ID: <strong className="text-[#11162B]">{upiId}</strong>
             </p>
           )}
           {!manual && payouts && !payouts.active && (
-            <p className="text-[13px] text-[#8A540C]">
+            <p className="text-[14px] text-[#7A4F00]">
               Automatic RazorpayX payout is not available{payouts.reason ? ` (${payouts.reason})` : ''}. Use the manual refund.
             </p>
           )}
@@ -836,7 +836,7 @@ function RefundDialog({ row, onClose, onDone }: { row: ReturnRow; onClose: () =>
           <input id="reference" className={fieldClass} value={reference} maxLength={100} onChange={(e) => setReference(e.target.value)} />
         </div>
       ) : (
-        <p className="mt-4 text-[13px] text-[#626875]">Paid online: the refund goes through Razorpay to the customer’s original payment method.</p>
+        <p className="mt-4 text-[14px] text-[#5A6075]">Paid online: the refund goes through Razorpay to the customer’s original payment method.</p>
       )}
 
       {error && (
@@ -878,10 +878,10 @@ function InsightsCard() {
   }, [open, from, to]);
 
   const cell = (label: string, value: string, hint?: string) => (
-    <div className="rounded-lg border border-[#E4E7EC] px-3 py-2">
-      <p className="text-[11px] uppercase tracking-wider text-[#626875]">{label}</p>
-      <p className="text-[20px] font-bold text-[#111111]">{value}</p>
-      {hint && <p className="text-[12px] text-[#626875]">{hint}</p>}
+    <div className="rounded-lg border border-[#E3E5EE] px-3 py-2">
+      <p className="text-[12px] uppercase tracking-wider text-[#5A6075]">{label}</p>
+      <p className="text-[20px] font-bold text-[#11162B]">{value}</p>
+      {hint && <p className="text-[13px] text-[#5A6075]">{hint}</p>}
     </div>
   );
   const pct = (v: number | null) => (v == null ? '—' : `${v}%`);
@@ -897,7 +897,7 @@ function InsightsCard() {
       }
     >
       {!open ? (
-        <p className="text-[13px] text-[#626875]">Open to see rates, refund totals and the most common reasons.</p>
+        <p className="text-[14px] text-[#5A6075]">Open to see rates, refund totals and the most common reasons.</p>
       ) : (
         <div className="space-y-4">
           <div className="flex flex-wrap gap-3">
@@ -925,11 +925,11 @@ function InsightsCard() {
               </div>
               <div className="grid gap-4 md:grid-cols-2">
                 <div>
-                  <p className="mb-1 text-[13px] font-semibold text-[#111111]">Top return reasons</p>
+                  <p className="mb-1 text-[14px] font-semibold text-[#11162B]">Top return reasons</p>
                   {data.reasons.returns.length === 0 ? (
-                    <p className="text-[13px] text-[#626875]">None in this period.</p>
+                    <p className="text-[14px] text-[#5A6075]">None in this period.</p>
                   ) : (
-                    <ul className="space-y-0.5 text-[13px] text-[#344054]">
+                    <ul className="space-y-0.5 text-[14px] text-[#5A6075]">
                       {data.reasons.returns.map((x) => (
                         <li key={x.code}>
                           {x.label}: <strong>{x.count}</strong>
@@ -937,11 +937,11 @@ function InsightsCard() {
                       ))}
                     </ul>
                   )}
-                  <p className="mb-1 mt-3 text-[13px] font-semibold text-[#111111]">Top cancellation reasons</p>
+                  <p className="mb-1 mt-3 text-[14px] font-semibold text-[#11162B]">Top cancellation reasons</p>
                   {data.reasons.cancellation.length === 0 ? (
-                    <p className="text-[13px] text-[#626875]">None in this period.</p>
+                    <p className="text-[14px] text-[#5A6075]">None in this period.</p>
                   ) : (
-                    <ul className="space-y-0.5 text-[13px] text-[#344054]">
+                    <ul className="space-y-0.5 text-[14px] text-[#5A6075]">
                       {data.reasons.cancellation.map((x) => (
                         <li key={x.code}>
                           {x.label}: <strong>{x.count}</strong>
@@ -951,13 +951,13 @@ function InsightsCard() {
                   )}
                 </div>
                 <div>
-                  <p className="mb-1 text-[13px] font-semibold text-[#111111]">Most returned products</p>
+                  <p className="mb-1 text-[14px] font-semibold text-[#11162B]">Most returned products</p>
                   {data.products.length === 0 ? (
-                    <p className="text-[13px] text-[#626875]">None in this period.</p>
+                    <p className="text-[14px] text-[#5A6075]">None in this period.</p>
                   ) : (
-                    <table className="w-full text-left text-[13px]">
+                    <table className="w-full text-left text-[14px]">
                       <thead>
-                        <tr className="text-[#626875]">
+                        <tr className="text-[#5A6075]">
                           <th className="py-1 font-semibold">Product</th>
                           <th className="py-1 text-right font-semibold">Returned</th>
                           <th className="py-1 text-right font-semibold">Rate</th>
@@ -966,10 +966,10 @@ function InsightsCard() {
                       <tbody>
                         {data.products.map((p) => (
                           <Fragment key={p.productId}>
-                            <tr className="border-t border-[#E4E7EC]">
+                            <tr className="border-t border-[#E3E5EE]">
                               <td className="py-1 pr-2">{p.name}</td>
                               <td className="py-1 text-right tabular-nums">
-                                {p.unitsReturned} <span className="text-[#626875]">of {p.unitsSold}</span>
+                                {p.unitsReturned} <span className="text-[#5A6075]">of {p.unitsSold}</span>
                               </td>
                               <td className="py-1 text-right tabular-nums">{pct(p.returnRatePercent)}</td>
                             </tr>
@@ -1038,7 +1038,7 @@ function PolicyCard({ onSaved }: { onSaved: (text: string) => void }) {
         <Spinner />
       ) : (
         <div className="flex flex-wrap items-end gap-4">
-          <label className="flex min-h-11 items-center gap-2 text-[14px] font-semibold text-[#111111]">
+          <label className="flex min-h-11 items-center gap-2 text-[15px] font-semibold text-[#11162B]">
             <input type="checkbox" checked={enabled} onChange={(e) => setEnabled(e.target.checked)} />
             Accept return requests
           </label>

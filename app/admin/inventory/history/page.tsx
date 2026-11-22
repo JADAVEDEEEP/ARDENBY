@@ -134,9 +134,9 @@ export default function InventoryHistoryPage() {
           </EmptyState>
         ) : (
           <div className={`overflow-x-auto ${loading ? 'opacity-60' : ''}`}>
-            <table className="w-full min-w-[820px] text-left text-[14px]">
+            <table className="w-full min-w-[820px] text-left text-[15px]">
               <thead>
-                <tr className="border-b border-[#E4E7EC] text-[12px] uppercase tracking-wider text-[#626875]">
+                <tr className="border-b border-[#E3E5EE] text-[13px] uppercase tracking-wider text-[#5A6075]">
                   <th className="px-5 py-3 font-semibold">When</th>
                   <th className="px-3 py-3 font-semibold">Product</th>
                   <th className="px-3 py-3 text-right font-semibold">Was</th>
@@ -148,23 +148,23 @@ export default function InventoryHistoryPage() {
               </thead>
               <tbody>
                 {rows.map((m) => (
-                  <tr key={m.id} className="border-b border-[#E4E7EC] last:border-0">
-                    <td className="whitespace-nowrap px-5 py-3 text-[#626875]">{when(m.createdAt)}</td>
+                  <tr key={m.id} className="border-b border-[#E3E5EE] last:border-0">
+                    <td className="whitespace-nowrap px-5 py-3 text-[#5A6075]">{when(m.createdAt)}</td>
                     <td className="px-3 py-3">
-                      <p className="font-medium text-[#111111]">{m.productName || m.productId}</p>
-                      {m.variant && <p className="text-[12px] text-[#626875]">{m.variant}</p>}
+                      <p className="font-medium text-[#11162B]">{m.productName || m.productId}</p>
+                      {m.variant && <p className="text-[13px] text-[#5A6075]">{m.variant}</p>}
                     </td>
                     <td className="px-3 py-3 text-right tabular-nums">{m.previousQuantity}</td>
                     <td
                       className={`px-3 py-3 text-right font-bold tabular-nums ${
-                        m.change < 0 ? 'text-[#B42318]' : 'text-[#0F6446]'
+                        m.change < 0 ? 'text-[#9A2C1F]' : 'text-[#17603F]'
                       }`}
                     >
                       {m.change > 0 ? `+${m.change}` : m.change}
                     </td>
                     <td className="px-3 py-3 text-right tabular-nums">{m.newQuantity}</td>
-                    <td className="px-3 py-3 text-[#344054]">{m.reason}</td>
-                    <td className="px-5 py-3 text-[#626875]">{m.actor}</td>
+                    <td className="px-3 py-3 text-[#5A6075]">{m.reason}</td>
+                    <td className="px-5 py-3 text-[#5A6075]">{m.actor}</td>
                   </tr>
                 ))}
               </tbody>

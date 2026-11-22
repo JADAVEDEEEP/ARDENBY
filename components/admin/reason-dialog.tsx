@@ -66,12 +66,12 @@ export function ReasonDialog({
         role="dialog"
         aria-modal="true"
         aria-labelledby="reason-title"
-        className="relative w-full max-w-md rounded-xl border border-[#E4E7EC] bg-white p-6 shadow-xl"
+        className="relative w-full max-w-md rounded-xl border border-[#E3E5EE] bg-white p-6 shadow-xl"
       >
-        <h2 id="reason-title" className="text-[20px] font-bold text-[#111111]">
+        <h2 id="reason-title" className="text-[20px] font-bold text-[#11162B]">
           {title}
         </h2>
-        {description && <div className="mt-2 text-[14px] leading-6 text-[#626875]">{description}</div>}
+        {description && <div className="mt-2 text-[15px] leading-6 text-[#5A6075]">{description}</div>}
         {extra && <div className="mt-4">{extra}</div>}
 
         <label className={`${labelClass} mt-4`} htmlFor="reason-text">

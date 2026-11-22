@@ -30,16 +30,16 @@ const ROLE_LABEL: Record<Role, string> = {
 };
 
 const ROLE_TONE: Record<Role, string> = {
-  customer: 'border-[#979797]/40 text-[#BBBBBB]',
-  admin: 'border-[#8DB0D6]/40 text-[#A9C4E4]',
-  superadmin: 'border-[#E53935]/60 text-[#E53935]',
+  customer: 'border-[#E3E5EE]/40 text-[#5A6075]',
+  admin: 'border-[#E3E5EE]/40 text-[#5A6075]',
+  superadmin: 'border-[#E3E5EE] text-[#4338CA]',
 };
 
 const PAGE_SIZE = 10;
 
-const card = 'rounded-xl border border-[#E53935]/20 bg-gradient-to-b from-[#1A1A1A] to-[#111111]';
+const card = 'rounded-xl border border-[#E3E5EE] bg-[#FFFFFF]';
 const field =
-  'h-10 rounded-lg border border-[#E53935]/25 bg-[#1A1A1A]/80 px-3 text-sm text-[#F7F7F7] outline-none transition focus:border-[#E53935]/70';
+  'h-11 rounded-lg border border-[#E3E5EE] bg-[#FFFFFF]/80 px-3 text-[15px] text-[#11162B] outline-none transition focus:border-[#4338CA]/70';
 
 type Pending =
   | { kind: 'status'; user: SuperAdminUser; isActive: boolean }
@@ -166,26 +166,26 @@ export default function SuperAdminUsersPage() {
           ['Deactivated', summary?.inactive],
         ].map(([label, value]) => (
           <div key={label as string} className={cn(card, 'px-4 py-3')}>
-            <p className="text-[10px] uppercase tracking-[0.18em] text-[#7A7A7A]">{label as string}</p>
-            <p className="mt-1 font-serif text-2xl text-[#F7F7F7]">{value === undefined ? '–' : (value as number)}</p>
+            <p className="text-[12px] uppercase tracking-[0.18em] text-[#5A6075]">{label as string}</p>
+            <p className="mt-1 font-serif text-2xl text-[#11162B]">{value === undefined ? '–' : (value as number)}</p>
           </div>
         ))}
       </div>
 
-      <p className="text-xs text-[#7A7A7A]">
+      <p className="text-[13px] text-[#5A6075]">
         Common Admin store tools (orders, products, coupons) stay in the Common Admin panel. Here you manage who has
         access.
       </p>
 
       <div className="flex flex-wrap items-center gap-3">
         <div className="relative min-w-[220px] flex-1 sm:max-w-sm">
-          <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[#E53935]" />
+          <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[#4338CA]" />
           <input
             value={searchInput}
             onChange={(e) => setSearchInput(e.target.value)}
             placeholder="Search name, email or phone"
             aria-label="Search users"
-            className={cn(field, 'w-full pl-9 placeholder:text-[#7A7A7A]')}
+            className={cn(field, 'w-full pl-9 placeholder:text-[#5A6075]')}
           />
         </div>
         <select
@@ -219,9 +219,9 @@ export default function SuperAdminUsersPage() {
           type="button"
           onClick={() => void load()}
           disabled={loading}
-          className="inline-flex h-10 items-center gap-2 rounded-lg border border-[#E53935]/30 px-3 text-xs font-semibold text-[#E5E5E5] transition hover:bg-[#272727] disabled:opacity-60"
+          className="inline-flex h-11 items-center gap-2 rounded-lg border border-[#E3E5EE] px-3 text-[13px] font-semibold text-[#11162B] transition hover:bg-[#FFFFFF] disabled:opacity-60"
         >
-          <RefreshCw className={cn('h-4 w-4 text-[#E53935]', loading && 'animate-spin')} />
+          <RefreshCw className={cn('h-4 w-4 text-[#4338CA]', loading && 'animate-spin')} />
           Refresh
         </button>
         <button
@@ -231,7 +231,7 @@ export default function SuperAdminUsersPage() {
             setInviteEmail('');
             setInviting(true);
           }}
-          className="inline-flex h-10 items-center gap-2 rounded-lg bg-[#E53935] px-4 text-xs font-semibold text-white transition hover:bg-[#C62E2B]"
+          className="inline-flex h-11 items-center gap-2 rounded-lg bg-[#4338CA] px-4 text-[13px] font-semibold text-white transition hover:bg-[#4338CA]"
         >
           Invite an Admin
         </button>
@@ -241,8 +241,8 @@ export default function SuperAdminUsersPage() {
         <div
           role="status"
           className={cn(
-            'rounded-lg border px-4 py-2.5 text-sm',
-            notice.ok ? 'border-[#7FAF7F]/40 bg-[#7FAF7F]/10 text-[#9BC49B]' : 'border-[#D98B7E]/40 bg-[#D98B7E]/10 text-[#E2A79D]'
+            'rounded-lg border px-4 py-2.5 text-[15px]',
+            notice.ok ? 'border-[#17603F]/40 bg-[#17603F]/10 text-[#17603F]' : 'border-[#9A2C1F]/40 bg-[#FBE3DF]/10 text-[#9A2C1F]'
           )}
         >
           {notice.text}
@@ -250,7 +250,7 @@ export default function SuperAdminUsersPage() {
       )}
 
       {error && (
-        <div role="alert" className="flex items-center gap-2 rounded-lg border border-[#D98B7E]/40 bg-[#D98B7E]/10 px-4 py-2.5 text-sm text-[#E2A79D]">
+        <div role="alert" className="flex items-center gap-2 rounded-lg border border-[#9A2C1F]/40 bg-[#FBE3DF]/10 px-4 py-2.5 text-[15px] text-[#9A2C1F]">
           <AlertTriangle className="h-4 w-4 shrink-0" />
           {error}
         </div>
@@ -260,18 +260,18 @@ export default function SuperAdminUsersPage() {
         {!data && loading ? (
           <div className="space-y-px" aria-label="Loading users">
             {Array.from({ length: 6 }).map((_, i) => (
-              <div key={i} className="h-16 animate-pulse bg-[#1A1A1A]" />
+              <div key={i} className="h-16 animate-pulse bg-[#FFFFFF]" />
             ))}
           </div>
         ) : !data ? null : data.users.length === 0 ? (
-          <p className="px-5 py-12 text-center text-sm text-[#7A7A7A]">
+          <p className="px-5 py-12 text-center text-[15px] text-[#5A6075]">
             {filtered ? 'No users match these filters.' : 'No users found.'}
           </p>
         ) : (
           <div className={cn('overflow-x-auto transition-opacity', loading && 'opacity-60')}>
-            <table className="w-full min-w-[820px] text-left text-sm">
+            <table className="w-full min-w-[820px] text-left text-[15px]">
               <thead>
-                <tr className="border-b border-[#E53935]/20 text-[10px] uppercase tracking-[0.18em] text-[#7A7A7A]">
+                <tr className="border-b border-[#E3E5EE] text-[12px] uppercase tracking-[0.18em] text-[#5A6075]">
                   <th className="px-5 py-3 font-semibold">User</th>
                   <th className="px-3 py-3 font-semibold">Role</th>
                   <th className="px-3 py-3 font-semibold">Status</th>
@@ -283,30 +283,30 @@ export default function SuperAdminUsersPage() {
                 {data.users.map((u) => {
                   const isSelf = u.id === selfId;
                   return (
-                    <tr key={u.id} className="border-b border-[#E53935]/10 last:border-0">
+                    <tr key={u.id} className="border-b border-[#4338CA]/10 last:border-0">
                       <td className="px-5 py-3">
-                        <p className="font-medium text-[#F7F7F7]">
+                        <p className="font-medium text-[#11162B]">
                           {u.fullName || '—'}
-                          {isSelf && <span className="ml-2 text-[10px] uppercase tracking-wider text-[#E53935]">You</span>}
+                          {isSelf && <span className="ml-2 text-[12px] uppercase tracking-wider text-[#4338CA]">You</span>}
                         </p>
-                        <p className="text-xs text-[#979797]">{u.email}</p>
-                        {u.phone && <p className="text-xs text-[#7A7A7A]">{u.phone}</p>}
+                        <p className="text-[13px] text-[#5A6075]">{u.email}</p>
+                        {u.phone && <p className="text-[13px] text-[#5A6075]">{u.phone}</p>}
                       </td>
                       <td className="px-3 py-3">
-                        <span className={cn('inline-block whitespace-nowrap rounded-full border px-2.5 py-0.5 text-[11px] font-medium', ROLE_TONE[u.role])}>
+                        <span className={cn('inline-block whitespace-nowrap rounded-full border px-2.5 py-0.5 text-[12px] font-medium', ROLE_TONE[u.role])}>
                           {ROLE_LABEL[u.role]}
                         </span>
                       </td>
-                      <td className="px-3 py-3 text-xs">
-                        <span className={u.isActive ? 'text-[#9BC49B]' : 'text-[#E2A79D]'}>
+                      <td className="px-3 py-3 text-[13px]">
+                        <span className={u.isActive ? 'text-[#17603F]' : 'text-[#9A2C1F]'}>
                           {u.isActive ? 'Active' : 'Deactivated'}
                         </span>
-                        <span className="block text-[#7A7A7A]">{u.emailVerified ? 'Email verified' : 'Not verified'}</span>
+                        <span className="block text-[#5A6075]">{u.emailVerified ? 'Email verified' : 'Not verified'}</span>
                       </td>
-                      <td className="px-3 py-3 text-xs text-[#979797]">{formatDate(u.createdAt)}</td>
+                      <td className="px-3 py-3 text-[13px] text-[#5A6075]">{formatDate(u.createdAt)}</td>
                       <td className="px-5 py-3">
                         {isSelf ? (
-                          <p className="text-right text-xs text-[#7A7A7A]">Your own account</p>
+                          <p className="text-right text-[13px] text-[#5A6075]">Your own account</p>
                         ) : (
                           <div className="flex items-center justify-end gap-2">
                             <select
@@ -319,7 +319,7 @@ export default function SuperAdminUsersPage() {
                                 setDialogError('');
                                 setPending({ kind: 'role', user: u, role: e.target.value as Role });
                               }}
-                              className="h-8 rounded-md border border-[#E53935]/25 bg-[#111111] px-2 text-xs text-[#E5E5E5] outline-none disabled:opacity-50"
+                              className="h-9 rounded-md border border-[#E3E5EE] bg-[#FFFFFF] px-2 text-[13px] text-[#11162B] outline-none disabled:opacity-50"
                             >
                               <option value="customer">Customer</option>
                               <option value="admin">Common Admin</option>
@@ -333,10 +333,10 @@ export default function SuperAdminUsersPage() {
                                 setPending({ kind: 'status', user: u, isActive: !u.isActive });
                               }}
                               className={cn(
-                                'h-8 rounded-md border px-3 text-xs font-semibold transition',
+                                'h-9 rounded-md border px-3 text-[13px] font-semibold transition',
                                 u.isActive
-                                  ? 'border-[#D98B7E]/40 text-[#E2A79D] hover:bg-[#D98B7E]/10'
-                                  : 'border-[#7FAF7F]/40 text-[#9BC49B] hover:bg-[#7FAF7F]/10'
+                                  ? 'border-[#9A2C1F]/40 text-[#9A2C1F] hover:bg-[#FBE3DF]/10'
+                                  : 'border-[#17603F]/40 text-[#17603F] hover:bg-[#17603F]/10'
                               )}
                             >
                               {u.isActive ? 'Deactivate' : 'Reactivate'}
@@ -353,7 +353,7 @@ export default function SuperAdminUsersPage() {
         )}
 
         {data && data.pagination.total > 0 && (
-          <div className="flex flex-wrap items-center justify-between gap-3 border-t border-[#E53935]/20 px-5 py-3 text-xs text-[#979797]">
+          <div className="flex flex-wrap items-center justify-between gap-3 border-t border-[#E3E5EE] px-5 py-3 text-[13px] text-[#5A6075]">
             <span>
               Page {data.pagination.page} of {totalPages} · {data.pagination.total} user
               {data.pagination.total === 1 ? '' : 's'}
@@ -364,7 +364,7 @@ export default function SuperAdminUsersPage() {
                 onClick={() => setPage((p) => Math.max(p - 1, 1))}
                 disabled={page <= 1 || loading}
                 aria-label="Previous page"
-                className="flex h-8 w-8 items-center justify-center rounded-md border border-[#E53935]/30 transition hover:bg-[#272727] disabled:opacity-40"
+                className="flex h-8 w-8 items-center justify-center rounded-md border border-[#E3E5EE] transition hover:bg-[#FFFFFF] disabled:opacity-40"
               >
                 <ChevronLeft className="h-4 w-4" />
               </button>
@@ -373,7 +373,7 @@ export default function SuperAdminUsersPage() {
                 onClick={() => setPage((p) => Math.min(p + 1, totalPages))}
                 disabled={page >= totalPages || loading}
                 aria-label="Next page"
-                className="flex h-8 w-8 items-center justify-center rounded-md border border-[#E53935]/30 transition hover:bg-[#272727] disabled:opacity-40"
+                className="flex h-8 w-8 items-center justify-center rounded-md border border-[#E3E5EE] transition hover:bg-[#FFFFFF] disabled:opacity-40"
               >
                 <ChevronRight className="h-4 w-4" />
               </button>
@@ -422,7 +422,7 @@ export default function SuperAdminUsersPage() {
           extraFields={
             <>
               <div>
-                <label htmlFor="inv-name" className="mb-1.5 block text-xs font-semibold text-[#E5E5E5]">
+                <label htmlFor="inv-name" className="mb-1.5 block text-[13px] font-semibold text-[#11162B]">
                   Full name
                 </label>
                 <input
@@ -430,11 +430,11 @@ export default function SuperAdminUsersPage() {
                   value={inviteName}
                   onChange={(e) => setInviteName(e.target.value)}
                   maxLength={100}
-                  className="w-full rounded-lg border border-[#E53935]/25 bg-[#111111] px-3 py-2 text-sm text-[#F7F7F7] outline-none focus:border-[#E53935]/70"
+                  className="w-full rounded-lg border border-[#E3E5EE] bg-[#FFFFFF] px-3 py-2 text-[15px] text-[#11162B] outline-none focus:border-[#4338CA]/70"
                 />
               </div>
               <div>
-                <label htmlFor="inv-email" className="mb-1.5 block text-xs font-semibold text-[#E5E5E5]">
+                <label htmlFor="inv-email" className="mb-1.5 block text-[13px] font-semibold text-[#11162B]">
                   E-mail address
                 </label>
                 <input
@@ -443,7 +443,7 @@ export default function SuperAdminUsersPage() {
                   value={inviteEmail}
                   onChange={(e) => setInviteEmail(e.target.value)}
                   maxLength={254}
-                  className="w-full rounded-lg border border-[#E53935]/25 bg-[#111111] px-3 py-2 text-sm text-[#F7F7F7] outline-none focus:border-[#E53935]/70"
+                  className="w-full rounded-lg border border-[#E3E5EE] bg-[#FFFFFF] px-3 py-2 text-[15px] text-[#11162B] outline-none focus:border-[#4338CA]/70"
                 />
               </div>
             </>
@@ -501,16 +501,16 @@ function ConfirmDialog({
         role="alertdialog"
         aria-modal="true"
         aria-labelledby="confirm-title"
-        className="relative w-full max-w-md rounded-xl border border-[#E53935]/30 bg-[#1A1A1A] p-6 shadow-[0_20px_50px_rgba(0,0,0,0.5)]"
+        className="relative w-full max-w-md rounded-xl border border-[#E3E5EE] bg-[#FFFFFF] p-6 shadow-[0_20px_50px_rgba(0,0,0,0.5)]"
       >
-        <h2 id="confirm-title" className="font-serif text-xl text-[#F7F7F7]">
+        <h2 id="confirm-title" className="font-serif text-xl text-[#11162B]">
           {title}
         </h2>
-        <p className="mt-2 text-sm leading-6 text-[#BBBBBB]">{body}</p>
-        <p className="mt-1 truncate text-xs text-[#7A7A7A]">{pending.user.email}</p>
+        <p className="mt-2 text-[15px] leading-6 text-[#5A6075]">{body}</p>
+        <p className="mt-1 truncate text-[13px] text-[#5A6075]">{pending.user.email}</p>
 
         {error && (
-          <p role="alert" className="mt-4 rounded-lg border border-[#D98B7E]/40 bg-[#D98B7E]/10 px-3 py-2 text-sm text-[#E2A79D]">
+          <p role="alert" className="mt-4 rounded-lg border border-[#9A2C1F]/40 bg-[#FBE3DF]/10 px-3 py-2 text-[15px] text-[#9A2C1F]">
             {error}
           </p>
         )}
@@ -521,7 +521,7 @@ function ConfirmDialog({
             type="button"
             onClick={onCancel}
             disabled={saving}
-            className="h-10 rounded-lg border border-[#E53935]/30 px-4 text-sm text-[#E5E5E5] transition hover:bg-[#272727]"
+            className="h-11 rounded-lg border border-[#E3E5EE] px-4 text-[15px] text-[#11162B] transition hover:bg-[#FFFFFF]"
           >
             Cancel
           </button>
@@ -530,8 +530,8 @@ function ConfirmDialog({
             onClick={onConfirm}
             disabled={saving}
             className={cn(
-              'inline-flex h-10 items-center gap-2 rounded-lg px-4 text-sm font-semibold transition disabled:opacity-60',
-              danger ? 'bg-[#B5584A] text-white hover:bg-[#C4665A]' : 'bg-[#E53935] text-white hover:bg-[#E53935]'
+              'inline-flex h-11 items-center gap-2 rounded-lg px-4 text-[15px] font-semibold transition disabled:opacity-60',
+              danger ? 'bg-[#9A2C1F] text-white hover:bg-[#9A2C1F]/90' : 'bg-[#4338CA] text-white hover:bg-[#4338CA]'
             )}
           >
             {saving && <Loader2 className="h-4 w-4 animate-spin" />}

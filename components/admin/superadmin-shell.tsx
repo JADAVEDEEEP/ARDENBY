@@ -3,7 +3,17 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useEffect, useState } from 'react';
-import { Landmark, LayoutDashboard, LogOut, Menu, ScrollText, ShieldCheck, Users, X } from 'lucide-react';
+import {
+  CalendarDays,
+  Landmark,
+  LayoutDashboard,
+  LogOut,
+  Menu,
+  ScrollText,
+  ShieldCheck,
+  Users,
+  X,
+} from 'lucide-react';
 
 import {
   AccessDenied,
@@ -21,15 +31,34 @@ const superAdminLinks = [
   { href: '/admin', label: 'Common Admin', icon: ShieldCheck },
 ];
 
+function isActive(pathname: string, href: string) {
+  if (href === '/superadmin') return pathname === '/superadmin';
+  if (href === '/admin') return false;
+  return pathname.startsWith(href);
+}
+
 function Wordmark() {
   return (
     <span className="flex flex-col items-center leading-none">
-      <span className="font-serif text-[24px] uppercase tracking-[0.2em] text-[#F7F7F7]">
+      <span className="font-oswald text-[26px] font-bold uppercase tracking-[0.2em] text-[#11162B]">
         Kovenik
       </span>
-      <span className="mt-2 text-[9px] font-semibold uppercase tracking-[0.5em] text-[#E53935]">
+      <span className="mt-2 rounded-full bg-[#4338CA] px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.4em] text-white">
         Super Admin
       </span>
+    </span>
+  );
+}
+
+function Avatar({ name, className }: { name?: string; className?: string }) {
+  return (
+    <span
+      className={cn(
+        'flex shrink-0 items-center justify-center rounded-full bg-[#11162B] text-sm font-bold text-white',
+        className
+      )}
+    >
+      {(name?.charAt(0) || 'S').toUpperCase()}
     </span>
   );
 }
@@ -39,37 +68,21 @@ function NavList({ pathname }: { pathname: string }) {
     <nav className="space-y-1" aria-label="Super admin navigation">
       {superAdminLinks.map((item) => {
         const Icon = item.icon;
-        const active =
-          item.href === '/superadmin'
-            ? pathname === '/superadmin'
-            : item.href === '/admin'
-              ? false
-              : pathname.startsWith(item.href);
-
+        const active = isActive(pathname, item.href);
         return (
           <Link
             key={item.href}
             href={item.href}
+            title={item.label}
             aria-current={active ? 'page' : undefined}
             className={cn(
-              'group relative flex items-center gap-3.5 rounded-lg px-4 py-3 text-[13px] font-medium tracking-wide outline-none transition-colors focus-visible:ring-1 focus-visible:ring-[#E53935]',
+              'group relative flex items-center gap-3.5 rounded-lg px-4 py-3 text-[15px] font-medium outline-none transition-colors focus-visible:ring-2 focus-visible:ring-[#4338CA]',
               active
-                ? 'bg-[#343434]/70 text-[#F7F7F7]'
-                : 'text-[#BBBBBB] hover:bg-[#272727]/70 hover:text-[#F7F7F7]'
+                ? 'bg-[#E6E5FA] text-[#2E2699]'
+                : 'text-[#5A6075] hover:bg-[#F5F6FA] hover:text-[#11162B]'
             )}
           >
-            <span
-              className={cn(
-                'absolute inset-y-2 left-0 w-[3px] rounded-r bg-[#E53935] transition-opacity',
-                active ? 'opacity-100' : 'opacity-0'
-              )}
-            />
-            <Icon
-              className={cn(
-                'h-[18px] w-[18px] shrink-0',
-                active ? 'text-[#E53935]' : 'text-[#979797] group-hover:text-[#E53935]'
-              )}
-            />
+            <Icon className="h-5 w-5 shrink-0" />
             {item.label}
           </Link>
         );
@@ -104,36 +117,47 @@ export function SuperAdminShell({ children }: { children: React.ReactNode }) {
   if (status === 'retry') return <AdminUnreachable onRetry={retry} />;
   if (status !== 'allowed') return <AdminChecking label="Checking super admin access…" />;
 
-  const title = pathname.startsWith('/superadmin/users') ? 'User Management' : 'Dashboard';
+  const title =
+    superAdminLinks.find((l) => isActive(pathname, l.href))?.label ?? 'Dashboard';
+
+  const today = new Date().toLocaleDateString('en-IN', {
+    weekday: 'short',
+    day: 'numeric',
+    month: 'short',
+    year: 'numeric',
+  });
 
   const account = (
-    <div className="border-t border-[#E53935]/20 p-4">
-      <p className="truncate text-[13px] font-medium text-[#F7F7F7]">
-        {user?.fullName || 'Super Admin'}
-      </p>
-      <p className="mt-0.5 truncate text-[11px] text-[#979797]">{user?.email}</p>
-      <p className="mt-1 text-[10px] uppercase tracking-[0.22em] text-[#E53935]">
-        {user?.role}
-      </p>
-      <button
-        type="button"
-        onClick={signOut}
-        className="mt-4 flex h-9 w-full items-center justify-center gap-2 rounded-lg border border-[#E53935]/30 text-xs font-semibold text-[#E5E5E5] outline-none transition hover:bg-[#272727] focus-visible:ring-1 focus-visible:ring-[#E53935]"
-      >
-        <LogOut className="h-4 w-4 text-[#E53935]" />
-        Logout
-      </button>
+    <div className="border-t border-[#E3E5EE] p-3">
+      <div className="flex items-center gap-3 rounded-lg p-2">
+        <Avatar name={user?.fullName} className="h-10 w-10" />
+        <div className="min-w-0 flex-1">
+          <p className="truncate text-[14px] font-semibold text-[#11162B]">
+            {user?.fullName || 'Super Admin'}
+          </p>
+          <p className="truncate text-[12px] text-[#5A6075]">{user?.email}</p>
+        </div>
+        <button
+          type="button"
+          onClick={signOut}
+          aria-label="Log out"
+          title="Log out"
+          className="rounded-md p-2 text-[#5A6075] outline-none transition hover:bg-[#F5F6FA] hover:text-[#11162B] focus-visible:ring-2 focus-visible:ring-[#4338CA]"
+        >
+          <LogOut className="h-4 w-4" />
+        </button>
+      </div>
     </div>
   );
 
   return (
-    <main className="min-h-screen bg-[#111111] text-[#F7F7F7]">
+    <main className="min-h-screen bg-[#F5F6FA] font-sans text-[#11162B]">
       <div className="min-h-screen lg:grid lg:grid-cols-[264px_minmax(0,1fr)]">
-        <aside className="sticky top-0 hidden h-screen flex-col border-r border-[#E53935]/20 bg-gradient-to-b from-[#111111] to-[#1A1A1A] lg:flex">
+        <aside className="sticky top-0 hidden h-screen flex-col border-r border-[#E3E5EE] bg-white lg:flex">
           <Link
             href="/superadmin"
             aria-label="Kovenik Super Admin home"
-            className="flex h-[88px] items-center justify-center border-b border-[#E53935]/20"
+            className="flex h-[84px] items-center justify-center border-b border-[#E3E5EE] outline-none focus-visible:ring-2 focus-visible:ring-[#4338CA]"
           >
             <Wordmark />
           </Link>
@@ -144,24 +168,44 @@ export function SuperAdminShell({ children }: { children: React.ReactNode }) {
         </aside>
 
         <div className="flex min-w-0 flex-col">
-          <header className="sticky top-0 z-40 flex h-16 items-center gap-3 border-b border-[#E53935]/20 bg-[#111111]/90 px-4 backdrop-blur sm:px-6 lg:h-[72px] lg:px-8">
+          {/* Mobile header */}
+          <header className="sticky top-0 z-40 flex h-16 items-center justify-between border-b border-[#E3E5EE] bg-white px-4 lg:hidden">
             <button
               type="button"
               onClick={() => setDrawerOpen(true)}
               aria-label="Open menu"
-              className="flex h-10 w-10 items-center justify-center rounded-lg text-[#E5E5E5] outline-none transition hover:bg-[#272727] focus-visible:ring-1 focus-visible:ring-[#E53935] lg:hidden"
+              className="flex h-11 w-11 items-center justify-center rounded-lg text-[#11162B] outline-none transition hover:bg-[#F5F6FA] focus-visible:ring-2 focus-visible:ring-[#4338CA]"
             >
               <Menu className="h-6 w-6" />
             </button>
-            <div className="min-w-0">
-              <p className="text-[10px] font-semibold uppercase tracking-[0.28em] text-[#E53935]">
-                Super Admin Console
-              </p>
-              <h1 className="truncate font-serif text-xl text-[#F7F7F7] lg:text-2xl">{title}</h1>
+            <h2 className="text-[17px] font-bold text-[#11162B]">{title}</h2>
+            <Avatar name={user?.fullName} className="h-10 w-10" />
+          </header>
+
+          {/* Desktop header (same as Admin) */}
+          <header className="sticky top-0 z-40 hidden h-[72px] items-center justify-between gap-6 border-b border-[#E3E5EE] bg-white px-8 lg:flex">
+            <nav aria-label="Breadcrumb" className="flex items-center gap-2 text-[14px] text-[#5A6075]">
+              <Link href="/superadmin" className="hover:text-[#11162B]">
+                Super Admin
+              </Link>
+              <span aria-hidden>/</span>
+              <span className="font-semibold text-[#11162B]">{title}</span>
+            </nav>
+            <div className="flex items-center gap-3">
+              <span className="hidden items-center gap-2 rounded-lg border border-[#E3E5EE] px-3 py-2 text-[14px] font-medium text-[#11162B] xl:flex">
+                <CalendarDays className="h-4 w-4 text-[#4338CA]" />
+                {today}
+              </span>
+              <span className="flex items-center gap-2.5 py-1 pl-1 pr-2">
+                <Avatar name={user?.fullName} className="h-10 w-10" />
+                <span className="max-w-[160px] truncate text-[14px] font-semibold text-[#11162B]">
+                  {user?.fullName || 'Super Admin'}
+                </span>
+              </span>
             </div>
           </header>
 
-          <div className="min-w-0 flex-1 bg-[radial-gradient(ellipse_at_top_right,rgba(27, 27, 27,0.55),transparent_60%)] px-4 pb-10 pt-5 sm:px-6 md:pt-8 lg:px-8">
+          <div className="min-w-0 flex-1 px-4 pb-10 pt-6 sm:px-6 md:pt-8 lg:px-8">
             <div className="mx-auto w-full max-w-[1400px]">{children}</div>
           </div>
         </div>
@@ -173,24 +217,24 @@ export function SuperAdminShell({ children }: { children: React.ReactNode }) {
       >
         <div
           onClick={() => setDrawerOpen(false)}
-          className={cn('absolute inset-0 bg-black/70 transition-opacity duration-300', drawerOpen ? 'opacity-100' : 'opacity-0')}
+          className={cn('absolute inset-0 bg-[#11162B]/60 transition-opacity duration-300', drawerOpen ? 'opacity-100' : 'opacity-0')}
         />
         <aside
           role="dialog"
           aria-modal="true"
           aria-label="Navigation menu"
           className={cn(
-            'absolute inset-y-0 left-0 flex h-full w-[300px] max-w-[85vw] flex-col border-r border-[#E53935]/30 bg-gradient-to-b from-[#1A1A1A] to-[#111111] shadow-2xl transition-transform duration-300 ease-out',
+            'absolute inset-y-0 left-0 flex h-full w-[300px] max-w-[85vw] flex-col bg-white shadow-2xl transition-transform duration-300 ease-out',
             drawerOpen ? 'translate-x-0' : '-translate-x-full'
           )}
         >
-          <div className="flex h-[88px] items-center justify-between border-b border-[#E53935]/20 px-5">
+          <div className="flex h-[84px] items-center justify-between border-b border-[#E3E5EE] px-5">
             <Wordmark />
             <button
               type="button"
               onClick={() => setDrawerOpen(false)}
               aria-label="Close menu"
-              className="flex h-10 w-10 items-center justify-center rounded-lg border border-[#E53935]/30 text-[#E53935] transition hover:bg-[#272727]"
+              className="flex h-11 w-11 items-center justify-center rounded-lg border border-[#E3E5EE] text-[#11162B] transition hover:bg-[#F5F6FA]"
             >
               <X className="h-5 w-5" />
             </button>

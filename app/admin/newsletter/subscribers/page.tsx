@@ -134,12 +134,12 @@ export default function AdminNewsletterPage() {
 
       <div className="mb-6 grid grid-cols-2 gap-3 lg:grid-cols-4">
         {cards.map((c) => (
-          <div key={c.label} className="rounded-2xl border border-[#E4E7EC] bg-white p-4 md:p-5">
-            <p className="text-[13px] font-semibold text-[#626875]">{c.label}</p>
-            <p className="mt-1 text-[30px] font-bold leading-tight text-[#111111]" aria-busy={loading && !stats}>
+          <div key={c.label} className="rounded-2xl border border-[#E3E5EE] bg-white p-4 md:p-5">
+            <p className="text-[14px] font-semibold text-[#5A6075]">{c.label}</p>
+            <p className="mt-1 text-[30px] font-bold leading-tight text-[#11162B]" aria-busy={loading && !stats}>
               {c.value === undefined ? '—' : c.value.toLocaleString('en-IN')}
             </p>
-            <p className="mt-0.5 text-[12px] text-[#626875]">{c.hint}</p>
+            <p className="mt-0.5 text-[13px] text-[#5A6075]">{c.hint}</p>
           </div>
         ))}
       </div>
@@ -190,8 +190,8 @@ export default function AdminNewsletterPage() {
           </EmptyState>
         ) : (
           <div className="overflow-x-auto" aria-busy={loading}>
-            <table className="w-full min-w-[760px] text-left text-[14px]">
-              <thead className="border-b border-[#E4E7EC] text-[12px] uppercase tracking-wide text-[#626875]">
+            <table className="w-full min-w-[760px] text-left text-[15px]">
+              <thead className="border-b border-[#E3E5EE] text-[13px] uppercase tracking-wide text-[#5A6075]">
                 <tr>
                   <th className="px-5 py-3 font-semibold">Email</th>
                   <th className="px-3 py-3 font-semibold">Status</th>
@@ -201,24 +201,24 @@ export default function AdminNewsletterPage() {
                   <th className="px-5 py-3 text-right font-semibold">Action</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-[#E4E7EC]">
+              <tbody className="divide-y divide-[#E3E5EE]">
                 {subscribers.map((s) => {
                   const tone = TONE[s.status as keyof typeof TONE] ?? 'neutral';
                   const label = LABEL[s.status as keyof typeof LABEL] ?? s.status;
                   return (
                     <tr key={s.id}>
-                      <td className="max-w-[280px] break-all px-5 py-3 font-medium text-[#111111]">{s.email}</td>
+                      <td className="max-w-[280px] break-all px-5 py-3 font-medium text-[#11162B]">{s.email}</td>
                       <td className="px-3 py-3">
                         <StatusPill tone={tone}>{label}</StatusPill>
                       </td>
-                      <td className="whitespace-nowrap px-3 py-3 text-[#344054]">{when(s.subscribedAt)}</td>
-                      <td className="whitespace-nowrap px-3 py-3 text-[#344054]">{when(s.confirmedAt)}</td>
-                      <td className="whitespace-nowrap px-3 py-3 text-[#344054]">{when(s.unsubscribedAt)}</td>
+                      <td className="whitespace-nowrap px-3 py-3 text-[#5A6075]">{when(s.subscribedAt)}</td>
+                      <td className="whitespace-nowrap px-3 py-3 text-[#5A6075]">{when(s.confirmedAt)}</td>
+                      <td className="whitespace-nowrap px-3 py-3 text-[#5A6075]">{when(s.unsubscribedAt)}</td>
                       <td className="px-5 py-3 text-right">
                         {s.status === 'active' || s.status === 'pending' ? (
                           <button
                             type="button"
-                            className={`${btnDanger} !min-h-0 !px-3 !py-1.5 !text-[13px]`}
+                            className={`${btnDanger} !min-h-0 !px-3 !py-1.5 !text-[14px]`}
                             onClick={() => {
                               setNotice('');
                               setTarget(s);
@@ -227,7 +227,7 @@ export default function AdminNewsletterPage() {
                             <UserMinus className="h-4 w-4" /> Unsubscribe
                           </button>
                         ) : (
-                          <span className="text-[13px] text-[#98A2B3]">—</span>
+                          <span className="text-[14px] text-[#5A6075]">—</span>
                         )}
                       </td>
                     </tr>
@@ -248,7 +248,7 @@ export default function AdminNewsletterPage() {
           reasonLabel="Reason (saved in the audit log)"
           description={
             <>
-              <strong className="break-all text-[#111111]">{target.email}</strong> will stop receiving newsletter email
+              <strong className="break-all text-[#11162B]">{target.email}</strong> will stop receiving newsletter email
               immediately. This cannot be undone from here: they would have to sign up and confirm their email again.
             </>
           }

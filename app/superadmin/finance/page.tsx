@@ -50,16 +50,16 @@ type Report = {
   notes: string[];
 };
 
-const card = 'rounded-xl border border-[#E53935]/20 bg-gradient-to-b from-[#1A1A1A] to-[#111111]';
+const card = 'rounded-xl border border-[#E3E5EE] bg-[#FFFFFF]';
 const field =
-  'h-10 rounded-lg border border-[#E53935]/25 bg-[#1A1A1A]/80 px-3 text-sm text-[#F7F7F7] outline-none transition focus:border-[#E53935]/70';
+  'h-11 rounded-lg border border-[#E3E5EE] bg-[#FFFFFF]/80 px-3 text-[15px] text-[#11162B] outline-none transition focus:border-[#4338CA]/70';
 
 function Stat({ label, value, hint, strong }: { label: string; value: string; hint?: string; strong?: boolean }) {
   return (
     <div className={cn(card, 'px-4 py-3')}>
-      <p className="text-[10px] uppercase tracking-[0.18em] text-[#7A7A7A]">{label}</p>
-      <p className={cn('mt-1 font-serif text-2xl', strong ? 'text-[#E53935]' : 'text-[#F7F7F7]')}>{value}</p>
-      {hint && <p className="mt-1 text-xs text-[#979797]">{hint}</p>}
+      <p className="text-[12px] uppercase tracking-[0.18em] text-[#5A6075]">{label}</p>
+      <p className={cn('mt-1 font-serif text-2xl', strong ? 'text-[#4338CA]' : 'text-[#11162B]')}>{value}</p>
+      {hint && <p className="mt-1 text-[13px] text-[#5A6075]">{hint}</p>}
     </div>
   );
 }
@@ -96,18 +96,18 @@ export default function FinancePage() {
   return (
     <div className="space-y-5">
       <div>
-        <h1 className="font-serif text-2xl text-[#F7F7F7]">Financial report</h1>
-        <p className="mt-1 max-w-2xl text-sm text-[#979797]">
+        <h1 className="font-serif text-2xl text-[#11162B]">Financial report</h1>
+        <p className="mt-1 max-w-2xl text-[15px] text-[#5A6075]">
           Built from your orders. Dates are Indian Standard Time, and orders are grouped by the day they were placed.
         </p>
       </div>
 
       <div className="flex flex-wrap items-center gap-3">
-        <label className="text-xs text-[#979797]">
+        <label className="text-[13px] text-[#5A6075]">
           From{' '}
           <input type="date" className={field} value={from} max={to} onChange={(e) => setFrom(e.target.value)} />
         </label>
-        <label className="text-xs text-[#979797]">
+        <label className="text-[13px] text-[#5A6075]">
           To{' '}
           <input type="date" className={field} value={to} min={from} max={todayIso()} onChange={(e) => setTo(e.target.value)} />
         </label>
@@ -115,15 +115,15 @@ export default function FinancePage() {
           type="button"
           onClick={() => void load()}
           disabled={loading}
-          className="inline-flex h-10 items-center gap-2 rounded-lg border border-[#E53935]/30 px-3 text-xs font-semibold text-[#E5E5E5] transition hover:bg-[#272727] disabled:opacity-60"
+          className="inline-flex h-11 items-center gap-2 rounded-lg border border-[#E3E5EE] px-3 text-[13px] font-semibold text-[#11162B] transition hover:bg-[#FFFFFF] disabled:opacity-60"
         >
-          <RefreshCw className={cn('h-4 w-4 text-[#E53935]', loading && 'animate-spin')} />
+          <RefreshCw className={cn('h-4 w-4 text-[#4338CA]', loading && 'animate-spin')} />
           Refresh
         </button>
       </div>
 
       {error && (
-        <div role="alert" className="flex items-center gap-2 rounded-lg border border-[#D98B7E]/40 bg-[#D98B7E]/10 px-4 py-2.5 text-sm text-[#E2A79D]">
+        <div role="alert" className="flex items-center gap-2 rounded-lg border border-[#9A2C1F]/40 bg-[#FBE3DF]/10 px-4 py-2.5 text-[15px] text-[#9A2C1F]">
           <AlertTriangle className="h-4 w-4 shrink-0" />
           {error}
         </div>
@@ -134,7 +134,7 @@ export default function FinancePage() {
       ) : (
         <div className={cn('space-y-6 transition-opacity', loading && 'opacity-60')}>
           <section aria-labelledby="fin-headline">
-            <h2 id="fin-headline" className="mb-2 text-xs font-semibold uppercase tracking-[0.18em] text-[#E53935]">
+            <h2 id="fin-headline" className="mb-2 text-[13px] font-semibold uppercase tracking-[0.18em] text-[#4338CA]">
               Headline
             </h2>
             <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
@@ -146,7 +146,7 @@ export default function FinancePage() {
           </section>
 
           <section aria-labelledby="fin-refunds">
-            <h2 id="fin-refunds" className="mb-2 text-xs font-semibold uppercase tracking-[0.18em] text-[#E53935]">
+            <h2 id="fin-refunds" className="mb-2 text-[13px] font-semibold uppercase tracking-[0.18em] text-[#4338CA]">
               Refunds
             </h2>
             <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
@@ -158,7 +158,7 @@ export default function FinancePage() {
           </section>
 
           <section aria-labelledby="fin-other">
-            <h2 id="fin-other" className="mb-2 text-xs font-semibold uppercase tracking-[0.18em] text-[#E53935]">
+            <h2 id="fin-other" className="mb-2 text-[13px] font-semibold uppercase tracking-[0.18em] text-[#4338CA]">
               Not collected
             </h2>
             <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
@@ -170,7 +170,7 @@ export default function FinancePage() {
           </section>
 
           <section aria-labelledby="fin-split">
-            <h2 id="fin-split" className="mb-2 text-xs font-semibold uppercase tracking-[0.18em] text-[#E53935]">
+            <h2 id="fin-split" className="mb-2 text-[13px] font-semibold uppercase tracking-[0.18em] text-[#4338CA]">
               Where it came from
             </h2>
             <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
@@ -185,12 +185,12 @@ export default function FinancePage() {
 
           <section className={cn(card, 'overflow-hidden')} aria-label="Daily figures">
             {report.daily.length === 0 ? (
-              <p className="px-5 py-10 text-center text-sm text-[#7A7A7A]">No orders in this period.</p>
+              <p className="px-5 py-10 text-center text-[15px] text-[#5A6075]">No orders in this period.</p>
             ) : (
               <div className="overflow-x-auto">
-                <table className="w-full min-w-[720px] text-left text-sm">
+                <table className="w-full min-w-[720px] text-left text-[15px]">
                   <thead>
-                    <tr className="border-b border-[#E53935]/20 text-[10px] uppercase tracking-[0.18em] text-[#7A7A7A]">
+                    <tr className="border-b border-[#E3E5EE] text-[12px] uppercase tracking-[0.18em] text-[#5A6075]">
                       <th className="px-5 py-3 font-semibold">Day</th>
                       <th className="px-3 py-3 text-right font-semibold">Orders</th>
                       <th className="px-3 py-3 text-right font-semibold">Gross</th>
@@ -202,7 +202,7 @@ export default function FinancePage() {
                   </thead>
                   <tbody>
                     {report.daily.map((d) => (
-                      <tr key={d.date} className="border-b border-[#E53935]/10 last:border-0 text-[#E5E5E5]">
+                      <tr key={d.date} className="border-b border-[#4338CA]/10 last:border-0 text-[#11162B]">
                         <td className="px-5 py-2.5">{d.date}</td>
                         <td className="px-3 py-2.5 text-right tabular-nums">{d.orders}</td>
                         <td className="px-3 py-2.5 text-right tabular-nums">{inr(d.grossOrderValue)}</td>
@@ -218,9 +218,9 @@ export default function FinancePage() {
             )}
           </section>
 
-          <section className="rounded-xl border border-[#C47A16]/30 bg-[#C47A16]/10 px-5 py-4" aria-label="Limits of this report">
-            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#E0A84A]">What this report cannot tell you</p>
-            <ul className="mt-2 list-disc space-y-1 pl-5 text-sm text-[#E5E5E5]">
+          <section className="rounded-xl border border-[#7A4F00]/30 bg-[#7A4F00]/10 px-5 py-4" aria-label="Limits of this report">
+            <p className="text-[13px] font-semibold uppercase tracking-[0.18em] text-[#7A4F00]">What this report cannot tell you</p>
+            <ul className="mt-2 list-disc space-y-1 pl-5 text-[15px] text-[#11162B]">
               {report?.notes.map((n) => (
                 <li key={n}>{n}</li>
               ))}
