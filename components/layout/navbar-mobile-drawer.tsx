@@ -17,7 +17,7 @@ import { useHomeProducts } from '@/hooks/use-home-products';
 import { prioritizeNewCollection } from '@/lib/new-collection';
 import { cn } from '@/lib/utils';
 
-import { KovenikBrand } from './kovenik-brand';
+import { KovenikWordmark } from './kovenik-wordmark';
 import type { UserProfile } from './navbar';
 import { HAS_SOCIAL_LINKS, SocialLinks } from './social-links';
 
@@ -253,7 +253,7 @@ export function NavbarMobileDrawer({
             {/* a) header row */}
             <div className="relative flex flex-wrap items-center justify-between gap-3 p-5 pr-[68px]">
               <Link href="/" onClick={close} aria-label="Kovenik home" className="shrink-0">
-                <KovenikBrand variant="bust" className="h-[37px] w-[118px]" bearClassName="h-[56px]" />
+                <KovenikWordmark size="sm" />
               </Link>
 
               {user ? (

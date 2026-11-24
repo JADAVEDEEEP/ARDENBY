@@ -1,5 +1,7 @@
 "use client";
 
+import { LogoChip } from '@/app/checkout/_components/payment-logos';
+import type { LogoName } from '@/app/checkout/_components/payment-logos';
 import { useState } from "react";
 
 import Link from "next/link";
@@ -7,7 +9,7 @@ import { ChevronDown } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 
-import { KovenikBrand } from "./kovenik-brand";
+import { KovenikWordmark } from "./kovenik-wordmark";
 import { HAS_SOCIAL_LINKS, SocialLinks } from "./social-links";
 
 /* ================================================================
@@ -100,6 +102,8 @@ function FooterColumn({
 /* ================================================================
     FOOTER
 ================================================================ */
+
+const PAYMENT_LOGOS: LogoName[] = ["razorpay", "gpay", "phonepe", "upi", "paytm", "visa", "mastercard", "rupay"];
 
 export function Footer() {
   return (
@@ -195,7 +199,7 @@ export function Footer() {
         <div className="mt-6 flex flex-col gap-5 border-t border-kv-line pt-6 md:mt-10 md:flex-row md:items-center md:justify-between">
           <div className="flex items-center gap-4">
             <Link href="/" aria-label="Kovenik home" className="inline-block">
-              <KovenikBrand className="h-[48px] w-[136px] md:h-[64px] md:w-[182px]" bearClassName="h-[84px] md:h-[130px]" />
+              <KovenikWordmark size="md" />
             </Link>
             <span className="text-[14px] font-semibold uppercase tracking-[0.12em] text-kv-sub">Est. 2026 · India</span>
           </div>
@@ -206,6 +210,13 @@ export function Footer() {
               <SocialLinks />
             </div>
           )}
+
+          {/* Payment methods, at the far end of the brand row. Same logos as the checkout page. */}
+          <div className="flex flex-wrap items-center gap-2" role="group" aria-label="Payment methods we accept">
+            {PAYMENT_LOGOS.map((name) => (
+              <LogoChip key={name} name={name} />
+            ))}
+          </div>
         </div>
 
         <details className="group mt-6 border border-kv-line bg-kv-bg">

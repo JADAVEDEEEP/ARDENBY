@@ -13,7 +13,7 @@ type KovenikLogoProps = {
   /** Kept for call-site compatibility; there is a single artwork. */
   layout?: KovenikLogoLayout;
   className?: string;
-  /** false drops the bunny and shows the wordmark only. */
+  /** true adds the Rebel Bunny peeking from behind the letters. Default: wordmark only. */
   bunny?: boolean;
 };
 
@@ -21,11 +21,11 @@ const BLACK = '#111111';
 const WHITE = '#FFFFFF';
 const RED = '#E53935';
 
-export function KovenikLogo({ className, bunny = true }: KovenikLogoProps) {
+export function KovenikLogo({ className, bunny = false }: KovenikLogoProps) {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 182 64"
+      viewBox={bunny ? '0 0 182 64' : '0 22 182 40'}
       role="img"
       aria-label="KOVENIK"
       className={className}

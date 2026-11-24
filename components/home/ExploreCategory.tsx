@@ -58,10 +58,14 @@ export function ExploreCategory({ products, loading, error, onRetry }: ExploreCa
   }, [products, active]);
 
   return (
-    <section aria-labelledby="home-explore" className="w-full bg-kv-bg py-10 md:py-14">
-      <div className="kv-gutter mx-auto w-full max-w-[1600px]">
-        <SectionHeader id="home-explore" title="Shop by category" href="/shop" />
-        <FilterChips options={CHIPS} active={active} onChange={setActive} label="Filter products" />
+    <section aria-labelledby="home-explore" className="w-full bg-kv-bg py-8 md:py-10">
+      <div className="mx-auto w-full">
+        <SectionHeader id="home-explore" title="Shop by category" href="/shop" className="kv-gutter" />
+        {/* Chip bar stays under the header while the grid scrolls (desktop). */}
+        <div className="z-30 border-b border-kv-line bg-kv-bg lg:sticky lg:top-[84px]">
+          <FilterChips options={CHIPS} active={active} onChange={setActive} label="Filter products" />
+        </div>
+        <div className="px-3 pt-5 md:px-0 md:pt-6">
 
         {error && !loading ? (
           <div role="status" className="flex flex-col items-center gap-3 py-10 text-center">
@@ -75,15 +79,15 @@ export function ExploreCategory({ products, loading, error, onRetry }: ExploreCa
             </button>
           </div>
         ) : loading ? (
-          <div className="grid grid-cols-2 gap-x-3 gap-y-8 md:grid-cols-4 md:gap-x-6 min-[1600px]:grid-cols-5">
+          <div className="grid grid-cols-2 gap-x-3 gap-y-8 md:grid-cols-3 md:gap-x-4 md:gap-y-10 lg:grid-cols-4 min-[1600px]:grid-cols-5">
             {Array.from({ length: GRID_LIMIT }).map((_, i) => (
               <ProductSkeletonCard key={i} />
             ))}
           </div>
         ) : visible.length > 0 ? (
-          <div className="grid grid-cols-2 gap-x-3 gap-y-8 md:grid-cols-4 md:gap-x-6 md:gap-y-10 min-[1600px]:grid-cols-5">
+          <div className="grid grid-cols-2 gap-x-3 gap-y-8 md:grid-cols-3 md:gap-x-4 md:gap-y-10 lg:grid-cols-4 min-[1600px]:grid-cols-5">
             {visible.map((product) => (
-              <ProductCard key={product.id} product={product} variant="grid" />
+              <ProductCard key={product.id} product={product} variant="arrival" />
             ))}
           </div>
         ) : (
@@ -99,6 +103,7 @@ export function ExploreCategory({ products, loading, error, onRetry }: ExploreCa
             </button>
           </div>
         )}
+        </div>
       </div>
     </section>
   );

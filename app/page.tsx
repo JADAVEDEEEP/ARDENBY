@@ -9,7 +9,6 @@ import { MobileCategoryIcons } from '@/components/home/MobileCategoryIcons';
 import { MembershipBanner } from '@/components/home/MembershipBanner';
 import { Newsletter } from '@/components/home/Newsletter';
 import { ProductRail } from '@/components/home/ProductRail';
-import { PromoBanner } from '@/components/home/PromoBanner';
 import { USPStrip } from '@/components/home/USPStrip';
 import { useHomeProducts } from '@/hooks/use-home-products';
 import { isNewCollection, prioritizeNewCollection } from '@/lib/new-collection';
@@ -26,11 +25,10 @@ export default function HomePage() {
 
   return (
     <>
-      <div className="kv-flat w-full overflow-x-hidden bg-kv-bg">
+      <div className="kv-flat w-full overflow-x-clip bg-kv-bg">
         <MobileCategoryIcons />
         <HeroCarousel products={products} />
         <USPStrip />
-        <PromoBanner products={products} />
         <ProductRail
           id="home-new-arrivals"
           title="New arrivals"

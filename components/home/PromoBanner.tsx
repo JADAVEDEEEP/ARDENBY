@@ -28,7 +28,7 @@ export function PromoBanner({ products }: { products: Product[] }) {
   return (
     <section aria-labelledby="home-featured" className="w-full bg-kv-bg">
       {/* Full-bleed banner: 100% of the viewport, no container, no radius */}
-      <div className="on-dark grid w-full bg-kv-ink md:min-h-[460px] md:grid-cols-2">
+      <div className="on-dark grid w-full bg-kv-ink md:min-h-[460px] md:grid-cols-2 lg:min-h-[calc(100svh-84px)]">
         <div className="relative order-1 h-[280px] w-full md:order-2 md:h-auto">
           <Image
             src="/images/print-club-campaign.png"
@@ -40,20 +40,20 @@ export function PromoBanner({ products }: { products: Product[] }) {
           />
         </div>
 
-        <div className="order-2 flex flex-col justify-center px-4 py-8 md:order-1 md:px-16 md:py-12">
+        <div className="order-2 flex flex-col justify-center px-4 py-8 md:order-1 md:px-16 md:py-12 lg:py-[clamp(16px,4svh,48px)]">
           <p className="text-[12px] font-bold uppercase tracking-[0.28em] text-kv-gold-dark md:text-[13px]">
             Featured collection
           </p>
-          <h2 id="home-featured" className="mt-4 font-oswald text-[48px] font-bold uppercase leading-[0.95] text-white md:text-[84px]">
+          <h2 id="home-featured" className="mt-4 font-oswald text-[48px] font-bold uppercase leading-[0.95] text-white md:text-[84px] lg:mt-[clamp(8px,2svh,16px)] lg:text-[clamp(44px,11svh,84px)]">
             The Print
             <br />
             Club
           </h2>
-          <p className="mt-5 max-w-[460px] text-[15px] leading-[1.6] text-kv-mist md:text-[17px]">
+          <p className="mt-5 max-w-[460px] text-[15px] leading-[1.6] text-kv-mist md:text-[17px] lg:mt-[clamp(8px,2svh,20px)]">
             Bold graphic streetwear designs from KOVENIK.
           </p>
 
-          <div className="mt-7 flex flex-col gap-3 sm:flex-row">
+          <div className="mt-7 flex flex-col gap-3 sm:flex-row lg:mt-[clamp(12px,3svh,28px)]">
             <Link
               href="/shop?category=the-print-club"
               className="inline-flex min-h-[48px] items-center justify-center bg-kv-gold px-8 text-[14px] font-bold uppercase tracking-[0.1em] text-white transition-colors hover:bg-kv-gold-dark md:min-h-[52px] md:text-[15px]"
@@ -69,11 +69,11 @@ export function PromoBanner({ products }: { products: Product[] }) {
           </div>
 
           {drop.length > 0 && (
-            <div className="mt-9">
+            <div className="mt-9 lg:mt-[clamp(12px,4svh,36px)]">
               <p className="text-[12px] font-bold uppercase tracking-[0.2em] text-kv-gold-dark md:text-[13px]">In this drop</p>
               <ul className="mt-3 grid grid-cols-3 gap-3 md:flex md:gap-4">
                 {drop.map((p) => (
-                  <li key={p.id} className="min-w-0 md:w-[104px]">
+                  <li key={p.id} className="min-w-0 md:w-[104px] lg:w-[clamp(72px,13svh,104px)]">
                     <Link href={`/product/${p.slug}`} className="group block">
                       <span className="relative block aspect-[104/128] w-full overflow-hidden bg-kv-img">
                         <SafeImage
@@ -84,7 +84,7 @@ export function PromoBanner({ products }: { products: Product[] }) {
                           className="object-cover object-top transition duration-300 group-hover:scale-105"
                         />
                       </span>
-                      <span className="mt-2 line-clamp-2 block text-[14px] font-semibold leading-[1.3] text-white group-hover:text-kv-gold-dark">
+                      <span className="mt-2 line-clamp-2 block text-[14px] lg:line-clamp-1 font-semibold leading-[1.3] text-white group-hover:text-kv-gold-dark">
                         {p.name}
                       </span>
                     </Link>

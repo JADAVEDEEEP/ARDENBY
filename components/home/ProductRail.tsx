@@ -36,10 +36,10 @@ export function ProductSkeletonCard() {
 
 /* Same gaps as the grids below (12px mobile, 24px md+). Mobile: 160px cards. Tablet: 3 across. 1024px+: 4. 1600px+: 5. */
 const ITEM =
-  'w-[160px] shrink-0 md:w-[calc((100%-48px)/3)] lg:w-[calc((100%-72px)/4)] min-[1600px]:w-[calc((100%-96px)/5)]';
+  'w-[44%] shrink-0 md:w-[calc((100%-24px)/3)] lg:w-[calc((100%-36px)/4)] min-[1600px]:w-[calc((100%-48px)/5)]';
 
 const ARROW =
-  'absolute top-[calc(50%-48px)] z-20 hidden h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full border border-kv-line bg-kv-bg text-kv-ink transition-colors hover:border-kv-ink focus-visible:outline focus-visible:outline-2 focus-visible:outline-kv-ink disabled:pointer-events-none disabled:opacity-0 md:flex';
+  'absolute top-[calc(50%-48px)] z-20 hidden h-14 w-10 -translate-y-1/2 items-center justify-center text-white drop-shadow-[0_1px_4px_rgba(0,0,0,0.65)] transition-transform hover:scale-110 focus-visible:outline focus-visible:outline-2 focus-visible:outline-white disabled:pointer-events-none disabled:opacity-0 md:flex';
 
 /** Full-width horizontal carousel: swipe on touch, arrows on tablet/desktop. */
 export function ProductRail({ id, title, products, loading, error, onRetry, href }: ProductRailProps) {
@@ -72,8 +72,8 @@ export function ProductRail({ id, title, products, loading, error, onRetry, href
   if (!loading && !error && products.length === 0) return null;
 
   return (
-    <section aria-labelledby={id} className="kv-gutter mx-auto w-full max-w-[1600px] bg-kv-bg py-10 md:py-14">
-      <SectionHeader id={id} title={title} href={href} />
+    <section aria-labelledby={id} className="mx-auto w-full bg-kv-bg py-8 md:py-10">
+      <SectionHeader id={id} title={title} href={href} className="kv-gutter" />
 
       {error && !loading ? (
         <div role="status" className="flex flex-col items-center gap-3 py-10 text-center">
@@ -95,24 +95,24 @@ export function ProductRail({ id, title, products, loading, error, onRetry, href
             aria-label="Previous products"
             onClick={() => scrollByPage(-1)}
             disabled={!canPrev}
-            className={`${ARROW} left-3`}
+            className={`${ARROW} left-1`}
           >
-            <ChevronLeft className="h-6 w-6" aria-hidden="true" />
+            <ChevronLeft className="h-10 w-10" strokeWidth={1.6} aria-hidden="true" />
           </button>
           <button
             type="button"
             aria-label="Next products"
             onClick={() => scrollByPage(1)}
             disabled={!canNext}
-            className={`${ARROW} right-3`}
+            className={`${ARROW} right-1`}
           >
-            <ChevronRight className="h-6 w-6" aria-hidden="true" />
+            <ChevronRight className="h-10 w-10" strokeWidth={1.6} aria-hidden="true" />
           </button>
 
           <ul
             ref={track}
             onScroll={update}
-            className="kv-rail -mx-[clamp(16px,3vw,48px)] flex gap-3 overflow-x-auto md:gap-6 px-[clamp(16px,3vw,48px)] md:mx-0 md:px-0"
+            className="kv-rail flex gap-3 overflow-x-auto px-3 md:px-0"
           >
             {loading
               ? Array.from({ length: 4 }).map((_, i) => (

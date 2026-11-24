@@ -9,9 +9,7 @@ import { Heart, Menu, Search, ShoppingCart, User } from 'lucide-react';
 
 import { cn } from '@/lib/utils';
 
-import { HeaderMember } from '@/components/membership/header-member';
-
-import { KovenikBrand } from './kovenik-brand';
+import { KovenikWordmark } from './kovenik-wordmark';
 import { NavbarMega } from './navbar-mega';
 import type { UserProfile } from './navbar';
 import { CATEGORY_LINKS, COLLECTION_LINKS, PRIMARY_LINKS } from './navbar-links';
@@ -31,10 +29,9 @@ type NavbarHeaderProps = {
   closeCart?: () => void;
 };
 
-/** Departments shown left of the logo (desktop). The second row carries the remaining primary links. */
-const LEFT_TAB_KEYS = ['top-wear', 'bottom-wear', 'plus-size'];
-const leftTabs = PRIMARY_LINKS.filter((l) => LEFT_TAB_KEYS.includes(l.key));
-const rowTwoLinks = PRIMARY_LINKS.filter((l) => !LEFT_TAB_KEYS.includes(l.key));
+/** Desktop: New In, Collections and Best Sellers sit left of the logo. Shop All and the departments live in the menu. */
+const DESKTOP_NAV_KEYS = ['new', 'collections', 'best'];
+const desktopLinks = PRIMARY_LINKS.filter((l) => DESKTOP_NAV_KEYS.includes(l.key));
 
 const ICON_BTN =
   'relative flex h-11 w-11 shrink-0 items-center justify-center text-kv-ink transition-colors hover:text-kv-gold-text';
@@ -86,7 +83,7 @@ export function NavbarHeader({
     <form
       onSubmit={handleSearchSubmit}
       role="search"
-      className="flex h-12 w-full items-center gap-2 rounded-full border border-kv-line bg-kv-bg px-4 focus-within:border-kv-ink"
+      className="flex h-12 w-full items-center gap-2 rounded-full border border-kv-ink bg-kv-bg px-4 focus-within:shadow-[0_0_0_1px_#0a0a0a]"
     >
       <input
         id={`site-search-${idSuffix}`}
@@ -95,7 +92,7 @@ export function NavbarHeader({
         onChange={(e) => setSearchQuery(e.target.value)}
         placeholder="What are you looking for?"
         aria-label="Search KOVENIK"
-        className="min-w-0 flex-1 bg-transparent text-[16px] text-kv-ink outline-none placeholder:text-kv-sub"
+        className="min-w-0 flex-1 bg-transparent text-[16px] text-kv-ink outline-none focus-visible:!outline-none placeholder:text-kv-sub"
       />
       <button type="submit" aria-label="Search" className="flex h-9 w-9 items-center justify-center text-kv-ink">
         <Search className="h-[18px] w-[18px]" strokeWidth={1.8} />
@@ -135,13 +132,10 @@ export function NavbarHeader({
     </button>
   );
 
-  const logo = (cls: string, bearCls: string, badgeCls: string) => (
-    <div className="relative shrink-0">
-      <Link href="/" aria-label="Kovenik home" className="block">
-        <KovenikBrand variant="bust" className={cls} bearClassName={bearCls} />
-      </Link>
-      <HeaderMember className={badgeCls} />
-    </div>
+  const logo = (size: 'sm' | 'md') => (
+    <Link href="/" aria-label="Kovenik home" className="block shrink-0">
+      <KovenikWordmark size={size} />
+    </Link>
   );
 
   return (
@@ -162,39 +156,22 @@ export function NavbarHeader({
           <div className="kv-gutter grid h-[84px] w-full grid-cols-[1fr_auto_1fr] items-center">
             <div className="flex h-full items-center gap-4 xl:gap-8">
               {hamburger}
-              <nav aria-label="Departments" className="flex h-full items-center gap-5 xl:gap-9">
-                {leftTabs.map((tab) => {
-                  const active = onShop && category === tab.key;
-                  return (
-                    <Link
-                      key={tab.key}
-                      href={tab.href}
-                      aria-current={active ? 'page' : undefined}
-                      className="relative flex h-full items-center font-oswald text-[19px] font-semibold uppercase tracking-[0.05em] text-kv-ink transition-colors duration-200 hover:text-kv-gold-text xl:text-[21px] xl:tracking-[0.08em]"
-                    >
-                      {tab.label}
-                      {active && <span aria-hidden="true" className="absolute inset-x-0 bottom-0 h-[3px] bg-kv-gold" />}
-                    </Link>
-                  );
-                })}
-              </nav>
+              <NavbarMega
+                links={desktopLinks}
+                isActive={activeKey}
+                collectionsActive={onShop && [...COLLECTION_LINKS, ...CATEGORY_LINKS].some((c) => c.slug === category)}
+              />
             </div>
 
             <div className="justify-self-center">
-              {logo('h-[46px] w-[131px]', '-my-1 h-[80px] translate-y-[2px]', '')}
+              {logo('md')}
             </div>
 
             <div className="flex items-center gap-1 justify-self-end">
-              <div className="mr-2 w-[170px] xl:mr-3 xl:w-[300px]">{searchForm('d')}</div>
+              <div className="mr-2 w-[170px] xl:mr-3 xl:w-[280px]">{searchForm('d')}</div>
               {iconButtons(true)}
             </div>
           </div>
-
-          <NavbarMega
-            links={rowTwoLinks}
-            isActive={activeKey}
-            collectionsActive={onShop && [...COLLECTION_LINKS, ...CATEGORY_LINKS].some((c) => c.slug === category)}
-          />
         </div>
 
         {/* ===================== MOBILE / TABLET ===================== */}
@@ -202,7 +179,7 @@ export function NavbarHeader({
           <div className="flex h-14 items-center justify-between pl-1 pr-2">
             <div className="flex min-w-0 items-center">
               {hamburger}
-              {logo('h-[32px] w-[91px]', '-my-1 h-[55px] translate-y-[2px]', '')}
+              {logo('sm')}
             </div>
             <div className="flex items-center">
               {iconButtons(false)}

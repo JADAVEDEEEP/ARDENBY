@@ -826,6 +826,9 @@
   --c-mist: #D1D1D1;
 }
 
+:root { --kv-top: 124px; }
+html[data-bar='off'] { --kv-top: 84px; }
+
 .kv-flat {
   font-family: var(--font-archivo), Arial, sans-serif;
   color: var(--c-ink);

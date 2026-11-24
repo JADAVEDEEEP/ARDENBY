@@ -37,7 +37,8 @@ function ribbonText(product: Product): string {
   return product.limitedEdition ? 'Limited drop' : '';
 }
 
-export const ProductCard = memo(function ProductCard({ product, priority = false, className }: ProductCardProps) {
+export const ProductCard = memo(function ProductCard({ product, variant = 'grid', priority = false, className }: ProductCardProps) {
+  const arrival = variant === 'arrival';
   const { isWishlisted, toggle, loginModalOpen, closeLoginModal } = useWishlistToggle(product);
 
   const image = product.images?.[0] || PRODUCT_FALLBACK_IMAGE;
@@ -93,13 +94,46 @@ export const ProductCard = memo(function ProductCard({ product, priority = false
             />
           </button>
 
-          {ribbon && (
+                    {arrival && ribbon && (
+            <span className="pointer-events-none absolute bottom-0 left-0 z-[5] max-w-[80%] bg-kv-ink px-3 py-1.5 text-[10px] font-bold uppercase leading-[1.15] tracking-[0.06em] text-white md:text-[11px]">
+              {ribbon}
+            </span>
+          )}
+
+          {!arrival && ribbon && (
             <span className="pointer-events-none absolute inset-x-0 bottom-0 bg-kv-ink px-2 py-2 text-center text-[12px] font-bold uppercase tracking-[0.1em] text-white">
               {ribbon}
             </span>
           )}
         </div>
 
+        {arrival ? (
+          <div className="flex flex-1 flex-col px-0.5 pt-3">
+            <Link href={`/product/${product.slug}`} className="block transition-colors hover:text-kv-gold-text">
+              <h3 title={product.name} className="line-clamp-1 text-[15px] font-bold leading-[1.35] text-kv-ink md:text-[16px]">
+                {product.name}
+              </h3>
+            </Link>
+            {product.categoryLabel && (
+              <p className="line-clamp-1 text-[14px] leading-5 text-kv-sub md:text-[15px]">{product.categoryLabel}</p>
+            )}
+            {fit && (
+              <span className="mt-1.5 inline-block self-start bg-kv-gold px-2 py-1 text-[11px] font-bold uppercase leading-none tracking-[0.08em] text-white md:text-[12px]">
+                {fit}
+              </span>
+            )}
+            <div className="mt-1.5 flex flex-wrap items-baseline gap-x-2">
+              <span className="whitespace-nowrap text-[16px] font-bold leading-6 text-kv-ink md:text-[17px]">{formatINR(price)}</span>
+              {onSale && (
+                <>
+                  <span className="whitespace-nowrap text-[13px] leading-6 text-kv-sub line-through">{formatINR(mrp)}</span>
+                  <span className="whitespace-nowrap text-[13px] font-bold uppercase leading-6 text-kv-gold-text">{discount}% off</span>
+                </>
+              )}
+            </div>
+            <MemberPriceTag productId={product.id} price={price} />
+          </div>
+        ) : (
         <div className="flex flex-1 flex-col pt-3.5">
           <p className="mb-1 text-[12px] font-bold uppercase tracking-[0.24em] text-kv-gold-text">Kovenik</p>
           <Link href={`/product/${product.slug}`} className="block transition-colors hover:text-kv-gold-text">
@@ -135,6 +169,7 @@ export const ProductCard = memo(function ProductCard({ product, priority = false
             <MemberPriceTag productId={product.id} price={price} />
           </div>
         </div>
+        )}
       </article>
 
       <WishlistLoginModal open={loginModalOpen} onClose={closeLoginModal} />

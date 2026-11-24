@@ -125,7 +125,7 @@ function ProductCard({ product, tag, onNavigate }: { product: Product; tag: stri
   return (
     <li className="w-[150px] shrink-0 snap-start xl:w-[168px]">
       <Link href={`/product/${product.slug}`} onClick={onNavigate} className="group block">
-        <span className="relative block aspect-[3/4] overflow-hidden bg-kv-img">
+        <span className="relative block aspect-[3/4] overflow-hidden rounded-2xl bg-kv-img shadow-[0_4px_14px_rgba(0,0,0,0.1)]">
           <SafeImage
             src={product.images[0]}
             fallback={PRODUCT_FALLBACK_IMAGE}
@@ -134,12 +134,12 @@ function ProductCard({ product, tag, onNavigate }: { product: Product; tag: stri
             sizes="170px"
             className="object-cover object-top transition duration-500 group-hover:scale-[1.06]"
           />
-          <span className="absolute left-2 top-2 bg-kv-ink px-2 py-1 text-[11px] font-bold uppercase leading-none tracking-[0.12em] text-white">
+          <span className="absolute left-2 top-2 rounded-full bg-kv-ink px-2.5 py-1 text-[11px] font-bold uppercase leading-none tracking-[0.12em] text-white">
             {tag}
           </span>
           <span
             aria-hidden="true"
-            className="absolute inset-x-0 bottom-0 translate-y-full bg-kv-ink/90 py-2 text-center text-[12px] font-bold uppercase tracking-[0.14em] text-white transition-transform duration-300 group-hover:translate-y-0"
+            className="absolute inset-x-2 bottom-2 translate-y-[140%] rounded-full bg-kv-ink/90 py-2 text-center text-[12px] font-bold uppercase tracking-[0.14em] text-white transition-transform duration-300 group-hover:translate-y-0"
           >
             View
           </span>
@@ -160,23 +160,27 @@ type Tile = { slug: string; label: string; desc: string; href: string; image: st
 
 function CollectionTile({ tile, onNavigate }: { tile: Tile; onNavigate: () => void }) {
   return (
-    <li className="w-[170px] shrink-0 snap-start xl:w-[190px]">
-      <Link href={tile.href} onClick={onNavigate} className="group relative block aspect-[3/4] overflow-hidden bg-kv-ink">
+    <li className="w-[176px] shrink-0 snap-start xl:w-[196px]">
+      <Link
+        href={tile.href}
+        onClick={onNavigate}
+        className="group relative block aspect-[3/4] overflow-hidden rounded-2xl bg-kv-ink shadow-[0_6px_18px_rgba(0,0,0,0.12)] transition-shadow duration-300 hover:shadow-[0_12px_28px_rgba(0,0,0,0.22)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-kv-ink"
+      >
         <SafeImage
           src={tile.image}
           fallback={categoryImage(tile.slug)}
           alt=""
           fill
-          sizes="190px"
-          className="object-cover object-top opacity-95 transition duration-500 group-hover:scale-[1.07] group-hover:opacity-100"
+          sizes="196px"
+          className="object-cover object-top transition duration-500 group-hover:scale-[1.06]"
         />
-        <span aria-hidden="true" className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/25 to-transparent" />
-        <span className="absolute inset-x-0 bottom-0 p-3 text-white">
-          <span className="block font-oswald text-[19px] font-semibold uppercase leading-tight tracking-[0.05em]">
+        {/* Caption sits on its own dark card, so it reads on light and dark photos alike. */}
+        <span className="absolute inset-x-2 bottom-2 rounded-xl bg-black/75 px-3 py-2.5 text-white backdrop-blur-sm">
+          <span className="block font-oswald text-[19px] font-semibold uppercase leading-tight tracking-[0.05em] text-white">
             {tile.label}
           </span>
-          <span className="mt-0.5 block text-[12px] leading-snug text-white/80">{tile.desc}</span>
-          <span className="mt-2 flex items-center gap-1 text-[11px] font-bold uppercase tracking-[0.14em] text-white/90">
+          <span className="mt-0.5 block text-[12.5px] leading-snug text-white/90">{tile.desc}</span>
+          <span className="mt-2 flex items-center gap-1 text-[11px] font-bold uppercase tracking-[0.14em] text-kv-gold-dark">
             {tile.count > 0 ? `${tile.count} styles` : 'Explore'}
             <ArrowRight className="h-3.5 w-3.5 transition-transform duration-300 group-hover:translate-x-1" aria-hidden="true" />
           </span>
@@ -191,7 +195,7 @@ function Skeletons() {
     <>
       {Array.from({ length: 6 }, (_, i) => (
         <li key={i} aria-hidden="true" className="w-[150px] shrink-0 xl:w-[168px]">
-          <div className="aspect-[3/4] animate-pulse bg-kv-img" />
+          <div className="aspect-[3/4] animate-pulse rounded-2xl bg-kv-img" />
           <div className="mt-2 h-3 w-4/5 animate-pulse bg-kv-img" />
           <div className="mt-1.5 h-3 w-1/3 animate-pulse bg-kv-img" />
         </li>
@@ -253,7 +257,7 @@ function Panel({ id, panel, onNavigate, products, loading }: { id: PanelKey; pan
         <Link
           href={panel.href}
           onClick={onNavigate}
-          className="group mt-6 inline-flex min-h-[46px] items-center justify-center gap-2 bg-kv-ink px-5 text-[13px] font-bold uppercase tracking-[0.12em] text-white transition-colors hover:bg-black"
+          className="group mt-6 inline-flex min-h-[46px] items-center justify-center gap-2 rounded-full bg-kv-ink px-6 text-[13px] font-bold uppercase tracking-[0.12em] text-white transition-colors hover:bg-black"
         >
           {panel.cta}
           <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" aria-hidden="true" />
@@ -276,7 +280,7 @@ function Panel({ id, panel, onNavigate, products, loading }: { id: PanelKey; pan
 /* ------------------------------------------------------------------ the nav */
 
 /**
- * Second desktop nav row. "New In", "Best Sellers" and "Collections" open a full-width panel with an
+ * Desktop nav left of the logo (panels anchor to the sticky header). "New In", "Best Sellers" and "Collections" open a full-width panel with an
  * image slider; "Shop All" stays a plain link. Opens on hover or focus, a click pins it, Esc closes.
  */
 export function NavbarMega({ links, isActive, collectionsActive }: NavbarMegaProps) {
@@ -322,7 +326,7 @@ export function NavbarMega({ links, isActive, collectionsActive }: NavbarMegaPro
   }, [pinned, close]);
 
   const TRIGGER =
-    'relative flex h-full items-center gap-1 whitespace-nowrap text-[16px] font-bold uppercase tracking-[0.08em] text-kv-ink transition-colors duration-200 hover:text-kv-gold-text xl:text-[17px]';
+    'relative flex h-full items-center gap-1 whitespace-nowrap text-[15px] font-bold uppercase tracking-[0.06em] text-kv-ink transition-colors duration-200 hover:text-kv-gold-text xl:text-[16px] xl:tracking-[0.08em]';
 
   const underline = <span aria-hidden="true" className="absolute inset-x-0 bottom-0 h-[3px] bg-kv-gold" />;
 
@@ -330,7 +334,7 @@ export function NavbarMega({ links, isActive, collectionsActive }: NavbarMegaPro
     <nav
       ref={navRef}
       aria-label="Primary"
-      className="relative border-t border-kv-line"
+      className="h-full"
       onMouseLeave={scheduleClose}
       onBlur={(e) => {
         if (!navRef.current?.contains(e.relatedTarget as Node | null)) close();
@@ -339,7 +343,7 @@ export function NavbarMega({ links, isActive, collectionsActive }: NavbarMegaPro
         if (e.key === 'Escape') close();
       }}
     >
-      <ul className="kv-gutter flex h-14 w-full items-center justify-center gap-8 xl:gap-14">
+      <ul className="flex h-full items-center gap-4 xl:gap-8">
         {links.map((link) => {
           if (link.key === 'collections') {
             const isOpen = open === 'collections';
@@ -396,7 +400,7 @@ export function NavbarMega({ links, isActive, collectionsActive }: NavbarMegaPro
             aria-hidden={!isOpen}
             onMouseEnter={cancelClose}
             className={cn(
-              'absolute inset-x-0 top-full z-50 border-t-2 border-kv-gold bg-kv-bg shadow-[0_18px_40px_rgba(0,0,0,0.14)] transition duration-200 ease-out motion-reduce:transition-none',
+              'absolute inset-x-0 top-full z-50 rounded-b-[28px] border-t-2 border-kv-gold bg-kv-bg shadow-[0_18px_40px_rgba(0,0,0,0.14)] transition duration-200 ease-out motion-reduce:transition-none',
               isOpen ? 'visible translate-y-0 opacity-100' : 'invisible pointer-events-none -translate-y-2 opacity-0'
             )}
           >

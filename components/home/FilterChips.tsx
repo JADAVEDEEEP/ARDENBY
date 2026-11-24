@@ -12,10 +12,10 @@ interface FilterChipsProps {
   label: string;
 }
 
-/** Pill filter chips. Scroll sideways on mobile (no visible scrollbar). */
+/** Pill filter chips, left-aligned in one row. Scroll sideways when they do not fit (no visible scrollbar). */
 export function FilterChips({ options, active, onChange, label }: FilterChipsProps) {
   return (
-    <div role="group" aria-label={label} className="kv-rail -mx-[clamp(16px,3vw,48px)] mb-6 flex gap-2 overflow-x-auto px-[clamp(16px,3vw,48px)] md:mx-0 md:flex-wrap md:px-0">
+    <div role="group" aria-label={label} className="kv-rail flex gap-3 overflow-x-auto px-3 py-3 md:px-[clamp(16px,3vw,48px)]">
       {options.map((option) => {
         const isActive = option.id === active;
         return (
@@ -25,10 +25,10 @@ export function FilterChips({ options, active, onChange, label }: FilterChipsPro
             onClick={() => onChange(option.id)}
             aria-pressed={isActive}
             className={cn(
-              'inline-flex min-h-[48px] shrink-0 items-center rounded-full border px-5 text-[14px] font-bold uppercase tracking-[0.08em] transition-colors',
+              'inline-flex min-h-[40px] shrink-0 items-center rounded-full border px-5 text-[14px] font-semibold transition-colors',
               isActive
                 ? 'border-kv-ink bg-kv-ink text-white'
-                : 'border-kv-line bg-kv-bg text-kv-ink hover:border-kv-gold-text hover:text-kv-gold-text'
+                : 'border-kv-line bg-kv-bg text-kv-ink hover:border-kv-ink'
             )}
           >
             {option.label}

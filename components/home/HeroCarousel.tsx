@@ -42,10 +42,10 @@ export function HeroCarousel({ products }: HeroCarouselProps) {
       className="w-full bg-kv-bg"
     >
       {/* Edge to edge: image flush left, content fills the rest */}
-      <div className="grid w-full md:grid-cols-2">
+      <div className="grid w-full md:grid-cols-2 lg:min-h-[calc(100svh-var(--kv-top))]">
         <div className="w-full md:contents">
           {/* Banner slider: live banners from the admin panel */}
-          <div className="relative aspect-[4/5] w-full overflow-hidden bg-kv-ink md:aspect-auto md:min-h-[560px]">
+          <div className="relative aspect-[4/5] w-full overflow-hidden bg-kv-ink md:aspect-auto md:min-h-[560px] lg:min-h-0">
             <BannerSlider />
           </div>
 
@@ -60,17 +60,17 @@ export function HeroCarousel({ products }: HeroCarouselProps) {
         </div>
 
         {/* Desktop panel */}
-        <div className="kv-gutter hidden flex-col items-center justify-center py-10 text-center md:flex">
+        <div className="kv-gutter hidden flex-col items-center justify-center py-10 text-center md:flex lg:py-6">
           <p className="text-[13px] font-bold uppercase tracking-[0.2em] text-kv-gold-text">Graphic streetwear</p>
           <h1 className="mt-3 font-oswald text-[56px] font-bold uppercase leading-none tracking-[0.04em] text-kv-ink lg:text-[64px]">
             Art you can wear
           </h1>
 
           {thumbs.length > 0 && (
-            <ul className="mt-8 grid w-full max-w-[600px] grid-cols-3 gap-4">
+            <ul className="mt-6 grid w-full max-w-[600px] grid-cols-3 gap-4 lg:min-h-[150px] lg:flex-1 lg:max-h-[320px]">
               {thumbs.map((p) => (
-                <li key={p.id}>
-                  <Link href={`/product/${p.slug}`} aria-label={p.name} className="relative block aspect-[3/4] overflow-hidden bg-kv-img">
+                <li key={p.id} className="lg:min-h-0">
+                  <Link href={`/product/${p.slug}`} aria-label={p.name} className="relative block aspect-[3/4] overflow-hidden bg-kv-img lg:aspect-auto lg:h-full">
                     <SafeImage
                       src={p.images[0]}
                       alt={p.name}
