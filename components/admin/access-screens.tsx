@@ -1,6 +1,8 @@
 'use client';
 
 import Link from 'next/link';
+
+import { KovenikWordmark } from '@/components/layout/kovenik-wordmark';
 import { Lock, RefreshCw, ShieldAlert } from 'lucide-react';
 
 const FRAME =
@@ -10,7 +12,7 @@ export function AdminChecking({ label = 'Checking admin access…' }: { label?: 
   return (
     <main className={FRAME}>
       <div className="text-center">
-        <p className="font-serif text-[24px] uppercase tracking-[0.2em]">Kovenik</p>
+        <div className="flex justify-center"><KovenikWordmark height={56} /></div>
         <p className="mt-6 text-[15px] text-[#5A6075]">{label}</p>
       </div>
     </main>

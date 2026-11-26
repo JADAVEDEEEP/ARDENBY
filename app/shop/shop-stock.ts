@@ -5,7 +5,8 @@ export const LOW_STOCK_THRESHOLD = 5;
 export const NOTIFY_KEY = 'kovenik_notify_me';
 
 export type StockState = 'in' | 'low' | 'out';
-export type ProductColorDot = { name: string; hex: string };
+/** `hex2` is set for two-tone colours ("Black & Cream"): drawn as a split circle. */
+export type ProductColorDot = { name: string; hex: string; hex2?: string };
 
 export const stateOfQty = (qty: number): StockState =>
   qty <= 0 ? 'out' : qty <= LOW_STOCK_THRESHOLD ? 'low' : 'in';
@@ -62,14 +63,25 @@ const KNOWN_COLORS: Record<string, string> = {
   Lilac: '#C8A2C8',
   Red: '#DC2626',
   Green: '#16a34a',
+  Cream: '#F1E6D0',
+  'Off-White': '#F5F2EA',
+  Maroon: '#6d1f2c',
+  Burgundy: '#7B1E2E',
+  Charcoal: '#36393D',
+  Plum: '#5B2C4A',
+  Purple: '#5B3A8C',
+  'Washed Purple': '#7B6A9C',
+  Brown: '#6f4e37',
+  'Dark Brown': '#3E2A22',
+  Teal: '#0F6B6B',
+  Grey: '#808080',
 };
 
-const titleCase = (s: string) =>
-  s
-    .toLowerCase()
-    .split(' ')
-    .map((w) => (w ? w[0].toUpperCase() + w.slice(1) : w))
-    .join(' ');
+/** Capitalise every word, also after a hyphen ("off-white" -> "Off-White"). */
+const titleCase = (s: string) => s.toLowerCase().replace(/(^|[\s-])([a-z])/g, (_, sep: string, ch: string) => sep + ch.toUpperCase());
+
+/** "Black & Cream" / "Black and Cream" / "Black/Cream" -> ["Black", "Cream"]. One colour -> [it]. */
+const splitTwoTone = (name: string): string[] => name.split(/\s*(?:&|\/|\band\b)\s*/i).map((p) => p.trim()).filter(Boolean);
 
 /** "BLACK", " royal  blue " -> "Black", "Royal Blue". */
 export function canonicalColorName(raw: unknown): string {
@@ -80,7 +92,8 @@ export function canonicalColorName(raw: unknown): string {
 }
 
 function hexFor(name: string): string {
-  if (KNOWN_COLORS[name]) return KNOWN_COLORS[name];
+  const known = Object.keys(KNOWN_COLORS).find((k) => k.toLowerCase() === name.toLowerCase());
+  if (known) return KNOWN_COLORS[known];
   const css = name.toLowerCase().replace(/\s+/g, '');
   if (typeof CSS !== 'undefined' && CSS.supports?.('color', css)) return css;
   return '#8a8a8a';
@@ -106,7 +119,8 @@ export function normalizeProductColors(product: any): ProductColorDot[] {
     const name = canonicalColorName(raw);
     if (!name || seen.has(name.toLowerCase())) continue;
     seen.add(name.toLowerCase());
-    out.push({ name, hex: hexFor(name) });
+    const parts = splitTwoTone(name);
+    out.push(parts.length >= 2 ? { name, hex: hexFor(parts[0]), hex2: hexFor(parts[1]) } : { name, hex: hexFor(name) });
   }
   return out;
 }

@@ -8,6 +8,15 @@ export interface PublicBanner {
   mobileImageUrl: string | null;
   linkUrl: string | null;
   sortOrder: number;
+  /**
+   * Optional hero fields. The API does not send them yet; when it does, a banner with a `modelImageUrl`
+   * (transparent cut-out, same size as `imageUrl`) gets the layered hero: giant KOVENIK word behind the model plus real text.
+   */
+  modelImageUrl?: string | null;
+  mobileModelImageUrl?: string | null;
+  title?: string | null;
+  subtitle?: string | null;
+  buttonText?: string | null;
 }
 
 export type BannerStatus = 'live' | 'scheduled' | 'expired' | 'inactive';

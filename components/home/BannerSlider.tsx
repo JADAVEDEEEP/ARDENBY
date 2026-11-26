@@ -193,6 +193,11 @@ export function BannerSlider() {
                     className="h-full w-full object-cover object-[50%_40%]"
                   />
                 </picture>
+                {/* Soft dark gradient so the caption stays readable on any photo */}
+                <span
+                  aria-hidden="true"
+                  className="pointer-events-none absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-black/70 via-black/25 to-transparent"
+                />
               </SlideLink>
             </div>
           );
@@ -214,7 +219,7 @@ export function BannerSlider() {
                 <span
                   className={cn(
                     'block h-2 rounded-full transition-all duration-300',
-                    i === current ? 'w-6 bg-kv-gold' : 'w-2 bg-white/70'
+                    i === current ? 'w-6 bg-[#d92b2b]' : 'w-2 bg-white/70'
                   )}
                 />
               </button>

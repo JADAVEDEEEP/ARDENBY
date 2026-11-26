@@ -1,26 +1,35 @@
-import { cn } from '@/lib/utils';
-
 /**
- * The one KOVENIK logo: red diamond + Oswald Bold wordmark. Header, mobile menu and footer all use this,
- * so the logo stays identical everywhere. Pick a size with `size`; the colours live here only.
- * (The old bunny/crown artwork is still in kovenik-logo.tsx and the public assets, just not used here.)
+ * The one KOVENIK logo: the supplied artwork (/kovenik-wordmark.png, 2880x800, transparent).
+ * Used as-is: only the height is set, width stays auto, so it is never stretched, cropped or filtered.
+ * Every place that shows the logo (header, mobile menu, footer, login, admin, 404) renders this.
+ * The PNG has transparent padding around the letters, so the visible lettering is roughly 70% of `height`.
  */
-const SIZES = {
-  sm: 'text-[20px] gap-[7px]',
-  md: 'text-[24px] gap-2 md:text-[28px] md:gap-2.5',
-  lg: 'text-[30px] gap-2.5 md:text-[36px] md:gap-3',
-} as const;
+const HEIGHTS = { sm: 44, md: 56, lg: 72 } as const;
 
-const DIAMOND = { sm: 'h-[7px] w-[7px]', md: 'h-[8px] w-[8px] md:h-[9px] md:w-[9px]', lg: 'h-[10px] w-[10px] md:h-[11px] md:w-[11px]' } as const;
-
-export function KovenikWordmark({ size = 'md', className }: { size?: keyof typeof SIZES; className?: string }) {
+export function KovenikWordmark({
+  size = 'md',
+  height,
+  className,
+}: {
+  size?: keyof typeof HEIGHTS;
+  /** Overrides `size` with an exact pixel height (must stay at or below 800). */
+  height?: number;
+  className?: string;
+}) {
+  const h = Math.min(height ?? HEIGHTS[size], 800);
+  // Pre-scaled copies (Lanczos) for the header sizes so the artwork stays crisp instead of being squeezed down by the browser.
+  const sharp = h === 44 || h === 56;
   return (
-    <span
-      aria-label="KOVENIK"
-      className={cn('inline-flex items-center whitespace-nowrap font-oswald font-bold uppercase leading-none tracking-[0.1em] text-[#111]', SIZES[size], className)}
-    >
-      <span aria-hidden="true" className={cn('shrink-0 rotate-45 bg-[#d92b2b]', DIAMOND[size])} />
-      <span aria-hidden="true">Kovenik</span>
-    </span>
+    // Plain <img> on purpose: next/image would re-encode and resize the artwork.
+    // eslint-disable-next-line @next/next/no-img-element
+    <img
+      src={sharp ? `/kovenik-wordmark-h${h}.png` : '/kovenik-wordmark.png'}
+      srcSet={sharp ? `/kovenik-wordmark-h${h}.png 1x, /kovenik-wordmark-h${h * 2}.png 2x, /kovenik-wordmark-h${h * 3}.png 3x` : undefined}
+      alt="KOVENIK"
+      height={h}
+      style={{ height: h, width: 'auto', maxWidth: 'none' }}
+      className={className ? `block ${className}` : 'block'}
+      draggable={false}
+    />
   );
 }

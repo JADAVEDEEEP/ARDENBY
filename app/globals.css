@@ -826,8 +826,34 @@
   --c-mist: #D1D1D1;
 }
 
-:root { --kv-top: 124px; }
-html[data-bar='off'] { --kv-top: 84px; }
+:root { --kv-top: 108px; --kv-radius: 8px; }
+html[data-bar='off'] { --kv-top: 68px; }
+
+/* ---- Homepage hero --------------------------------------------------------------------------------------------
+   --kv-top is the announcement bar + header height (HeroCarousel re-measures it live; these values are the fallback).
+   Below 1024px the stage is a fixed-ratio picture and the text/collections sit under it. From 1024px it fills the
+   screen left under the bar and header, never smaller than 520px so the model, button and collections are not cut. */
+.kv-hero-stage { height: min(125vw, 640px); }
+.kv-hero-word {
+  font-size: min(24vw, 170px);
+  color: #8f8f8f;
+  opacity: 0.3;
+  text-shadow: 0 8px 22px rgba(0, 0, 0, 0.5);
+  -webkit-mask-image: linear-gradient(180deg, #000 0%, #000 28%, transparent 88%);
+  mask-image: linear-gradient(180deg, #000 0%, #000 28%, transparent 88%);
+}
+@media (min-width: 1024px) {
+  .kv-hero-stage {
+    --hero-h: clamp(520px, calc(100vh - var(--kv-top)), 960px);
+    height: var(--hero-h);
+  }
+  .kv-hero-word { font-size: min(24vw, calc(var(--hero-h) * 0.62), 520px); }
+}
+@supports (height: 100svh) {
+  @media (min-width: 1024px) {
+    .kv-hero-stage { --hero-h: clamp(520px, calc(100svh - var(--kv-top)), 960px); }
+  }
+}
 
 .kv-flat {
   font-family: var(--font-archivo), Arial, sans-serif;
@@ -1014,8 +1040,8 @@ textarea.kv-input { padding-top: 14px; padding-bottom: 14px; resize: none; line-
   --gold: #E53935;
   --line: #D2D2D2;
   --line-2: #E5E5E5;
-  --muted: #696969;
-  --soft: #878787;
+  --muted: #555555;
+  --soft: #666666;
   font-family: var(--font-inter), system-ui, sans-serif;
   color: var(--charcoal);
   line-height: 1.4;
@@ -1040,3 +1066,12 @@ textarea.kv-input { padding-top: 14px; padding-bottom: 14px; resize: none; line-
   background: linear-gradient(180deg,#fff,#E5E5E5) !important; color:#0A0A0A !important; }
 .kv-scope input, .kv-scope textarea, .kv-scope select { background:#121316 !important; color:#fff !important; border-color:#42454C !important; }
 .kv-scope input::placeholder, .kv-scope textarea::placeholder { color:#9296A0 !important; }
+
+/* Login-required wishlist dialog: short fade/rise on open (skipped for reduced motion). */
+@keyframes kv-modal-fade { from { opacity: 0; } to { opacity: 1; } }
+@keyframes kv-modal-rise { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: none; } }
+.kv-modal-backdrop { animation: kv-modal-fade 0.18s ease-out; }
+.kv-modal-panel { animation: kv-modal-rise 0.22s ease-out; }
+@media (prefers-reduced-motion: reduce) {
+  .kv-modal-backdrop, .kv-modal-panel { animation: none; }
+}

@@ -11,8 +11,9 @@ const GAP_BOTTOM = 24;
 
 /** Offset for the sticky filter column.
  *  - Content fits under the header: pin it just below the header.
- *  - Content is taller than the viewport: "sticky to bottom" (top = 100vh - content - 24px), so the
- *    page scrolls through the filters naturally and the last group stays pinned once reached.
+ *  - Content is taller than the viewport: "sticky to bottom" (top = 100vh - content - 24px), so the page scrolls
+ *    through the filters naturally (nothing is hidden behind an inner scrollbar) and the last group stays
+ *    pinned once reached.
  *  Content height is observed, so expanding / collapsing groups switches modes without a jump. */
 function useStickyTop(ref: React.RefObject<HTMLElement>) {
   const [height, setHeight] = useState(0);
@@ -43,8 +44,9 @@ function useStickyTop(ref: React.RefObject<HTMLElement>) {
   return fits ? `calc(var(--header-h, ${headerH}px) + ${GAP_TOP}px)` : `calc(100vh - ${height}px - ${GAP_BOTTOM}px)`;
 }
 
-/** Desktop filter column. The aside stretches to the full row height and carries the continuous
- *  right border; the inner wrapper is the sticky part. No inner scrolling, no fixed heights. */
+/** Desktop filter column (265px). The aside stretches to the full row height and carries the continuous right
+ *  border; the inner wrapper is the sticky part. No inner scrolling, no fixed heights: every filter stays reachable
+ *  by scrolling the page. */
 export function FilterSidebar({
   filters,
   facets,
@@ -65,8 +67,8 @@ export function FilterSidebar({
 
   return (
     <aside aria-label="Filters" className="relative z-0 hidden border-r border-[var(--line)] lg:block">
-      <div ref={innerRef} className="sticky self-start pb-[60px] pl-12 pr-8 pt-[30px]" style={{ top }}>
-        <div className="flex items-center justify-between border-b border-[var(--line-2)] pb-5">
+      <div ref={innerRef} className="sticky self-start pb-8 pl-6 pr-5 pt-6" style={{ top }}>
+        <div className="flex items-center justify-between border-b border-[var(--line-2)] pb-4">
           <h2 className="kvl-eyebrow text-[15px] text-[var(--ink)]">Filters</h2>
           <button
             type="button"

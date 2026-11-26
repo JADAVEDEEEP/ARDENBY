@@ -16,7 +16,7 @@ export function FilterGroup({
   const [open, setOpen] = useState(defaultOpen);
   const panelId = useId();
   return (
-    <section className="border-b border-[var(--line-2)] py-5">
+    <section className="border-b border-[var(--line-2)] py-4">
       <h3>
         <button
           type="button"

@@ -27,7 +27,7 @@ export default function HomePage() {
     <>
       <div className="kv-flat w-full overflow-x-clip bg-kv-bg">
         <MobileCategoryIcons />
-        <HeroCarousel products={products} />
+        <HeroCarousel products={products} loading={loading} />
         <USPStrip />
         <ProductRail
           id="home-new-arrivals"

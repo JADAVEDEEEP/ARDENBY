@@ -39,7 +39,7 @@ const ITEM =
   'w-[44%] shrink-0 md:w-[calc((100%-24px)/3)] lg:w-[calc((100%-36px)/4)] min-[1600px]:w-[calc((100%-48px)/5)]';
 
 const ARROW =
-  'absolute top-[calc(50%-48px)] z-20 hidden h-14 w-10 -translate-y-1/2 items-center justify-center text-white drop-shadow-[0_1px_4px_rgba(0,0,0,0.65)] transition-transform hover:scale-110 focus-visible:outline focus-visible:outline-2 focus-visible:outline-white disabled:pointer-events-none disabled:opacity-0 md:flex';
+  'absolute top-[calc(50%-48px)] z-20 hidden h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-white text-kv-ink shadow-[0_2px_8px_rgba(0,0,0,0.22)] transition-transform hover:scale-110 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-kv-ink disabled:pointer-events-none disabled:opacity-0 md:flex';
 
 /** Full-width horizontal carousel: swipe on touch, arrows on tablet/desktop. */
 export function ProductRail({ id, title, products, loading, error, onRetry, href }: ProductRailProps) {
@@ -97,7 +97,7 @@ export function ProductRail({ id, title, products, loading, error, onRetry, href
             disabled={!canPrev}
             className={`${ARROW} left-1`}
           >
-            <ChevronLeft className="h-10 w-10" strokeWidth={1.6} aria-hidden="true" />
+            <ChevronLeft className="h-6 w-6" strokeWidth={2} aria-hidden="true" />
           </button>
           <button
             type="button"
@@ -106,7 +106,7 @@ export function ProductRail({ id, title, products, loading, error, onRetry, href
             disabled={!canNext}
             className={`${ARROW} right-1`}
           >
-            <ChevronRight className="h-10 w-10" strokeWidth={1.6} aria-hidden="true" />
+            <ChevronRight className="h-6 w-6" strokeWidth={2} aria-hidden="true" />
           </button>
 
           <ul

@@ -14,13 +14,12 @@ export const metadata: Metadata = {
 
   ...(IS_STAGING ? { robots: { index: false, follow: false } } : {}),
 
-  title: "KÖVENIK — Wear Beyond Ordinary | Premium Men's Clothing",
+  title: "KOVENIK — Wear Beyond Ordinary | Premium Men's Clothing",
 
   description:
-    "Shop KÖVENIK premium oversized tees, graphic prints, hoodies, cargos and joggers. Discover KÖVENIK — premium men's streetwear crafted for the bold.",
+    "Shop KOVENIK premium oversized tees, graphic prints, hoodies, cargos and joggers. Discover KOVENIK — premium men's streetwear crafted for the bold.",
 
   keywords: [
-    'KÖVENIK',
     'KOVENIK',
     'KOVENIK clothing',
     'KOVENIK streetwear',
@@ -52,11 +51,11 @@ export const metadata: Metadata = {
   },
 
   openGraph: {
-    title: 'KÖVENIK — Wear Beyond Ordinary',
+    title: 'KOVENIK — Wear Beyond Ordinary',
     description:
       "Premium men's streetwear. Oversized tees, graphic prints, hoodies, cargos & more.",
     type: 'website',
-    siteName: 'KÖVENIK',
+    siteName: 'KOVENIK',
   },
 };
 

@@ -285,7 +285,7 @@ function BrandTab({ saved, onSaved, onDirty }: SectionProps<Brand>) {
             <p className={labelClass}>Current logo</p>
             <div className="flex h-32 items-center justify-center rounded-lg bg-[#11162B] p-4">
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src="/kovenik-logo.svg" alt="KOVENIK logo" className="max-h-full max-w-full object-contain" />
+              <img src="/kovenik-wordmark.png" alt="KOVENIK logo" className="max-h-full max-w-full object-contain" />
             </div>
             <p className="mt-2 text-[13px] text-[#5A6075]">
               The logo is part of the site build and is not editable here, so existing brand assets stay untouched.

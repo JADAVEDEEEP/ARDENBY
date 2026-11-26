@@ -129,6 +129,9 @@ export function NavbarMobileDrawer({
   const [page, setPage] = useState(0);
   const [pages, setPages] = useState(1);
   const { products } = useHomeProducts();
+  // The Plus Size tab appears once a Plus Size product exists.
+  const plusSize = useMemo(() => inCategory(products, 'plus-size').length > 0, [products]);
+  const tabs = useMemo(() => TABS.filter((t) => t.key !== 'plus' || plusSize), [plusSize]);
   const { categories } = useCategories();
 
   const close = useCallback(() => setMobileOpen(false), [setMobileOpen]);
@@ -293,7 +296,7 @@ export function NavbarMobileDrawer({
 
             {/* c) tabs */}
             <div role="tablist" aria-label="Departments" className="flex justify-evenly border-b border-kv-line px-2">
-              {TABS.map((t) => {
+              {tabs.map((t) => {
                 const active = t.key === tab;
                 return (
                   <button

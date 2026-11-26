@@ -4,8 +4,8 @@ import { Suspense } from 'react';
 import { ShopClient } from './shop-client';
 
 export const metadata: Metadata = {
-  title: 'Shop All | KÖVENIK',
-  description: "Shop KÖVENIK oversized tees, graphic prints and everyday essentials. Premium men's streetwear crafted for the bold.",
+  title: 'Shop All | KOVENIK',
+  description: "Shop KOVENIK oversized tees, graphic prints and everyday essentials. Premium men's streetwear crafted for the bold.",
   alternates: { canonical: '/shop' },
 };
 

@@ -19,10 +19,12 @@ import { SafeImage } from './ui/SafeImage';
 
 interface ProductCardProps {
   product: Product;
-  /** `arrival`: fit label + ribbon. `grid`: gold % OFF badge + best price. */
-  variant?: 'arrival' | 'grid';
+  /** `arrival`: fit label + ribbon. `grid`: gold % OFF badge + best price. `catalog`: label on the photo, name with a hairline, price + member pill. */
+  variant?: 'arrival' | 'grid' | 'catalog';
   priority?: boolean;
   className?: string;
+  /** Extra classes for the arrival variant's text block (e.g. side padding). */
+  textClassName?: string;
 }
 
 /** Fit tag shown on every card. */
@@ -37,8 +39,9 @@ function ribbonText(product: Product): string {
   return product.limitedEdition ? 'Limited drop' : '';
 }
 
-export const ProductCard = memo(function ProductCard({ product, variant = 'grid', priority = false, className }: ProductCardProps) {
-  const arrival = variant === 'arrival';
+export const ProductCard = memo(function ProductCard({ product, variant = 'grid', priority = false, className, textClassName }: ProductCardProps) {
+  const catalog = variant === 'catalog';
+  const arrival = variant === 'arrival' || catalog; // shares the arrival photo treatment (crop, heart circle)
   const { isWishlisted, toggle, loginModalOpen, closeLoginModal } = useWishlistToggle(product);
 
   const image = product.images?.[0] || PRODUCT_FALLBACK_IMAGE;
@@ -64,7 +67,8 @@ export const ProductCard = memo(function ProductCard({ product, variant = 'grid'
               priority={priority}
               draggable={false}
               className={cn(
-                'object-cover object-top transition duration-500 ease-out motion-reduce:transition-none',
+                arrival ? 'object-cover object-[50%_12%]' : 'object-cover object-top',
+                'transition duration-500 ease-out motion-reduce:transition-none',
                 hoverImage ? 'md:group-hover:opacity-0' : 'md:group-hover:scale-[1.04]'
               )}
             />
@@ -76,7 +80,10 @@ export const ProductCard = memo(function ProductCard({ product, variant = 'grid'
                 fill
                 sizes="(min-width: 1600px) 20vw, 25vw"
                 draggable={false}
-                className="hidden object-cover object-top opacity-0 transition duration-500 ease-out motion-reduce:transition-none md:block md:group-hover:opacity-100"
+                className={cn(
+                  'hidden object-cover opacity-0 transition duration-500 ease-out motion-reduce:transition-none md:block md:group-hover:opacity-100',
+                  arrival ? 'object-[50%_12%]' : 'object-top'
+                )}
               />
             )}
           </Link>
@@ -88,13 +95,21 @@ export const ProductCard = memo(function ProductCard({ product, variant = 'grid'
             aria-pressed={isWishlisted}
             className="group/wish absolute right-0 top-0 z-10 flex h-12 w-12 items-center justify-center focus-visible:outline focus-visible:outline-2 focus-visible:outline-kv-ink"
           >
-            <Heart
-              className={cn('h-6 w-6 transition duration-200 group-hover/wish:scale-110 group-active/wish:scale-90 motion-reduce:transition-none', isWishlisted ? 'fill-kv-gold text-kv-gold' : 'text-kv-ink')}
-              strokeWidth={1.8}
-            />
+            <span className={cn('flex items-center justify-center', arrival && 'h-9 w-9 rounded-full bg-white/75')}>
+              <Heart
+                className={cn('h-6 w-6 transition duration-200 group-hover/wish:scale-110 group-active/wish:scale-90 motion-reduce:transition-none', isWishlisted ? 'fill-kv-gold text-kv-gold' : 'text-kv-ink')}
+                strokeWidth={1.8}
+              />
+            </span>
           </button>
 
-                    {arrival && ribbon && (
+          {catalog && (ribbon || fit) && (
+            <span className="pointer-events-none absolute bottom-0 left-0 z-[5] max-w-[90%] bg-black/70 px-2.5 py-1.5 text-[10px] font-semibold uppercase leading-[1.2] tracking-[0.06em] text-white md:text-[11px]">
+              {[ribbon, fit].filter(Boolean).join(' · ')}
+            </span>
+          )}
+
+          {variant === 'arrival' && ribbon && (
             <span className="pointer-events-none absolute bottom-0 left-0 z-[5] max-w-[80%] bg-kv-ink px-3 py-1.5 text-[10px] font-bold uppercase leading-[1.15] tracking-[0.06em] text-white md:text-[11px]">
               {ribbon}
             </span>
@@ -107,8 +122,31 @@ export const ProductCard = memo(function ProductCard({ product, variant = 'grid'
           )}
         </div>
 
-        {arrival ? (
-          <div className="flex flex-1 flex-col px-0.5 pt-3">
+        {catalog ? (
+          <div className={cn('flex flex-1 flex-col pt-3', textClassName)}>
+            {/* Border + padding live on the link: padding on a line-clamped element lets the clipped 2nd line show through. */}
+            <Link href={`/product/${product.slug}`} className="block border-b border-kv-line pb-1.5 transition-colors hover:text-kv-gold-text">
+              <h3 title={product.name} className="line-clamp-1 text-[14px] font-bold leading-[1.35] text-kv-ink md:text-[15px]">
+                {product.name}
+              </h3>
+            </Link>
+            {product.categoryLabel && (
+              <p className="mt-1.5 line-clamp-1 text-[14px] leading-5 text-kv-sub md:text-[15px]">{product.categoryLabel}</p>
+            )}
+            {/* Regular price always shown as-is; the member price is an extra offer, never a strike-through of what a shopper pays today. */}
+            <div className="mt-1.5 flex flex-wrap items-baseline gap-x-2">
+              <span className="whitespace-nowrap text-[16px] font-bold leading-6 text-kv-ink md:text-[17px]">{formatINR(price)}</span>
+              {onSale && (
+                <>
+                  <span className="whitespace-nowrap text-[13px] leading-6 text-kv-sub line-through">{formatINR(mrp)}</span>
+                  <span className="whitespace-nowrap text-[13px] font-bold uppercase leading-6 text-kv-gold-text">{discount}% off</span>
+                </>
+              )}
+            </div>
+            <MemberPriceTag productId={product.id} price={price} pill />
+          </div>
+        ) : arrival ? (
+          <div className={cn('flex flex-1 flex-col px-0.5 pt-3', textClassName)}>
             <Link href={`/product/${product.slug}`} className="block transition-colors hover:text-kv-gold-text">
               <h3 title={product.name} className="line-clamp-1 text-[15px] font-bold leading-[1.35] text-kv-ink md:text-[16px]">
                 {product.name}
@@ -118,7 +156,7 @@ export const ProductCard = memo(function ProductCard({ product, variant = 'grid'
               <p className="line-clamp-1 text-[14px] leading-5 text-kv-sub md:text-[15px]">{product.categoryLabel}</p>
             )}
             {fit && (
-              <span className="mt-1.5 inline-block self-start bg-kv-gold px-2 py-1 text-[11px] font-bold uppercase leading-none tracking-[0.08em] text-white md:text-[12px]">
+              <span className="mt-1.5 inline-block self-start border border-kv-gold px-[7px] py-[3px] text-[11px] font-semibold uppercase leading-none tracking-[0.08em] text-kv-gold-text md:text-[12px]">
                 {fit}
               </span>
             )}
@@ -172,7 +210,7 @@ export const ProductCard = memo(function ProductCard({ product, variant = 'grid'
         )}
       </article>
 
-      <WishlistLoginModal open={loginModalOpen} onClose={closeLoginModal} />
+      <WishlistLoginModal open={loginModalOpen} onClose={closeLoginModal} product={{ name: product.name, image: product.images?.[0] }} />
     </>
   );
 });

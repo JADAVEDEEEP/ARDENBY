@@ -16,7 +16,9 @@ import { useRouter } from 'next/navigation';
 
 import { motion } from 'framer-motion';
 
-import { Heart, Star, ShoppingCart, X } from 'lucide-react';
+import Image from 'next/image';
+
+import { Check, Heart, Star, ShoppingCart, X } from 'lucide-react';
 
 import type { Product } from '@/types';
 
@@ -119,9 +121,12 @@ function colorToHex(name: string): string {
 export function WishlistLoginModal({
   open,
   onClose,
+  product,
 }: {
   open: boolean;
   onClose: () => void;
+  /** The piece the shopper tried to save; shown in the dialog when given. */
+  product?: { name: string; image?: string };
 }) {
   const [mounted, setMounted] = useState(false);
   const dialogRef = useRef<HTMLDivElement>(null);
@@ -140,6 +145,10 @@ export function WishlistLoginModal({
 
     const previouslyFocused = document.activeElement as HTMLElement | null;
     const previousOverflow = document.body.style.overflow;
+    const previousPadding = document.body.style.paddingRight;
+    // Locking scroll removes the scrollbar; pad by its width so the page behind doesn't jump sideways.
+    const scrollbar = window.innerWidth - document.documentElement.clientWidth;
+    if (scrollbar > 0) document.body.style.paddingRight = `${scrollbar}px`;
     document.body.style.overflow = 'hidden';
 
     const getFocusable = () =>
@@ -149,7 +158,8 @@ export function WishlistLoginModal({
         ) ?? []
       );
 
-    getFocusable()[0]?.focus();
+    // Start on the main action (not the close button) so Enter does the useful thing.
+    (dialogRef.current?.querySelector<HTMLElement>('[data-autofocus]') ?? getFocusable()[0])?.focus();
 
     const onKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
@@ -179,6 +189,7 @@ export function WishlistLoginModal({
     return () => {
       document.removeEventListener('keydown', onKeyDown);
       document.body.style.overflow = previousOverflow;
+      document.body.style.paddingRight = previousPadding;
       previouslyFocused?.focus?.();
     };
   }, [open, mounted]);
@@ -187,8 +198,9 @@ export function WishlistLoginModal({
 
   return createPortal(
     <div
-      className="fixed inset-0 z-[100] flex items-end justify-center bg-black/50 p-4 backdrop-blur-sm sm:items-center"
-      onClick={(e) => {
+      className="kv-modal-backdrop fixed inset-0 z-[100] flex items-end justify-center bg-black/50 p-4 backdrop-blur-sm sm:items-center"
+      // mousedown (not click) so dragging out of the box while selecting text doesn't close it.
+      onMouseDown={(e) => {
         if (e.target === e.currentTarget) onClose();
       }}
     >
@@ -198,32 +210,67 @@ export function WishlistLoginModal({
         aria-modal="true"
         aria-labelledby={titleId}
         aria-describedby={descId}
-        className="relative max-h-[calc(100dvh-2rem)] w-full max-w-[420px] overflow-y-auto border-t-4 border-[#E53935] bg-white px-6 pb-7 pt-9 text-center shadow-2xl sm:px-8"
+        className="kv-modal-panel relative max-h-[calc(100dvh-2rem)] w-full max-w-[440px] overflow-y-auto overscroll-contain rounded-[12px] bg-white px-6 pb-[max(1.5rem,env(safe-area-inset-bottom))] pt-9 text-center shadow-2xl sm:rounded-[8px] sm:px-9 sm:pb-8 sm:pt-10"
       >
-        <span className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-[#E53935]/10">
-          <Heart className="h-7 w-7 fill-[#E53935] text-[#E53935]" aria-hidden="true" />
+        {/* Brand-red top edge */}
+        <span aria-hidden="true" className="absolute inset-x-0 top-0 h-1 bg-[#E53935]" />
+
+        {/* Heart badge: solid red heart in a soft ring */}
+        <span className="mx-auto mb-5 flex h-[68px] w-[68px] items-center justify-center rounded-full bg-[#E53935]/10">
+          <span className="flex h-12 w-12 items-center justify-center rounded-full bg-[#E53935] shadow-[0_6px_16px_rgba(229,57,53,0.35)]">
+            <Heart className="h-6 w-6 fill-white text-white" aria-hidden="true" />
+          </span>
         </span>
 
         <h2
           id={titleId}
-          className="font-oswald text-[26px] font-bold uppercase leading-tight tracking-[0.04em] text-[#111111] sm:text-[30px]"
+          className="font-oswald text-[28px] font-bold uppercase leading-[1.1] tracking-[0.04em] text-[#111111] sm:text-[32px]"
         >
-          Sign in to save your favourites
+          Save it to your wishlist
         </h2>
 
-        <p id={descId} className="mx-auto mt-3 max-w-[320px] text-[15px] leading-relaxed text-[#444444]">
-          Keep the pieces you love in one place, come back to them on any device, and never lose track of a drop you
-          want.
+        <p id={descId} className="mx-auto mt-3 max-w-[330px] text-[15px] leading-relaxed text-[#555555]">
+          Sign in to keep the pieces you love in one place, on any device.
         </p>
 
-        <div className="mt-6 flex flex-col gap-3">
+        {product && (
+          <div className="mt-5 flex items-center gap-3 border border-[#E5E5E5] bg-[#FAFAFA] p-2.5 text-left">
+            <span className="relative h-[60px] w-[48px] shrink-0 overflow-hidden bg-[#EFEFED]">
+              {product.image && (
+                <Image src={product.image} alt="" fill sizes="48px" className="object-cover object-[50%_12%]" />
+              )}
+            </span>
+            <span className="min-w-0">
+              <span className="block text-[11px] font-bold uppercase tracking-[0.14em] text-[#E53935]">You are saving</span>
+              <span className="mt-0.5 line-clamp-2 block text-[14px] font-bold leading-snug text-[#111111]">{product.name}</span>
+            </span>
+          </div>
+        )}
+
+        <ul className="mt-5 space-y-2.5 text-left text-[14px] text-[#333333]">
+          {[
+            'Your wishlist follows you to any device',
+            'Pick up right where you left off',
+            'Saved details make checkout quicker',
+          ].map((line) => (
+            <li key={line} className="flex items-start gap-2.5">
+              <span className="mt-[1px] flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-[#111111]">
+                <Check className="h-3 w-3 text-white" strokeWidth={3} aria-hidden="true" />
+              </span>
+              <span className="leading-5">{line}</span>
+            </li>
+          ))}
+        </ul>
+
+        <div className="mt-7 flex flex-col gap-1.5">
           <button
             type="button"
+            data-autofocus
             onClick={() => {
               onClose();
               window.dispatchEvent(new Event('ardenby-open-auth'));
             }}
-            className="inline-flex min-h-[48px] w-full items-center justify-center bg-[#111111] px-6 text-[14px] font-bold uppercase tracking-[0.1em] text-white transition-colors hover:bg-[#E53935] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#E53935]"
+            className="inline-flex min-h-[52px] w-full items-center justify-center bg-[#111111] px-6 text-[14px] font-bold uppercase tracking-[0.12em] text-white transition-colors hover:bg-[#E53935] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#E53935]"
           >
             Sign in or create account
           </button>
@@ -753,7 +800,7 @@ export function ProductCard({
         </div>
       </motion.div>
 
-      <WishlistLoginModal open={loginModalOpen} onClose={closeLoginModal} />
+      <WishlistLoginModal open={loginModalOpen} onClose={closeLoginModal} product={{ name: product.name, image: product.images?.[0] }} />
     </>
   );
 }

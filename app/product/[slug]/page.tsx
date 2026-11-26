@@ -1,5 +1,6 @@
 'use client';
 
+import { KovenikWordmark } from '@/components/layout/kovenik-wordmark';
 import Link from 'next/link';
 import { useParams, useRouter } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
@@ -626,7 +627,7 @@ export default function ProductPage() {
     return (
       <main className="flex min-h-screen items-center justify-center bg-[#F7F7F7] px-6 text-center">
         <div>
-          <p className="font-serif text-2xl tracking-[0.12em] text-[#111111]">KOVENIK</p>
+          <div className="flex justify-center"><KovenikWordmark height={56} /></div>
           <h1 className="mt-3 text-3xl text-[#111111]">Product not found</h1>
           <p className="mt-2 text-sm text-[#5A5A5A]">This piece may have been removed or the link is incorrect.</p>
           <Link

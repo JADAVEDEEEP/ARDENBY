@@ -1,4 +1,8 @@
+'use client';
+
 import Link from 'next/link';
+
+import { usePlusSizeAvailable } from '@/hooks/use-plus-size';
 
 import { categoryImage } from './home-assets';
 import { SafeImage } from './ui/SafeImage';
@@ -16,10 +20,11 @@ const ITEMS = [
 
 /** Mobile only: swipeable round category icons with a gold ring. */
 export function MobileCategoryIcons() {
+  const plusSize = usePlusSizeAvailable();
   return (
     <nav aria-label="Shop by category" className="bg-kv-bg md:hidden">
       <ul className="kv-rail flex gap-4 overflow-x-auto px-4 py-4">
-        {ITEMS.map((item) => (
+        {ITEMS.filter((item) => item.slug !== 'plus-size' || plusSize).map((item) => (
           <li key={item.slug} className="w-[80px] shrink-0">
             <Link href={item.href} className="flex flex-col items-center gap-2">
               <span className="relative block h-[68px] w-[68px] overflow-hidden rounded-full border-2 border-kv-gold bg-kv-img">

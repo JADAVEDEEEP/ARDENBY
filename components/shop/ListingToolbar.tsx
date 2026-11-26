@@ -100,19 +100,30 @@ export function ListingToolbarRow({
   onSort: (s: SortKey) => void;
 }) {
   return (
-    <div className="flex items-center justify-between gap-6">
-      <div className="min-w-0">
-        <Breadcrumb current={current} />
-      </div>
-      <p className="shrink-0 text-[13px] text-[var(--soft)] lg:hidden">
-        {total} {total === 1 ? 'product' : 'products'}
-      </p>
-      <div className="hidden shrink-0 items-center gap-4 lg:flex">
-        <p className="text-[14px] text-[var(--muted)]" aria-live="polite">
-          Showing <b className="font-semibold text-[var(--ink)]">{shown}</b> of{' '}
-          <b className="font-semibold text-[var(--ink)]">{total}</b> products
+    <div className="lg:border-b lg:border-[var(--line)] lg:pb-4">
+      {/* Breadcrumb (all sizes) and, on mobile, the product count beside it. */}
+      <div className="flex items-center justify-between gap-6">
+        <div className="min-w-0">
+          <Breadcrumb current={current} />
+        </div>
+        <p className="shrink-0 text-[13px] text-[var(--soft)] lg:hidden">
+          {total} {total === 1 ? 'product' : 'products'}
         </p>
-        <span aria-hidden className="h-6 w-px bg-[var(--line)]" />
+      </div>
+
+      {/* Desktop second row: existing title + count on the left, density and sort on the right. */}
+      <div className="mt-3 hidden items-center justify-between gap-6 lg:flex">
+        <div className="flex min-w-0 items-baseline gap-3">
+          {/* Visual copy of the page's h1 (the real, screen-reader h1 stays in the page). */}
+          <p aria-hidden className="truncate text-[22px] font-semibold leading-tight text-[var(--ink)]">
+            {current}
+          </p>
+          <p className="shrink-0 text-[14px] text-[var(--muted)]" aria-live="polite">
+            Showing <b className="font-semibold text-[var(--ink)]">{shown}</b> of{' '}
+            <b className="font-semibold text-[var(--ink)]">{total}</b> products
+          </p>
+        </div>
+        <div className="flex shrink-0 items-center gap-4">
         <div className="flex items-center gap-1" role="group" aria-label="Grid density">
           {([4, 3] as const).map((d) => (
             <button
@@ -131,6 +142,7 @@ export function ListingToolbarRow({
           ))}
         </div>
         <SortDropdown value={sort} onChange={onSort} />
+        </div>
       </div>
     </div>
   );

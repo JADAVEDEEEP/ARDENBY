@@ -9,6 +9,13 @@ type HasId = { id?: unknown };
 export const isNewCollection = (p: HasId | null | undefined): boolean =>
   String(p?.id ?? '').startsWith(NEW_COLLECTION_ID_PREFIX);
 
+/**
+ * The round-neck tees (ard-kvk-101 ... ard-kvk-110) are shot on a plain studio wall. The polo, premium and
+ * trouser photos carry design-number / fit text in the background, so they are not used as tile covers.
+ */
+export const hasPlainBackground = (p: HasId | null | undefined): boolean =>
+  /^ard-kvk-\d+$/.test(String(p?.id ?? ''));
+
 // ids look like ard-kvk-polo-101 / ard-kvk-101 (round neck) / ard-kvk-vip-101 / ard-kvk-tt-101
 const typeOf = (id: string): string => {
   const rest = id.slice(NEW_COLLECTION_ID_PREFIX.length);

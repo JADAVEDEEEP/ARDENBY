@@ -4,8 +4,8 @@ import { Suspense } from 'react';
 import { MembershipClient } from './membership-client';
 
 export const metadata: Metadata = {
-  title: 'Membership | KÖVENIK',
-  description: 'Join KÖVENIK MEMBER: one membership, a flat 15% off eligible products all year.',
+  title: 'Membership | KOVENIK',
+  description: 'Join KOVENIK MEMBER: one membership, a flat 15% off eligible products all year.',
   alternates: { canonical: '/membership' },
 };
 

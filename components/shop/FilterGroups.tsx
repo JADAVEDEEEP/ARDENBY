@@ -1,5 +1,7 @@
 'use client';
 
+import { COLLECTION_LINKS } from '@/components/layout/navbar-links';
+
 import { CheckRow, ToggleRow } from './FilterControls';
 import { ColourSwatches } from './ColourSwatches';
 import { PriceRange } from './PriceRange';
@@ -38,7 +40,7 @@ export const GROUPS: GroupMeta[] = [
   { id: 'availability', label: 'Availability', railLabel: 'Availability', defaultOpen: true },
   { id: 'fabric', label: 'Fabric', railLabel: 'Fabric', defaultOpen: false },
   { id: 'print', label: 'Print type', railLabel: 'Print Type', defaultOpen: false },
-  { id: 'collection', label: 'Collection', railLabel: 'Collection', defaultOpen: false },
+  { id: 'collection', label: 'Drops', railLabel: 'Drops', defaultOpen: false },
 ];
 
 /** Groups with no data behind them (e.g. no fabric on any product) are hidden. */
@@ -95,7 +97,7 @@ function OptionList({
   return (
     <div>
       {options.map((o) => (
-        <CheckRow key={o.key} label={o.label} count={o.count} checked={selected.includes(o.key)} onToggle={() => onToggle(o.key)} />
+        <CheckRow key={o.key} label={o.label} count={o.count} disabled={o.count === 0} checked={selected.includes(o.key)} onToggle={() => onToggle(o.key)} />
       ))}
     </div>
   );
@@ -116,26 +118,41 @@ export function GroupBody({
   onChange: (patch: FilterPatch) => void;
 }) {
   switch (id) {
-    case 'category':
+    case 'category': {
+      // Brand collections vs. product types (same source as the navbar's collection links).
+      const collectionSlugs = new Set<string>(COLLECTION_LINKS.map((c) => c.slug));
+      // Plus Size is listed only once it has products (or while it is the selected category).
+      const typeRows = categories.filter(
+        (c) => !collectionSlugs.has(c.slug) && (c.slug !== 'plus-size' || (c.count ?? 0) > 0 || filters.category === c.slug)
+      );
+      const collectionRows = categories.filter((c) => collectionSlugs.has(c.slug));
+      const row = (c: CategoryOption) => (
+        <CheckRow
+          key={c.slug}
+          label={c.name}
+          count={c.count}
+          disabled={c.count === 0}
+          checked={filters.category === c.slug}
+          onToggle={() => onChange({ category: filters.category === c.slug ? ALL_CATEGORY : c.slug })}
+        />
+      );
+      const heading = 'mb-1 text-[12px] font-semibold uppercase tracking-[0.14em] text-[var(--soft)]';
       return (
         <div>
-          {categories.map((c) => (
-            <CheckRow
-              key={c.slug}
-              label={c.name}
-              count={c.count}
-              checked={filters.category === c.slug}
-              onToggle={() => onChange({ category: filters.category === c.slug ? ALL_CATEGORY : c.slug })}
-            />
-          ))}
+          <p className={heading}>Product type</p>
+          {typeRows.map(row)}
+          <p className={`${heading} mt-4`}>Collections</p>
+          {collectionRows.map(row)}
           <CheckRow
             label="Best Sellers"
             count={facets.collections.bestSeller}
+            disabled={facets.collections.bestSeller === 0}
             checked={filters.collections.includes('bestSeller')}
             onToggle={() => onChange({ collections: toggleIn(filters.collections, 'bestSeller') })}
           />
         </div>
       );
+    }
     case 'price':
       return (
         <PriceRange
@@ -186,6 +203,7 @@ export function GroupBody({
               key={o.key}
               label={o.label}
               count={facets.collections[o.key]}
+              disabled={facets.collections[o.key] === 0}
               checked={filters.collections.includes(o.key)}
               onToggle={() => onChange({ collections: toggleIn(filters.collections, o.key) })}
             />

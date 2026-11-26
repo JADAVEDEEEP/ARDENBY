@@ -204,7 +204,7 @@ export function countActive(f: ShopFilters): number {
 
 export type Option = { key: string; label: string; count: number };
 export type SizeFacet = { size: string; state: StockState; carrying: number };
-export type ColourFacet = Option & { hex: string };
+export type ColourFacet = Option & { hex: string; hex2?: string };
 
 export type Facets = {
   sizes: SizeFacet[];
@@ -251,7 +251,7 @@ export function buildFacets(allProducts: any[], category: string): Facets {
       const inScope = scope.has(p) ? 1 : 0;
       const cur = colourMap.get(key);
       if (cur) cur.count += inScope;
-      else colourMap.set(key, { key, label: canonicalColorName(dot.name), hex: dot.hex, count: inScope });
+      else colourMap.set(key, { key, label: canonicalColorName(dot.name), hex: dot.hex, hex2: dot.hex2, count: inScope });
     }
   }
 

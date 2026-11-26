@@ -24,6 +24,7 @@ import {
   type ProductColorDot,
 } from '@/app/shop/shop-stock';
 
+import { swatchBackground } from './ColourSwatches';
 import { discountPct } from './shop-filters';
 
 export type ColorStatus = 'ok' | 'loading' | 'error';
@@ -68,8 +69,8 @@ function ColourDots({
           key={c.name}
           title={c.name}
           aria-hidden
-          className="h-[11px] w-[11px] rounded-full border border-black/15"
-          style={{ backgroundColor: c.hex }}
+          className="h-[11px] w-[11px] rounded-full border border-black/20"
+          style={{ background: swatchBackground(c.hex, c.hex2) }}
         />
       ))}
       {extra > 0 && <span className="text-[10.5px] font-medium text-[var(--muted)]">+{extra}</span>}
@@ -265,7 +266,7 @@ export function ProductCard({
         {tag && (
           <span
             className={cn(
-              'pointer-events-none absolute left-0 top-3.5 px-2.5 py-[5px] text-[10px] font-semibold uppercase leading-none tracking-[0.14em] text-white lg:text-[11px]',
+              'pointer-events-none absolute left-0 top-3 px-2 py-1 text-[10px] font-semibold uppercase leading-none tracking-[0.12em] text-white',
               tag === 'NEW' || tag === 'LIMITED DROP' ? 'bg-[var(--gold)]' : 'bg-[var(--ink)]'
             )}
           >
@@ -278,9 +279,12 @@ export function ProductCard({
           onClick={handleWishlist}
           aria-label={isWishlisted ? 'Remove from wishlist' : 'Add to wishlist'}
           aria-pressed={isWishlisted}
-          className="absolute right-2 top-2 flex h-[34px] w-[34px] items-center justify-center rounded-full bg-[var(--ivory)]/[0.94] text-[var(--ink)] transition active:scale-95 max-md:h-7 max-md:w-7"
+          className="group/wish absolute right-0 top-0 z-10 flex h-12 w-12 items-center justify-center text-[var(--ink)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-[var(--ink)]"
         >
-          <Heart className={cn('h-4 w-4 max-md:h-3.5 max-md:w-3.5', isWishlisted && 'fill-[var(--ink)]')} strokeWidth={1.6} />
+          {/* Same white circle as the homepage cards, so the heart reads over any photo. */}
+          <span className="flex h-9 w-9 items-center justify-center rounded-full bg-white/75 transition group-active/wish:scale-90 motion-reduce:transition-none">
+            <Heart className={cn('h-6 w-6', isWishlisted && 'fill-kv-gold text-kv-gold')} strokeWidth={1.8} />
+          </span>
         </button>
 
         {unavailable && (
@@ -368,34 +372,42 @@ export function ProductCard({
         </div>
       </div>
 
-      <div className="flex min-w-0 flex-1 flex-col gap-1.5 pt-3.5">
-        <ColourDots colors={colors} status={colorStatus} onRetry={() => onRetryColors(product)} />
-        <p className="text-[11px] font-medium uppercase tracking-[0.16em] text-[var(--soft)] lg:text-[12px]">Kovenik</p>
+      <div className="flex min-w-0 flex-1 flex-col gap-1.5 pt-3">
+        {/* Text hierarchy, strongest to quietest:
+            1. name (bold, one line) over a hairline  2. category (larger, grey)  3. price  4. member-price pill
+            then the small extras (brand, rating, colours) kept light. */}
+        <p className="-mb-0.5 text-[10px] font-medium uppercase leading-none tracking-[0.16em] text-[var(--soft)]">Kovenik</p>
         <Link
           href={href}
           title={product.name}
-          className="line-clamp-2 text-[14px] font-medium leading-[1.3] text-[var(--ink)] lg:line-clamp-1 lg:text-[16px]"
+          className="block border-b border-[var(--line-2)] pb-2 text-[14px] font-bold leading-[1.3] text-[var(--ink)] lg:text-[15px]"
         >
-          {product.name}
+          <span className="line-clamp-1">{product.name}</span>
         </Link>
-        {product.categoryLabel && (
-          <p className="line-clamp-1 text-[12px] text-[var(--soft)] lg:text-[13px]">
-            {product.categoryLabel}
-            {product.fit ? ` · ${product.fit}` : ''}
-          </p>
-        )}
-        <RatingLink slug={product.slug} rating={product.rating} reviewCount={product.reviewCount} />
-        {/* Pricing is pinned to the bottom so rows line up whatever the title length. */}
+        {/* Category on the left, colour dot(s) at the right end of the same row. */}
+        <div className="flex items-center justify-between gap-2">
+          {product.categoryLabel ? (
+            <p className="line-clamp-1 min-w-0 flex-1 text-[14px] leading-5 text-[var(--soft)] lg:text-[15px]">
+              {product.categoryLabel}
+              {product.fit ? ` · ${product.fit}` : ''}
+            </p>
+          ) : (
+            <span />
+          )}
+          <ColourDots colors={colors} status={colorStatus} onRetry={() => onRetryColors(product)} />
+        </div>
+        <div className="flex flex-wrap items-center gap-x-2 gap-y-0.5 text-[16px] lg:text-[17px]">
+          <span className={cn('whitespace-nowrap font-bold', unavailable ? 'text-[var(--muted)]' : 'text-[var(--ink)]')}>{formatINR(price)}</span>
+          {mrp && <span className="whitespace-nowrap text-[13px] text-[var(--soft)] line-through lg:text-[14px]">{formatINR(mrp)}</span>}
+          {pct > 0 && <span className="whitespace-nowrap text-[13px] font-semibold text-[var(--gold)] lg:text-[14px]">{pct}% OFF</span>}
+        </div>
+        <MemberPriceTag productId={product.id} price={price} pill className="mt-0 gap-x-1.5 px-1.5 text-[11px]" />
+        {/* Rating sits last (pinned to the bottom so rows line up); no extra padding, so no dead space below. */}
         <div className="mt-auto">
-          <p className="flex flex-wrap items-baseline gap-x-2 gap-y-0.5 text-[15px] lg:text-[17px]">
-            <span className={cn('whitespace-nowrap font-semibold', unavailable ? 'text-[var(--muted)]' : 'text-[var(--ink)]')}>{formatINR(price)}</span>
-            {mrp && <span className="whitespace-nowrap text-[12px] text-[var(--soft)] line-through lg:text-[14px]">{formatINR(mrp)}</span>}
-            {pct > 0 && <span className="whitespace-nowrap text-[12px] font-semibold text-[var(--gold)] lg:text-[14px]">{pct}% OFF</span>}
-          </p>
-          <MemberPriceTag productId={product.id} price={price} />
+          <RatingLink slug={product.slug} rating={product.rating} reviewCount={product.reviewCount} />
         </div>
       </div>
-      <WishlistLoginModal open={loginOpen} onClose={() => setLoginOpen(false)} />
+      <WishlistLoginModal open={loginOpen} onClose={() => setLoginOpen(false)} product={{ name: product.name, image: product.images?.[0] }} />
     </article>
   );
 }

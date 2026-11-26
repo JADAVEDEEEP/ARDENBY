@@ -1,5 +1,6 @@
 'use client';
 
+import { KovenikWordmark } from '@/components/layout/kovenik-wordmark';
 import { FormEvent, useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
@@ -179,9 +180,7 @@ export default function AdminLoginPage() {
       <section className="relative hidden h-full overflow-hidden bg-[#11162B] lg:block">
 
         <div className="absolute left-12 top-12 z-10">
-          <p className="font-serif text-4xl tracking-[0.3em] text-white">
-            KOVENIK
-          </p>
+          <KovenikWordmark height={96} />
 
           <div className="mt-3 flex items-center gap-3">
             <span className="h-px w-10 bg-[#CFCCF4]/50" />
@@ -240,8 +239,8 @@ export default function AdminLoginPage() {
             transition={{ duration: 0.5 }}
             className="flex flex-col items-center text-center lg:hidden"
           >
-            <h1 className="font-serif text-[28px] uppercase tracking-[0.28em] text-[#11162B]">
-              KOVENIK
+            <h1 className="m-0">
+              <KovenikWordmark height={64} />
             </h1>
 
             <div className="mt-2 flex items-center gap-3">

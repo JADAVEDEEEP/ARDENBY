@@ -1,5 +1,6 @@
 'use client';
 
+import { KovenikWordmark } from '@/components/layout/kovenik-wordmark';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useEffect, useState } from 'react';
@@ -40,10 +41,8 @@ function isActive(pathname: string, href: string) {
 function Wordmark() {
   return (
     <span className="flex flex-col items-center leading-none">
-      <span className="font-oswald text-[26px] font-bold uppercase tracking-[0.2em] text-[#11162B]">
-        Kovenik
-      </span>
-      <span className="mt-2 rounded-full bg-[#4338CA] px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.4em] text-white">
+      <KovenikWordmark height={44} />
+      <span className="mt-0.5 rounded-full bg-[#4338CA] px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.4em] text-white">
         Super Admin
       </span>
     </span>

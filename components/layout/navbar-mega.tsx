@@ -67,9 +67,18 @@ function Rail({ label, children }: { label: string; children: ReactNode }) {
   const measure = useCallback(() => {
     const el = ref.current;
     if (!el) return;
-    setEdge({
+    const next = {
       start: el.scrollLeft <= 4,
       end: el.scrollLeft + el.clientWidth >= el.scrollWidth - 4,
+    };
+    // Only re-render when an edge actually flips (this runs on every scroll event).
+    setEdge((prev) => (prev.start === next.start && prev.end === next.end ? prev : next));
+    // Mark cards that are only partly in view so their captions can fade instead of being cut mid-word.
+    const box = el.getBoundingClientRect();
+    Array.from(el.children).forEach((child) => {
+      const r = (child as HTMLElement).getBoundingClientRect();
+      const clipped = r.left < box.left - 2 || r.right > box.right + 2;
+      (child as HTMLElement).dataset.clipped = clipped ? 'true' : 'false';
     });
   }, []);
 
@@ -92,18 +101,27 @@ function Rail({ label, children }: { label: string; children: ReactNode }) {
       <ul
         ref={ref}
         onScroll={measure}
+        onKeyDown={(e) => {
+          if (e.key === 'ArrowRight') {
+            e.preventDefault();
+            step(1);
+          } else if (e.key === 'ArrowLeft') {
+            e.preventDefault();
+            step(-1);
+          }
+        }}
         aria-label={label}
         className="kv-rail -mx-1 flex snap-x snap-mandatory gap-4 overflow-x-auto scroll-smooth px-1 pb-1"
       >
         {children}
       </ul>
       {!edge.start && (
-        <button type="button" aria-label="Scroll back" onClick={() => step(-1)} className={cn(ARROW, '-left-3')}>
+        <button type="button" aria-label={`Previous ${label}`} onClick={() => step(-1)} className={cn(ARROW, '-left-3')}>
           <ChevronLeft className="h-5 w-5" />
         </button>
       )}
       {!edge.end && (
-        <button type="button" aria-label="Scroll forward" onClick={() => step(1)} className={cn(ARROW, '-right-3')}>
+        <button type="button" aria-label={`Next ${label}`} onClick={() => step(1)} className={cn(ARROW, '-right-3')}>
           <ChevronRight className="h-5 w-5" />
         </button>
       )}
@@ -124,7 +142,7 @@ function ProductCard({ product, tag, onNavigate }: { product: Product; tag: stri
   const discount = product.mrp > product.price;
   return (
     <li className="w-[150px] shrink-0 snap-start xl:w-[168px]">
-      <Link href={`/product/${product.slug}`} onClick={onNavigate} className="group block">
+      <Link href={`/product/${product.slug}`} onClick={onNavigate} className="group block focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-kv-ink">
         <span className="relative block aspect-[3/4] overflow-hidden rounded-2xl bg-kv-img shadow-[0_4px_14px_rgba(0,0,0,0.1)]">
           <SafeImage
             src={product.images[0]}
@@ -174,14 +192,19 @@ function CollectionTile({ tile, onNavigate }: { tile: Tile; onNavigate: () => vo
           sizes="196px"
           className="object-cover object-top transition duration-500 group-hover:scale-[1.06]"
         />
-        {/* Caption sits on its own dark card, so it reads on light and dark photos alike. */}
-        <span className="absolute inset-x-2 bottom-2 rounded-xl bg-black/75 px-3 py-2.5 text-white backdrop-blur-sm">
+        {/* Soft bottom-to-top shade keeps the white caption readable on light and dark photos alike. */}
+        <span
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-x-0 bottom-0 h-[75%] bg-gradient-to-t from-black/90 via-black/70 to-transparent"
+        />
+        {/* A card that is only partly in the slider (data-clipped, set by Rail) fades its caption out until it slides fully in. */}
+        <span className="absolute inset-x-3 bottom-3 text-white transition-opacity duration-200 [li[data-clipped=true]_&]:opacity-0">
           <span className="block font-oswald text-[19px] font-semibold uppercase leading-tight tracking-[0.05em] text-white">
             {tile.label}
           </span>
-          <span className="mt-0.5 block text-[12.5px] leading-snug text-white/90">{tile.desc}</span>
+          <span className="mt-0.5 line-clamp-2 block text-[12.5px] leading-snug text-white/90">{tile.desc}</span>
           <span className="mt-2 flex items-center gap-1 text-[11px] font-bold uppercase tracking-[0.14em] text-kv-gold-dark">
-            {tile.count > 0 ? `${tile.count} styles` : 'Explore'}
+            {tile.count > 0 ? `${tile.count} ${tile.count === 1 ? 'style' : 'styles'}` : 'Explore'}
             <ArrowRight className="h-3.5 w-3.5 transition-transform duration-300 group-hover:translate-x-1" aria-hidden="true" />
           </span>
         </span>
@@ -208,6 +231,8 @@ function Skeletons() {
 
 function Panel({ id, panel, onNavigate, products, loading }: { id: PanelKey; panel: (typeof PANELS)[PanelKey]; onNavigate: () => void; products: Product[]; loading: boolean }) {
   const withImage = useMemo(() => products.filter((p) => p.images?.[0]), [products]);
+  // Plus Size tile appears once a Plus Size product exists.
+  const plusSize = useMemo(() => inCategory(products, 'plus-size').length > 0, [products]);
 
   const productList = useMemo(() => {
     // New In = the 34 products of the new catalogue (ard-kvk-*), all of them, in a varied order.
@@ -222,7 +247,7 @@ function Panel({ id, panel, onNavigate, products, loading }: { id: PanelKey; pan
     const used = new Set<string>();
     const groups = [
       ...COLLECTION_LINKS.map((c) => ({ slug: c.slug as string, label: c.label, href: c.href })),
-      ...CATEGORY_LINKS.filter((c) => c.slug !== 'all').map((c) => ({ slug: c.slug as string, label: c.label, href: c.href })),
+      ...CATEGORY_LINKS.filter((c) => c.slug !== 'all' && (c.slug !== 'plus-size' || plusSize)).map((c) => ({ slug: c.slug as string, label: c.label, href: c.href })),
     ];
     return groups.map((g) => {
       const matches = prioritizeNewCollection(inCategory(withImage, g.slug)) as Product[];
@@ -238,7 +263,7 @@ function Panel({ id, panel, onNavigate, products, loading }: { id: PanelKey; pan
         count: matches.length,
       };
     });
-  }, [id, withImage]);
+  }, [id, withImage, plusSize]);
 
   const tag = id === 'best' ? 'Bestseller' : 'New';
   const empty = !loading && id !== 'collections' && productList.length === 0;
@@ -248,7 +273,7 @@ function Panel({ id, panel, onNavigate, products, loading }: { id: PanelKey; pan
       <div className="flex w-[220px] shrink-0 flex-col justify-between border-r border-kv-line pr-8 xl:w-[260px]">
         <div>
           <p className="text-[12px] font-bold uppercase tracking-[0.22em] text-kv-gold-text">{panel.eyebrow}</p>
-          <p className="mt-2 font-oswald text-[40px] font-bold uppercase leading-none tracking-[0.03em] text-kv-ink xl:text-[46px]">
+          <p className="mt-2 font-oswald text-[29px] font-bold uppercase leading-none tracking-[0.03em] text-kv-ink xl:text-[34px]">
             {panel.title}
           </p>
           <span aria-hidden="true" className="mt-4 block h-[3px] w-12 bg-kv-gold" />
@@ -257,7 +282,7 @@ function Panel({ id, panel, onNavigate, products, loading }: { id: PanelKey; pan
         <Link
           href={panel.href}
           onClick={onNavigate}
-          className="group mt-6 inline-flex min-h-[46px] items-center justify-center gap-2 rounded-full bg-kv-ink px-6 text-[13px] font-bold uppercase tracking-[0.12em] text-white transition-colors hover:bg-black"
+          className="group mt-6 inline-flex min-h-[46px] items-center justify-center gap-2 whitespace-nowrap rounded-full bg-kv-ink px-3 text-[12px] font-bold uppercase tracking-[0.08em] text-white transition-colors hover:bg-black focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-kv-ink xl:px-6 xl:text-[13px] xl:tracking-[0.12em]"
         >
           {panel.cta}
           <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" aria-hidden="true" />
@@ -315,6 +340,30 @@ export function NavbarMega({ links, isActive, collectionsActive }: NavbarMegaPro
 
   useEffect(() => () => cancelClose(), []);
 
+  // Esc closes an open panel even when focus is not inside the nav (e.g. it was opened by hover).
+  useEffect(() => {
+    if (!open) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') close();
+    };
+    document.addEventListener('keydown', onKey);
+    return () => document.removeEventListener('keydown', onKey);
+  }, [open, close]);
+
+  // Once the product feed is in, build every panel while the browser is idle so the first open
+  // shows images that are already loading/cached instead of blank cards.
+  useEffect(() => {
+    if (loading) return;
+    const warm = () => setVisited(new Set<PanelKey>(['new', 'best', 'collections']));
+    const w = window as Window & { requestIdleCallback?: (cb: () => void) => number; cancelIdleCallback?: (id: number) => void };
+    if (w.requestIdleCallback) {
+      const id = w.requestIdleCallback(warm);
+      return () => w.cancelIdleCallback?.(id);
+    }
+    const id = window.setTimeout(warm, 1200);
+    return () => window.clearTimeout(id);
+  }, [loading]);
+
   // A click outside closes a pinned panel.
   useEffect(() => {
     if (!pinned) return;
@@ -326,9 +375,9 @@ export function NavbarMega({ links, isActive, collectionsActive }: NavbarMegaPro
   }, [pinned, close]);
 
   const TRIGGER =
-    'relative flex h-full items-center gap-1 whitespace-nowrap text-[15px] font-bold uppercase tracking-[0.06em] text-kv-ink transition-colors duration-200 hover:text-kv-gold-text xl:text-[16px] xl:tracking-[0.08em]';
+    'relative flex h-full items-center gap-1 whitespace-nowrap text-[14px] font-extrabold uppercase tracking-[0.03em] text-kv-ink transition-colors duration-200 hover:text-kv-gold-text xl:text-[16px] 2xl:text-[17px]';
 
-  const underline = <span aria-hidden="true" className="absolute inset-x-0 bottom-0 h-[3px] bg-kv-gold" />;
+  const underline = <span aria-hidden="true" className="absolute inset-x-0 bottom-0 h-[3px] bg-[#d92b2b]" />;
 
   return (
     <nav
@@ -343,12 +392,12 @@ export function NavbarMega({ links, isActive, collectionsActive }: NavbarMegaPro
         if (e.key === 'Escape') close();
       }}
     >
-      <ul className="flex h-full items-center gap-4 xl:gap-8">
+      <ul className="flex h-full items-center gap-2 min-[1100px]:gap-3 xl:gap-5 2xl:gap-6">
         {links.map((link) => {
           if (link.key === 'collections') {
             const isOpen = open === 'collections';
             return (
-              <li key={link.key} className="h-full" onMouseEnter={() => show('collections')}>
+              <li key={link.key} className="h-full" onMouseEnter={() => show('collections')} onFocus={() => show('collections')}>
                 <button
                   type="button"
                   aria-expanded={isOpen}

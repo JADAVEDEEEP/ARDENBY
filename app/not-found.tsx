@@ -1,5 +1,7 @@
 import Link from 'next/link';
 
+import { KovenikWordmark } from '@/components/layout/kovenik-wordmark';
+
 const SERIF = { fontFamily: 'var(--font-oswald), Impact, sans-serif' };
 
 export default function NotFound() {
@@ -8,6 +10,9 @@ export default function NotFound() {
       className="flex min-h-[70vh] items-center bg-white justify-center px-4 py-20 text-center text-[#111111]"
     >
       <div>
+        <div className="mb-6 flex justify-center">
+          <KovenikWordmark height={64} />
+        </div>
         <p className="text-[10px] font-semibold uppercase tracking-[0.3em] text-[#E53935]">
           Error 404
         </p>

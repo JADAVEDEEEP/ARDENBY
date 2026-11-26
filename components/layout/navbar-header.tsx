@@ -7,7 +7,7 @@ import { Suspense, useEffect, useState } from 'react';
 
 import { Heart, Menu, Search, ShoppingCart, User } from 'lucide-react';
 
-import { cn } from '@/lib/utils';
+import { usePlusSizeAvailable } from '@/hooks/use-plus-size';
 
 import { KovenikWordmark } from './kovenik-wordmark';
 import { NavbarMega } from './navbar-mega';
@@ -34,7 +34,7 @@ const DESKTOP_NAV_KEYS = ['new', 'collections', 'best'];
 const desktopLinks = PRIMARY_LINKS.filter((l) => DESKTOP_NAV_KEYS.includes(l.key));
 
 const ICON_BTN =
-  'relative flex h-11 w-11 shrink-0 items-center justify-center text-kv-ink transition-colors hover:text-kv-gold-text';
+  'relative flex h-11 w-11 shrink-0 items-center justify-center text-kv-ink transition-colors hover:text-kv-gold-text focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-[-4px] focus-visible:outline-kv-ink';
 const BADGE =
   'absolute right-0 top-0 flex h-5 min-w-[20px] items-center justify-center rounded-full bg-kv-gold px-1 text-[12px] font-bold leading-none text-white';
 
@@ -69,6 +69,7 @@ export function NavbarHeader({
   const [sort, setSort] = useState<string | null>(null);
   const [mounted, setMounted] = useState(false);
   useEffect(() => setMounted(true), []);
+  const plusSize = usePlusSizeAvailable();
 
   const onShop = pathname === '/shop';
   const activeKey = (key: string) => {
@@ -83,7 +84,7 @@ export function NavbarHeader({
     <form
       onSubmit={handleSearchSubmit}
       role="search"
-      className="flex h-12 w-full items-center gap-2 rounded-full border border-kv-ink bg-kv-bg px-4 focus-within:shadow-[0_0_0_1px_#0a0a0a]"
+      className="flex h-12 w-full items-center gap-2 rounded-[var(--kv-radius)] border border-[#D4D4D4] bg-white px-4 transition-colors hover:border-[#A3A3A3] focus-within:border-kv-ink focus-within:shadow-[0_0_0_1px_#0a0a0a]"
     >
       <input
         id={`site-search-${idSuffix}`}
@@ -94,7 +95,7 @@ export function NavbarHeader({
         aria-label="Search KOVENIK"
         className="min-w-0 flex-1 bg-transparent text-[16px] text-kv-ink outline-none focus-visible:!outline-none placeholder:text-kv-sub"
       />
-      <button type="submit" aria-label="Search" className="flex h-9 w-9 items-center justify-center text-kv-ink">
+      <button type="submit" aria-label="Search" className="flex h-9 w-9 items-center justify-center text-kv-ink focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-kv-ink">
         <Search className="h-[18px] w-[18px]" strokeWidth={1.8} />
       </button>
     </form>
@@ -107,9 +108,13 @@ export function NavbarHeader({
           <User className="h-[22px] w-[22px]" strokeWidth={1.6} />
         </button>
       )}
-      <Link href="/wishlist" aria-label="Wishlist" className={ICON_BTN}>
+      <Link
+        href="/wishlist"
+        aria-label={mounted && wishlistCount > 0 ? `Wishlist, ${wishlistCount} ${wishlistCount === 1 ? 'item' : 'items'}` : 'Wishlist'}
+        className={ICON_BTN}
+      >
         <Heart className="h-[22px] w-[22px]" strokeWidth={1.6} />
-        {mounted && wishlistCount > 0 && <span className={BADGE}>{wishlistCount}</span>}
+        {mounted && wishlistCount > 0 && <span aria-hidden="true" className={BADGE}>{wishlistCount > 99 ? '99+' : wishlistCount}</span>}
       </Link>
       <button
         type="button"
@@ -117,11 +122,12 @@ export function NavbarHeader({
           closeCart?.();
           openCart();
         }}
-        aria-label="Shopping cart"
+        aria-label={mounted && cartCount > 0 ? `Shopping cart, ${cartCount} ${cartCount === 1 ? 'item' : 'items'}` : 'Shopping cart'}
+        aria-haspopup="dialog"
         className={ICON_BTN}
       >
         <ShoppingCart className="h-[22px] w-[22px]" strokeWidth={1.6} />
-        {mounted && cartCount > 0 && <span className={BADGE}>{cartCount}</span>}
+        {mounted && cartCount > 0 && <span aria-hidden="true" className={BADGE}>{cartCount > 99 ? '99+' : cartCount}</span>}
       </button>
     </>
   );
@@ -150,11 +156,11 @@ export function NavbarHeader({
         />
       </Suspense>
 
-      <header className="kv-flat sticky top-0 z-[100] w-full max-w-[100vw] bg-kv-bg shadow-[0_1px_4px_rgba(0,0,0,0.08)]">
+      <header className="kv-flat sticky top-0 z-[100] w-full max-w-[100vw] bg-white shadow-[0_1px_4px_rgba(0,0,0,0.08)]">
         {/* ===================== DESKTOP ===================== */}
         <div className="hidden lg:block">
-          <div className="kv-gutter grid h-[84px] w-full grid-cols-[1fr_auto_1fr] items-center">
-            <div className="flex h-full items-center gap-4 xl:gap-8">
+          <div className="kv-gutter grid h-[68px] w-full grid-cols-[1fr_auto_1fr] items-center">
+            <div className="flex h-full items-center gap-1 min-[1100px]:gap-2 xl:gap-6">
               {hamburger}
               <NavbarMega
                 links={desktopLinks}
@@ -163,12 +169,15 @@ export function NavbarHeader({
               />
             </div>
 
+            {/* Both side columns are equal (1fr), so the logo sits exactly at the viewport centre. The grid never
+                shrinks a side column below its content, so a crowded width pushes the logo aside instead of overlapping. */}
             <div className="justify-self-center">
-              {logo('md')}
+              <span className="block xl:hidden">{logo('sm')}</span>
+              <span className="hidden xl:block">{logo('md')}</span>
             </div>
 
             <div className="flex items-center gap-1 justify-self-end">
-              <div className="mr-2 w-[170px] xl:mr-3 xl:w-[280px]">{searchForm('d')}</div>
+              <div className="mr-2 w-[150px] xl:mr-3 xl:w-[280px]">{searchForm('d')}</div>
               {iconButtons(true)}
             </div>
           </div>
@@ -189,7 +198,7 @@ export function NavbarHeader({
           <div className="px-4 pb-2">{searchForm('m')}</div>
 
           <nav aria-label="Departments" className="kv-rail flex overflow-x-auto border-t border-kv-line px-2">
-            {PRIMARY_LINKS.filter((l) => l.key !== 'collections').map((link) => {
+            {PRIMARY_LINKS.filter((l) => l.key !== 'collections' && (l.key !== 'plus-size' || plusSize)).map((link) => {
               const active = activeKey(link.key);
               return (
                 <Link

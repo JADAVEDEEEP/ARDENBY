@@ -10,19 +10,24 @@ export function CheckRow({
   count,
   checked,
   onToggle,
+  disabled = false,
 }: {
   label: string;
   count?: number;
   checked: boolean;
   onToggle: () => void;
+  /** Used for options with nothing behind them (count 0); a selected option stays clickable so it can be cleared. */
+  disabled?: boolean;
 }) {
+  const off = disabled && !checked;
   return (
     <button
       type="button"
       role="checkbox"
       aria-checked={checked}
+      disabled={off}
       onClick={onToggle}
-      className="group flex min-h-[34px] w-full items-center gap-3 text-left"
+      className={cn('group flex min-h-[34px] w-full items-center gap-3 text-left', off && 'cursor-not-allowed opacity-45')}
     >
       <span
         aria-hidden

@@ -4,7 +4,7 @@ import { cn } from '@/lib/utils';
 
 import type { SizeFacet } from './shop-filters';
 
-/** 4-column grid of size chips. Selected = ink; sold out = greyed with a diagonal strike. */
+/** Rounded size chips with the number of products carrying that size. Selected = ink; sold out = greyed with a diagonal strike. */
 export function SizeGrid({
   sizes,
   selected,
@@ -15,8 +15,8 @@ export function SizeGrid({
   onToggle: (size: string) => void;
 }) {
   return (
-    <div className="grid grid-cols-4 gap-2" role="group" aria-label="Size">
-      {sizes.map(({ size, state }) => {
+    <div className="flex flex-wrap gap-2" role="group" aria-label="Size">
+      {sizes.map(({ size, state, carrying }) => {
         const on = selected.includes(size);
         const out = state === 'out';
         return (
@@ -27,7 +27,7 @@ export function SizeGrid({
             aria-label={out ? `${size}, sold out` : state === 'low' ? `${size}, low stock` : size}
             onClick={() => onToggle(size)}
             className={cn(
-              'relative h-[38px] overflow-hidden border text-[14px] font-medium transition-colors',
+              'relative inline-flex h-[36px] items-center gap-1 overflow-hidden rounded-full border px-3.5 text-[14px] font-medium transition-colors',
               on
                 ? 'border-[var(--ink)] bg-[var(--ink)] text-[var(--ivory)]'
                 : out
@@ -36,6 +36,7 @@ export function SizeGrid({
             )}
           >
             {size}
+            <span className={cn('text-[11px] font-normal tabular-nums', on ? 'text-[var(--ivory)]/75' : 'text-[var(--soft)]')}>({carrying})</span>
             {out && !on && (
               <span
                 aria-hidden

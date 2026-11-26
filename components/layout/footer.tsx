@@ -7,6 +7,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { ChevronDown } from "lucide-react";
 
+import { BUSINESS } from "@/lib/policy-facts";
 import { cn } from "@/lib/utils";
 
 import { KovenikWordmark } from "./kovenik-wordmark";
@@ -41,6 +42,7 @@ const footerColumns = [
       { label: "Epic Thread", href: "/shop?category=epic-thread" },
       { label: "Kovenik Premium", href: "/shop?category=ardenby-premium" },
       { label: "The Print Club", href: "/shop?category=the-print-club" },
+      { label: "Top Wear", href: "/shop?category=top-wear" },
       { label: "Bottom Wear", href: "/shop?category=bottom-wear" },
     ],
   },
@@ -52,6 +54,69 @@ const footerColumns = [
     ],
   },
 ];
+
+/**
+ * Business / legal details. Every value comes from NEXT_PUBLIC_* config (lib/policy-facts.ts); none is invented.
+ * A value that isn't configured is simply left out, and a block with no values at all is not rendered.
+ */
+function BusinessDetails() {
+  const line = (value: string, placeholder: string, key: string, href?: string) => {
+    if (value) {
+      return (
+        <p key={key} className="break-words">
+          {href ? (
+            <a href={href} className="underline underline-offset-2 hover:text-kv-ink">
+              {value}
+            </a>
+          ) : (
+            value
+          )}
+        </p>
+      );
+    }
+    // Not configured: nothing is shown (and nothing invented). `placeholder` names the variable to set.
+    void placeholder;
+    return null;
+  };
+
+  const blocks: { title: string; rows: (JSX.Element | null)[] }[] = [
+    {
+      title: "Business",
+      rows: [
+        line(BUSINESS.legalName, "Set NEXT_PUBLIC_LEGAL_NAME: registered business name", "legal"),
+        line(BUSINESS.address, "Set NEXT_PUBLIC_BUSINESS_ADDRESS: registered address", "addr"),
+      ],
+    },
+    {
+      title: "Customer care",
+      rows: [
+        line(BUSINESS.supportPhone, "Set NEXT_PUBLIC_SUPPORT_PHONE", "phone", BUSINESS.supportPhone ? `tel:${BUSINESS.supportPhone.replace(/[^+\d]/g, "")}` : undefined),
+        line(BUSINESS.supportEmail, "Set NEXT_PUBLIC_SUPPORT_EMAIL", "mail", BUSINESS.supportEmail ? `mailto:${BUSINESS.supportEmail}` : undefined),
+        line(BUSINESS.supportHours, "Set NEXT_PUBLIC_SUPPORT_HOURS", "hours"),
+      ],
+    },
+    {
+      title: "Grievance Officer",
+      rows: [
+        line(BUSINESS.grievanceOfficer, "Set NEXT_PUBLIC_GRIEVANCE_OFFICER: officer name", "gname"),
+      ],
+    },
+  ];
+
+  const visible = blocks.filter((b) => b.rows.some(Boolean));
+  if (visible.length === 0) return null;
+
+  return (
+    <section aria-label="Business details" className="mt-6 grid grid-cols-1 gap-5 border-t border-kv-line pt-6 text-[14px] leading-[1.6] text-kv-sub sm:grid-cols-2 md:grid-cols-3">
+      {visible.map((b) => (
+        <div key={b.title} className="min-w-0">
+          <h3 className="mb-1 font-oswald text-[15px] font-semibold uppercase tracking-[0.1em] text-kv-ink">{b.title}</h3>
+          {b.rows}
+        </div>
+      ))}
+    </section>
+  );
+}
 
 /** Link column: an accordion below md (Need Help starts open), always open from md up. */
 function FooterColumn({
@@ -229,6 +294,8 @@ export function Footer() {
             aesthetics.
           </p>
         </details>
+
+        <BusinessDetails />
 
         {/* Decorative brand wordmark: scales with the container, stays on one line at every width. */}
         <div aria-hidden="true" className="pointer-events-none mt-8 select-none md:mt-12">

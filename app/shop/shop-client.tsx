@@ -249,10 +249,10 @@ export function ShopClient() {
     for (const c of apiCategories) {
       if (c.slug !== ALL_CATEGORY) counts[c.slug] = inCategory(products, c.slug).length;
     }
-    const all = apiCategories.find((c: any) => c.slug === ALL_CATEGORY);
     const count = (slug: string) => (isLoading ? undefined : counts[slug] ?? 0);
     return [
-      { slug: ALL_CATEGORY, name: all?.name || 'All Products', count: count(ALL_CATEGORY) },
+      // Fixed casing: the stored category name's capitalisation isn't relied on for this label.
+      { slug: ALL_CATEGORY, name: 'All Products', count: count(ALL_CATEGORY) },
       ...apiCategories
         .filter((c: any) => c.slug !== ALL_CATEGORY)
         .map((c: any) => ({ slug: c.slug as string, name: c.name as string, count: count(c.slug) })),
@@ -261,7 +261,9 @@ export function ShopClient() {
 
   const activeCategory = apiCategories.find((c: any) => c.slug === filters.category);
   const awaitingCategory = filters.category !== ALL_CATEGORY && categoriesLoading;
-  const categoryName: string = activeCategory
+  const categoryName: string = filters.category === ALL_CATEGORY
+    ? 'All Products' // the stored name's capitalisation ("All PRODUCTS") is not shown
+    : activeCategory
     ? activeCategory.name
     : awaitingCategory
       ? ''
@@ -405,7 +407,7 @@ export function ShopClient() {
     <div className="kvl min-h-screen bg-[var(--ivory)] text-[var(--charcoal)]">
       <ToastStack toasts={toasts} onDismiss={dismiss} />
 
-      <div className="lg:grid lg:grid-cols-[288px_minmax(0,1fr)]">
+      <div className="lg:grid lg:grid-cols-[265px_minmax(0,1fr)]">
         <FilterSidebar
           filters={filters}
           facets={facets}

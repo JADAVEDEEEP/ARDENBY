@@ -1,5 +1,6 @@
 'use client';
 
+import { KovenikWordmark } from '@/components/layout/kovenik-wordmark';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useCallback, useEffect, useRef, useState } from 'react';
@@ -101,18 +102,11 @@ function pageTitle(pathname: string) {
 function Wordmark({ size = 'lg' }: { size?: 'lg' | 'sm' }) {
   return (
     <span className="flex flex-col items-center leading-none">
-      <span
-        className={cn(
-          'font-oswald font-bold uppercase text-[#11162B]',
-          size === 'lg' ? 'text-[26px] tracking-[0.2em]' : 'text-[20px] tracking-[0.18em]'
-        )}
-      >
-        Kovenik
-      </span>
+      <KovenikWordmark height={size === 'lg' ? 44 : 36} />
       <span
         className={cn(
           'rounded-full bg-[#E6E5FA] px-2.5 py-1 font-semibold uppercase text-[#2E2699]',
-          size === 'lg' ? 'mt-2 text-[12px] tracking-[0.5em]' : 'mt-1 text-[9px] tracking-[0.45em]'
+          size === 'lg' ? 'mt-0.5 text-[12px] tracking-[0.5em]' : 'mt-0 text-[9px] tracking-[0.45em]'
         )}
       >
         Admin

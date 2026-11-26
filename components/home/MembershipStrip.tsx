@@ -26,10 +26,10 @@ export function MembershipStrip() {
   if (!plan) return null;
 
   return (
-    <section aria-label="KÖVENIK membership" className="bg-[#111111] text-white">
+    <section aria-label="KOVENIK membership" className="bg-[#111111] text-white">
       <div className="mx-auto flex max-w-[1280px] flex-col items-start gap-4 px-4 py-8 md:flex-row md:items-center md:justify-between md:px-8">
         <div>
-          <p className="text-[12px] font-semibold uppercase tracking-[0.2em] text-[#FF8A87]">KÖVENIK Membership</p>
+          <p className="text-[12px] font-semibold uppercase tracking-[0.2em] text-[#FF8A87]">KOVENIK Membership</p>
           <h2 className="mt-1 text-[22px] font-bold leading-tight md:text-[28px]">
             {plan.discountPercent > 0 ? `Flat ${plan.discountPercent}% off, every day.` : 'Join the club.'} {formatINR(plan.price)} a year.
           </h2>

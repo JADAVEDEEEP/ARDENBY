@@ -1,5 +1,6 @@
 'use client';
 
+import { KovenikWordmark } from './kovenik-wordmark';
 import Link from 'next/link';
 import type {
   ClipboardEvent,
@@ -30,32 +31,39 @@ const GOLD_TEXT_STYLE = {
 } as const;
 
 const PHOTO_STYLE = {
-  backgroundImage: "url('/images/hero-olive-graphic.jpg')",
+  backgroundImage: "url('/images/login-photo.jpg')",
   backgroundSize: 'cover',
+  filter: 'grayscale(1)',
 } as const;
+
+/** Photo edges: a curved right edge on desktop, a curved bottom edge on mobile. */
+const PHOTO_CLIP_DESKTOP = 'ellipse(100% 87% at 0% 50%)';
+const PHOTO_CLIP_MOBILE = 'ellipse(82% 100% at 50% 0%)';
+
+const BRAND_LETTERS = ['K', 'O', 'V', 'E', 'N', 'I', 'K'];
 
 const METAL_BG = 'none';
 
 const CARD_BG = 'none';
 
 const INPUT_CLASS =
-  'h-[48px] w-full rounded-[6px] border bg-[#FFFFFF] px-11 text-[14px] text-[#111111] outline-none transition focus:ring-4 placeholder:text-[#5C5C5C]';
+  'h-[54px] w-full rounded-none border bg-[#EFEFEF] px-4 text-[15px] text-[#111111] outline-none transition focus:bg-[#F5F5F5] placeholder:text-[#6B6B6B]';
 
 const INPUT_OK_CLASS =
-  'border-[#111111]/20 focus:border-[#111111]/60 focus:ring-[#111111]/15';
+  'border-transparent focus:border-[#111111]';
 
 const INPUT_ERR_CLASS =
-  'border-[#E53935] focus:border-[#E53935] focus:ring-[#E53935]/20';
+  'border-[#C62828] focus:border-[#C62828]';
 
 const GOLD_BUTTON_CLASS =
-  'flex h-[50px] w-full items-center justify-center gap-3 rounded-[6px] bg-[#E53935] px-6 text-[13px] font-bold tracking-[0.12em] text-[#FFFFFF] transition duration-200 hover:bg-[#C62828] hover:shadow-[0_8px_20px_rgba(229,57,53,0.28)] active:translate-y-px focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[#E53935]/30 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60 disabled:hover:bg-[#E53935] disabled:hover:shadow-none';
+  'flex h-[56px] w-full items-center justify-center gap-3 rounded-none bg-[#C62828] px-6 text-[15px] font-bold tracking-[0.2em] text-[#FFFFFF] shadow-[0_10px_24px_rgba(0,0,0,0.12)] transition duration-200 hover:bg-[#B71C1C] active:translate-y-px focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[#C62828]/30 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60 disabled:hover:bg-[#C62828]';
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 
 const FIELD_ERROR_CLASS = 'mt-1.5 text-[12px] font-medium text-[#C62828]';
 
 const LABEL_CLASS =
-  'mb-1.5 block text-[10px] font-bold uppercase tracking-[0.2em] text-[#4A4A4A]';
+  'mb-1.5 block text-[13px] font-bold text-[#222222]';
 
 const ERROR_CLASS =
   'mb-5 rounded-[6px] border border-[#E53935]/40 bg-[#FDECEA] px-4 py-3 text-center text-[13px] font-medium text-[#B71C1C]';
@@ -101,12 +109,7 @@ type NavbarAuthModalProps = {
 function Wordmark({ className = '' }: { className?: string }) {
   return (
     <div className={`flex flex-col items-start ${className}`}>
-      <span
-        className="text-[18px] font-bold uppercase leading-none tracking-[0.3em] text-[#F7F7F7]"
-        style={{ fontFamily: SERIF }}
-      >
-        KOVENIK
-      </span>
+      <KovenikWordmark height={56} />
     </div>
   );
 }
@@ -195,60 +198,65 @@ export function NavbarAuthModal({
   return createPortal(
     <AnimatePresence>
       {isOpen && (
-        <div
-          className="chrome-scope fixed inset-0 z-[1000] flex items-center justify-center p-0 text-[#111111] md:p-6"
-          style={{ background: 'rgba(17,17,17,0.72)', backdropFilter: 'blur(6px)' }}
-        >
+        <div className="chrome-scope fixed inset-0 z-[1000] overflow-y-auto bg-white text-[#111111]">
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="relative flex w-full justify-center"
+            className="relative min-h-full"
             style={{ backgroundImage: METAL_BG }}
           >
-            <main className="relative z-10 w-full max-w-[920px]">
-              <div className="relative grid max-h-screen w-full grid-cols-1 overflow-y-auto overflow-x-hidden bg-[#F7F7F7] shadow-[0_40px_100px_rgba(0,0,0,0.35)] md:h-[580px] md:max-h-[calc(100vh-48px)] md:grid-cols-[42%_58%] md:overflow-hidden md:rounded-[6px] lg:grid-cols-2">
-                {/* Close */}
+            <main className="relative z-10 min-h-full">
+              <div className="relative grid min-h-screen w-full grid-cols-1 lg:h-screen lg:grid-cols-[46%_auto_minmax(0,1fr)]">
+                {/* Close: always visible, 44px, calls the existing close logic */}
                 <button
                   type="button"
                   onClick={() => setIsOpen(false)}
-                  className="absolute right-4 top-4 z-50 flex h-[36px] w-[36px] items-center justify-center rounded-full border border-[#E5E5E5] bg-white text-[#111111] shadow-sm transition hover:border-[#222222] hover:bg-[#F7F7F7] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[#E53935]/30"
+                  className="fixed right-3 top-3 z-[1010] flex h-11 w-11 items-center justify-center rounded-full bg-white text-[#111111] shadow-[0_2px_10px_rgba(0,0,0,0.25)] transition hover:bg-[#F2F2F2] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[#C62828]/40 lg:right-5 lg:top-5"
                   aria-label="Close"
                 >
-                  <X className="h-4 w-4" strokeWidth={1.5} />
+                  <X className="h-5 w-5" strokeWidth={1.8} />
                 </button>
 
-                {/* Photo / brand panel */}
-                <div
-                  className="relative h-[190px] overflow-hidden bg-[position:62%_4%] md:h-full md:bg-[position:62%_18%]"
-                  style={PHOTO_STYLE}
-                >
-                  <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(to_top,rgba(10,10,10,0.92)_0%,rgba(10,10,10,0.55)_28%,rgba(10,10,10,0)_58%,rgba(10,10,10,0.35)_100%)]" />
+                {/* Photo: black and white, curved bottom (mobile) / right edge (desktop) */}
+                <div aria-hidden="true" className="relative h-[190px] lg:h-full">
+                  <div
+                    className="absolute inset-0 bg-[position:50%_10%] [clip-path:var(--clip-m)] lg:[clip-path:var(--clip-d)]"
+                    style={{
+                      ...PHOTO_STYLE,
+                      ['--clip-m' as string]: PHOTO_CLIP_MOBILE,
+                      ['--clip-d' as string]: PHOTO_CLIP_DESKTOP,
+                    }}
+                  />
+                </div>
 
-                  <Link
-                    href="/"
-                    aria-label="Kovenik home"
-                    className="absolute left-5 top-5 z-[2] block md:left-8 md:top-8"
-                  >
-                    <Wordmark />
-                  </Link>
-
-                  <h2
-                    className="absolute bottom-5 left-5 z-[2] text-[32px] font-bold leading-none text-[#F7F7F7] md:bottom-9 md:left-8 md:text-[40px] lg:left-9 lg:text-[48px]"
-                    style={{ fontFamily: SERIF }}
-                  >
-                    Wear Your
-                    <span className="block text-[#E53935]">Essence.</span>
-                  </h2>
+                {/* Vertical outlined brand letters (desktop only) */}
+                <div aria-hidden="true" className="hidden select-none flex-col items-center justify-between px-6 lg:flex">
+                  {BRAND_LETTERS.map((letter, i) => (
+                    <span
+                      key={i}
+                      className="font-sans text-[clamp(64px,11.5vh,112px)] font-light leading-none text-transparent [-webkit-text-stroke:1px_#8A8A8A]"
+                    >
+                      {letter}
+                    </span>
+                  ))}
                 </div>
 
                 {/* Form panel */}
                 <div
-                  className="relative flex flex-col justify-center bg-[#F7F7F7] px-5 pb-8 pt-6 md:overflow-y-auto md:p-8 lg:p-12"
+                  className="relative flex flex-col items-center justify-center bg-white px-6 pb-10 pt-6 lg:overflow-y-auto lg:px-10 lg:py-12"
                   style={{ backgroundImage: CARD_BG }}
                 >
+                  <div className="relative w-full max-w-[420px]">
+                    <Link
+                      href="/"
+                      onClick={() => setIsOpen(false)}
+                      aria-label="Kovenik home"
+                      className="mx-auto mb-3 block w-fit"
+                    >
+                      <KovenikWordmark height={54} />
+                    </Link>
 
-                  <div className="relative">
                     <AnimatePresence mode="wait">
                       {/* LOGIN */}
                       {step === 'LOGIN' && (
@@ -259,16 +267,14 @@ export function NavbarAuthModal({
                           exit={{ opacity: 0, y: -12 }}
                           transition={{ duration: 0.25 }}
                         >
-                          <div className="mb-5 text-center">
+                          <div className="mb-6 text-center">
                             <h1
-                              className="text-[36px] font-bold leading-none tracking-[-0.01em] text-[#111111]"
-                              style={{ fontFamily: SERIF }}
+                              className="text-[40px] font-normal uppercase leading-none tracking-[0.18em] text-[#111111] md:text-[44px]"
+                              style={{ fontFamily: 'var(--font-inter), Arial, sans-serif' }}
                             >
-                              Welcome <span className="text-[#E53935]">Back</span>
+                              Log in
                             </h1>
-                            <p className="mx-auto mt-3 max-w-[340px] text-[14px] leading-5 text-[#4A4A4A]">
-                              Sign in to your account and continue your style journey.
-                            </p>
+                            <span aria-hidden="true" className="mx-auto mt-5 block h-[3px] w-[72px] bg-[#C62828]" />
                           </div>
 
                           {error && (
@@ -282,16 +288,11 @@ export function NavbarAuthModal({
                             </motion.div>
                           )}
 
-                          <form onSubmit={submitLogin} noValidate className="mx-auto max-w-[360px] space-y-4">
+                          <form onSubmit={submitLogin} noValidate className="w-full space-y-4">
                             <label className="block">
-                              <span className={LABEL_CLASS}>Email Address</span>
+                              <span className={LABEL_CLASS}>Email address</span>
 
                               <div className="relative">
-                                <Mail
-                                  className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-[#E53935]"
-                                  strokeWidth={1.4}
-                                />
-
                                 <input
                                   id="kv-login-email"
                                   type="email"
@@ -300,7 +301,7 @@ export function NavbarAuthModal({
                                     setEmail(e.target.value);
                                     if (fieldErrors.email) setFieldErrors((f) => ({ ...f, email: undefined }));
                                   }}
-                                  placeholder="Email address"
+                                  placeholder="you@example.com"
                                   autoComplete="email"
                                   disabled={isLoading}
                                   aria-invalid={!!fieldErrors.email}
@@ -319,11 +320,6 @@ export function NavbarAuthModal({
                               <span className={LABEL_CLASS}>Password</span>
 
                               <div className="relative">
-                                <Lock
-                                  className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-[#E53935]"
-                                  strokeWidth={1.4}
-                                />
-
                                 <input
                                   id="kv-login-password"
                                   type={showPassword ? 'text' : 'password'}
@@ -332,7 +328,7 @@ export function NavbarAuthModal({
                                     setPassword(e.target.value);
                                     if (fieldErrors.password) setFieldErrors((f) => ({ ...f, password: undefined }));
                                   }}
-                                  placeholder="Password"
+                                  placeholder="Enter password"
                                   autoComplete="current-password"
                                   disabled={isLoading}
                                   aria-invalid={!!fieldErrors.password}
@@ -343,7 +339,7 @@ export function NavbarAuthModal({
                                 <button
                                   type="button"
                                   onClick={() => setShowPassword((v) => !v)}
-                                  className="absolute right-2 top-1/2 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full text-[#E53935] hover:text-[#111111] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#E53935]/40"
+                                  className="absolute right-2 top-1/2 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full text-[#555555] hover:text-[#111111] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#C62828]/40"
                                   aria-label={showPassword ? 'Hide password' : 'Show password'}
                                 >
                                   {showPassword ? (
@@ -366,7 +362,7 @@ export function NavbarAuthModal({
                                   type="checkbox"
                                   checked={rememberMe}
                                   onChange={(e) => setRememberMe(e.target.checked)}
-                                  className="h-3.5 w-3.5 accent-[#E53935]"
+                                  className="h-3.5 w-3.5 accent-[#C62828]"
                                 />
                                 Remember me
                               </label>
@@ -375,7 +371,7 @@ export function NavbarAuthModal({
                                 type="button"
                                 onClick={handleForgotPassword}
                                 disabled={isLoading}
-                                className="shrink-0 text-[12px] font-semibold text-[#E53935] transition hover:text-[#111111] focus-visible:outline-none focus-visible:underline disabled:opacity-50"
+                                className="shrink-0 text-[12px] font-medium text-[#B71C1C] underline underline-offset-2 transition hover:text-[#111111] focus-visible:outline-none disabled:opacity-50"
                               >
                                 Forgot password?
                               </button>
@@ -388,28 +384,19 @@ export function NavbarAuthModal({
                                   PLEASE WAIT...
                                 </>
                               ) : (
-                                <>
-                                  CONTINUE
-                                  <ArrowRight className="h-4 w-4" strokeWidth={1.8} />
-                                </>
+                                'LOG IN'
                               )}
                             </button>
                           </form>
 
-                          <div className="mx-auto my-4 flex max-w-[360px] items-center gap-4">
-                            <div className="h-px flex-1 bg-[#111111]/20" />
-                            <span className="text-[9px] font-bold uppercase tracking-[0.3em] text-[#4A4A4A]">
-                              OR
-                            </span>
-                            <div className="h-px flex-1 bg-[#111111]/20" />
-                          </div>
+                          <p className="my-3 text-center text-[12px] text-[#555555]">or</p>
 
                           <div
-                            className={`group relative mx-auto h-[50px] w-full max-w-[360px] rounded-[6px] focus-within:ring-4 focus-within:ring-[#111111]/15 ${
+                            className={`group relative mx-auto h-[50px] w-full rounded-none focus-within:ring-4 focus-within:ring-[#111111]/15 ${
                               isGoogleLoading ? 'opacity-70' : ''
                             }`}
                           >
-                            <div className="pointer-events-none absolute inset-0 flex items-center justify-center gap-3 rounded-[6px] border border-[#111111]/20 bg-[#FFFFFF]/80 text-[13px] font-medium text-[#111111] transition group-hover:border-[#111111]/60 group-hover:bg-[#F7F7F7]">
+                            <div className="pointer-events-none absolute inset-0 flex items-center justify-center gap-3 rounded-none border border-[#111111] bg-[#FFFFFF] text-[14px] font-semibold text-[#111111] transition group-hover:bg-[#F5F5F5]">
                               <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true">
                                 <path fill="#4285F4" d="M21.35 12.27c0-.72-.06-1.42-.18-2.09H12v3.95h5.22a4.46 4.46 0 0 1-1.94 2.93v2.43h3.14c1.84-1.69 2.93-4.18 2.93-7.22Z"/>
                                 <path fill="#34A853" d="M12 21.72c2.63 0 4.84-.87 6.45-2.35l-3.14-2.43c-.87.58-1.98.93-3.31.93-2.54 0-4.69-1.72-5.46-4.03H3.3v2.51A9.74 9.74 0 0 0 12 21.72Z"/>
@@ -428,8 +415,16 @@ export function NavbarAuthModal({
                             />
                           </div>
 
-                          <p className="mx-auto mt-5 max-w-[360px] text-center text-[12px] text-[#4A4A4A]">
-                            New to KOVENIK? Enter your email and password above to create an account.
+                          <p className="mt-5 text-center text-[12px] leading-5 text-[#555555]">
+                            By continuing, you agree to our{' '}
+                            <Link href="/terms" onClick={() => setIsOpen(false)} className="text-[#B71C1C] underline underline-offset-2">
+                              Terms
+                            </Link>{' '}
+                            and{' '}
+                            <Link href="/privacy" onClick={() => setIsOpen(false)} className="text-[#B71C1C] underline underline-offset-2">
+                              Privacy Policy
+                            </Link>
+                            .
                           </p>
                         </motion.div>
                       )}
@@ -479,7 +474,7 @@ export function NavbarAuthModal({
                             </motion.div>
                           )}
 
-                          <form onSubmit={handleVerifyOtp} className="mx-auto max-w-[460px] space-y-4">
+                          <form onSubmit={handleVerifyOtp} className="mx-auto w-full space-y-4">
                             <div
                               className="flex justify-center gap-2 sm:gap-3"
                               onPaste={handleOtpPaste}
@@ -497,7 +492,7 @@ export function NavbarAuthModal({
                                   value={digit}
                                   onChange={(e) => handleOtpChange(e.target.value, index)}
                                   onKeyDown={(e) => handleOtpKeyDown(e, index)}
-                                  className="h-12 w-11 rounded-[6px] border border-[#111111]/20 bg-[#FFFFFF]/80 text-center text-lg font-bold text-[#111111] outline-none transition focus:border-[#111111]/60 focus:ring-4 focus:ring-[#111111]/15 sm:h-[54px] sm:w-[52px]"
+                                  className="h-12 w-11 rounded-none border border-[#111111]/20 bg-[#EFEFEF] text-center text-lg font-bold text-[#111111] outline-none transition focus:border-[#111111]/60 focus:ring-4 focus:ring-[#111111]/15 sm:h-[54px] sm:w-[52px]"
                                   aria-label={`OTP digit ${index + 1}`}
                                 />
                               ))}
@@ -599,16 +594,11 @@ export function NavbarAuthModal({
                             </motion.div>
                           )}
 
-                          <form onSubmit={handleResetPassword} className="mx-auto max-w-[460px] space-y-4">
+                          <form onSubmit={handleResetPassword} className="mx-auto w-full space-y-4">
                             <label className="block">
                               <span className={LABEL_CLASS}>New Password</span>
 
                               <div className="relative">
-                                <Lock
-                                  className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-[#E53935]"
-                                  strokeWidth={1.4}
-                                />
-
                                 <input
                                   type={showPassword ? 'text' : 'password'}
                                   value={password}
@@ -621,7 +611,7 @@ export function NavbarAuthModal({
                                 <button
                                   type="button"
                                   onClick={() => setShowPassword((v) => !v)}
-                                  className="absolute right-2 top-1/2 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full text-[#E53935] hover:text-[#111111] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#E53935]/40"
+                                  className="absolute right-2 top-1/2 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full text-[#555555] hover:text-[#111111] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#C62828]/40"
                                   aria-label={showPassword ? 'Hide password' : 'Show password'}
                                 >
                                   {showPassword ? (

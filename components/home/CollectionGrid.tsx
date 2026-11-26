@@ -3,6 +3,8 @@ import Link from 'next/link';
 
 import type { Product } from '@/types';
 
+import { hasPlainBackground } from '@/lib/new-collection';
+
 import { SectionHeader } from './ui/SectionHeader';
 
 const COLLECTIONS = [
@@ -21,6 +23,23 @@ export function CollectionGrid({ products }: { products: Product[] }) {
   // A collection with no visible product of its own borrows a photo from the live catalogue, a different
   // one per tile (spread across the list), so a tile is never blank.
   const withPhoto = products.filter((p) => p.images?.[0]);
+
+  // Covers come from the photos that have a clean studio background (no printed text), one per tile and a
+  // different garment colour each where possible. If none exist, the older per-collection logic below applies.
+  const plain = withPhoto.filter(hasPlainBackground).sort((a, b) => a.id.localeCompare(b.id));
+  const covers: string[] = [];
+  const colours = new Set<string>();
+  plain.forEach((p) => {
+    const colour = String(p.colors?.[0] ?? p.id);
+    if (covers.length < COLLECTIONS.length && !colours.has(colour)) {
+      colours.add(colour);
+      covers.push(p.images[0]);
+    }
+  });
+  plain.forEach((p) => {
+    if (covers.length < COLLECTIONS.length && !covers.includes(p.images[0])) covers.push(p.images[0]);
+  });
+
   const used = new Set<string>();
   const ownPhoto = (slug: string) => withPhoto.find((p) => p.category === slug)?.images[0];
   COLLECTIONS.forEach((c) => {
@@ -37,53 +56,45 @@ export function CollectionGrid({ products }: { products: Product[] }) {
   };
 
   return (
-    <section aria-labelledby="home-collections" className="bg-kv-bg py-8 md:py-10">
-      <SectionHeader id="home-collections" title="Collections" className="kv-gutter" />
+    <section aria-labelledby="home-collections" className="bg-kv-bg py-10 md:py-12">
+      <div className="mx-auto w-full max-w-[760px] px-3 sm:px-6">
+        <SectionHeader id="home-collections" title="Collections" titleClassName="text-[28px] md:text-[36px]" />
 
-      <ul className="grid grid-cols-2 gap-3 px-3 md:gap-4 md:px-0 lg:grid-cols-4">
-        {COLLECTIONS.map((c, i) => {
-          const photo = ownPhoto(c.slug) ?? pickSpare();
-          const count = products.filter((p) => p.category === c.slug).length;
-          return (
-            <li key={c.slug}>
-              <Link
-                href={`/shop?category=${c.slug}`}
-                className="group relative block aspect-[3/4] overflow-hidden bg-kv-ink shadow-[0_8px_24px_rgba(0,0,0,0.12)] transition-shadow duration-300 hover:shadow-[0_16px_36px_rgba(0,0,0,0.24)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-kv-ink"
-              >
-                {photo ? (
-                  <Image
-                    src={photo}
-                    alt={`${c.label} collection`}
-                    fill
-                    loading="lazy"
-                    sizes="(min-width: 1600px) 400px, (min-width: 1024px) 25vw, 50vw"
-                    className="object-cover object-top transition duration-700 ease-out group-hover:scale-[1.06] motion-reduce:transition-none"
-                  />
-                ) : (
-                  <span className="absolute inset-0 bg-gradient-to-br from-kv-ink to-[#2a2a2a]" aria-hidden="true" />
-                )}
-
-                {/* Collection number, top left */}
-                <span className="absolute left-3 top-3 bg-white/90 px-2.5 py-1 font-oswald text-[13px] font-semibold tracking-[0.12em] text-kv-ink shadow-sm">
-                  {String(i + 1).padStart(2, '0')}
-                </span>
-
-                {/* Caption on its own dark card, so it reads on any photo */}
-                <span className="absolute inset-x-2.5 bottom-2.5 bg-black/75 px-3 py-2.5 text-white md:px-4 md:py-3.5 backdrop-blur-sm md:inset-x-3 md:bottom-3">
-                  <span className="block font-oswald text-[17px] font-semibold uppercase leading-tight tracking-[0.05em] md:text-[26px] md:tracking-[0.06em]">
+        {/* Always 2 columns, even on the smallest phones. */}
+        <ul className="grid grid-cols-[repeat(2,minmax(0,1fr))] gap-x-[10px] gap-y-6 sm:gap-x-6 sm:gap-y-12">
+          {COLLECTIONS.map((c, i) => {
+            const photo = covers[i] ?? ownPhoto(c.slug) ?? pickSpare();
+            return (
+              <li key={c.slug}>
+                <Link href={`/shop?category=${c.slug}`} className="group block focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-kv-ink">
+                  <div className="relative aspect-[4/5] overflow-hidden bg-kv-img">
+                    {photo ? (
+                      <Image
+                        src={photo}
+                        alt={`${c.label} collection`}
+                        fill
+                        loading="lazy"
+                        sizes="(min-width: 808px) 368px, 50vw"
+                        className="object-cover object-[50%_12%] transition duration-500 ease-out motion-reduce:transition-none [@media(hover:hover)]:group-hover:scale-[1.04]"
+                      />
+                    ) : (
+                      <div className="flex h-full w-full items-center justify-center p-4 text-center">
+                        <span className="font-oswald text-[22px] font-semibold uppercase tracking-[0.12em] text-kv-ink/70 md:text-[28px]">
+                          {c.label}
+                        </span>
+                      </div>
+                    )}
+                  </div>
+                  <p className="mt-3 font-oswald text-[14px] font-semibold uppercase leading-snug tracking-[0.04em] text-kv-ink transition-colors sm:text-[24px] sm:font-bold sm:tracking-[0.06em] [@media(hover:hover)]:group-hover:text-kv-gold-text">
                     {c.label}
-                  </span>
-                  <span className="mt-1 hidden text-[14px] leading-[1.45] text-white/85 md:block">{c.text}</span>
-                  <span className="mt-2 inline-flex items-center gap-1.5 whitespace-nowrap bg-white px-3 py-1.5 text-[11px] md:mt-3 md:gap-2 md:px-4 md:py-2 md:text-[12px] font-bold uppercase tracking-[0.12em] text-kv-ink transition-colors group-hover:bg-kv-gold group-hover:text-white">
-                    {count > 0 ? `${count} styles` : 'Shop'}
-                    <span aria-hidden="true" className="transition-transform duration-300 group-hover:translate-x-1">→</span>
-                  </span>
-                </span>
-              </Link>
-            </li>
-          );
-        })}
-      </ul>
+                  </p>
+                  <p className="mt-0.5 hidden line-clamp-2 text-[15px] leading-[1.5] text-kv-sub sm:block">{c.text}</p>
+                </Link>
+              </li>
+            );
+          })}
+        </ul>
+      </div>
     </section>
   );
 }

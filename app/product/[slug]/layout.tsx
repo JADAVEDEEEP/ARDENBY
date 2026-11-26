@@ -18,15 +18,15 @@ export async function generateMetadata({ params }: Pick<Props, 'params'>): Promi
   const { product, missing } = await fetchProduct(params.slug);
 
   if (missing) {
-    return { title: 'Product not found | KÖVENIK', robots: { index: false, follow: false } };
+    return { title: 'Product not found | KOVENIK', robots: { index: false, follow: false } };
   }
   // API unreachable: keep the site-wide defaults instead of guessing.
   if (!product) return {};
 
-  const title = `${product.name} | KÖVENIK`;
+  const title = `${product.name} | KOVENIK`;
   const description = trim(
     product.description ||
-      `${product.name} from KÖVENIK. Premium men's streetwear crafted for the bold.`
+      `${product.name} from KOVENIK. Premium men's streetwear crafted for the bold.`
   );
   const image = product.images[0];
 
@@ -39,7 +39,7 @@ export async function generateMetadata({ params }: Pick<Props, 'params'>): Promi
       title,
       description,
       url: productUrl(product.slug),
-      siteName: 'KÖVENIK',
+      siteName: 'KOVENIK',
       ...(image ? { images: [{ url: image, alt: product.name }] } : {}),
     },
     twitter: {
@@ -65,7 +65,7 @@ function productJsonLd(product: Product) {
     description: trim(product.description || product.name, 500),
     url: productUrl(product.slug),
     ...(product.images.length ? { image: product.images } : {}),
-    brand: { '@type': 'Brand', name: 'KÖVENIK' },
+    brand: { '@type': 'Brand', name: 'KOVENIK' },
     ...(product.categoryLabel ? { category: product.categoryLabel } : {}),
     ...(product.colors.length ? { color: product.colors.join(', ') } : {}),
     offers: {

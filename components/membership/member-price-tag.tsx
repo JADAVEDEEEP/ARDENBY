@@ -39,13 +39,39 @@ export function MemberPriceTag({
   productId,
   price,
   className,
+  pill = false,
 }: {
   productId: string;
   price: number;
   className?: string;
+  /** One soft-gradient pill: "Member price ₹849 · Save ₹150 · Join" (wraps on narrow cards). The whole pill links
+   *  to /membership and has a 44px tap area without looking bigger. */
+  pill?: boolean;
 }) {
   const info = useProductMemberPrice(productId, price);
   if (!info) return null;
+
+  if (pill) {
+    return (
+      <Link
+        href="/membership"
+        aria-label={`${info.isMember ? 'Your member price' : 'Member price'} ${rupees(info.memberPrice)}, ${info.isMember ? 'you save' : 'save'} ${rupees(info.saving)}${info.isMember ? '' : ', join membership'}`}
+        // The ::before stretches the tap area to 44px tall without changing how big the pill looks.
+        className={cn(
+          "relative mt-1.5 inline-flex max-w-full flex-wrap items-center gap-x-2 self-start rounded-[3px] bg-gradient-to-r from-[#F1F1EF] via-[#F6EAE8] to-[#FBE4E1] px-2 py-1 text-[12px] leading-5 text-[#111111] before:absolute before:inset-x-0 before:-inset-y-2 before:content-[''] focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#111111]",
+          className
+        )}
+      >
+        <span>{info.isMember ? 'Your price' : 'Member price'}</span>
+        <strong className="whitespace-nowrap font-bold tabular-nums">{rupees(info.memberPrice)}</strong>
+        {/* "Save ₹X" and "Join" always travel together: on a very narrow card they drop to the second line as a pair. */}
+        <span className="inline-flex gap-x-1.5 whitespace-nowrap">
+          <span>{info.isMember ? 'You save' : 'Save'} {rupees(info.saving)}</span>
+          {!info.isMember && <span className="font-semibold underline underline-offset-2">Join</span>}
+        </span>
+      </Link>
+    );
+  }
 
   return (
     <div className={cn('mt-2 flex min-w-0 items-center gap-2 rounded-[3px] bg-[#F3F3F1] px-2.5 py-2', className)}>

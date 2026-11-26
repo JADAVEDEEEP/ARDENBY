@@ -6,6 +6,8 @@ import type { Product } from '@/types';
 
 import { FilterChips } from './FilterChips';
 import type { ChipOption } from './FilterChips';
+import { inCategory } from '@/components/shop/shop-filters';
+import { usePlusSizeAvailable } from '@/hooks/use-plus-size';
 import { prioritizeNewCollection } from '@/lib/new-collection';
 
 import { ProductCard } from './ProductCard';
@@ -28,6 +30,7 @@ const CHIPS: readonly ChipOption[] = [
   { id: 'bottom-wear', label: 'Bottom Wear' },
   { id: 'plus-size', label: 'Plus Size' },
   { id: 'best-seller', label: 'Best Seller' },
+  { id: 'apex-edition', label: 'Apex Edition' },
   { id: 'ardenby-premium', label: 'Kovenik Premium' },
   { id: 'epic-thread', label: 'Epic Thread' },
   { id: 'the-print-club', label: 'The Print Club' },
@@ -39,18 +42,17 @@ function matches(product: Product, filter: string): boolean {
       return true;
     case 'best-seller':
       return product.bestSeller;
-    case 'top-wear':
-    case 'bottom-wear':
-    case 'plus-size':
-      // Categories live as slug tokens in the product's tags (a product has one collection).
-      return product.category === filter || product.tags.some((t) => t.toLowerCase() === filter);
     default:
-      return product.category === filter;
+      // Same rule as the shop page: a product's category slug OR a slug token in its tags (a product has one
+      // category but can also belong to a collection), and Plus Size also covers 3XL and above.
+      return inCategory([product], filter).length > 0;
   }
 }
 
 export function ExploreCategory({ products, loading, error, onRetry }: ExploreCategoryProps) {
   const [active, setActive] = useState('all');
+  const plusSize = usePlusSizeAvailable();
+  const chips = useMemo(() => CHIPS.filter((c) => c.id !== 'plus-size' || plusSize), [plusSize]);
 
   const visible = useMemo(() => {
     // Every tab lists ALL of its products, the imported catalogue products first, then the older ones.
@@ -62,8 +64,8 @@ export function ExploreCategory({ products, loading, error, onRetry }: ExploreCa
       <div className="mx-auto w-full">
         <SectionHeader id="home-explore" title="Shop by category" href="/shop" className="kv-gutter" />
         {/* Chip bar stays under the header while the grid scrolls (desktop). */}
-        <div className="z-30 border-b border-kv-line bg-kv-bg lg:sticky lg:top-[84px]">
-          <FilterChips options={CHIPS} active={active} onChange={setActive} label="Filter products" />
+        <div className="z-30 border-b border-kv-line bg-kv-bg lg:sticky lg:top-[68px]">
+          <FilterChips options={chips}active={active} onChange={setActive} label="Filter products" />
         </div>
         <div className="px-3 pt-5 md:px-0 md:pt-6">
 
@@ -87,12 +89,12 @@ export function ExploreCategory({ products, loading, error, onRetry }: ExploreCa
         ) : visible.length > 0 ? (
           <div className="grid grid-cols-2 gap-x-3 gap-y-8 md:grid-cols-3 md:gap-x-4 md:gap-y-10 lg:grid-cols-4 min-[1600px]:grid-cols-5">
             {visible.map((product) => (
-              <ProductCard key={product.id} product={product} variant="arrival" />
+              <ProductCard key={product.id} product={product} variant="catalog" textClassName="px-3" />
             ))}
           </div>
         ) : (
           <div role="status" className="flex min-h-[200px] flex-col items-center justify-center bg-kv-band px-4 text-center">
-            <p className="font-oswald text-[22px] font-semibold uppercase tracking-[0.06em] text-kv-ink">No pieces found</p>
+            <p className="font-oswald text-[22px] font-semibold uppercase tracking-[0.06em] text-kv-ink">No products found</p>
             <p className="mt-1 text-[16px] text-kv-sub">Nothing in this category yet.</p>
             <button
               type="button"

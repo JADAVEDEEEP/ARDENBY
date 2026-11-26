@@ -27,7 +27,7 @@ export function ProductGrid({
   return (
     <ul
       className={cn(
-        'grid grid-cols-2 gap-x-2.5 gap-y-[26px] md:grid-cols-3 lg:gap-x-[22px] lg:gap-y-11',
+        'grid grid-cols-2 gap-5 md:grid-cols-3',
         density === 4 ? 'lg:grid-cols-4' : 'lg:grid-cols-3'
       )}
     >
@@ -55,7 +55,7 @@ export function ProductGridSkeleton({ density }: { density: GridDensity }) {
       aria-busy="true"
       aria-label="Loading products"
       className={cn(
-        'grid grid-cols-2 gap-x-2.5 gap-y-[26px] md:grid-cols-3 lg:gap-x-[22px] lg:gap-y-11',
+        'grid grid-cols-2 gap-5 md:grid-cols-3',
         density === 4 ? 'lg:grid-cols-4' : 'lg:grid-cols-3'
       )}
     >

@@ -367,7 +367,7 @@ function CheckoutPageView() {
             </div>
             <ConfirmedCard orderNumber={orderNumber} />
             <p className="mb-8 mt-5 text-center text-sm leading-relaxed text-[#4A4A4A]">
-              Thank you for shopping with KÖVENIK. Your order is confirmed. You can track it anytime from My Orders.
+              Thank you for shopping with KOVENIK. Your order is confirmed. You can track it anytime from My Orders.
             </p>
             <div className="grid gap-3">
               <Link href="/shop" className="ck-cta">

@@ -10,10 +10,12 @@ interface SectionHeaderProps {
   linkLabel?: string;
   align?: 'center' | 'left';
   className?: string;
+  /** Extra classes for the h2, e.g. a different mobile size. */
+  titleClassName?: string;
 }
 
 /** Oswald uppercase section title (36px desktop / 26px mobile) with an optional link. */
-export function SectionHeader({ id, title, href, linkLabel = 'View all', align = 'center', className }: SectionHeaderProps) {
+export function SectionHeader({ id, title, href, linkLabel = 'View all', align = 'center', className, titleClassName }: SectionHeaderProps) {
   return (
     <div className={cn('mb-6 flex items-end gap-4 md:mb-8', align === 'center' && !href ? 'justify-center' : 'justify-between', className)}>
       <h2
@@ -21,7 +23,8 @@ export function SectionHeader({ id, title, href, linkLabel = 'View all', align =
         className={cn(
           'min-w-0 font-oswald font-semibold uppercase leading-tight text-kv-ink md:text-[36px] md:tracking-[0.06em]',
           href ? 'whitespace-nowrap text-[clamp(19px,5.6vw,26px)] tracking-[0.04em]' : 'text-[26px] tracking-[0.06em]',
-          align === 'center' && !href && 'text-center'
+          align === 'center' && !href && 'text-center',
+          titleClassName
         )}
       >
         {title}
